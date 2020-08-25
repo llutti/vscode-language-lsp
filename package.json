@@ -1,0 +1,32 @@
+{
+    "name": "lsp",
+    "displayName": "LSP Language Service",
+    "description": "Linguagem Senior de Pyrogramação",
+    "version": "0.0.2",
+    "publisher": "llutti",
+    "engines": {
+        "vscode": "^1.46.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "lsp",
+            "aliases": ["lsp"],
+            "extensions": ["lspt"],
+            "configuration": "./lsp-configuration.json"
+        }],
+        "grammars": [{
+            "language": "lsp",
+            "scopeName": "source.lsp",
+            "path": "./syntaxes/lsp.tmLanguage.json"
+        }],
+        "snippets": [
+            {
+                "language": "lsp",
+                "path": "./snippets/lsp.json"
+            }
+        ]
+    }
+}

@@ -1,0 +1,255 @@
+{
+  "ComentarioLinha": {
+    "prefix": "//",
+    "body": [
+      "@-- $1 --@"
+    ],
+    "description": "Comentário de Linha"
+  },
+  "Inicio Fim": {
+    "prefix": "Inicio",
+    "body": [
+      "Inicio",
+      "\t$1",
+      "Fim;"
+    ],
+    "description": "Inicio ... Fim"
+  },
+  "Definir Alfa": {
+    "prefix": "da",
+    "body": [
+      "Definir Alfa a$1;"
+    ],
+    "description": "Definir uma variável do tipo 'Alfa'"
+  },
+  "Definir Numero": {
+    "prefix": "dn",
+    "body": [
+      "Definir Numero n$1;"
+    ],
+    "description": "Definir uma variável do tipo 'Numero'"
+  },
+  "Definir Data": {
+    "prefix": "dd",
+    "body": [
+      "Definir Data d$1;"
+    ],
+    "description": "Definir uma variável do tipo 'Data'"
+  },
+  "Definir Cursor": {
+    "prefix": "dc",
+    "body": [
+      "Definir Cursor Cur_$1;"
+    ],
+    "description": "Definir uma variável do tipo 'Cursor'"
+  },
+  "Definir Lista": {
+    "prefix": "dl",
+    "body": [
+      "Definir Lista lst_$1;"
+    ],
+    "description": "Definir uma variável do tipo 'Lista'"
+  },
+  "Definir Funcao": {
+    "prefix": "df",
+    "body": [
+      "Definir Funcao f$1;"
+    ],
+    "description": "Definir uma variável do tipo 'Funcao'"
+  },
+  "CR": {
+    "prefix": "dcr",
+    "body": [
+      "Definir Alfa CR; RetornaASCII(13, CR);",
+      "$1"
+    ],
+    "description": "Definir uma variável 'Alfa' e atribuir o valor #13"
+  },
+  "CRLF": {
+    "prefix": "dcrlf",
+    "body": [
+      "Definir Alfa CR; RetornaASCII(13, CR);",
+      "Definir Alfa LF; RetornaASCII(10, LF);",
+      "Definir Alfa CRLF; CRLF = CR + LF;",
+      "$1"
+    ],
+    "description": "Definir uma variável 'Alfa' e atribuir o valor #13#10"
+  },
+  "cor": {
+    "prefix": "cor",
+    "body": [
+      "Definir alfa aCor;",
+      "Se (nCor = 0)",
+      "Inicio",
+      "\tnCor = 1;",
+      "\taCor = \"#F5F5F5\";",
+      "Fim;",
+      "Senao",
+      "Inicio",
+      "\tnCor = 0;",
+      "\taCor = \"Branco\";",
+      "Fim;",
+      "AlteraControle(\"$1\", \"Cor\", aCor);"
+    ],
+    "description": "Regra para alternar a cor de uma Seção de Relatório"
+  },
+  "Enquanto Lista": {
+    "prefix": "el",
+    "body": [
+      "${1:lst_dados}.Primeiro();",
+      "Enquanto (${1:lst_dados}.FDA = cFalso)",
+      "Inicio",
+      "\t$2",
+      "\t${1:lst_dados}.Proximo();",
+      "Fim;"
+    ],
+    "description": "Criar um Enquanto para uma Lista"
+  },
+  "ExecSQLEx": {
+    "prefix": "ex",
+    "body": [
+      "ExecSQLEx(\"$1",
+      "          \", nRetErro, aMsgErro);",
+      "",
+      "Se (nRetErro = 1) @-- Se Ocorreu algum erro --@",
+      "Inicio",
+      "\t",
+      "Fim; "
+    ],
+    "description": "Lógica para executar um 'ExexSQLEx'"
+  },
+  "Se SQL": {
+    "prefix": "ss",
+    "body": [
+      "SQL_Criar(${1:cPesquisa});",
+      "SQL_UsarSQLSenior2(${1:cPesquisa}, 0);",
+      "SQL_UsarAbrangencia(${1:cPesquisa}, 0);",
+      "SQL_DefinirComando(${1:cPesquisa}, \"$2",
+      "                              \");",
+      "SQL_AbrirCursor(${1:cPesquisa});",
+      "Se (SQL_EOF(${1:cPesquisa}) = cFalso)",
+      "Inicio",
+      "\t",
+      "Fim;",
+      "SQL_FecharCursor(${1:cPesquisa});",
+      "SQL_Destruir(${1:cPesquisa});"
+    ],
+    "description": "Lógica para executar um 'Se' para 'SQL_' e setar a variável 'nAchou'"
+  },
+  "SQL Achou": {
+    "prefix": "ssa",
+    "body": [
+      "SQL_Criar(${1:cPesquisa});",
+      "SQL_UsarSQLSenior2(${1:cPesquisa}, 0);",
+      "SQL_UsarAbrangencia(${1:cPesquisa}, 0);",
+      "SQL_DefinirComando(${1:cPesquisa}, \"$2",
+      "                              \");",
+      "SQL_AbrirCursor(${1:cPesquisa});",
+      "nAchou = cFalso;",
+      "Se (SQL_EOF(${1:cPesquisa}) = cFalso)",
+      "Inicio",
+      "  nAchou = cVerdadeiro;",
+      "Fim;",
+      "SQL_FecharCursor(${1:cPesquisa});",
+      "SQL_Destruir(${1:cPesquisa});"
+    ],
+    "description": "Lógica para executar um 'Se' para 'SQL_'"
+  },
+  "SQL Enquanto": {
+    "prefix": "es",
+    "body": [
+      "SQL_Criar(${1:cPesquisa});",
+      "SQL_UsarSQLSenior2(${1:cPesquisa}, 0);",
+      "SQL_UsarAbrangencia(${1:cPesquisa}, 0);",
+      "SQL_DefinirComando(${1:cPesquisa}, \"$2",
+      "                              \");",
+      "",
+      "SQL_AbrirCursor(${1:cPesquisa});",
+      "Enquanto (SQL_EOF(${1:cPesquisa}) = cFalso)",
+      "Inicio",
+      "\t",
+      "\tSQL_Proximo(${1:cPesquisa});",
+      "Fim;",
+      "SQL_FecharCursor(${1:cPesquisa});",
+      "SQL_Destruir(${1:cPesquisa});"
+    ],
+    "description": "Lógica para executar um 'Enquanto' para 'SQL_'"
+  },
+  "SQL Definir Inteiro": {
+    "prefix": "sdi",
+    "body": [
+      "SQL_DefinirInteiro(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Definir um parâmetro do tipo 'INTEIRO' para 'SQL_'"
+  },
+  "SQL Definir Data": {
+    "prefix": "sdd",
+    "body": [
+      "SQL_DefinirData(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Definir um parâmetro do tipo 'DATA' para 'SQL_'"
+  },
+  "SQL Definir Alfa": {
+    "prefix": "sda",
+    "body": [
+      "SQL_DefinirAlfa(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Definir um parâmetro do tipo 'ALFA' para 'SQL_'"
+  },
+  "SQL Definir Flutuante": {
+    "prefix": "sdf",
+    "body": [
+      "SQL_DefinirFlutuante(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Definir um parâmetro do tipo 'DECIMAL' para 'SQL_'"
+  },
+  "SQL Retornar Inteiro": {
+    "prefix": "sri",
+    "body": [
+      "SQL_RetornarInteiro(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Retornar um valor do tipo 'INTEIRO' de um 'SQL_'"
+  },
+  "SQL Retornar Data": {
+    "prefix": "srd",
+    "body": [
+      "SQL_RetornarData(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Retornar um valor do tipo 'DATA' de um 'SQL_'"
+  },
+  "SQL Retornar Alfa": {
+    "prefix": "sra",
+    "body": [
+      "SQL_RetornarAlfa(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Retornar um valor do tipo 'ALFA' de um 'SQL_'"
+  },
+  "SQL Retornar Flutuante": {
+    "prefix": "srf",
+    "body": [
+      "SQL_RetornarFlutuante(cPesquisa, \"$1\", $2);"
+    ],
+    "description": "Retornar um valor do tipo 'DECIMAL' de um 'SQL_'"
+  },
+  "ConverteParaMaiusculo": {
+    "prefix": "cm",
+    "body": [
+      "ConverteParaMaiusculo(${1}, ${1});"
+    ],
+    "description": "Lógica para Converter o conteúdo de uma variável para Maiúsculo"
+  },
+  "TiraEspacos": {
+    "prefix": "te",
+    "body": [
+      "TiraEspacos(${1}, ${1});"
+    ],
+    "description": "Lógica para remover os espaços em branco do começo e do final"
+  },
+  "AlteraControle": {
+    "prefix": "ad",
+    "body": [
+      "AlteraControle(\"$1\", \"Descrição\", \"$2\");"
+    ],
+    "description": "Lógica para modificar a descrição de um 'label' no gerador de relatórios"
+  }
+}
