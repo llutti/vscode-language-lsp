@@ -17,4 +17,4 @@ Suporta colorização total de todas as funções, métodos, variáveis de siste
 
 # Licença
 
-[MIT](https://github.com/llutti/vscode-language-lsp/blob/master/LICENSE.md) &copy; Luciano Cargnelutti
+[MIT](https://github.com/llutti/llutti-vscode-language-lsp/blob/master/LICENSE) &copy; Luciano Cargnelutti
