@@ -3,17 +3,13 @@
 Esta extensão adiciona o suporte à Linguagem Senior de Programação, também conhecida como LSP, ao Visual Studio Code. A extensão atualmente suporta:
 
 * Colorização
-* Snippets (atalhos para trechos de códigos)
-
-# Instalação
-
-Aperte `F1` no VSCode, digite `ext install` e então procure por `Language LSP`.
+* Snippets (trechos de códigos previamente configurados)
 
 # Modo de usar
 
 ## Colorização
 
-Suporta colorização total de todas as funções, métodos, variáveis de sistema e palavras-chave para o LSP
+Suporta colorização da maioria das funções internas, variáveis de sistema e palavras-chave para o LSP para o [Vetorh](https://www.senior.com.br/)
 
 # Licença
 
