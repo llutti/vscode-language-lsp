@@ -18,12 +18,13 @@
         "vscode": "^1.46.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Snippets"
     ],
     "contributes": {
         "languages": [{
             "id": "lsp",
-            "aliases": ["lsp"],
+            "aliases": ["LSP", "Senior"],
             "extensions": ["lspt"],
             "configuration": "./lsp-configuration.json"
         }],
