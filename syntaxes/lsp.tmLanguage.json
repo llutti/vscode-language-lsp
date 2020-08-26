@@ -35,7 +35,7 @@
 					"match": "\\b(?i:(definir))\\b"
 				},
 				{
-					"name": "storage.support.type.lsp",
+					"name": "support.type.primitive.lsp",
 					"match": "\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b"
 				},
 				{
