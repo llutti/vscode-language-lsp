@@ -1,9 +1,10 @@
 {
     "name": "lsp",
     "displayName": "LSP Language Service",
-    "description": "Linguagem Senior de Pyrogramação",
+    "description": "Linguagem Senior de Programação",
     "version": "0.0.2",
     "publisher": "llutti",
+    "icon": "images/icon.png",
     "license": "SEE LICENSE IN LICENSE.md",
     "homepage": "https://github.com/llutti/vscode-language-lsp/blob/master/README.md",
     "repository": {
