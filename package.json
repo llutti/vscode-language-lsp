@@ -24,7 +24,7 @@
     "contributes": {
         "languages": [{
             "id": "lsp",
-            "aliases": ["LSP", "Senior"],
+            "aliases": ["LSP"],
             "extensions": ["lspt"],
             "configuration": "./lsp-configuration.json"
         }],
