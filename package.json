@@ -4,10 +4,15 @@
     "description": "Linguagem Senior de Pyrogramação",
     "version": "0.0.2",
     "publisher": "llutti",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "homepage": "https://github.com/llutti/vscode-language-lsp/blob/master/README.md",
     "repository": {
 		"type": "git",
-		"url": "https://github.com/llutti/vscode-language-lsp"
-	},
+		"url": "https://github.com/llutti/vscode-language-lsp.git"
+    },
+    "bugs": {
+        "url": "https://github.com/llutti/vscode-language-lsp/issues"
+    },
     "engines": {
         "vscode": "^1.46.0"
     },
