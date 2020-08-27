@@ -4,3 +4,17 @@
 vsc-extension-quickstart.md
 README-example.md
 CHANGELOG-example.md
+
+
+**/*.ts
+**/*.map
+**/tsconfig.json
+**/tsconfig.base.json
+contributing.md
+.travis.yml
+client/node_modules/**
+!client/node_modules/vscode-jsonrpc/**
+!client/node_modules/vscode-languageclient/**
+!client/node_modules/vscode-languageserver-protocol/**
+!client/node_modules/vscode-languageserver-types/**
+!client/node_modules/semver/**

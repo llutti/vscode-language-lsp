@@ -5,6 +5,7 @@ Alterações realizadas na extensão.
 ## [0.0.3] - 27/08/2020
 ### Adicionado
 - Implementado "Autoindentação" após o "inicio"
+- Implementado "Autocomplete" baseado em um arquivo de configurações
 
 ### Alterações
 - Melhoria na identificação da sintaxe
