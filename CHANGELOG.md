@@ -5,6 +5,7 @@ Alterações realizadas na extensão.
 ## [0.0.3] - 27/08/2020
 
 - Melhoria na identificação da sintaxe
+- Implementado "Autoindentação" após o "inicio"
 
 ## [0.0.2] - 26/08/2020
 
