@@ -31,12 +31,22 @@
 					"match": "\\b(?i:(e|ou))\\b"
 				},
 				{
-					"name": "storage.type.prototype.lsp",
-					"match": "\\b(?i:(definir))\\b"
-				},
-				{
-					"name": "support.type.primitive.lsp",
-					"match": "\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b"
+					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b\\s*;",
+					"captures": {
+						"1": {
+							"name": "storage.type.prototype.lsp"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#type"
+								}
+							]
+						},
+						"3": {
+							"name": "variable.other.readwrite.lsp"
+						}
+					}
 				},
 				{
 					"name": "entity.name.function.lsp",
@@ -53,6 +63,10 @@
 				{
 					"name": "support.variable.lsp",
 					"match": "\\b(?i:(abrbhr|abrvinsol|acu_sitemp|acucal|acutotcod1|acutotcod2|acutotdes1|acutotdes2|acutotref1|acutotref2|acutotval1|acutotval2|adiabo|adiins|adinot|adiper|adivr1|adivr2|adt13s|abrtelsel|totabrsel|adtfer|afsgev|altdatsol|altqtdsol|anoadm|anodem|anofim|anohoj|anoini|anonas|anopag|anopro|anorfg|anosis|anotel|anu_anoren|anu_apoinv|anu_aporef|anu_avipre|anu_codcep|anu_codret|anu_codseq|anu_conpre|anu_desnot|anu_desrec|anu_desseq|anu_diaaju|anu_endfil|anu_estcid|anu_indrcs|anu_irfret|anu_locemp|anu_mesren|anu_nombai|anu_nomcid|anu_nomdep|anu_nomfun|anu_numcad|anu_numcgc|anu_numcpf|anu_numtel|anu_penjud|anu_pesres|anu_prepri|anu_razsoc|anu_renbru|anu_rente1|anu_rente2|anu_salfam|anu_straux|anu_tittot1|anu_tittot2|anu_tittot3|anu_tittot4|anu_tittot5|anu_val13s|anu_valax0|anu_valax1|anu_valax2|anu_valax3|anu_valax4|anu_valax5|anu_valdep|anu_valirf|anu_vlrseq|anxema|apoespemp|apudiu|apunot|assdup|assema|atualizando|atiraigre|atuprosal|auxdatnas|auxentcet|avomatano|basev2|basevt|basmov|basref|basval|benprv|bir13s|birfer|bpvadi|bpvmhe|bpvmvv|bpvsal|bpvter|busevt|busmov|cadpca|cadpsa|cag_anonas|cag_atirai|cag_camfix|cag_camint|cag_codcbo|cag_codcep|cag_codfil|cag_conmtp|cag_corant|cag_datadm|cag_datnas|cag_deffis|cag_diadem|cag_empfol|cag_encati|cag_endfil|cag_estcid|cag_estctp|cag_grains|cag_horsem|cag_impcgc|cag_impiap|cag_nombai|cag_nomcid|cag_nomfun|cag_nomrel|cag_numcgc|cag_numctp|cag_numemp|cag_numfol|cag_numpis|cag_perref|cag_pesres|cag_pridia|cag_privez|cag_raccor|cag_ramres|cag_razsoc|cag_remmen|cag_serctp|cag_setdisco|cag_telemp|cag_tipcau|cag_tipsex|cag_titred|cag_totadm|cag_totapo|cag_totapr|cag_totare|cag_totatr|cag_totdem|cag_totdis|cag_totesp|cag_totfco|cag_totfol|cag_totfun|cag_totinj|cag_totjus|cag_totmor|cag_tottra|cag_ultdia|calatu|calcomposicao|calperfgt|calprg|calref|caltri|caremp|carimbobaicep|carimbocgcemp|carimbocidest|carimboendemp|carimbonomemp|carpca|catfgtgre|caudem|ccpema|cd_antmes|cd_antsal|cd_aviind|cd_mestra|cd_penmes|cd_pensal|cd_retmes|cd_retsal|cd_ultmes|cd_ultsal|cd_ultsem|centesimaltime|cgiaddr|cidest|claant|claatu|claempgre|claesc|clapro|clapsa|clasal|clasalant|clasalemp|clcfun|cmpfgtgre|cnaegre|cnv_condev|cnv_conrec|cnv_conret|cnv_desati|cnv_desbai|cnv_descep|cnv_descid|cnv_descmp|cnv_descnv|cnv_descod|cnv_desend|cnv_desest|cnv_desfan|cnv_desnum|cnv_numcol|cnv_perdev|cnv_perrec|cnv_perret|cnv_vlrbas|cnvhor|cnvmin|codafs|codcal|codccu|codcepgre|codclc|codcrt|codcta|codctd|coddir|codepa|coderroenviaemail|codesc|codesg|codeta|codevg|codevt|codfgt40p|codfgtant|codfgtmes|codfil|codhog|codhor|codlocemp|codpar|codpesext|codrat|codratemp|codref|codrtg|codsal|codsinemp|codstg|codtug|codusu|codvinemp|codvinsol|coltab|comven|confgtgre|conger|conmarabrori|conmarabrrlg|conmarabrtac|conmarabruso|conmardatfim|conmardatini|conurvfim|cplant|cplhis|cplmesant|cplniv|cplnivbas|cplnivrea|cplpro|cplpsa|cplsalemp|craaud|ctacre|ctadeb|ctb_datfim|ctb_datini|ctb_datlct|ctb_tipctb|da0195|datadmgre|datalt|dataltadi|dataltcar|dataltccu|dataltesc|dataltetb|dataltfil|dataltgre|dataltloc|dataltnat|dataltsal|dataltsit|datapg|datapocol|dataud|datavi|datcal|datdem|datdes|datdma|datefepro|datfim|dathoj|datind|datini|datmar|datnasgre|datori|datpag|datpca|datpro|datpsa|datref|datrel|datsalant|datsis|datsitant|debfgttotal|debfgtvalbas|debfgtvalcor|debfgtvaljur|debfgtvalmul|debfgtvaltrd|depbol|depcre|depinv|depirf|depsaf|des_rodape|desafaavo|desapu|desclagre|desdes|desdia|desdir|desepa|desesc|desesq|deseta|deseve|despar|despro|despsa|desrev|desrodape|desrodapepa|desrtg|dessal|desstg|destot|destsa|diaadm|diacal|diadem|diades|diadom|diaest|diaext|diafim|diafip|diagra|diahoj|diaind|diaini|diainp|diajus|diajusant|diamatano|diamatmes|dianas|diapag|diapro|diaqua|diaqui|diarcs|diarea|diarfg|diasab|diaseg|diasem|diasex|diasis|diasit|diasithor|diasld|diasmg|diatel|diater|dirf|dstema|dtasit|dtrefp|dtreip|dulmar|dupsal|ecolpag|edicad|edicar|edicr1|edicra|edilc1|ediloc|efepca|efepsa|empatu|empfgtgre|emppca|emppre|emppro|emppsa|endfilgre|entsab|envtot|errimp|escatu|escemp|esctrf|efetiv|espcodniv|espdesniv|esplevel|espnivtot|espnomniv|esptotallevel|estant|estaux|estcaremp|estcargre|estcidgre|estpca|estpsa|estsal|estsalant|estsalemp|estsalpro|etbemp|etrumar|etrupri|etruult|everef|evtger|evtlan|extsis|faiirf|ferencrec|ferfil|ferpag|ferpagrec|ferpro|ferven|fgtmes|filctb|filemp|fimace|fimapu|fimcal|fimcmp|fimctt|fimeve|fimevehor|fimext|fimfer|fimferenv|fimint|fimpec|fimperenv|fimpon|fimprj|finavi|flemar|flepar|fleref|flesal|fncacc|fncaud|fncmar|fncref|fnlper|fpxmar|fpxpar|fpxref|fpxsal|gerhpa|gernommod|gernovper|gfipatirai|gfipbasfgt|gfipbfg13s|gfipcatfun|gfipcdrfgt|gfipcmpfgt|gfipcodcep|gfipcodfpa|gfipcodmov|gfipcodoco|gfipcodter|gfipdatadm|gfipdatmov|gfipdatnas|gfipendfil|gfipestcid|gfipinstom|gfiplocdat|gfipnombai|gfipnomcid|gfipnomfun|gfipnomrat|gfipnomtom|gfipnumcgc|gfipnumpis|gfipnumtel|gfipoptsim|gfippersat|gfippesres|gfiprazsoc|gfipstrctp|gfiptotgrp|gfipvalc37|gfipvalc38|gfipvalc39|gfipvalc40|gfipvalc41|gfipvalc42|gfipvalcmp|gfipvalgrp|gfipvalins|gfipvaljam|gfipvalpro|gfipvalsfa|grp_acitra|grp_paremp|grp_valcon|grp_valter|grpsbasaut|grpsbasemp|grpscepemp|grpscidemp|grpscoda19|grpscoda20|grpscodemp|grpscodfpa|grpscodpag|grpscodsat|grpscodter|grpscomemp|grpscompet|grpsdeside|grpsendemp|grpsestemp|grpsnoma19|grpsnoma20|grpsnomemp|grpsnrocol|grpspersat|grpssldded|grpstelemp|grpstipide|grpsvala19|grpsvala20|grpsvaldeb|grpsvalemp|grpsvalliq|grpsvalsat|grpsvalseg|grpsvalter|grpsvlrded|grspvaltrp|guiacitracol|guiparempcol|hieloc|hispad|horalt|horapg|horaud|horbasemp|horbat|hordan|hordfe|hordse|hordsr|hordsremp|horent|horesc|horesg|horeve|horext|horfac|horfim|horfma|horfol|horini|hormar|horpfo|horprf|horqua|horref|horsabemp|horsai|horsal|horsem|horsememp|horsis|horsit|horstg|hortrf|hrrefp|hrreip|hrtrad|hrtran|hulmar|idafun|iddemp|imagatuenv|ind13s|indvar|inftit1|inftit2|inftit3|inftit4|iniace|iniapu|inical|inicmp|iniext|inifer|iniferenv|iniperenv|inipon|iniprj|inscolefe|insorisal|inssacrsat|inssapefil|inssauxmat|inssbasdec|inssbasnor|insscabrel|insscmp11p|insscmpsal|insscomcmp|insscomfil|inssconcod|insscondes|inssconpag|inssconper|inssconval|inssfaibas|inssfaicen|inssfaides|inssfaiemp|inssfaiins|inssfaiper|inssnomfun|inssnumcad|inssperdec|insspernor|inssret11p|insssalfam|insssatbas|insssatemp|insstotemp|insstotstr|inssvalant|inssvalcmp|inssvaldec|inssvalded|inssvalemp|inssvalfut|inssvalliq|inssvalnor|inssvalori|inssvalseg|inssvalter|intbasrea|intconobr|intfaicon|intfimefe|intfimnes|intiniefe|intinines|intqtdefe|intqtdnes|inttotal|inttotapo|inttotfal|inttotfei|iprper|is_codfor|lerbai|lercid|lic_numlic|lic_numpec|limabo|limba1|limba2|limhex|linadic|lintab|linweb|liqfer|litcat|litpag|locemp|logdatfim|logdatini|loglin|logqtd|logtxt|mai13s|masloc|mat13s|mcdfnc|mcdplt|mcdrlg|mdatac|mediaavadet|menlog|mesadm|mesagefgt|mesaltant|mesant|mesatu|mesdem|mesex|mesext|mesfic|mesfim|mesfip|meshoj|mesini|mesinp|mesnas|mespag|mespro|mesreq|mesrfg|messis|mestel|mestra|mesultpro|mhorac|mignma|minabo|minaux|mindiu|mindsr|minexd|minexn|minint|minjor|minmjo|minnot|minope|minpvd|minpvn|minute|minutn|mommar|motal1|motal2|motalt|motaux|motcaremp|motign|motpca|motpsa|motsalant|motsalemp|motsel|motsit|motstg|msaind|msainn|mseqac|msgani|msgenv|msgerroenviaemail|mudevt|mudmov|mudsitper|natdes|natdesemp|nempt1|nempt2|ninref|nivant|nivatu|nivaux|nivlan|nivpro|nivpsa|nivsal|nivsalant|nivsalemp|nombai|nombaigre|nomcab|nomcau|nomcid|nomcidgre|nomcta|nomemp|nomempfgt|nomest|nommodrel|nommot|nomsit|nomtel|nomusu|nrodiaafa|nrodig|nromes|numcadfgt|numcadlan|numcargre|numcgcfil|numche|numempfgt|numenv|numficreg|numint|numpag|numper|numpisgre|numtelgre|obsprocar|obsprosal|occmat|orialt|oriapg|orimar|orimov|oripca|oripsa|orisal|pag13s|pagrcs|pecbinmes|pecconcor|pecdatcor|pecdatrec|pecqtdcon|pectotcon|pectotcor|pecvinmes|perabo|perafaapo|perbhr|percmp|perdesant|perdesemp|perdespro|perext|perfim|perind|perini|perinsemp|perpag|perperemp|perreaant|perreaatu|perref|perres|pertemint|posctr|poseve|posevehor|posint|prepsa|pricon|priext|privez|pro_decfgt|pro_decins|pro_decval|pro_ferfgt|pro_ferins|pro_ferter|pro_ferval|proavoapo|prodep|proporapo|prtcgc|prtcodcep|prtcodcli|prtcplend|prtendemp|prtmar|prtmaremp|prtnombai|prtnomcid|prtnumcgc|prtram|prtraz|prtrazsoc|prtres|prtsigest|prttel|prttipins|prvtra|prvtrd|prvtrn|prxafa|prxcalsal|prxfnc|qdimes|qtdafs|qtdcmp|qtdctdmem|qtddep|qtddiasdsr|qtddiasfer|qtddiasfolga|qtddiasoutras|qtddiassab|qtddiasutil|qtddom|qtdemd|qtdemn|qtdepa|qtdext|qtdfer|qtdhog|qtdhordsr|qtdhorfer|qtdhoroutras|qtdhorsab|qtdhorutil|qtdhrp|qtdhtr|qtdimd|qtdimn|qtdlanval|qtdmar|qtdpar|qtdref|qtdsal|quebraconv|quehor|rais|ratcol|ratext|ratpad|razsocgre|rc_codeve1|rc_codeve2|rc_codrateio|rc_deseve1|rc_deseve2|rc_refeve1|rc_refeve2|rc_tipeve1|rc_tipeve2|rc_valeve1|rc_valeve2|rcsext|rcsvar|rcsvarori|readmmes|rearrhor|rearrmen|rebascpl|rebassal|recfgtgre|recodmot|redatalt|redatdem|redemmes|refcar|refch2|refdes|refdir|refesq|refeta|refev2|refevt|reffic|refmov|refop1|refop2|refpro|refqtd|refrev|refvtr|regras|rehisfut|rel_abrnat|relapu|relficcmp|relficcod|relficdes|relficref|relfictip|relfictot|relficval|relhorcodeve|relhornroemp|relhornrohor|relhorperhor|relhortotemp|relhorvlrtot|renormativo|renovsal|rereapro|rereasal|respsa|retdiahor|retdes|retdescon|retipsin|retipsis|retvalcon|revalsal|rlgacc|rlgaud|rlgmar|rlgref|rmtema|rw_diafer|rw_parets|rw_valfer|rw_valfgt|rw_valins|rw_valirr|rw_valsed|rw_valsen|rw_valses|rw_valwss|saisab|saladm|salant|salat1|salat2|salatu|salcpl|saldiaemp|salemp|salhoremp|salini|salmesant|salmesemp|salminemp|salniv|salpro|salpsa|salres|salsit|selcpr|selexc|selinc|seqaud|sercargre|sevant|sevatu|sevcal|sevfec|sin_codsin|sin_datadm|sin_descar|sin_desque|sin_estctb|sin_nomcon|sin_nomemp|sin_nomfun|sin_nompro|sin_nomrel|sin_nomsin|sin_numcad|sin_numctb|sin_numemp|sin_pagina|sin_refeve|sin_serctb|sin_tcoque|sin_tdeque|sin_tipcol|sin_totcon|sin_totemp|sin_totsal|sin_tsaque|sin_valeve|sitafa|sitant|sitapu|sitcmd|sitcmn|sitdia|siteaddr|sitemp|sitmes|sitope|sitpca|sitpro|sitpsa|sitrec|sitres|sldfgt|strlot|taborgemp|tavfer|temafs|temava|temcmp|temded|temniv|temprv|temser|temtes|temthr|terencrec|terpag|terpagrec|tetevt|tipadmfgt|tipafafgt|tipant|tipaud|tipcal|tipcalper|tipcao|tipcolfgt|tipcollan|tipdes|tipdir|tipesq|tipestemp|tipeve|tipext|tipfer|tiphormov|tiplan|tiplto|tipoavadet|tipoavager|tipobanco|tipope|tipoptsim|tiporescisao|tippro|tiprecgre|tipreg|tiprev|tipsalant|tipsalemp|tipsalpro|tipsisemp|tipsit|tipsitant|tipsitemp|tot_descol|tot_fgt13r|tot_fgt13s|tot_fgtmes|tot_fgtres|tot_ins13s|tot_insmes|tot_irfird|tot_irfirf|tot_irfirp|tot_irfmes|tot_outcol|tot_procol|tot_valfgt|tot_vancol|totacu|totafa|totafo|totatr|totaus|totcodsit|totcom|totcre|totdeb|totdes|totdessit|totdev|totext|totmar|totnpt|totout|totpfo|totpre|totpro|totrec|totreg|totstg|tottemext|tottotsit|totvan|totven|tpcpca|tpcpsa|tpopsa|tposer|tposerdia|tradiu|tradiuv|tranot|troant|troclasal|tromes|turemp|turhor|turint|txtema|uficom|ufidev|ufirec|ufiven|ufrpag|ultcodloc|ultsal|unides|unipro|usoaud|usoref|val13sgre|valali|valant|valatu|valbas|valbas13s|valbasfgt|valcal|valcar|valch2|valclc|valcmp|valcom|valcon|valcor|valctb|valdes|valdif|valdifmat|valdir|valesq|valeta|valev2|valeve|valevt|valfgtgre|valfic|valhor|valimp|valind|valjamgre|valjur|valliq|valmov|valmul|valmulgre|valrea|valref|valsal|valstr|valtet|valtot|valuni|valvalaux|valvalbas|valvalbru|valvalirf|valvalirm|valvalliq|valvao|valvar|valvtr|vascal|verweb|vexecucaoregra|vlrcom|vlrori|vprvho|vprvin|vprvtr|salcmp|eveant|refant|remant|vsaant|vcpant|vsmant|web_html|wnconector|zerevt|zermov|tipcalind|valorcint|qtdvagqua|tabcol|loccol|tabche|locche|turcol|turche))\\b"
+				},
+				{
+					"name": "keyword.other.lsp",
+					"match": "\\b(?i:(definir|alfa|cursor|data|funcao|lista|numero))\\b"
 				},
 				{
 					"name": "variable.other.readwrite.lsp",
@@ -92,6 +106,26 @@
 					"end": "\\*/"
 				}
 			]
+		},
+		"type": {
+			"patterns": [
+				{
+					"name": "meta.type.lsp",
+					"patterns": [
+						{
+							"include": "#type-builtin"
+						}
+					]
+				}
+			]
+		},
+		"type-builtin": {
+			"match": "\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b",
+			"captures": {
+				"1": {
+					"name": "support.type.primitive.lsp"
+				}
+			}
 		}
 	},
 	"scopeName": "source.lsp"
