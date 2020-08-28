@@ -4760,82 +4760,6 @@ const autoCompleteList: AutoCompleteItem[] = [
 		]
 	})
 	, new AutoCompleteItem({
-		label: "RetornaDistribuicaoEPI",
-		kind: CompletionItemKind.Method,
-		parametros: [
-			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TipOpe [I",
-				retornaValor: false
-			},
-			{
-				tipo: ETipoParametro.Numero,
-				nome: "P",
-				retornaValor: false
-			},
-			{
-				tipo: ETipoParametro.Numero,
-				nome: "A",
-				retornaValor: false
-			},
-			{
-				tipo: ETipoParametro.Numero,
-				nome: "F]",
-				retornaValor: false
-			},
-			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodEpi",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Alfa,
-				nome: "MedEpi",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Alfa,
-				nome: "DesMot",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Data,
-				nome: "DatEnt",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Data,
-				nome: "DatRev",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Data,
-				nome: "DatVal",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Alfa,
-				nome: "RecIns",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Data,
-				nome: "DatAju",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodMtv",
-				retornaValor: true
-			},
-			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatDev",
-				retornaValor: true
-			}
-		]
-	})
-	, new AutoCompleteItem({
 		label: "GlbAdiVarNumDat",
 		documentation: "Adiciona uma variável global numérica/data em memória",
 		kind: CompletionItemKind.Method,
@@ -5415,6 +5339,7 @@ const autoCompleteList: AutoCompleteItem[] = [
 	})
 	, new AutoCompleteItem({
 		label: "RetornaDistribuicaoEPI",
+		documentation: "Retorna item a item dos resultados encontrados em CarregaDistribuicaoEPI. Os itens podem ser navegados através dos parâmetro TipOpe, que retorna o item escolhido na lista, como, primeiro, ultimo, próximo e anterior. A função CarregaDistribuicaoEPI deve sempre ser chamada antes da RetornaDistribuicaoEPI para que os dados sejam carregados anteriormente.",
 		kind: CompletionItemKind.Method,
 		parametros: [
 			{
@@ -5465,6 +5390,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 			{
 				tipo: ETipoParametro.Numero,
 				nome: "CodMtv",
+				retornaValor: true
+			},
+			{
+				tipo: ETipoParametro.Numero,
+				nome: "DatDev",
 				retornaValor: true
 			}
 		]
