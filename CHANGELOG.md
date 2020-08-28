@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [0.0.4] - 28/08/2020
+### Adicionado
+- Foram incluídas novas funções internas da LSP no "Autocomplete"
+
 ## [0.0.3] - 27/08/2020
 ### Adicionado
 - Implementado "Autoindentação" após o "inicio"

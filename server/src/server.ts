@@ -213,7 +213,7 @@ connection.onCompletionResolve(
 	{
 		const element = autoCompleteList.find((_, index) => index === item.data);
 
-		item.detail = element?.detail;
+		item.detail = element?.detail();
 		item.documentation = element?.documentation;
 		item.kind = element?.kind;
 
