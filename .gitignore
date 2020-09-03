@@ -8,4 +8,7 @@ dist
 vsc-extension-quickstart.md
 *.bat
 old
+
+# lock files
 package-lock.json
+yarn.lock
