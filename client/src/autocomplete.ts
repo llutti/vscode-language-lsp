@@ -1,5 +1,4 @@
-import { Hover, languages, MarkdownString } from 'vscode';
-import { CompletionItemKind } from 'vscode-languageserver';
+import { CompletionItemKind, Hover, languages, MarkdownString } from 'vscode';
 
 export enum ETipoParametro
 {
