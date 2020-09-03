@@ -4,7 +4,8 @@
 vsc-extension-quickstart.md
 README-example.md
 CHANGELOG-example.md
-
+old/**
+p.bat
 
 **/*.ts
 **/*.map

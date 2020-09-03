@@ -6,3 +6,6 @@ dist
 *.vsix
 *-example.md
 vsc-extension-quickstart.md
+*.bat
+old
+package-lock.json
