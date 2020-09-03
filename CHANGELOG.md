@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [0.0.5] - 03/09/2020
+### Adicionado
+- Disponibilizado recurso de "hover" (ao passar o cursor sobre uma função ou palavra chave, é apresentado um popup com a documentação)
+
 ## [0.0.4] - 28/08/2020
 ### Adicionado
 - Foram incluídas novas funções internas da LSP no "Autocomplete"

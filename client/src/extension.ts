@@ -3,14 +3,15 @@ import { workspace, ExtensionContext } from 'vscode';
 
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 
+import * as vscode from 'vscode';
+import { LSPHoverProvider } from './providers/hover-provider-lsp';
+
 let client: LanguageClient;
 
 export function activate(context: ExtensionContext)
 {
 	// The server is implemented in node
-	let serverModule = context.asAbsolutePath(
-		path.join('server', 'out', 'server.js')
-	);
+	let serverModule = context.asAbsolutePath(path.join('server', 'out', 'server.js'));
 	// The debug options for the server
 	// --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
 	let debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
@@ -42,6 +43,30 @@ export function activate(context: ExtensionContext)
 		serverOptions,
 		clientOptions
 	);
+
+	// let disposable = vscode.commands.registerCommand('extension.mamar', () =>
+	// {
+	// 	vscode.window.showInformationMessage("The Star Rod... is powerful beyond belief. It can grant any wish. For as long as we can remember, Bowser has been making wishes like, for instance... 'I'd like to trounce Mario' or 'I want Princess Peach to like me.' Of course, Stars ignore such selfish wishes. As a result, his wishes were never granted.");
+	// });
+
+	// context.subscriptions.push(disposable);
+
+	vscode.languages.registerHoverProvider('lsp', new LSPHoverProvider());
+		// {
+		// 	provideHover(document, position)
+		// 	{
+		// 		const range = document.getWordRangeAtPosition(position);
+		// 		const word = document.getText(range);
+
+		// 		if (word !== '')
+		// 		{
+		// 			return new vscode.Hover({
+		// 				language: `language ${word}`,
+		// 				value: word
+		// 			});
+		// 		}
+		// 	}
+		// });
 
 	// Start the client. This will also launch the server
 	client.start();
