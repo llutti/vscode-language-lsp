@@ -2,6 +2,13 @@
 
 Alterações realizadas na extensão.
 
+## [0.0.6] - 03/09/2020
+### Adicionado
+- Adicionar as funções de lista no autocomplete
+
+### Alterações
+- Movido os providers do Server para Client da extensão
+
 ## [0.0.5] - 03/09/2020
 ### Adicionado
 - Disponibilizado recurso de "hover" (ao passar o cursor sobre uma função ou palavra chave, é apresentado um popup com a documentação)
