@@ -1,82 +1,83 @@
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace } from 'vscode';
 
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, TransportKind } from 'vscode-languageclient';
 
 import * as vscode from 'vscode';
-import { LSPHoverProvider } from './providers/hover-provider-lsp';
+import { LSPHoverProvider } from './providers/lsp-hover-provider';
+import { LSPCompletionItemProvider } from './providers/lsp-completion-item-provider';
 
-let client: LanguageClient;
-
-export function activate(context: ExtensionContext)
+export async function activate(context: vscode.ExtensionContext)
 {
-	// The server is implemented in node
 	let serverModule = context.asAbsolutePath(path.join('server', 'out', 'server.js'));
-	// The debug options for the server
-	// --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
 	let debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
 
-	// If the extension is launched in debug mode then the debug server options are used
-	// Otherwise the run options are used
 	let serverOptions: ServerOptions = {
 		run: { module: serverModule, transport: TransportKind.ipc },
-		debug: {
-			module: serverModule,
-			transport: TransportKind.ipc,
-			options: debugOptions
-		}
+		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
 	};
 
-	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
-		// Register the server for plain text documents
-		documentSelector: [{ scheme: 'file', language: 'lsp' }],
+		documentSelector: ['lsp'],
 		synchronize: {
-			// Notify the server about file changes to '.clientrc files contained in the workspace
-			fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
-		}
+			fileEvents: vscode.workspace.createFileSystemWatcher('{**/*.txt,**/*.lspt,**/*.json}', false, false, true)
+		},
+		// initializationOptions: {
+		//   config,
+		//   globalSnippetDir
+		// },
+		revealOutputChannelOn: RevealOutputChannelOn.Never
 	};
 
 	// Create the language client and start the client.
-	client = new LanguageClient(
+	const client: LanguageClient = new LanguageClient(
+		'lsp',
 		'languageServerLSP',
 		serverOptions,
 		clientOptions
 	);
 
-	// let disposable = vscode.commands.registerCommand('extension.mamar', () =>
-	// {
-	// 	vscode.window.showInformationMessage("The Star Rod... is powerful beyond belief. It can grant any wish. For as long as we can remember, Bowser has been making wishes like, for instance... 'I'd like to trounce Mario' or 'I want Princess Peach to like me.' Of course, Stars ignore such selfish wishes. As a result, his wishes were never granted.");
-	// });
-
-	// context.subscriptions.push(disposable);
-
 	vscode.languages.registerHoverProvider('lsp', new LSPHoverProvider());
-		// {
-		// 	provideHover(document, position)
-		// 	{
-		// 		const range = document.getWordRangeAtPosition(position);
-		// 		const word = document.getText(range);
+	vscode.languages.registerCompletionItemProvider('lsp', new LSPCompletionItemProvider());
 
-		// 		if (word !== '')
-		// 		{
-		// 			return new vscode.Hover({
-		// 				language: `language ${word}`,
-		// 				value: word
-		// 			});
-		// 		}
-		// 	}
-		// });
+	const promise = client
+		.onReady()
+		.then(
+			() =>
+			{
+				registerCustomClientNotificationHandlers(client);
+			})
+		.catch(e =>
+		{
+			console.log('Falhou a inicialização do "Client do LSP"');
+		});
 
-	// Start the client. This will also launch the server
-	client.start();
+	context.subscriptions.push(client.start());
+
+	return vscode.window.withProgress(
+		{
+			title: 'Inicializando LSP',
+			location: vscode.ProgressLocation.Window
+		},
+		() => promise
+	);
 }
 
-export function deactivate(): Thenable<void> | undefined
+function registerCustomClientNotificationHandlers(client: LanguageClient)
 {
-	if (!client)
+	client.onNotification('$/displayInfo', (msg: string) =>
 	{
-		return undefined;
-	}
-	return client.stop();
+		vscode.window.showInformationMessage(msg);
+	});
+	client.onNotification('$/displayWarning', (msg: string) =>
+	{
+		vscode.window.showWarningMessage(msg);
+	});
+	client.onNotification('$/displayError', (msg: string) =>
+	{
+		vscode.window.showErrorMessage(msg);
+	});
+	// client.onNotification('$/showVirtualFile', (virtualFileSource: string, prettySourceMap: string) => {
+	//   setVirtualContents(virtualFileSource, prettySourceMap);
+	// });
 }
