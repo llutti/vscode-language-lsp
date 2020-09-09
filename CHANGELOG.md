@@ -2,7 +2,7 @@
 
 Alterações realizadas na extensão.
 
-## [0.0.6] - 03/09/2020
+## [0.0.6] - 09/09/2020
 ### Adicionado
 - Adicionar as funções de lista no autocomplete
 
