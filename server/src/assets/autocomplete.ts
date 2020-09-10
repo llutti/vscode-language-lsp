@@ -1,6 +1,6 @@
-import { CompletionItemKind } from 'vscode-languageserver';
+import { CompletionItemKind, Hover } from 'vscode-languageserver';
 
-export enum ETipoParametro
+export enum EParameterType
 {
 	Alfa = 'Alfa',
 	Numero = 'Numero',
@@ -9,41 +9,33 @@ export enum ETipoParametro
 	Lista = 'Lista',
 }
 
-export interface parametroItem
+export interface parameterItem
 {
 	id?: number; // Deve ser único e sequencial
-	tipo: ETipoParametro;
-	nome: string;
-	retornaValor: boolean;
+	type: EParameterType;
+	name: string;
+	isReturnValue: boolean;
 }
-
-// export interface autoCompleteItem
-// {
-// 	label: string;
-// 	detail: string;
-// 	documentation?: string;
-// 	kind: CompletionItemKind;
-// 	parametros?: parametroItem[];
-// }
 
 export class AutoCompleteItem
 {
 	public label: string = '';
 	public documentation?: string;
 	public kind?: CompletionItemKind;
-	public parametros?: parametroItem[];
+	public parameters?: parameterItem[];
+	public insertText?: string;
 
-	constructor(params: { label: string, kind?: CompletionItemKind, documentation?: string, parametros?: parametroItem[] })
+	constructor(params: { label: string, kind?: CompletionItemKind, documentation?: string, parameters?: parameterItem[] })
 	{
 		this.label = params.label;
 		this.documentation = params?.documentation;
 		this.kind = params?.kind;
-		this.parametros = params?.parametros;
+		this.parameters = params?.parameters;
 	}
 
 	public detail(): string
 	{
-		const params = this.parametros?.map<string>(p => `${p.tipo} ${p.retornaValor ? 'End ' : ''}${p.nome}`).join(', ') || '';
+		const params = this.parameters?.map<string>(p => `${p.type} ${p.isReturnValue ? 'End ' : ''}${p.name}`).join(', ') || '';
 		return `${this.label}(${params})`
 	};
 }
@@ -52,5536 +44,5536 @@ const autoCompleteList: AutoCompleteItem[] = [
 	new AutoCompleteItem({
 		label: "AlfaParaInt",
 		documentation: "Converte um texto para um número não formatado",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Origem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Origem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ConverteMascara",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipoDado",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipoDado",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ValorNum",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "ValorNum",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ValorStr",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "ValorStr",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Mascara",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Mascara",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "MontaData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xdia",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xdia",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xmes",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xmes",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xano",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xano",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xData",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "xData",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "IntParaAlfa",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Origem",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Origem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WInsSelecaodaLista",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "HTML",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "HTML",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Marcador",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Marcador",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeLista",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeLista",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Opcional",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Opcional",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ItemSelecionado",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ItemSelecionado",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WInsSelecaodoBanco",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "HTML",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "HTML",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Marcador",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Marcador",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SQL",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "SQL",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CampoValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CampoValor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CampoDescricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CampoDescricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Opcional",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Opcional",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ItemSelecionado",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ItemSelecionado",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipoSQL",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipoSQL",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WAdicionanoHTML",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aHTML",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aHTML",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aMarcador",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aMarcador",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WAdicionaListaErros",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aMsgErro",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aMsgErro",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "TrocaString",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrIni",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrOut",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrOut",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrIn",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrIn",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrFim",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aStrFim",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "DescItemLista",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "xNomLis",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "xNomLis",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "xIteLis",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "xIteLis",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "xDesLis",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "xDesLis",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "DesmontaData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "Data_Origem",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "Data_Origem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Dia",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Dia",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Mes",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Mes",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Ano",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Ano",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ConverteDataBanco",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "Data_Origem",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "Data_Origem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Data_Destino",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Data_Destino",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ConverteMinutosHoras",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xQuantidadeMinutos",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xQuantidadeMinutos",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "xRetornoHoras",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "xRetornoHoras",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaEscala",
 		documentation: "Retorna a escala do colaborador em determinada data, considerando as programações de troca de escala e histórico do colaborador",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodEsc",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodEsc",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodTma",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodTma",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TurInt",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TurInt",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodEqp",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodEqp",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodCat",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodCat",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Mensagem",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Mensagem",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetSalDat",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Saldo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Saldo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ValSaldo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "ValSaldo",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "LiquidoFolha",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NatEve",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NatEve",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ConSol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "ConSol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Liquido",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Liquido",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerPag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerPag",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatPag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatPag",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "LiquidoFerias",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NatEve",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NatEve",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Liquido",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Liquido",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerPag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerPag",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatPag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatPag",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "LiquidoRescisao",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipRcs",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipRcs",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NatEve",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NatEve",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Liquido",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Liquido",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerPag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerPag",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatPag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatPag",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCheckValInteger",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Descricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Descricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Opcional",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Opcional",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aTamMax",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aTamMax",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCheckValString",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Descricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Descricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Opcional",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Opcional",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aTamMax",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aTamMax",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCheckValData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Descricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Descricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Opcional",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Opcional",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCheckValHora",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Descricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Descricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Opcional",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Opcional",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCheckValCheckBox",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Descricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Descricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WLerHTML",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aArquivo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aArquivo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aHTML",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aHTML",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetColabPorCodUsu",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodUsu",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodUsu",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCountFields",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aQtdCampos",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "aQtdCampos",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WReturnFieldsName",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aIndice",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aIndice",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomeCampo",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aNomeCampo",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CopiarAlfa",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Texto",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Texto",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Posicao_Inicial",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Posicao_Inicial",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Quantidade_Caracteres",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Quantidade_Caracteres",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "DeletarAlfa",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Variavel/Campo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Variavel/Campo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Posicao",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Posicao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Quantidade",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Quantidade",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "LerPosicaoAlfa",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Origem",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Origem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Destino",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Destino",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Posicao",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Posicao",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "PosicaoAlfa",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Texto_Pesquisar",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Texto_Pesquisar",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campo_Pesquisado",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campo_Pesquisado",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Posicao",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Posicao",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "TamanhoAlfa",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Origem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Origem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Tamanho",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Tamanho",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaHorario",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Considerar Feriado (S",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Considerar Feriado (S",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "N)",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "N)",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodHor",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodHor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExtensoSemana",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Extenso",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Extenso",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaEscala",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Escala",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Escala",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Turma",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Turma",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Intervalo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Intervalo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Mensagem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Mensagem",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Para",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "<valor inicial>;",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "<valor inicial>;",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "<condição>;",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "<condição>;",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "<contador>",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "<contador>",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetDifDat",
 		documentation: "Retorna a diferença de tempo entre duas datas",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Serviço (1-Dia|2-Meses|3-Anos|4-Meses c/Ajuste|5-Anos c/Ajuste|4-Meses c/Ajuste[DI/DF])",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Serviço (1-Dia|2-Meses|3-Anos|4-Meses c/Ajuste|5-Anos c/Ajuste|4-Meses c/Ajuste[DI/DF])",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataIni",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataFim",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RestoDivisao",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Dividendo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Dividendo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Divisor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Divisor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Resto",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Resto",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Divide",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Divisor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Divisor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Dividendo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Dividendo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipoDivisao (1-Normal|2-Resto|3-Parte inteira da divisão)",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipoDivisao (1-Normal|2-Resto|3-Parte inteira da divisão)",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "TruncarValor",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Valor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Valor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetHtmlFicReg",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Pasta",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Pasta",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "vHtml",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "vHtml",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Alt",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Alt",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WStrtoJavaScript",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrOrigem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrOrigem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrDestino",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aStrDestino",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "TiraEspacos",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "xDigito",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "xDigito",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "xRetorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "xRetorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ConverteParaMaiusculo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TextoConverter",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "TextoConverter",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TextoConvertido",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "TextoConvertido",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WAlteraValorCampo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomeValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomeValor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValorCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValorCampo",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "MontaAbrangencia",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "pCpoTab",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "pCpoTab",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "pAbgInf",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "pAbgInf",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "pAbrRetorno",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "pAbrRetorno",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "__Inserir",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: ":Nome_Variavel",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: ":Nome_Variavel",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCheckValDouble",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aDescricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aDescricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aRetorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "aRetorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aOpcional",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aOpcional",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aTamMax",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aTamMax",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetQtdVagLoc",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumLoc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "EstCar",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "EstCar",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodCar",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CodCar",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Turno DatAlt QtdVaga",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Turno DatAlt QtdVaga",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipVag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipVag",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "BusCadChefe",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatBas",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatBas",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Nivel",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Nivel",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ExcecaoChefia",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ExcecaoChefia",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "EmpChe",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "EmpChe",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipChe",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TipChe",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CadChe",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CadChe",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "LocChe",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "LocChe",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "LocCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "LocCol",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "EnviaEMail",
 		documentation: "Função que permite enviar e-mails. (CodErroEnviaEmail e MsgErroEnviaEmail)",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Rememetente]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Rememetente]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Destinatario",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Destinatario",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa CopiaPara]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa CopiaPara]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa CopiaOcultaPara]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa CopiaOcultaPara]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Assunto]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Assunto]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Texto]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Texto]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Anexos]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Anexos]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nPapelCarta",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nPapelCarta",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "EnviaEMailHTML",
 		documentation: "Função que permite enviar e-mails em formato HTML e com imagens no corpo do E-mail. (CodErroEnviaEmail e MsgErroEnviaEmail)",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Rememetente]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Rememetente]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Destinatario",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Destinatario",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa CopiaPara]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa CopiaPara]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa CopiaOcultaPara]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa CopiaOcultaPara]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Assunto]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Assunto]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Texto]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Texto]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[Alfa Anexos]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[Alfa Anexos]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aTratarAnexo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aTratarAnexo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nPapelCarta",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nPapelCarta",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "BusEmailFunc",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "EmailParticular",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "EmailParticular",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "EmailComercial",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "EmailComercial",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaBatidaHorario",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodHor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodHor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "SeqMar",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "SeqMar",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "UsoMar",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "UsoMar",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "HorMar",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "HorMar",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TolAnt",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TolAnt",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TolApo",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TolApo",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "FaiMov",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "FaiMov",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExtrasIntervalo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "horaini",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "horaini",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "horafim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "horafim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "diaext",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "diaext",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "qtddiu",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "qtddiu",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "qtdnot",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "qtdnot",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetMinRefHTr",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "QtdeMinutos",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "QtdeMinutos",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetVinEmp",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DataRef",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DataRef",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaCodLoc",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumLoc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodLoc",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "CodLoc",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetTurCol",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Turno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Turno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "InsClauSQLWhere",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SectionName",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "SectionName",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "WhereClau",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "WhereClau",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaHorarioApurado",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodHor",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodHor",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Mensagem",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Mensagem",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "DataHoje",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Data,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaAnoData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataBase",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataBase",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Ano",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Ano",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaMesData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataBase",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataBase",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Mes",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Mes",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaDiaData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataBase",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataBase",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Dia",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Dia",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "AlteraControle",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Nome_Controle",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Nome_Controle",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Nome_Propriedade",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Nome_Propriedade",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Valor_Propriedade",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Valor_Propriedade",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaDiaSemana",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataBase",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataBase",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "AdicionarCampo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Tipo_Campo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Tipo_Campo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "[",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "[",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Tamanho]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Tamanho]",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Chave",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Nome_Campo [;Nome_Campo[;Nome_Campo]...]",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Nome_Campo [;Nome_Campo[;Nome_Campo]...]",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "VerDatFer",
 		documentation: "Procura se a data específica é um feriado para o colaborador. Para isto, verifica pela filial e pela escala. Se a data for feriado,  retornará 1. Caso contrário, retornará 0.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetNivLoc",
 		documentation: "Função que retorna a quantidade de níveis do local informado",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodLoc",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CodLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatLoc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Nivloc",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Nivloc",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Concatena",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Texto1",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Texto1",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Texto2",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Texto2",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Texto3",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Texto3",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Destino",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Destino",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ArredondarValor",
 		documentation: "Esta função arredonda determinado valor, conforme a quantidade de casa decimais informada",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ValorVariavel",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "ValorVariavel",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Precisao",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Precisao",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "InicioVtr",
 		documentation: "Função para preparar os recursos de máquina (alocar memória) para o cálculo de Vale Transporte",
-		kind: CompletionItemKind.Method
+		kind: 1
 	})
 	, new AutoCompleteItem({
 		label: "VerFaltasVtr",
 		documentation: "Verificar se o colaborador teve faltas no período para perda de vale transporte",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "SolIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "SolIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "SolFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "SolFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "IniFal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "IniFal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "FimFal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "FimFal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TemFal",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TemFal",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "LerPassesVtr",
 		documentation: "Verifica se houve digitação de Passes de Vale Transporte",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TemDig",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TemDig",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalcularVtr",
 		documentation: "Esta função calcula o valor e a quantidade de passes de vale transporte",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Tipcol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Tipcol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "RecCal",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "RecCal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "SolIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "SolIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "SolFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "SolFim",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GravarVtr",
 		documentation: "Grava os passes na tabela R028PVT, calculada anteriormente pela função CalculaVtr",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Tipcol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Tipcol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "PerFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "PerFim",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "FinalVtr",
 		documentation: "Libera as estruturas alocadas anteriormente pela função CalculaVtr",
-		kind: CompletionItemKind.Method
+		kind: 1
 	})
 	, new AutoCompleteItem({
 		label: "ListaSecao",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SectionName",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "SectionName",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetEscEmp",
 		documentation: "Retorna a escala do funcionário em uma determinada data",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatEsc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatEsc",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "VerAbrBHR",
 		documentation: "Esta função verifica se o colaborador está incluído na abrangência de um determinado banco de horas",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodBhr",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodBhr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatBus",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatBus",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ColBhr",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "ColBhr",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WWriteCookie",
 		documentation: "Grava um campo no Cookie ativo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Nome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Nome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Valor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Valor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetSinEmp",
 		documentation: "Esta função retorna o código do sindicato de um colaborador em uma determinada data na variável de sistema CodSinEmp",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DataRef",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DataRef",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalIdaEmp",
 		documentation: "cula a idade do colaborador na Data de Referência",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatRef",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatRef",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalculaQtdMinutos",
 		documentation: "Calcula a quantidade de minutos existente entre uma Data/Hora Inicial e uma Data/Hora Final",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatIni",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Hora HorIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Hora HorIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatFim",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Hora Horfim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Hora Horfim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Qtd_Minutos",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Qtd_Minutos",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaNumLoc",
 		documentation: "Converte o código do local para o número do local. Considera a data setada em DatRef",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "pCodLoc",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "pCodLoc",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaNivelLocal",
 		documentation: "Retorna uma fração do código do local do nível inicial até o nível final informados",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodLoc",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CodLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NivIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NivIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NivFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NivFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NivLoc",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "NivLoc",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaAscII",
 		documentation: "Esta função retorna o caractere ASCII de um número.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodigoASCII",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodigoASCII",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "PertenceGrupo",
 		documentation: "Identifica se o usuário ativo pertence ao grupo de usuários passado como parâmetro. Se pertencer retornará 1, caso contrário retornará 0",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomGru",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomGru",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WSetarCalculo",
 		documentation: "Função utilizada para setar o código de cálculo para processos automáticos, via regra (Somente RubiWeb)",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodCal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodCal",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "UltimoDia",
 		documentation: "Esta função verifica qual é o último dia do mês/ano da data informada, retornando esta nova data dia/mês/ano na própria variável indicada",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "Mes",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "Mes",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetLocEmp",
 		documentation: "Retorna o local do funcionário em uma determinada data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatLoc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatLoc",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WSQLSenior2paraSQLNativo",
 		documentation: "Retorna a Sintaxe de um comando SQL Senior2 para o SQL Nativo, correspondente ao banco que estiver sendo utilizado",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SqlSenior2",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "SqlSenior2",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SqlNativo",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "SqlNativo",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalculaTotCol",
 		documentation: "Esta função calcula o totalizador do evento, valor ou referência, de acordo com o cálculo, totalizador e o colaborador enviados por parâmetro.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xCodCal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xCodCal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodTot",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodTot",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorna",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorna",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SelectData",
 		documentation: "Função na qual é possível executar qualquer SELECT",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SQL",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "SQL",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CamposRet",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "CamposRet",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TemDados",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TemDados",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetCampoNumero",
 		documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Indice",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Indice",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campos",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campos",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetCampoAlfa",
 		documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Indice",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Indice",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Campos",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Campos",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetSitEmp",
 		documentation: "Retorna a Situação do Colaborador em uma determinda Data (Retorna na variável SitEmp)",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xDatSit",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xDatSit",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetCodUsuPorColab",
 		documentation: "Esta função retornará o código do usuário associadr. Caso não houver retornará zero.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "MontarSQLHistoricoSeq",
 		documentation: "Esta função retorna um SQL com base em uma data e seqüência para uso com os históricos do sistema",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Tabela",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Tabela",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataReferencia",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataReferencia",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SQL",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "SQL",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "MontarSQLHistorico",
 		documentation: "Retorna um SQL com base em uma data para uso com os históricos do sistema",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Tabela",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Tabela",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataReferencia",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataReferencia",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "SQL",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "SQL",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetSalEmp",
 		documentation: "Esta função retorna o salário do funcionário em uma determinada data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatSal",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatSal",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WTextoParaFormatoHTML",
 		documentation: "Retorna a expressão alfanumérica passada como parâmetro convertida para HTML",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TextoInicial",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "TextoInicial",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TextoFinal",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "TextoFinal",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetEstCarEmp",
 		documentation: "Função que retorna a estrutura de cargos utilizada pela empresa na data informada.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatRef",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatRef",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalTotFolha",
 		documentation: "Utilizada para carregar as variáveis de sistema",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodRat",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodRat",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetCarEmp",
 		documentation: "Retorna o Cargo do funcionário em uma determinada data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatCar",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatCar",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetNomCodNiv",
 		documentation: "Retorna o Nome e o código do Local do Empregado em um determinado nível.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatRef",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatRef",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NivIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NivIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NivFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NivFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeLoc",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "NomeLoc",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodNivLoc",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "CodNivLoc",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "TiraAcentos",
 		documentation: "Retira os caracteres especiais, retornando o texto em maíusculo.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Texto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Texto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalSalEmpCS",
 		documentation: "Esta função retorna o salário do funcionário em relação ao tipo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipSal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipSal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataBase",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataBase",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExtensoMes",
 		documentation: "Esta função retorna o nome por extenso do mês passado como parâmetro",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DataBase",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DataBase",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Extenso",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Extenso",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "BusSalClaNiv",
 		documentation: "Esta função retorna o valor do salário da estrutura/classe/nível passados como parâmetro, e se desejar (informando tipo 2), o número de meses de complemento do nível salarial.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "EstruturaSalario",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "EstruturaSalario",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Classe",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Classe",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Nivel",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Nivel",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Tipo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Tipo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatSal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatSal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NivelMercado",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NivelMercado",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ValorSalario",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "ValorSalario",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NroMeses",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "NroMeses",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetExtMoeda",
 		documentation: "Gera o extenso de um valor (moeda). Obs: não completa o espaço restante com o caracter “*”.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Valor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Valor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ExtensoDoValor",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "ExtensoDoValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExtensoNumero",
 		documentation: "Retorna o valor por extenso do número passado como parâmetro.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Valor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Valor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ExtensoDoValor",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "ExtensoDoValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ProximaPagina",
 		documentation: "Permite verificar se uma determinada seção será impressa na próxima página.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Secao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Secao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "BusHorBase",
 		documentation: "Retorna o horário base do colaborador em uma determinada data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatHor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatHor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Minusculo",
 		documentation: "Converte um valor alfanumérico de maiúsculo para minúsculo (SOMENTE NO RUBI)",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Texto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Texto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Retorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "PrimeiraLetraMiuscula(S/N)",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "PrimeiraLetraMiuscula(S/N)",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExecutaRelatorio",
 		documentation: "Permite que sejam executados relatórios através das regras.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeModelo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeModelo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ExibirTelaEntrada",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ExibirTelaEntrada",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SetaNumeroTelaEntrada",
 		documentation: "Permite ao usuário alterar os valores numéricos da tela de entrada do modelo.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Valor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Valor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SetaDataTelaEntrada",
 		documentation: "Permite ao usuário alterar os valores do tipo data da tela de entrada do modelo.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Valor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Valor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SetaAlfaTelaEntrada",
 		documentation: "Permite ao usuário alterar os valores alfanuméricos da tela de entrada do modelo.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Valor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Valor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "EscondeCampoTelaEntrada",
 		documentation: "Permite ao usuário esconder determinados campos da tela de entrada do modelo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeCampo",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetCodNomLocNiv",
 		documentation: "Retorna o nome e o código do local, no nível informado",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumLoc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NroNiv",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NroNiv",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatLoc",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomLoc",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "NomLoc",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodNivLoc",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "CodNivLoc",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetNumLocNiv",
 		documentation: "Retorna o código do local no nível passado como parâmetro.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumLoc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DataRef",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DataRef",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Nivel",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Nivel",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumLocNiv",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "NumLocNiv",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ConvStrPNum",
 		documentation: "Converte um valor tipo string para numérico.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ValorEntrada",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ValorEntrada",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ValorRetorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "ValorRetorno",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "BuscaDiaSit",
 		documentation: "Esta função retorna a quantidade de dias de uma situação em um período informado. Esta função não apresenta as seguintes situações: 15 (ronda) e 16 (todos os módulos)",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatIni",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatFim",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nCodSit",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nCodSit",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nQtdDia",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nQtdDia",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetSalEst",
 		documentation: "Retorna o salário (sem nenhuma conversão) de uma Estrutura/Classe/Nível específica em uma determinada data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nEstSal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nEstSal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aClaSal",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aClaSal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNivSal",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNivSal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatRef",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatRef",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetBHRDat",
 		documentation: "Esta função retorna o saldo do banco de horas conforme a data especificada para verificação. O valor que será retornado corresponderá ao saldo inicial da data. Não são considerados os lançamentos efetuados no dia.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodBhr",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodBhr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatBas",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatBas",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "BhrDat",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "BhrDat",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExcLanBhr",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodBhr",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodBhr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatLan",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatLan",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodSit",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodSit",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "IncLanBhr",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodBhr",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodBhr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatLan",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatLan",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodSit",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodSit",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "QtdHor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "QtdHor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatCmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatCmp",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetDatCmp",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatLan",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatLan",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodBhr",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodBhr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodSit",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "CodSit",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatCmp",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "DatCmp",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetTabOrgEmp",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataRef",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataRef",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GravaFotoColaboradorEmDisco",
 		documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "DirArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "DirArq",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomArq",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Retorno[0=Sucesso | 1=Erro]",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Retorno[0=Sucesso | 1=Erro]",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "MsgErro",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "MsgErro",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "BusCadChefeLocal",
 		documentation: "Busca o chefe de um local especificado.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodLoc",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CodLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Turno",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Turno",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Nivel",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Nivel",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatBas",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatBas",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "EmpChe",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "EmpChe",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipChe",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "TipChe",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CadChe",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CadChe",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "LocChe",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "LocChe",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "LocCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "LocCol",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExecSQLEx",
 		documentation: "Implementada a função ExecSqlEx que permite a execução de comandos SQL no banco de dados efetuando tratamento de exceções",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ComandoSQL",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ComandoSQL",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Sucesso(0 - Sucesso | 1 - Erro)",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "Sucesso(0 - Sucesso | 1 - Erro)",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "MensagemErro",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "MensagemErro",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "InserirAlfa",
 		documentation: "Insere um ou mais caracteres em uma Variável/Campo, a partir da posição indicada. Havendo informação no campo alfa, no qual deseja-se inserir o texto, as que estiverem a partir da posicão indicada serão deslocadas para a direita e o que passar do tamanho definido do campo/variável será truncado.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Texto_Origem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Texto_Origem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Variável_Destino",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Variável_Destino",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Posicao_Inicial",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Posicao_Inicial",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "TempoTrabFun",
 		documentation: "Esta função retorna o tempo de trabalho em meses, de um funcionário em um determinado período",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataIni",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DataFim",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DataFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ConAfa",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "ConAfa",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NrMeses",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "NrMeses",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "MensagemLog",
 		documentation: "Esta função cancela o processamento em execução e mostra a mensagem de erro passada como parâmetro",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Mensagem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Mensagem",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetPrxClaNiv",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Opcao(1-Classe | 2-Nível)",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Opcao(1-Classe | 2-Nível)",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Estrutura",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Estrutura",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatBas",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatBas",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Classe",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Classe",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Nivel",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Nivel",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ProximaClasse",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "ProximaClasse",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ProximoNivel",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "ProximoNivel",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "InsSQLWhereSimples",
 		documentation: "Permite Inserir uma cláusula WHERE dentro de um SQL durante a execução da regra de pré-seleção. As tabelas referenciadas no SQL não são incluídas na cláusula FROM do comando SQL.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeSecao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeSecao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ClausulaWhere",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ClausulaWhere",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetAdiEmp",
 		documentation: "Esta função retorna o Adicional do funcionário em uma determinada data",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatAdi",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatAdi",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalculaQtdDep",
 		documentation: "Calcula a quantidade de dependentes.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "dDatPag",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "dDatPag",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetEtbEmp",
 		documentation: "Retorna a estabilidade do funcionário em uma determinada data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatEtb",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatEtb",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_Criar",
 		documentation: "Função que cria um cursor, ou um objeto para execução de SQL, e retorna no parâmetro \"Objeto\".",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_Destruir",
 		documentation: "Função que destrói um cursor depois de sua utilização, o mesmo deve ser chamado quando o cursor não for mais utilizado.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_DefinirComando",
 		documentation: "Função que aplica o comando SQL para o cursor passado como parâmetro.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aSQL",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aSQL",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_BOF",
 		documentation: "Função que retorna se o cursor está na posição inicial (antes do primeiro registro). Se o cursor está na posição BOF, o valor retornado é 1 (um), caso contrário é 0 (zero).",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_EOF",
 		documentation: "Função que retorna se o cursor está na posição final (depois do último registro). Se o cursor está na posição EOF, o valor retornado é 1 (um), caso contrário é 0 (zero)",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_AbrirCursor",
 		documentation: "Função que abre o cursor depois de informado o SQL a ser utilizado.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_Proximo",
 		documentation: "Função que posiciona o cursor no próximo registro.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_FecharCursor",
 		documentation: "Função que fecha a pesquisa sendo feita pelo cursor.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_RetornarBoleano",
 		documentation: "Função que retorna um valor boleano de um campo do registro do cursor.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_RetornarInteiro",
 		documentation: "Função que retorna um valor inteiro de um campo do registro do cursor.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_RetornarFlutuante",
 		documentation: "Função que retorna um valor flutuante de um campo do registro do cursor.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_RetornarData",
 		documentation: "Função que retorna uma data de um campo do registro do cursor.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dValor",
-				retornaValor: true
+				type: EParameterType.Data,
+				name: "dValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_RetornarAlfa",
 		documentation: "Função que retorna um valor do tipo alfa (string) de um campo do registro do cursor.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_RetornarBlob",
 		documentation: "Função que retorna um Blob de um campo do registro do cursor.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_RetornarSeNulo",
 		documentation: "Função que retorna um valor booleano, que significa se o campo é nulo ou não.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_DefinirBoleano",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo boleano.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_DefinirInteiro",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo inteiro.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_DefinirFlutuante",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo numérico com ponto flutuante.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_DefinirData",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dValor",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_DefinirAlfa",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo alfanumérico.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_DefinirBlob",
 		documentation: "Função que seta define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo blob.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SQL_UsarAbrangencia",
 		documentation: "Função que informa ao cursor se é para utilizar abrangência de usuários.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nUsar",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nUsar",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CalSalEmp",
 		documentation: "Retorna o salário do funcionário em relação ao tipo.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCal",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCal",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatSal",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatSal",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetQtdDiasUtil",
 		documentation: "Retorna a quantidade de dias úteis dentro de um determinado período, levando-se em consideração os dias de segunda a sexta-feira, desde que não estejam cadastrados como feriado na Tabela de Feriados passada como parâmetro na função.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatIni",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatFim",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTabFer",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTabFer",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nQtdDiasUtil",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nQtdDiasUtil",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetApuPon",
 		documentation: "Esta função retorna o tipo de apuração do colaborador, conforme o histórico de apuração.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatApu",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatApu",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nApuPon",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nApuPon",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetFilEmp",
 		documentation: "Retorna a filial do funcionário em uma determinada data.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "dDatRef",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "dDatRef",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CarregaImgControle",
 		documentation: "Carregar uma imagem do banco ou arquivo para um controle imagem do modelo",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeDoControleImagem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeDoControleImagem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "Opcao[0-Arquivo;1-Banco;2-Variavel]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "Opcao[0-Arquivo;1-Banco;2-Variavel]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CaminhoCampoNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CaminhoCampoNome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ClausulaWhereSQL",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ClausulaWhereSQL",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "SqlSenior2",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "SqlSenior2",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Gravarnl",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nManArquivo",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nManArquivo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aVar",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aVar",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Abrir",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "NomeArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "NomeArq",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "ModoAbertura [Ler|Gravar|LerNL|GravarNL]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "ModoAbertura [Ler|Gravar|LerNL|GravarNL]",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ExecutaTelaSgi",
 		documentation: "Esta função executa a tela do SGI passada como parâmetro. Se a tela for executada com sucesso, a função retornará 1. Caso contrário, retornará 0.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "xNomeTela",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "xNomeTela",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GlbRetVarStr",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aVarNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aVarNome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aVarValor",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aVarValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GlbAdiVarStr",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aVarNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aVarNome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aVarValor",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aVarValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CarregaAbrUsu",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomCam",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomCam",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aCond",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aCond",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aSobrepoeAbr",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aSobrepoeAbr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValorAbr",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValorAbr",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaAbrUsu",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCodMod",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCodMod",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aTipoAbr",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aTipoAbr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aCodUsu",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aCodUsu",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aIDPerfil",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aIDPerfil",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aCond",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aCond",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValAbr",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aValAbr",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SetaValorFormula",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aNomeControle",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aNomeControle",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValorControle",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nValorControle",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "BusCraTit",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmpFun",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmpFun",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipColFun",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipColFun",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCadFun",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCadFun",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "dDatAccFun",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "dDatAccFun",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCraFun",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nNumCraFun",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "VerNumAbr",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumero",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumero",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aAbrangencia",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aAbrangencia",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nRetorno (0-Não está|1-Está)",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nRetorno (0-Não está|1-Está)",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "MontaCriteriosAperfeicoamento",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xHisCua",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xHisCua",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xValCua",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xValCua",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xRevCua",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xRevCua",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xCerApr",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xCerApr",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xCerPar",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xCerPar",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xSitAnd",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xSitAnd",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xSitCom",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xSitCom",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xSitDes",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xSitDes",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xSitSus",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xSitSus",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xSitMed",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xSitMed",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xSitFre",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xSitFre",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xSitTrf",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xSitTrf",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xAbrCua",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "xAbrCua",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WPersonalizaMenuWeb",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nPosicao",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nPosicao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aMenuPai",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aMenuPai",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aTitulo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aTitulo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aLink",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aLink",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aTipo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aTipo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTarget",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTarget",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetLocNiv",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNroNiv",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNroNiv",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodLoc",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "CodLoc",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "CarregaDistribuicaoEPI",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TabOrg",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TabOrg",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumLoc",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "EstCar",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "EstCar",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "CodCar",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "CodCar",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatIni",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatFim",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Data,
-				nome: "DatRef",
-				retornaValor: false
+				type: EParameterType.Data,
+				name: "DatRef",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "AbrEpi",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "AbrEpi",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "ColBom",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "ColBom",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TipOpe",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "TipOpe",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TipPes",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "TipPes",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipOrd",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipOrd",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GlbAdiVarNumDat",
 		documentation: "Adiciona uma variável global numérica/data em memória",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aVarNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aVarNome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GlbAdiVarStr",
 		documentation: "Adiciona uma variável global alfa numérica em memória",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "VarNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "VarNome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GlbRetVarNumDat",
 		documentation: "Retorna o conteúdo de uma variável global numérica, armazenada pela função GlbAdiVarNumDat. Exemplo: x := GlbRetVarNumDat(vNomVar);",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "VarNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "VarNome",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GlbRetVarStr",
 		documentation: "Retorna o conteúdo de uma variável global armazenada pela função GlbAdiVarStr.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "VarNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "VarNome",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aVarValor",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aVarValor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "AlteraValorFormula",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomeFormula",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomeFormula",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValor",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nValor",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetHorPrvTrb",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "TipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "TipCol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "NumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "NumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "HorIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "HorIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "HorFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "HorFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatVer",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "DatVer",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xhorprv",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "xhorprv",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "xdiaint",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "xdiaint",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WCheckValImage",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aDescricao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aDescricao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aRetorno",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aRetorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "lfa aOpcional",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "lfa aOpcional",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aExtensao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aExtensao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aTamMax",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aTamMax",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GravaImagemBanco",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aTabela",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aTabela",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCamposChave",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCamposChave",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aOutrosCampos",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aOutrosCampos",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCampoImagem",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCampoImagem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aOrigem",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aOrigem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aArquivo",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aArquivo",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aMensagem",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aMensagem",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Encriptar",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aChave",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aChave",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aResultado",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aResultado",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "Desencriptar",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aValor",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aValor",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aChave",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aChave",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aResultado",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aResultado",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ArqExiste",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomeArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomeArq",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetHorTrab",
 		documentation: "Retorna a quantidade de horas trabalhadas num determinado período.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "dDatIni",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "dDatIni",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "dDatFim",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "dDatFim",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aAbrTip",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aAbrTip",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aAbrLoc",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aAbrLoc",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aFilSit",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aFilSit",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aAbrSit",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aAbrSit",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nQtdHor",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nQtdHor",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ConverteDataHoraDateTime",
 		documentation: "A função serve para montar uma data e uma hora passados como parâmetro em uma string no formato datetime do banco.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "dData",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "dData",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nHora",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nHora",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aDataHoraBanco",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aDataHoraBanco",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GeraHash",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Texto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Texto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Algoritmo [MD5 | SHA1 | SHA256 | SHA512]",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "Algoritmo [MD5 | SHA1 | SHA256 | SHA512]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "Hash",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "Hash",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "WRemoteAddr",
 		documentation: "Retorna o endereço IP da estação que está acessando o sistema. Utilizada apenas nos sistemas Web.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aIp",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aIp",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegEntLe",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nCodEnt",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nCodEnt",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegEntEhUsuario",
 		documentation: "Esta função indica se o Usuário/Grupo passado em aObjeto é um usuário. Se sim o resultado direto da função é 1 senão será 0.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegUsuAtivado",
 		documentation: "Esta função indica se o acesso ao usuário passado em aObjeto está desativado. Se sim o resultado direto da função é 1 senão será 0.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegEntQtdGrp",
 		documentation: "Esta função retorna diretamente a quantidade de grupos do Usuário/Grupo passado em aObjeto.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegEntNome",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNome",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aNome",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegUsuNomeComp",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNome",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aNome",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegUsuSetaSenha",
 		documentation: "Esta função seta a senha do usuário passado em aObjeto através do parâmetro aNovaSenha retornando o aObjeto(Usuário) com a senha setada.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNovaSenha",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNovaSenha",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegUsuSetaAtivado",
 		documentation: "Esta função seta a opção Conta Desabilitada do usuário passado em aObjeto através do parâmetro nOpcao: 1 = Conta Habilitada ou 0 = Conta Desabilitada retornando aObjeto(Usuário) com a opção setada.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nOpcao [0:Desabilitar | 1: Habilitar]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nOpcao [0:Desabilitar | 1: Habilitar]",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegUsuDatExp",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aObjeto",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetDiaHor",
 		documentation: "Função que concatena os dias da semana que contenham o mesmo horário de curso.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nCodHCu",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nCodHCu",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomDia1",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomDia1",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomDia2",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomDia2",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomDia3",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomDia3",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomDia4",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomDia4",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomDia5",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomDia5",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomDia6",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomDia6",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomDia7",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomDia7",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrHor1",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrHor1",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrHor2",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrHor2",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrHor3",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrHor3",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrHor4",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrHor4",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrHor5",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrHor5",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrHor6",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrHor6",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aStrHor7",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aStrHor7",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaDistribuicaoEPI",
 		documentation: "Retorna item a item dos resultados encontrados em CarregaDistribuicaoEPI. Os itens podem ser navegados através dos parâmetro TipOpe, que retorna o item escolhido na lista, como, primeiro, ultimo, próximo e anterior. A função CarregaDistribuicaoEPI deve sempre ser chamada antes da RetornaDistribuicaoEPI para que os dados sejam carregados anteriormente.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "TipOpe",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "TipOpe",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodEpi",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodEpi",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "MedEpi",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "MedEpi",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "DesMot",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "DesMot",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatEnt",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "DatEnt",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatRev",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "DatRev",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatVal",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "DatVal",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "RecIns",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "RecIns",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatAju",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "DatAju",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "CodMtv",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "CodMtv",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "DatDev",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "DatDev",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ValidaPISCPF",
 		documentation: "Função para Validar um número de CPF ou PIS.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipo [1-PIS | 2-CPF]",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipo [1-PIS | 2-CPF]",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aPISCPF",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aPISCPF",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nValido [0-OK | 10-Inválido]",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nValido [0-OK | 10-Inválido]",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "TrocaCadastro",
 		documentation: "Esta função tem a funcionalidade de efetuar a troca de cadastro de colaboradores.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nCadNov",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nCadNov",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nCadAnt",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nCadAnt",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipCol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipCol",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "SegEntExistePorNome",
 		documentation: "Essa função verifica pelo nome se o usuário/grupo existe.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNome",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNome",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "NumeroParaAlfa",
 		documentation: "Converte um número para formato alfanumérico, mantendo as casas decimais e sem arredondar.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nOrigem",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nOrigem",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aDestino",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aDestino",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GravaFotoColaboradorEmDisco",
 		documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumEmp",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumEmp",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nTipcol",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nTipcol",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCad",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCad",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aDirArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aDirArq",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomArq",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nRetorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nRetorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aMsgErro",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aMsgErro",
+				isReturnValue: false
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "GravaFotoCandidatoEmDisco",
 		documentation: "Grava a foto do candidato em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados,  no formato JPEG (*.JPG).",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nNumCan",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "nNumCan",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aDirArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aDirArq",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomArq",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aNomArq",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "nRetorno",
-				retornaValor: true
+				type: EParameterType.Numero,
+				name: "nRetorno",
+				isReturnValue: true
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aMsgErro);",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aMsgErro);",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "RetornaNomeUsuario",
 		documentation: "É uma função que permite utilizar os nomes disponíveis no cadastro de propriedades do usuário no SGU - Senior Gerenciador de usuários.",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Numero,
-				nome: "aCodUsu",
-				retornaValor: false
+				type: EParameterType.Numero,
+				name: "aCodUsu",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aNomUsu",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aNomUsu",
+				isReturnValue: true
 			}
 		]
 	})
 	, new AutoCompleteItem({
 		label: "ConverteCodificacaoString",
 		documentation: "Esta função altera a codificação de um texto contido em uma variável, onde este texto com a codificação alterada pode ser utilizado para comunicação com web services. Se o sistema não suportar a codificação informada, será emitida a seguinte mensagem: \"A codificação X não é suportada. Verifique a documentação\".",
-		kind: CompletionItemKind.Method,
-		parametros: [
+		kind: 1,
+		parameters: [
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aString",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aString",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aCodificacao",
-				retornaValor: false
+				type: EParameterType.Alfa,
+				name: "aCodificacao",
+				isReturnValue: false
 			},
 			{
-				tipo: ETipoParametro.Alfa,
-				nome: "aResultado",
-				retornaValor: true
+				type: EParameterType.Alfa,
+				name: "aResultado",
+				isReturnValue: true
 			}
 		]
 	})

@@ -1,10 +1,12 @@
-import { createConnection, TextDocuments, Diagnostic, DiagnosticSeverity, ProposedFeatures, InitializeParams, DidChangeConfigurationNotification, CompletionItem,  TextDocumentPositionParams, TextDocumentSyncKind, InitializeResult } from 'vscode-languageserver';
+import { createConnection, TextDocuments, Diagnostic, DiagnosticSeverity, ProposedFeatures, InitializeParams, DidChangeConfigurationNotification, CompletionItem, TextDocumentPositionParams, TextDocumentSyncKind, InitializeResult, CancellationToken, SignatureHelp, SignatureInformation, ParameterInformation } from 'vscode-languageserver';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import autoCompleteList from './assets/autocomplete';
 
-// Create a connection for the server, using Node's IPC as a transport.
-// Also include all preview / proposed LSP features.
+import * as ts from 'typescript';
+export type T_TypeScript = typeof import('typescript');
+const tsModule: T_TypeScript = ts;
+
 let connection = createConnection(ProposedFeatures.all);
 
 // Create a simple text document manager.
@@ -35,6 +37,9 @@ connection.onInitialize((params: InitializeParams) =>
 			// completionProvider: {
 			// 	resolveProvider: true
 			// }
+			signatureHelpProvider: {
+				triggerCharacters: ['(', ','],
+			}
 		}
 	};
 
@@ -189,41 +194,144 @@ connection.onDidChangeWatchedFiles(_change =>
 });
 
 // This handler provides the initial list of the completion items.
-connection.onCompletion(
-	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] =>
-	{
-		// The pass parameter contains the position of the text document in
-		// which code complete got requested. For the example we ignore this
-		// info and always provide the same completion items.
-		return autoCompleteList.map<CompletionItem>((item, index) =>
-		{
-			return {
-				label: item.label,
-				kind: item.kind,
-				data: index
-			}
-		})
-	}
-);
+// connection.onCompletion(
+// 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] =>
+// 	{
+// 		// The pass parameter contains the position of the text document in
+// 		// which code complete got requested. For the example we ignore this
+// 		// info and always provide the same completion items.
+// 		return autoCompleteList.map<CompletionItem>((item, index) =>
+// 		{
+// 			return {
+// 				label: item.label,
+// 				kind: item.kind,
+// 				data: index
+// 			}
+// 		})
+// 	}
+// );
 
 // This handler resolves additional information for the item selected in
 // the completion list.
-connection.onCompletionResolve(
-	(item: CompletionItem): CompletionItem =>
+// connection.onCompletionResolve(
+// 	(item: CompletionItem): CompletionItem =>
+// 	{
+// 		const element = autoCompleteList.find((_, index) => index === item.data);
+
+// 		item.detail = element?.detail();
+// 		item.documentation = element?.documentation;
+// 		item.kind = element?.kind;
+
+// 		return item;
+// 	}
+// );
+
+connection.onSignatureHelp((docPos, token) => getSignatureHelp(docPos, token));
+
+const tokenSplitter = /([\w\$]+)/g;                     //Captures symbol names
+const symbolMatcher = /[\w\$]+/g;                       //Like above but non-capturing
+const firstSymbolMatcher = /(^[\w\$]+)/;                //Like above but from start of string only
+const ambientValidator = /(?:^|\(|\[|,)\s*[\w\$]+$/g;   //Matches strings that end with an ambient symbol; fails for sub properties – ...hopefully
+const braceMatcher = /{(?:(?!{).)*?}/g;                 //Matches well paired braces
+const bracketMatcher = /\[(?:(?!\[).)*?\]/g;            //Matches well paired square brackets
+const matchedParens = /\((?:(?!\().)*?\)/g;             //Matches well paired parentheses
+const importLineMatcher = /(\bimport\s+)([\w$\.\*]+)/;  //Finds import statements (group 1: preamble, group 2: fully qualified class)
+const superclassMatcher = /(\bextends\s+)([\w$\.\*]+)/; //Finds extends statements (group 1: preamble, group 2: class - possibly fully qualified)
+
+
+function getSignatureHelp(textDocumentPosition: TextDocumentPositionParams, token: CancellationToken): SignatureHelp | null
+{
+	let lspSignature: SignatureInformation;
+	const start = {
+		line: textDocumentPosition.position.line,
+		character: 0,
+	};
+	const end = {
+		line: textDocumentPosition.position.line + 1,
+		character: 0,
+	};
+
+	const document = documents.get(textDocumentPosition.textDocument.uri);
+	let lineIndex = textDocumentPosition.position.line;
+	let line = document?.getText({ start, end }).substr(0, textDocumentPosition.position.character).trim() || '';
+	line = line.replace(braceMatcher, '');
+	line = line.replace(bracketMatcher, '');
+
+	let charIndex = line.length - 1;
+	let unmatchedParentheses = 1;
+	let paramIndex = 0;
+	let char: string;
+
+	while (charIndex >= 0)
 	{
-		const element = autoCompleteList.find((_, index) => index === item.data);
+		char = line.charAt(charIndex);
+		if (char === '(')
+		{
+			unmatchedParentheses--;
+		}
+		else
+			if (char === ')')
+			{
+				unmatchedParentheses++;
+			}
+			else
+				if (unmatchedParentheses === 1 && char === ',')
+				{
+					paramIndex++;
+				}
 
-		item.detail = element?.detail();
-		item.documentation = element?.documentation;
-		item.kind = element?.kind;
+		if (unmatchedParentheses === 0)
+		{
+			break;
+		}
 
-		return item;
+		charIndex--;
 	}
-);
 
-// Make the text document manager listen on the connection
-// for open, change and close text document events
+	if (unmatchedParentheses !== 0)
+	{
+		return null;
+	}
+
+	let sigLabel = '';
+	let callOuter = line.substring(0, charIndex);
+	const funcao = autoCompleteList.find(x => x.label.toUpperCase() === callOuter.toUpperCase());
+
+	if (!funcao)
+	{
+		return null;
+	}
+
+	const sigParamemterInfos: ParameterInformation[] = [];
+
+	if (funcao.parameters)
+	{
+		let label: string = '';
+		for (const iterator of funcao.parameters)
+		{
+			label = tsModule.displayPartsToString([{ text: `${iterator.type} ${iterator.isReturnValue ? 'End ' : ''}${iterator.name}`, kind: ts.SymbolDisplayPartKind.parameterName.toString() }]);
+			sigParamemterInfos.push({
+				label
+				// documentation: `${iterator.type} ${iterator.isReturnValue ? 'End ' : ''}${iterator.name}`
+			});
+		}
+	}
+
+	sigLabel = funcao.detail();
+
+	lspSignature = {
+		label: sigLabel,
+		documentation: funcao.documentation,
+		parameters: sigParamemterInfos
+	};
+
+	return {
+		signatures: [lspSignature],
+		activeSignature: 0,
+		activeParameter: paramIndex
+	};
+}
+
 documents.listen(connection);
 
-// Listen on the connection
 connection.listen();
