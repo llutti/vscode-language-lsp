@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [0.0.7] - 10/09/2020
+### Adicionado
+- Implementado o recurso "Ajuda na Assinatura dos Métodos (SignatureHelp)", para mostrar os parâmetros das funções internas
+
 ## [0.0.6] - 09/09/2020
 ### Adicionado
 - Adicionar as funções de lista no autocomplete
