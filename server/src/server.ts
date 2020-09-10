@@ -1,11 +1,7 @@
-import { createConnection, TextDocuments, Diagnostic, DiagnosticSeverity, ProposedFeatures, InitializeParams, DidChangeConfigurationNotification, CompletionItem, TextDocumentPositionParams, TextDocumentSyncKind, InitializeResult, CancellationToken, SignatureHelp, SignatureInformation, ParameterInformation } from 'vscode-languageserver';
+import { createConnection, TextDocuments, ProposedFeatures, InitializeParams, DidChangeConfigurationNotification, TextDocumentPositionParams, TextDocumentSyncKind, InitializeResult, CancellationToken, SignatureHelp, SignatureInformation, ParameterInformation } from 'vscode-languageserver';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import autoCompleteList from './assets/autocomplete';
-
-import * as ts from 'typescript';
-export type T_TypeScript = typeof import('typescript');
-const tsModule: T_TypeScript = ts;
 
 let connection = createConnection(ProposedFeatures.all);
 
@@ -193,39 +189,6 @@ connection.onDidChangeWatchedFiles(_change =>
 	connection.console.log('We received an file change event');
 });
 
-// This handler provides the initial list of the completion items.
-// connection.onCompletion(
-// 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] =>
-// 	{
-// 		// The pass parameter contains the position of the text document in
-// 		// which code complete got requested. For the example we ignore this
-// 		// info and always provide the same completion items.
-// 		return autoCompleteList.map<CompletionItem>((item, index) =>
-// 		{
-// 			return {
-// 				label: item.label,
-// 				kind: item.kind,
-// 				data: index
-// 			}
-// 		})
-// 	}
-// );
-
-// This handler resolves additional information for the item selected in
-// the completion list.
-// connection.onCompletionResolve(
-// 	(item: CompletionItem): CompletionItem =>
-// 	{
-// 		const element = autoCompleteList.find((_, index) => index === item.data);
-
-// 		item.detail = element?.detail();
-// 		item.documentation = element?.documentation;
-// 		item.kind = element?.kind;
-
-// 		return item;
-// 	}
-// );
-
 connection.onSignatureHelp((docPos, token) => getSignatureHelp(docPos, token));
 
 const tokenSplitter = /([\w\$]+)/g;                     //Captures symbol names
@@ -295,7 +258,7 @@ function getSignatureHelp(textDocumentPosition: TextDocumentPositionParams, toke
 
 	let sigLabel = '';
 	let callOuter = line.substring(0, charIndex);
-	const funcao = autoCompleteList.find(x => x.label.toUpperCase() === callOuter.toUpperCase());
+	const funcao = autoCompleteList?.find(x => x.label.toUpperCase() === callOuter.toUpperCase());
 
 	if (!funcao)
 	{
@@ -309,7 +272,7 @@ function getSignatureHelp(textDocumentPosition: TextDocumentPositionParams, toke
 		let label: string = '';
 		for (const iterator of funcao.parameters)
 		{
-			label = tsModule.displayPartsToString([{ text: `${iterator.type} ${iterator.isReturnValue ? 'End ' : ''}${iterator.name}`, kind: ts.SymbolDisplayPartKind.parameterName.toString() }]);
+			label = `${iterator.type} ${iterator.isReturnValue ? 'End ' : ''}${iterator.name}`;
 			sigParamemterInfos.push({
 				label
 				// documentation: `${iterator.type} ${iterator.isReturnValue ? 'End ' : ''}${iterator.name}`
@@ -321,7 +284,7 @@ function getSignatureHelp(textDocumentPosition: TextDocumentPositionParams, toke
 
 	lspSignature = {
 		label: sigLabel,
-		documentation: funcao.documentation,
+		documentation: funcao?.documentation,
 		parameters: sigParamemterInfos
 	};
 
