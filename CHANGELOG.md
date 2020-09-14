@@ -3,8 +3,13 @@
 Alterações realizadas na extensão.
 
 ## [0.0.8] - 14/09/2020
+### Adicionado
+- Foram adicionadas as contantes *cVerdadeiro* e *cFalso* no *AutoComplete*
+
 ### Alterações
-- Refatorar a estrutura do Server
+- Refatorar a estrutura do Client (remover os providers Hover e SignatureHelp)
+- Refatorar a estrutura do Server (implementar os providers Hover e SignatureHelp)
+- Melhoria na documentação de algumas funções
 
 ## [0.0.7] - 10/09/2020
 ### Adicionado
@@ -23,12 +28,12 @@ Alterações realizadas na extensão.
 
 ## [0.0.4] - 28/08/2020
 ### Adicionado
-- Foram incluídas novas funções internas da LSP no "Autocomplete"
+- Foram incluídas novas funções internas da LSP no *Autocomplete*
 
 ## [0.0.3] - 27/08/2020
 ### Adicionado
-- Implementado "Autoindentação" após o "inicio"
-- Implementado "Autocomplete" baseado em um arquivo de configurações
+- Implementado *Autoindentação* após o *inicio*
+- Implementado *Autocomplete* baseado em um arquivo de configurações
 
 ### Alterações
 - Melhoria na identificação da sintaxe
