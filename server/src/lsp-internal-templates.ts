@@ -21,11 +21,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "ConverteMascara",
 		type: 2,
+		documentation: 'Esta função converte um valor de entrada (numérico, data, hora ou cadeia de caracteres), para o tipo de dado cadeia de caracteres.',
 		parameters: [
 			{
 				type: EParameterType.Numero,
 				name: "TipoDado",
-				documenation:'1:Número | 2:Dinheiro(valor) | 3:Data | 4:Hora | 5:Alfa',
+				documenation: '1:Número | 2:Dinheiro(valor) | 3:Data | 4:Hora | 5:Alfa',
 				isReturnValue: false
 			},
 			{
@@ -41,6 +42,11 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "Mascara",
+				documenation:
+				{
+					kind: 'markdown',
+					value: 'Para pesquisar os valores válidos, acessar a [documentação da Senior](https://documentacao.senior.com.br/tecnologia/6.2.35/index.htm#cbds/mascara.htm)'
+				},
 				isReturnValue: false
 			}
 		]
@@ -51,22 +57,22 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "xdia",
+				name: "Dia",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "xmes",
+				name: "Mes",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "xano",
+				name: "Ano",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "xData",
+				name: "Retorno",
 				isReturnValue: true
 			}
 		]
@@ -204,25 +210,30 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "TrocaString",
 		type: 2,
+		documentation: 'Procura por um trecho específico dentro de um texto e o substitui, retornando um novo texto.',
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "aStrIni",
+				name: "TextoInicial",
+				documenation: 'Texto original',
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aStrOut",
+				name: "TextoPesquisar",
+				documenation: 'Trecho específico que deve ser buscado no texto original',
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aStrIn",
+				name: "NovoTexto",
+				documenation: 'Texto que irá substituir o trecho específico buscado',
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aStrFim",
+				name: "Retorno",
+				documenation: 'Variável que irá receber o novo texto retornado pela função',
 				isReturnValue: true
 			}
 		]
@@ -233,17 +244,17 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "xNomLis",
+				name: "NomLis",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "xIteLis",
+				name: "IteLis",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "xDesLis",
+				name: "DesLis",
 				isReturnValue: true
 			}
 		]
@@ -254,7 +265,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Data,
-				name: "Data_Origem",
+				name: "DataOrigem",
 				isReturnValue: false
 			},
 			{
@@ -280,12 +291,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Data,
-				name: "Data_Origem",
+				name: "DataOrigem",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "Data_Destino",
+				name: "DataDestino",
 				isReturnValue: true
 			}
 		]
@@ -296,12 +307,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "xQuantidadeMinutos",
+				name: "QuantidadeMinutos",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "xRetornoHoras",
+				name: "RetornoHoras",
 				isReturnValue: false
 			}
 		]
@@ -328,7 +339,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			},
 			{
@@ -389,7 +400,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			},
 			{
@@ -578,7 +589,8 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Numero,
-				name: "aTamMax",
+				name: "TamMax",
+				documenation: 'Tamanho Máximo',
 				isReturnValue: false
 			}
 		]
@@ -609,7 +621,8 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Numero,
-				name: "aTamMax",
+				name: "TamMax",
+				documenation: 'Tamanho Máximo',
 				isReturnValue: false
 			}
 		]
@@ -693,12 +706,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "aArquivo",
+				name: "NomeArquivo",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aHTML",
+				name: "HTML",
 				isReturnValue: true
 			}
 		]
@@ -732,10 +745,11 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "WCountFields",
 		type: 2,
+		documentation: 'Retorna a quantidade de campos passados pela ação do HTML',
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "aQtdCampos",
+				name: "QtdCampos",
 				isReturnValue: true
 			}
 		]
@@ -746,12 +760,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "aIndice",
+				name: "Indice",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aNomeCampo",
+				name: "NomeCampo",
 				isReturnValue: true
 			}
 		]
@@ -767,12 +781,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Numero,
-				name: "Posicao_Inicial",
+				name: "PosicaoInicial",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "Quantidade_Caracteres",
+				name: "QuantidadeCaracteres",
 				isReturnValue: false
 			}
 		]
@@ -783,7 +797,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "Variavel/Campo",
+				name: "Variavel",
 				isReturnValue: false
 			},
 			{
@@ -825,12 +839,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "Texto_Pesquisar",
+				name: "TextoPesquisar",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "Campo_Pesquisado",
+				name: "ValorPesquisado",
 				isReturnValue: false
 			},
 			{
@@ -859,6 +873,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "RetornaHorario",
 		type: 2,
+		documentation: 'A função Retornahorario calcula o horário na hora em que é chamada, considerando as programações de troca de horário, escala e ponte. Na escala de Busca Automática retorna o horário base e não o horário apurado.',
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -877,17 +892,13 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			},
 			{
-				type: EParameterType.Numero,
-				name: "Considerar Feriado (S",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "N)",
+				type: EParameterType.Alfa,
+				name: "ConsiderarFeriado",
+				documenation: 'Indica se é para retornar se é feriado ou não. Valores possíveis "S" | "N"',
 				isReturnValue: false
 			},
 			{
@@ -900,16 +911,18 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "ExtensoSemana",
 		type: 2,
+		documentation: 'Esta função monta o extenso do dia da semana de uma determinada data.',
 		parameters: [
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "Extenso",
-				isReturnValue: false
+				name: "Retorno",
+				documenation: 'Variável tipo Alfa que receberá o extenso do dia da semana.',
+				isReturnValue: true
 			}
 		]
 	},
@@ -934,7 +947,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			},
 			{
@@ -965,29 +978,30 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "<valor inicial>;",
+				name: "valor inicial",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "<condição>;",
+				name: "condição",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "<contador>",
+				name: "contador",
 				isReturnValue: false
 			}
 		]
 	},
 	{
 		label: "RetDifDat",
-		documentation: "Retorna a diferença de tempo entre duas datas",
+		documentation: "Esta função retorna a diferença em dias, meses ou anos entre duas datas.",
 		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "Serviço (1-Dia|2-Meses|3-Anos|4-Meses c/Ajuste|5-Anos c/Ajuste|4-Meses c/Ajuste[DI/DF])",
+				name: "UnidadeRetorno",
+				documenation: '1-Dia|2-Meses|3-Anos|4-Meses c/Ajuste|5-Anos c/Ajuste|4-Meses c/Ajuste[DI/DF]',
 				isReturnValue: false
 			},
 			{
@@ -1044,7 +1058,8 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Numero,
-				name: "TipoDivisao (1-Normal|2-Resto|3-Parte inteira da divisão)",
+				name: "TipoDivisao",
+				documenation: '1-Normal|2-Resto|3-Parte inteira da divisão',
 				isReturnValue: false
 			},
 			{
@@ -1107,12 +1122,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "aStrOrigem",
+				name: "Origem",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aStrDestino",
+				name: "Retorno",
 				isReturnValue: true
 			}
 		]
@@ -1123,12 +1138,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "xDigito",
+				name: "ValorInicial",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "xRetorno",
+				name: "Retorno",
 				isReturnValue: true
 			}
 		]
@@ -1192,7 +1207,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: ":Nome_Variavel",
+				name: "Nome_Variavel",
 				isReturnValue: false
 			}
 		]
@@ -1231,6 +1246,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "RetQtdVagLoc",
 		type: 2,
+		documentation: 'A função RetQtdVagLoc tem como objetivo retornar a quantidade de vagas disponíveis em um determinado local, cargo e data passados como parâmetros, ou seja, é a diferença entre a quantidade de vagas do quadro previsto e a quantidade de vagas do quadro efetivo.',
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1259,12 +1275,23 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Numero,
-				name: "Turno DatAlt QtdVaga",
+				name: "Turno",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "DatAlt",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "QtdVaga",
 				isReturnValue: true
 			},
 			{
 				type: EParameterType.Numero,
 				name: "TipVag",
+				documenation: 'Quando a empresa utiliza o tipo de vaga deve informar qual o tipo de vaga que deseja consultar, senão deve informar um parâmetro default igual a 1.',
 				isReturnValue: false
 			}
 		]
@@ -1591,7 +1618,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			},
 			{
@@ -1653,7 +1680,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			},
 			{
@@ -1823,7 +1850,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Data,
-				name: "",
+				name: "Data",
 				isReturnValue: false
 			}
 		]
@@ -5518,22 +5545,25 @@ export const templatesInternos: LSPTemplateClass[] = [
 	},
 	{
 		label: "ConverteCodificacaoString",
-		documentation: "Esta função altera a codificação de um texto contido em uma variável, onde este texto com a codificação alterada pode ser utilizado para comunicação com web services. Se o sistema não suportar a codificação informada, será emitida a seguinte mensagem: \"A codificação X não é suportada. Verifique a documentação\".",
+		documentation: 'Esta função altera a codificação de um texto contido em uma variável, onde este texto com a codificação alterada pode ser utilizado para comunicação com web services. Se o sistema não suportar a codificação informada, será emitida a seguinte mensagem: "A codificação X não é suportada. Verifique a documentação".',
 		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "aString",
+				name: "Texto",
+				documenation: 'Contém o texto original que necessita ter sua codificação alterada',
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aCodificacao",
+				name: "Codificacao",
+				documenation: 'Nome da codificação que ser utilizada, suporta as codificações: "UTF-8" ou "WINDOWS-1252"',
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aResultado",
+				name: "Retorno",
+				documenation: 'Contém o texto com a codificação alterada',
 				isReturnValue: true
 			}
 		]
