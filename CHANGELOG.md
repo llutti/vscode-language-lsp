@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [0.0.8] - 14/09/2020
+### Alterações
+- Refatorar a estrutura do Server
+
 ## [0.0.7] - 10/09/2020
 ### Adicionado
 - Implementado o recurso "Ajuda na Assinatura dos Métodos (SignatureHelp)", para mostrar os parâmetros das funções internas

@@ -1,50 +1,10 @@
-import { CompletionItemKind, Hover } from 'vscode-languageserver';
+import { EParameterType, LSPTemplateClass } from './lsp-elements';
 
-export enum EParameterType
-{
-	Alfa = 'Alfa',
-	Numero = 'Numero',
-	Data = 'Data',
-	Funcao = 'Funcao',
-	Lista = 'Lista',
-}
-
-export interface parameterItem
-{
-	id?: number; // Deve ser único e sequencial
-	type: EParameterType;
-	name: string;
-	isReturnValue: boolean;
-}
-
-export class AutoCompleteItem
-{
-	public label: string = '';
-	public documentation?: string;
-	public kind?: CompletionItemKind;
-	public parameters?: parameterItem[];
-	public insertText?: string;
-
-	constructor(params: { label: string, kind?: CompletionItemKind, documentation?: string, parameters?: parameterItem[] })
+export const templatesInternos: LSPTemplateClass[] = [
 	{
-		this.label = params.label;
-		this.documentation = params?.documentation;
-		this.kind = params?.kind;
-		this.parameters = params?.parameters;
-	}
-
-	public detail(): string
-	{
-		const params = this.parameters?.map<string>(p => `${p.type} ${p.isReturnValue ? 'End ' : ''}${p.name}`).join(', ') || '';
-		return `${this.label}(${params})`
-	};
-}
-
-const autoCompleteList: AutoCompleteItem[] = [
-	new AutoCompleteItem({
 		label: "AlfaParaInt",
 		documentation: "Converte um texto para um número não formatado",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -57,14 +17,15 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ConverteMascara",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
 				name: "TipoDado",
+				documenation:'1:Número | 2:Dinheiro(valor) | 3:Data | 4:Hora | 5:Alfa',
 				isReturnValue: false
 			},
 			{
@@ -83,10 +44,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "MontaData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -109,10 +70,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "IntParaAlfa",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -125,10 +86,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WInsSelecaodaLista",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -156,10 +117,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WInsSelecaodoBanco",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -202,10 +163,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WAdicionanoHTML",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -223,10 +184,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WAdicionaListaErros",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -239,10 +200,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "TrocaString",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -265,10 +226,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "DescItemLista",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -286,10 +247,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "DesmontaData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -312,10 +273,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ConverteDataBanco",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -328,10 +289,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ConverteMinutosHoras",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -344,11 +305,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaEscala",
 		documentation: "Retorna a escala do colaborador em determinada data, considerando as programações de troca de escala e histórico do colaborador",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -401,10 +362,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetSalDat",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -437,10 +398,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "LiquidoFolha",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -483,10 +444,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "LiquidoFerias",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -534,10 +495,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "LiquidoRescisao",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -590,10 +551,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCheckValInteger",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -621,10 +582,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCheckValString",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -652,10 +613,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCheckValData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -678,10 +639,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCheckValHora",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -704,10 +665,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCheckValCheckBox",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -725,10 +686,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WLerHTML",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -741,10 +702,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetColabPorCodUsu",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -767,10 +728,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCountFields",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -778,10 +739,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WReturnFieldsName",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -794,10 +755,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CopiarAlfa",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -815,10 +776,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "DeletarAlfa",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -836,10 +797,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "LerPosicaoAlfa",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -857,10 +818,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "PosicaoAlfa",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -878,10 +839,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "TamanhoAlfa",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -894,10 +855,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaHorario",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -935,10 +896,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExtensoSemana",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -951,10 +912,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaEscala",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -997,10 +958,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Para",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1018,11 +979,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetDifDat",
 		documentation: "Retorna a diferença de tempo entre duas datas",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1045,10 +1006,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RestoDivisao",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1066,10 +1027,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Divide",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1092,10 +1053,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "TruncarValor",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1103,10 +1064,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetHtmlFicReg",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1139,10 +1100,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WStrtoJavaScript",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1155,10 +1116,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "TiraEspacos",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1171,10 +1132,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ConverteParaMaiusculo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1187,10 +1148,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WAlteraValorCampo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1203,10 +1164,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "MontaAbrangencia",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1224,10 +1185,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "__Inserir",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1235,10 +1196,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCheckValDouble",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1266,10 +1227,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetQtdVagLoc",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1307,10 +1268,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "BusCadChefe",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1368,15 +1329,15 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "EnviaEMail",
 		documentation: "Função que permite enviar e-mails. (CodErroEnviaEmail e MsgErroEnviaEmail)",
-		kind: 1,
+		type: 3,
 		parameters: [
 			{
-				type: EParameterType.Numero,
-				name: "[Alfa Rememetente]",
+				type: EParameterType.Alfa,
+				name: "Rememetente",
 				isReturnValue: false
 			},
 			{
@@ -1385,45 +1346,45 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			},
 			{
-				type: EParameterType.Numero,
-				name: "[Alfa CopiaPara]",
+				type: EParameterType.Alfa,
+				name: "CopiaPara",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "CopiaOcultaPara",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Assunto",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Texto",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Anexos",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "[Alfa CopiaOcultaPara]",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "[Alfa Assunto]",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "[Alfa Texto]",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "[Alfa Anexos]",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "nPapelCarta",
+				name: "PapelCarta",
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "EnviaEMailHTML",
 		documentation: "Função que permite enviar e-mails em formato HTML e com imagens no corpo do E-mail. (CodErroEnviaEmail e MsgErroEnviaEmail)",
-		kind: 1,
+		type: 3,
 		parameters: [
 			{
-				type: EParameterType.Numero,
-				name: "[Alfa Rememetente]",
+				type: EParameterType.Alfa,
+				name: "Rememetente",
 				isReturnValue: false
 			},
 			{
@@ -1432,45 +1393,45 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			},
 			{
-				type: EParameterType.Numero,
-				name: "[Alfa CopiaPara]",
+				type: EParameterType.Alfa,
+				name: "CopiaPara",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "CopiaOcultaPara",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Assunto",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Texto",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Anexos",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "[Alfa CopiaOcultaPara]",
+				name: "TratarAnexo",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "[Alfa Assunto]",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "[Alfa Texto]",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "[Alfa Anexos]",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "aTratarAnexo",
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Numero,
-				name: "nPapelCarta",
+				name: "PapelCarta",
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "BusEmailFunc",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1498,10 +1459,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaBatidaHorario",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1539,10 +1500,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExtrasIntervalo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1570,10 +1531,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetMinRefHTr",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1581,10 +1542,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetVinEmp",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1607,10 +1568,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaCodLoc",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1623,10 +1584,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetTurCol",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -1654,10 +1615,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "InsClauSQLWhere",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1670,10 +1631,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaHorarioApurado",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1706,10 +1667,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "DataHoje",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -1717,10 +1678,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaAnoData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -1733,10 +1694,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaMesData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -1749,10 +1710,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaDiaData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -1765,10 +1726,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "AlteraControle",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1786,10 +1747,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaDiaSemana",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -1802,10 +1763,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "AdicionarCampo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1828,10 +1789,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Chave",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -1839,11 +1800,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "VerDatFer",
 		documentation: "Procura se a data específica é um feriado para o colaborador. Para isto, verifica pela filial e pela escala. Se a data for feriado,  retornará 1. Caso contrário, retornará 0.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1866,11 +1827,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetNivLoc",
 		documentation: "Função que retorna a quantidade de níveis do local informado",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1893,10 +1854,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Concatena",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1919,11 +1880,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ArredondarValor",
 		documentation: "Esta função arredonda determinado valor, conforme a quantidade de casa decimais informada",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1936,16 +1897,16 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "InicioVtr",
 		documentation: "Função para preparar os recursos de máquina (alocar memória) para o cálculo de Vale Transporte",
-		kind: 1
-	})
-	, new AutoCompleteItem({
+		type: 2
+	},
+	{
 		label: "VerFaltasVtr",
 		documentation: "Verificar se o colaborador teve faltas no período para perda de vale transporte",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -1998,11 +1959,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "LerPassesVtr",
 		documentation: "Verifica se houve digitação de Passes de Vale Transporte",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2035,11 +1996,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalcularVtr",
 		documentation: "Esta função calcula o valor e a quantidade de passes de vale transporte",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2082,11 +2043,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GravarVtr",
 		documentation: "Grava os passes na tabela R028PVT, calculada anteriormente pela função CalculaVtr",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2114,15 +2075,15 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "FinalVtr",
 		documentation: "Libera as estruturas alocadas anteriormente pela função CalculaVtr",
-		kind: 1
-	})
-	, new AutoCompleteItem({
+		type: 2
+	},
+	{
 		label: "ListaSecao",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2130,11 +2091,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetEscEmp",
 		documentation: "Retorna a escala do funcionário em uma determinada data",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2157,11 +2118,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "VerAbrBHR",
 		documentation: "Esta função verifica se o colaborador está incluído na abrangência de um determinado banco de horas",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2194,11 +2155,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WWriteCookie",
 		documentation: "Grava um campo no Cookie ativo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2211,11 +2172,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetSinEmp",
 		documentation: "Esta função retorna o código do sindicato de um colaborador em uma determinada data na variável de sistema CodSinEmp",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2238,11 +2199,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalIdaEmp",
 		documentation: "cula a idade do colaborador na Data de Referência",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2265,11 +2226,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalculaQtdMinutos",
 		documentation: "Calcula a quantidade de minutos existente entre uma Data/Hora Inicial e uma Data/Hora Final",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -2297,11 +2258,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaNumLoc",
 		documentation: "Converte o código do local para o número do local. Considera a data setada em DatRef",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2314,11 +2275,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaNivelLocal",
 		documentation: "Retorna uma fração do código do local do nível inicial até o nível final informados",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2346,11 +2307,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaAscII",
 		documentation: "Esta função retorna o caractere ASCII de um número.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2363,11 +2324,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "PertenceGrupo",
 		documentation: "Identifica se o usuário ativo pertence ao grupo de usuários passado como parâmetro. Se pertencer retornará 1, caso contrário retornará 0",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2375,11 +2336,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WSetarCalculo",
 		documentation: "Função utilizada para setar o código de cálculo para processos automáticos, via regra (Somente RubiWeb)",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2392,11 +2353,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "UltimoDia",
 		documentation: "Esta função verifica qual é o último dia do mês/ano da data informada, retornando esta nova data dia/mês/ano na própria variável indicada",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -2404,11 +2365,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetLocEmp",
 		documentation: "Retorna o local do funcionário em uma determinada data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2431,11 +2392,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WSQLSenior2paraSQLNativo",
 		documentation: "Retorna a Sintaxe de um comando SQL Senior2 para o SQL Nativo, correspondente ao banco que estiver sendo utilizado",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2448,11 +2409,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalculaTotCol",
 		documentation: "Esta função calcula o totalizador do evento, valor ou referência, de acordo com o cálculo, totalizador e o colaborador enviados por parâmetro.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2485,11 +2446,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SelectData",
 		documentation: "Função na qual é possível executar qualquer SELECT",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2507,11 +2468,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetCampoNumero",
 		documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2529,11 +2490,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetCampoAlfa",
 		documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2551,11 +2512,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetSitEmp",
 		documentation: "Retorna a Situação do Colaborador em uma determinda Data (Retorna na variável SitEmp)",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2578,11 +2539,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetCodUsuPorColab",
 		documentation: "Esta função retornará o código do usuário associadr. Caso não houver retornará zero.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2600,11 +2561,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "MontarSQLHistoricoSeq",
 		documentation: "Esta função retorna um SQL com base em uma data e seqüência para uso com os históricos do sistema",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2622,11 +2583,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "MontarSQLHistorico",
 		documentation: "Retorna um SQL com base em uma data para uso com os históricos do sistema",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2644,11 +2605,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetSalEmp",
 		documentation: "Esta função retorna o salário do funcionário em uma determinada data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2671,11 +2632,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WTextoParaFormatoHTML",
 		documentation: "Retorna a expressão alfanumérica passada como parâmetro convertida para HTML",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2688,11 +2649,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetEstCarEmp",
 		documentation: "Função que retorna a estrutura de cargos utilizada pela empresa na data informada.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2705,11 +2666,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalTotFolha",
 		documentation: "Utilizada para carregar as variáveis de sistema",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2732,11 +2693,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetCarEmp",
 		documentation: "Retorna o Cargo do funcionário em uma determinada data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2759,11 +2720,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetNomCodNiv",
 		documentation: "Retorna o Nome e o código do Local do Empregado em um determinado nível.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2806,11 +2767,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "TiraAcentos",
 		documentation: "Retira os caracteres especiais, retornando o texto em maíusculo.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2823,11 +2784,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalSalEmpCS",
 		documentation: "Esta função retorna o salário do funcionário em relação ao tipo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2855,11 +2816,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExtensoMes",
 		documentation: "Esta função retorna o nome por extenso do mês passado como parâmetro",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2872,11 +2833,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "BusSalClaNiv",
 		documentation: "Esta função retorna o valor do salário da estrutura/classe/nível passados como parâmetro, e se desejar (informando tipo 2), o número de meses de complemento do nível salarial.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2919,11 +2880,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetExtMoeda",
 		documentation: "Gera o extenso de um valor (moeda). Obs: não completa o espaço restante com o caracter “*”.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2936,11 +2897,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExtensoNumero",
 		documentation: "Retorna o valor por extenso do número passado como parâmetro.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2953,11 +2914,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ProximaPagina",
 		documentation: "Permite verificar se uma determinada seção será impressa na próxima página.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -2970,11 +2931,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "BusHorBase",
 		documentation: "Retorna o horário base do colaborador em uma determinada data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -2997,11 +2958,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Minusculo",
 		documentation: "Converte um valor alfanumérico de maiúsculo para minúsculo (SOMENTE NO RUBI)",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3019,11 +2980,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExecutaRelatorio",
 		documentation: "Permite que sejam executados relatórios através das regras.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3036,11 +2997,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SetaNumeroTelaEntrada",
 		documentation: "Permite ao usuário alterar os valores numéricos da tela de entrada do modelo.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3053,11 +3014,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SetaDataTelaEntrada",
 		documentation: "Permite ao usuário alterar os valores do tipo data da tela de entrada do modelo.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3070,11 +3031,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SetaAlfaTelaEntrada",
 		documentation: "Permite ao usuário alterar os valores alfanuméricos da tela de entrada do modelo.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3087,11 +3048,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "EscondeCampoTelaEntrada",
 		documentation: "Permite ao usuário esconder determinados campos da tela de entrada do modelo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3099,11 +3060,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetCodNomLocNiv",
 		documentation: "Retorna o nome e o código do local, no nível informado",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3136,11 +3097,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetNumLocNiv",
 		documentation: "Retorna o código do local no nível passado como parâmetro.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3168,11 +3129,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ConvStrPNum",
 		documentation: "Converte um valor tipo string para numérico.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3185,11 +3146,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "BuscaDiaSit",
 		documentation: "Esta função retorna a quantidade de dias de uma situação em um período informado. Esta função não apresenta as seguintes situações: 15 (ronda) e 16 (todos os módulos)",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3227,11 +3188,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetSalEst",
 		documentation: "Retorna o salário (sem nenhuma conversão) de uma Estrutura/Classe/Nível específica em uma determinada data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3254,11 +3215,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetBHRDat",
 		documentation: "Esta função retorna o saldo do banco de horas conforme a data especificada para verificação. O valor que será retornado corresponderá ao saldo inicial da data. Não são considerados os lançamentos efetuados no dia.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3291,10 +3252,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExcLanBhr",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3327,10 +3288,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "IncLanBhr",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3373,10 +3334,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetDatCmp",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3404,10 +3365,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetTabOrgEmp",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3425,11 +3386,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GravaFotoColaboradorEmDisco",
 		documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3467,11 +3428,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "BusCadChefeLocal",
 		documentation: "Busca o chefe de um local especificado.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3529,11 +3490,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExecSQLEx",
 		documentation: "Implementada a função ExecSqlEx que permite a execução de comandos SQL no banco de dados efetuando tratamento de exceções",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3551,11 +3512,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "InserirAlfa",
 		documentation: "Insere um ou mais caracteres em uma Variável/Campo, a partir da posição indicada. Havendo informação no campo alfa, no qual deseja-se inserir o texto, as que estiverem a partir da posicão indicada serão deslocadas para a direita e o que passar do tamanho definido do campo/variável será truncado.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3573,11 +3534,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "TempoTrabFun",
 		documentation: "Esta função retorna o tempo de trabalho em meses, de um funcionário em um determinado período",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3615,11 +3576,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "MensagemLog",
 		documentation: "Esta função cancela o processamento em execução e mostra a mensagem de erro passada como parâmetro",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3627,10 +3588,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetPrxClaNiv",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3668,11 +3629,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "InsSQLWhereSimples",
 		documentation: "Permite Inserir uma cláusula WHERE dentro de um SQL durante a execução da regra de pré-seleção. As tabelas referenciadas no SQL não são incluídas na cláusula FROM do comando SQL.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3685,11 +3646,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetAdiEmp",
 		documentation: "Esta função retorna o Adicional do funcionário em uma determinada data",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3712,11 +3673,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalculaQtdDep",
 		documentation: "Calcula a quantidade de dependentes.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3739,11 +3700,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetEtbEmp",
 		documentation: "Retorna a estabilidade do funcionário em uma determinada data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -3766,11 +3727,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_Criar",
 		documentation: "Função que cria um cursor, ou um objeto para execução de SQL, e retorna no parâmetro \"Objeto\".",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3778,11 +3739,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_Destruir",
 		documentation: "Função que destrói um cursor depois de sua utilização, o mesmo deve ser chamado quando o cursor não for mais utilizado.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3790,11 +3751,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_DefinirComando",
 		documentation: "Função que aplica o comando SQL para o cursor passado como parâmetro.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3807,11 +3768,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_BOF",
 		documentation: "Função que retorna se o cursor está na posição inicial (antes do primeiro registro). Se o cursor está na posição BOF, o valor retornado é 1 (um), caso contrário é 0 (zero).",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3819,11 +3780,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_EOF",
 		documentation: "Função que retorna se o cursor está na posição final (depois do último registro). Se o cursor está na posição EOF, o valor retornado é 1 (um), caso contrário é 0 (zero)",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3831,11 +3792,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_AbrirCursor",
 		documentation: "Função que abre o cursor depois de informado o SQL a ser utilizado.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3843,11 +3804,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_Proximo",
 		documentation: "Função que posiciona o cursor no próximo registro.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3855,11 +3816,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_FecharCursor",
 		documentation: "Função que fecha a pesquisa sendo feita pelo cursor.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3867,11 +3828,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_RetornarBoleano",
 		documentation: "Função que retorna um valor boleano de um campo do registro do cursor.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3889,11 +3850,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_RetornarInteiro",
 		documentation: "Função que retorna um valor inteiro de um campo do registro do cursor.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3911,11 +3872,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_RetornarFlutuante",
 		documentation: "Função que retorna um valor flutuante de um campo do registro do cursor.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3933,11 +3894,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_RetornarData",
 		documentation: "Função que retorna uma data de um campo do registro do cursor.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3955,11 +3916,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_RetornarAlfa",
 		documentation: "Função que retorna um valor do tipo alfa (string) de um campo do registro do cursor.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3977,11 +3938,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_RetornarBlob",
 		documentation: "Função que retorna um Blob de um campo do registro do cursor.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -3999,11 +3960,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_RetornarSeNulo",
 		documentation: "Função que retorna um valor booleano, que significa se o campo é nulo ou não.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4016,11 +3977,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_DefinirBoleano",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo boleano.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4038,11 +3999,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_DefinirInteiro",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo inteiro.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4060,11 +4021,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_DefinirFlutuante",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo numérico com ponto flutuante.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4082,11 +4043,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_DefinirData",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4104,11 +4065,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_DefinirAlfa",
 		documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo alfanumérico.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4126,11 +4087,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_DefinirBlob",
 		documentation: "Função que seta define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo blob.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4148,11 +4109,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SQL_UsarAbrangencia",
 		documentation: "Função que informa ao cursor se é para utilizar abrangência de usuários.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4165,11 +4126,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CalSalEmp",
 		documentation: "Retorna o salário do funcionário em relação ao tipo.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4197,11 +4158,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetQtdDiasUtil",
 		documentation: "Retorna a quantidade de dias úteis dentro de um determinado período, levando-se em consideração os dias de segunda a sexta-feira, desde que não estejam cadastrados como feriado na Tabela de Feriados passada como parâmetro na função.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Data,
@@ -4224,11 +4185,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetApuPon",
 		documentation: "Esta função retorna o tipo de apuração do colaborador, conforme o histórico de apuração.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4256,11 +4217,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetFilEmp",
 		documentation: "Retorna a filial do funcionário em uma determinada data.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4283,11 +4244,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CarregaImgControle",
 		documentation: "Carregar uma imagem do banco ou arquivo para um controle imagem do modelo",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4315,10 +4276,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Gravarnl",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4331,10 +4292,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Abrir",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4347,11 +4308,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ExecutaTelaSgi",
 		documentation: "Esta função executa a tela do SGI passada como parâmetro. Se a tela for executada com sucesso, a função retornará 1. Caso contrário, retornará 0.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4359,10 +4320,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GlbRetVarStr",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4375,10 +4336,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GlbAdiVarStr",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4391,10 +4352,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CarregaAbrUsu",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4417,10 +4378,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaAbrUsu",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4458,10 +4419,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SetaValorFormula",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4474,10 +4435,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "BusCraTit",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4505,10 +4466,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "VerNumAbr",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4526,10 +4487,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "MontaCriteriosAperfeicoamento",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4597,10 +4558,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WPersonalizaMenuWeb",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4638,10 +4599,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetLocNiv",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4669,10 +4630,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "CarregaDistribuicaoEPI",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4750,11 +4711,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GlbAdiVarNumDat",
 		documentation: "Adiciona uma variável global numérica/data em memória",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4767,11 +4728,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GlbAdiVarStr",
 		documentation: "Adiciona uma variável global alfa numérica em memória",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4784,11 +4745,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GlbRetVarNumDat",
 		documentation: "Retorna o conteúdo de uma variável global numérica, armazenada pela função GlbAdiVarNumDat. Exemplo: x := GlbRetVarNumDat(vNomVar);",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4796,11 +4757,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GlbRetVarStr",
 		documentation: "Retorna o conteúdo de uma variável global armazenada pela função GlbAdiVarStr.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4813,10 +4774,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "AlteraValorFormula",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4829,10 +4790,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetHorPrvTrb",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -4885,10 +4846,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WCheckValImage",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4921,10 +4882,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GravaImagemBanco",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4962,10 +4923,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Encriptar",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4983,10 +4944,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "Desencriptar",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5004,10 +4965,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ArqExiste",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5015,11 +4976,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetHorTrab",
 		documentation: "Retorna a quantidade de horas trabalhadas num determinado período.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5062,11 +5023,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ConverteDataHoraDateTime",
 		documentation: "A função serve para montar uma data e uma hora passados como parâmetro em uma string no formato datetime do banco.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5084,10 +5045,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GeraHash",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5105,11 +5066,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "WRemoteAddr",
 		documentation: "Retorna o endereço IP da estação que está acessando o sistema. Utilizada apenas nos sistemas Web.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5117,10 +5078,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegEntLe",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5133,11 +5094,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegEntEhUsuario",
 		documentation: "Esta função indica se o Usuário/Grupo passado em aObjeto é um usuário. Se sim o resultado direto da função é 1 senão será 0.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5145,11 +5106,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegUsuAtivado",
 		documentation: "Esta função indica se o acesso ao usuário passado em aObjeto está desativado. Se sim o resultado direto da função é 1 senão será 0.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5157,11 +5118,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegEntQtdGrp",
 		documentation: "Esta função retorna diretamente a quantidade de grupos do Usuário/Grupo passado em aObjeto.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5169,10 +5130,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegEntNome",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5185,10 +5146,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegUsuNomeComp",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5201,11 +5162,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegUsuSetaSenha",
 		documentation: "Esta função seta a senha do usuário passado em aObjeto através do parâmetro aNovaSenha retornando o aObjeto(Usuário) com a senha setada.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5218,11 +5179,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegUsuSetaAtivado",
 		documentation: "Esta função seta a opção Conta Desabilitada do usuário passado em aObjeto através do parâmetro nOpcao: 1 = Conta Habilitada ou 0 = Conta Desabilitada retornando aObjeto(Usuário) com a opção setada.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5235,10 +5196,10 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegUsuDatExp",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5246,11 +5207,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetDiaHor",
 		documentation: "Função que concatena os dias da semana que contenham o mesmo horário de curso.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5328,11 +5289,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaDistribuicaoEPI",
 		documentation: "Retorna item a item dos resultados encontrados em CarregaDistribuicaoEPI. Os itens podem ser navegados através dos parâmetro TipOpe, que retorna o item escolhido na lista, como, primeiro, ultimo, próximo e anterior. A função CarregaDistribuicaoEPI deve sempre ser chamada antes da RetornaDistribuicaoEPI para que os dados sejam carregados anteriormente.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5390,11 +5351,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ValidaPISCPF",
 		documentation: "Função para Validar um número de CPF ou PIS.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5412,11 +5373,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "TrocaCadastro",
 		documentation: "Esta função tem a funcionalidade de efetuar a troca de cadastro de colaboradores.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5434,11 +5395,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "SegEntExistePorNome",
 		documentation: "Essa função verifica pelo nome se o usuário/grupo existe.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5446,11 +5407,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "NumeroParaAlfa",
 		documentation: "Converte um número para formato alfanumérico, mantendo as casas decimais e sem arredondar.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5463,11 +5424,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GravaFotoColaboradorEmDisco",
 		documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5505,11 +5466,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: false
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "GravaFotoCandidatoEmDisco",
 		documentation: "Grava a foto do candidato em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados,  no formato JPEG (*.JPG).",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5537,11 +5498,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "RetornaNomeUsuario",
 		documentation: "É uma função que permite utilizar os nomes disponíveis no cadastro de propriedades do usuário no SGU - Senior Gerenciador de usuários.",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Numero,
@@ -5554,11 +5515,11 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-	, new AutoCompleteItem({
+	},
+	{
 		label: "ConverteCodificacaoString",
 		documentation: "Esta função altera a codificação de um texto contido em uma variável, onde este texto com a codificação alterada pode ser utilizado para comunicação com web services. Se o sistema não suportar a codificação informada, será emitida a seguinte mensagem: \"A codificação X não é suportada. Verifique a documentação\".",
-		kind: 1,
+		type: 2,
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -5576,9 +5537,5 @@ const autoCompleteList: AutoCompleteItem[] = [
 				isReturnValue: true
 			}
 		]
-	})
-
-];
-
-
-export default autoCompleteList;
+	}
+]
