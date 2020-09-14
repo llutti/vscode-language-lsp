@@ -1,3 +1,5 @@
+import { MarkupContent } from 'vscode-languageserver';
+
 export enum EParameterType
 {
 	Alfa = 'Alfa',
@@ -18,7 +20,7 @@ export interface LSPParameter
 {
 	type: EParameterType;
 	name: string;
-	documenation?: string;
+	documenation?: string | MarkupContent;
 	isReturnValue: boolean;
 }
 
@@ -26,7 +28,7 @@ export interface LSPTemplateClass
 {
 	label: string;
 	type: LSPTypeObject;
-	documentation?: string;
+	documentation?: string | MarkupContent;
 	parameters?: LSPParameter[];
 	insertText?: string;
 }
@@ -35,7 +37,7 @@ export class LSPClass
 	public readonly name: string;
 	public label: string;
 	public fileUri: string;
-	public documentation?: string;
+	public documentation?: string | MarkupContent;
 	public type?: LSPTypeObject;
 	public parameters?: LSPParameter[];
 	public insertText?: string;

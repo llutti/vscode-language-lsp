@@ -95,10 +95,12 @@ export class LSPContext
 		{
 			for (const parametro of funcao.parameters)
 			{
-				sigParamemterInfos.push({
-					label: `${parametro.type} ${parametro.isReturnValue ? 'End ' : ''}${parametro.name}`,
-					documentation: parametro.documenation
-				});
+				sigParamemterInfos.push(
+					{
+						label: `${parametro.type} ${parametro.isReturnValue ? 'End ' : ''}${parametro.name}`,
+						documentation: parametro.documenation
+					}
+				);
 			}
 		}
 
