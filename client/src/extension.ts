@@ -4,8 +4,6 @@ import * as path from 'path';
 import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, TransportKind } from 'vscode-languageclient';
 
 import * as vscode from 'vscode';
-import { LSPHoverProvider } from './providers/lsp-hover-provider';
-import { LSPCompletionItemProvider } from './providers/lsp-completion-item-provider';
 
 export async function activate(context: vscode.ExtensionContext)
 {
@@ -36,9 +34,6 @@ export async function activate(context: vscode.ExtensionContext)
 		serverOptions,
 		clientOptions
 	);
-
-	// vscode.languages.registerHoverProvider('lsp', new LSPHoverProvider());
-	vscode.languages.registerCompletionItemProvider('lsp', new LSPCompletionItemProvider());
 
 	const promise = client
 		.onReady()
