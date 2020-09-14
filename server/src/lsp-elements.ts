@@ -60,10 +60,10 @@ export class LSPClass
 		}
 
 		const params = this.parameters?.map<string>(p => `${p.type} ${p.isReturnValue ? 'End ' : ''}${p.name}`).join(', ') || '';
-		const prefix = `[${this.isInternal ? 'interno' : 'customizado'}]`;
-		const sufixo = this.type === LSPTypeObject.Function ? `:${EParameterType.Numero}` : '';
+		const prefix = `[${this.isInternal ? 'Senior' : 'customizado'}]`;
+		const sufixo = this.type === LSPTypeObject.Function ? `: ${EParameterType.Numero}` : '';
 
-		return `${prefix} ${this.label} (${params})${sufixo}`;
+		return `${prefix} ${this.label}(${params})${sufixo}`;
 	};
 
 	public static fromTemplate(template: LSPTemplateClass, isInternal: boolean = false): LSPClass

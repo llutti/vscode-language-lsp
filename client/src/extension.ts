@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { workspace } from 'vscode';
+// import { workspace } from 'vscode';
 
 import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, TransportKind } from 'vscode-languageclient';
 
@@ -37,7 +37,7 @@ export async function activate(context: vscode.ExtensionContext)
 		clientOptions
 	);
 
-	vscode.languages.registerHoverProvider('lsp', new LSPHoverProvider());
+	// vscode.languages.registerHoverProvider('lsp', new LSPHoverProvider());
 	vscode.languages.registerCompletionItemProvider('lsp', new LSPCompletionItemProvider());
 
 	const promise = client
