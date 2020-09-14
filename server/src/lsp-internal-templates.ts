@@ -2,6 +2,16 @@ import { EParameterType, LSPTemplateClass } from './lsp-elements';
 
 export const templatesInternos: LSPTemplateClass[] = [
 	{
+		label: "cVerdadeiro",
+		documentation: 'Constante que representa o valor "1"',
+		type: 21
+	},
+	{
+		label: "cFalso",
+		documentation: 'Constante que representa o valor "0"',
+		type: 21
+	},
+	{
 		label: "AlfaParaInt",
 		documentation: "Converte um texto para um número não formatado",
 		type: 2,

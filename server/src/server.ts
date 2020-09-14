@@ -19,7 +19,7 @@ connection.onInitialize(
 		return {
 			capabilities: {
 				textDocumentSync: TextDocumentSyncKind.Incremental,
-				// completionProvider: { resolveProvider: false, triggerCharacters: ['.'] },
+				completionProvider: { resolveProvider: false, triggerCharacters: ['.'] },
 				signatureHelpProvider: { triggerCharacters: ['(', ','] },
 				hoverProvider: true,
 				// definitionProvider: true // TODO: Não implementado
@@ -40,7 +40,7 @@ LSPParser.initialise()
 			});
 
 		documents.onDidChangeContent(change => LSPContext.registerClass(LSPParser.parseFile(change.document.uri, change.document.getText(), true)));
-		// connection.onCompletion((docPos, token) => LSPContext.getCompletions(docPos, token));
+		connection.onCompletion((docPos, token) => LSPContext.getCompletions(docPos, token, documents.get(docPos.textDocument.uri)));
 		connection.onSignatureHelp((docPos, token) => LSPContext.getSignatureHelp(docPos, token, documents.get(docPos.textDocument.uri)));
 		connection.onHover(docPos => LSPContext.getHoverInfo(docPos, documents.get(docPos.textDocument.uri)));
 		// connection.onDefinition(docPos => LSPContext.getDefinition(docPos)); // TODO: Não implementado
