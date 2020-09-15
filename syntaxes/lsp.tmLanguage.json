@@ -31,7 +31,7 @@
 					"match": "\\b(?i:(e|ou))\\b"
 				},
 				{
-					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b\\s*;",
+					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"name": "storage.type.prototype.lsp"
