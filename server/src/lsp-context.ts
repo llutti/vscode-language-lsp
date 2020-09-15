@@ -163,27 +163,48 @@ export class LSPContext
 		let paramIndex = 0;
 		let char: string;
 
+		let inString = false;
+		let lookingFor: string = '';
+
 		while (charIndex >= 0)
 		{
 			char = line.charAt(charIndex);
-			if (char === '(')
+
+			if (inString)
 			{
-				unmatchedParentheses--;
+				if ((char === lookingFor)
+					&& (line.charAt(charIndex - 1) !== '\\'))
+				{
+					inString = false;
+				}
 			}
 			else
-				if (char === ')')
+			{
+				if (char === '\'' || char === '"')
 				{
-					unmatchedParentheses++;
+					inString = true;
+					lookingFor = char;
 				}
 				else
-					if (unmatchedParentheses === 1 && char === ',')
+					if (char === '(')
 					{
-						paramIndex++;
+						unmatchedParentheses--;
 					}
+					else
+						if (char === ')')
+						{
+							unmatchedParentheses++;
+						}
+						else
+							if (unmatchedParentheses === 1 && char === ',')
+							{
+								paramIndex++;
+							}
 
-			if (unmatchedParentheses === 0)
-			{
-				break;
+				if (unmatchedParentheses === 0)
+				{
+					break;
+				}
 			}
 
 			charIndex--;
@@ -362,15 +383,19 @@ export class LSPContext
 				if (char === lookingFor)
 				{
 					inString = false;
-				} else if (char === '\\')
-				{
-					i++;
 				}
-			} else if (char === '\'' || char === '"')
-			{
-				inString = true;
-				lookingFor = char;
+				else
+					if (char === '\\')
+					{
+						i++;
+					}
 			}
+			else
+				if (char === '\'' || char === '"')
+				{
+					inString = true;
+					lookingFor = char;
+				}
 		}
 		return inString;
 	}
