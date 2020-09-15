@@ -1,9 +1,11 @@
-import * as path from 'path';
-// import { workspace } from 'vscode';
-
 import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, TransportKind } from 'vscode-languageclient';
 
 import * as vscode from 'vscode';
+
+import * as path from 'path';
+
+
+let client: LanguageClient;
 
 export async function activate(context: vscode.ExtensionContext)
 {
@@ -28,51 +30,19 @@ export async function activate(context: vscode.ExtensionContext)
 	};
 
 	// Create the language client and start the client.
-	const client: LanguageClient = new LanguageClient(
+	client = new LanguageClient(
 		'lsp',
-		'languageServerLSP',
+		'Linguaguem de Suporte para "Linguaguem Senior de Programação"',
 		serverOptions,
 		clientOptions
 	);
 
-	const promise = client
-		.onReady()
-		.then(
-			() =>
-			{
-				registerCustomClientNotificationHandlers(client);
-			})
-		.catch(e =>
-		{
-			console.log('Falhou a inicialização do "Client do LSP"');
-		});
-
-	context.subscriptions.push(client.start());
-
-	return vscode.window.withProgress(
-		{
-			title: 'Inicializando LSP',
-			location: vscode.ProgressLocation.Window
-		},
-		() => promise
-	);
+	client.start();
 }
 
-function registerCustomClientNotificationHandlers(client: LanguageClient)
-{
-	client.onNotification('$/displayInfo', (msg: string) =>
-	{
-		vscode.window.showInformationMessage(msg);
-	});
-	client.onNotification('$/displayWarning', (msg: string) =>
-	{
-		vscode.window.showWarningMessage(msg);
-	});
-	client.onNotification('$/displayError', (msg: string) =>
-	{
-		vscode.window.showErrorMessage(msg);
-	});
-	// client.onNotification('$/showVirtualFile', (virtualFileSource: string, prettySourceMap: string) => {
-	//   setVirtualContents(virtualFileSource, prettySourceMap);
-	// });
+export function deactivate(): Thenable<void> {
+  if (!client) {
+    return undefined;
+  }
+  return client.stop();
 }
