@@ -317,6 +317,11 @@ export class LSPContext
 
 	}
 
+	public static registerClasses(classes: LSPClass[]): void
+	{
+		classes.map(classe => this.registerClass(classe));
+	}
+
 	public static registerClass(lspClass: LSPClass): void
 	{
 		if (!lspClass.name)
