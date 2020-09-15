@@ -3,6 +3,9 @@
 Alterações realizadas na extensão.
 
 ## [0.0.9] - 15/09/2020
+### Adicionado
+- Criado um *parser* para identificar as funções customizadas
+
 ### Alterações
 - Melhorado o tratamento para parâmetros do tipo texto na SignatureHelp
 
