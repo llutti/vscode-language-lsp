@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [0.0.9] - 15/09/2020
+### Alterações
+- Melhorado o tratamento para parâmetros do tipo texto na SignatureHelp
+
 ## [0.0.8] - 14/09/2020
 ### Adicionado
 - Foram adicionadas as contantes *cVerdadeiro* e *cFalso* no *AutoComplete*
