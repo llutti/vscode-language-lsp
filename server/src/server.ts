@@ -32,8 +32,8 @@ connection.listen();
 LSPParser.initialise()
 	.then(() =>
 	{
-		documents.onDidOpen(evt => LSPContext.registerClasses(LSPParser.parseFile(evt.document.uri, evt.document.getText(), true)));
-		documents.onDidChangeContent(change => LSPContext.registerClasses(LSPParser.parseFile(change.document.uri, change.document.getText(), true)));
+		documents.onDidOpen(evt => LSPContext.registerClasses(evt.document.uri, LSPParser.parseFile(evt.document.uri, evt.document.getText())));
+		documents.onDidChangeContent(change => LSPContext.registerClasses(change.document.uri, LSPParser.parseFile(change.document.uri, change.document.getText())));
 		connection.onCompletion((docPos, token) => LSPContext.getCompletions(docPos, token, documents.get(docPos.textDocument.uri)));
 		connection.onSignatureHelp((docPos, token) => LSPContext.getSignatureHelp(docPos, token, documents.get(docPos.textDocument.uri)));
 		connection.onHover(docPos => LSPContext.getHoverInfo(docPos, documents.get(docPos.textDocument.uri)));

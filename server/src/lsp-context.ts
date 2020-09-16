@@ -317,8 +317,21 @@ export class LSPContext
 
 	}
 
-	public static registerClasses(classes: LSPClass[]): void
+	public static registerClasses(fileUri: string, classes: LSPClass[]): void
 	{
+		const newClassLookup: { [fullTypeOrUri: string]: LSPClass } = Object.create(null);
+		Object
+			.keys(this._classLookup)
+			.forEach(
+				c =>
+				{
+					if (this._classLookup[c].fileUri !== fileUri)
+					{
+						newClassLookup[c] = this._classLookup[c];
+					}
+				}
+			);
+		this._classLookup = { ...newClassLookup };
 		classes.map(classe => this.registerClass(classe));
 	}
 
@@ -330,7 +343,7 @@ export class LSPContext
 		}
 
 		this._classLookup[lspClass.name] = lspClass;
-		this._classLookup[lspClass.fileUri] = lspClass;
+		// this._classLookup[lspClass.fileUri] = lspClass;
 	}
 
 	public static loadInternalTemplates(templates: LSPTemplateClass[]): void
