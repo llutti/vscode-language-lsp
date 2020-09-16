@@ -29,22 +29,10 @@ connection.onInitialize(
 
 connection.listen();
 
-console.log('connection.listen()');
-
 LSPParser.initialise()
 	.then(() =>
 	{
-		console.log('LSPParser.initialise then');
-
-		documents.onDidOpen(
-			(evt) =>
-			{
-				console.log('LSPParser.initialise onDidOpen');
-
-				LSPContext.registerClasses(LSPParser.parseFile(evt.document.uri, evt.document.getText(), true));
-
-			});
-
+		documents.onDidOpen(evt => LSPContext.registerClasses(LSPParser.parseFile(evt.document.uri, evt.document.getText(), true)));
 		documents.onDidChangeContent(change => LSPContext.registerClasses(LSPParser.parseFile(change.document.uri, change.document.getText(), true)));
 		connection.onCompletion((docPos, token) => LSPContext.getCompletions(docPos, token, documents.get(docPos.textDocument.uri)));
 		connection.onSignatureHelp((docPos, token) => LSPContext.getSignatureHelp(docPos, token, documents.get(docPos.textDocument.uri)));

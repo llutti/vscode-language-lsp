@@ -31,7 +31,7 @@
 					"match": "\\b(?i:(e|ou))\\b"
 				},
 				{
-					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|lista|numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"name": "storage.type.prototype.lsp"
@@ -44,6 +44,68 @@
 							]
 						},
 						"3": {
+							"name": "variable.other.readwrite.lsp"
+						}
+					}
+				},
+				{
+					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(funcao))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"captures": {
+						"1": {
+							"name": "storage.type.prototype.lsp"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#type"
+								}
+							]
+						},
+						"3": {
+							"name": "entity.name.function.lsp"
+						}
+					}
+				},
+				{
+					"match": "\\b(?i:(funcao))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"captures": {
+						"1": {
+							"name": "storage.type.function.lsp"
+						},
+						"2": {
+							"name": "entity.name.function.lsp"
+						}
+					}
+				},
+				{
+					"match": "\\b(?i:(numero))\\b\\s\\b(?i:(end))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"captures": {
+						"1": {
+							"patterns": [
+								{
+									"include": "#type"
+								}
+							]
+						},
+						"2": {
+							"name": "keyword.other.lsp"
+						},
+						"3": {
+							"name": "variable.other.readwrite.lsp"
+						}
+					}
+				},
+				{
+					"match": "\\b(?i:(numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"captures": {
+						"1": {
+							"patterns": [
+								{
+									"include": "#type"
+								}
+							]
+						},
+						"2": {
 							"name": "variable.other.readwrite.lsp"
 						}
 					}

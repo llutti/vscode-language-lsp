@@ -1,19 +1,19 @@
 import { EParameterType, LSPClass, LSPParameter, LSPTypeObject } from './lsp-elements';
 
 const Patterns = {
-	IMPORT: /\bimport\s+([\w$\.\*]+)/,
-	CLASS: /(\bclass\s+)([\w$\.]+)/,
-	CLASS_EXTENDS: /\bextends\s+([\w$\.]+)/,
-	CLASS_VAR: /(\bvar\s+)([\w$]+)(?:\s*:\s*([\w$\.]+))?/,                //Group 2: var name; group 3 (optional): type
-	PRIVATE: /\bprivate\b/,
-	STATIC: /\bstatic\b/,
+	// IMPORT: /\bimport\s+([\w$\.\*]+)/,
+	// CLASS: /(\bclass\s+)([\w$\.]+)/,
+	// CLASS_EXTENDS: /\bextends\s+([\w$\.]+)/,
+	// CLASS_VAR: /(\bvar\s+)([\w$]+)(?:\s*:\s*([\w$\.]+))?/,                //Group 2: var name; group 3 (optional): type
+	// PRIVATE: /\bprivate\b/,
+	// STATIC: /\bstatic\b/,
 	FUNCAO: /(\bdefinir\s+)(\bfuncao\s+)([\w$]+)(\s*\()(.*)\)(?:\s*:\s*([\w$\.]+))?/i,
-	IDENTIFIER_AND_TYPE: /((\bnumero\s+)(\bend\s+)([\w$]+))|((\bnumero\s+)([\w$]+))?/i,     //Group 2: var/argument name; group 4 (optional): type
-	LOCAL_VARS: /(\bvar\b)([\s\w$:,=.\[\]()-+*/"']+)/,                    //Group 2: content
-	BRACES: /[{}]/g,
-	MATCHED_BRACES: /{(?:(?!{).)*?}/g,
-	MATCHED_BRACKETS: /\[(?:(?!\[).)*?\]/g,
-	MATCHED_PARENS: /\((?:(?!\().)*?\)/g
+	IDENTIFIER_AND_TYPE: /((\bnumero\s+)(\bend\s+){0,1}([\w$]+))/i,
+	// LOCAL_VARS: /(\bvar\b)([\s\w$:,=.\[\]()-+*/"']+)/,                    //Group 2: content
+	// BRACES: /[{}]/g,
+	// MATCHED_BRACES: /{(?:(?!{).)*?}/g,
+	// MATCHED_BRACKETS: /\[(?:(?!\[).)*?\]/g,
+	// MATCHED_PARENS: /\((?:(?!\().)*?\)/g
 };
 
 
@@ -72,11 +72,11 @@ export class LSPParser
 			Patterns.IDENTIFIER_AND_TYPE.lastIndex = 0;
 			params = rawParams[i].trim();
 			result = Patterns.IDENTIFIER_AND_TYPE.exec(params);
-			if (result && (result[2] || result[6]))
+			if (result && (result[2]))
 			{
 				let param: LSPParameter = {
 					type: EParameterType.Numero,
-					name: result[4] || result[7],
+					name: result[4],
 					isReturnValue: !!result[3]
 				};
 
