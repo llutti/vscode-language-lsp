@@ -296,7 +296,15 @@ export class LSPContext
 		let hoverContents = `\`\`\`lsp\n${classe.signature()}\n\`\`\``;
 		if (classe.documentation)
 		{
-			hoverContents = hoverContents + '\n---\n' + classe.documentation?.toString();
+			hoverContents = hoverContents + '\n---\n';
+			if (typeof classe.documentation !== 'string')
+			{
+				hoverContents = hoverContents + classe.documentation.value;
+			}
+			else
+			{
+				hoverContents = hoverContents + classe.documentation?.toString();
+			}
 		}
 
 		const range: Range = {
