@@ -5,6 +5,7 @@ Alterações realizadas na extensão.
 ## [0.1.0] - 16/09/2020
 ### Alteraçãoes
 - Melhoria na identificação dos parâmetros das funções customizadas
+- Melhoria na documentação do comando *ExecSQLEx*
 
 ## [0.0.9] - 15/09/2020
 ### Adicionado
