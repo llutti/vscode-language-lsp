@@ -3530,7 +3530,10 @@ export const templatesInternos: LSPTemplateClass[] = [
 	},
 	{
 		label: "ExecSQLEx",
-		documentation: "Implementada a função ExecSqlEx que permite a execução de comandos SQL no banco de dados efetuando tratamento de exceções",
+		documentation: {
+			kind: 'markdown',
+			value: "Executa um comando SQL no banco. Nessa função podem ser usadas para as operações Insert , Update , Delete.\n\n**Observação**: Poderão ser utilizados comandos nativos do Banco de Dados e é permitido acessar objetos que não constam no TBS."
+		},
 		type: 2,
 		parameters: [
 			{
@@ -3540,12 +3543,14 @@ export const templatesInternos: LSPTemplateClass[] = [
 			},
 			{
 				type: EParameterType.Numero,
-				name: "Sucesso(0 - Sucesso | 1 - Erro)",
+				name: "Sucesso",
+				documenation: 'Os valores possíveis são: 0: Sucesso | 1: Erro.',
 				isReturnValue: true
 			},
 			{
 				type: EParameterType.Alfa,
 				name: "MensagemErro",
+				documenation: 'Texto com a Mensagem de erro gerado pela execução do Comando SQL.',
 				isReturnValue: true
 			}
 		]
