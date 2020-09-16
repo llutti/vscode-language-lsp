@@ -78,7 +78,7 @@
 					}
 				},
 				{
-					"match": "\\b(?i:(numero))\\b\\s\\b(?i:(end))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?i:(end))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"patterns": [
@@ -96,7 +96,7 @@
 					}
 				},
 				{
-					"match": "\\b(?i:(numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"patterns": [
