@@ -6,6 +6,20 @@
     ],
     "description": "Comentário de Linha"
   },
+  "InicioBlocoCodigo": {
+    "prefix": "InicioBlocoCodigo",
+    "body": [
+      "@-- Bloco '$1' --@"
+    ],
+    "description": "Comentário de Linha, para iniciar um bloco de código"
+  },
+  "FimBlocoCodigo": {
+    "prefix": "FimBlocoCodigo",
+    "body": [
+      "@-- FimBloco '$1' --@"
+    ],
+    "description": "Comentário de Linha, para encerrar um bloco de código"
+  },
   "Inicio Fim": {
     "prefix": "Inicio",
     "body": [
