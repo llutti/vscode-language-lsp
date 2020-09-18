@@ -2,6 +2,14 @@
 
 Alterações realizadas na extensão.
 
+## [0.1.1] - 18/09/2020
+### Adicionado
+- Opção gerar um "bloco de código" utilizando a sintaxe para abrir/fechar:
+  @-- Bloco '<Qualquer Texto>' --@
+  @-- FimBloco '<Qualquer Texto>' --@
+- Adicionado como "brackets" **Inicio**...**Fim;** para que sejam destacado
+- Sempre que for digitado **Inicio** a palavra **Fim;** será adicionado automaticamente
+
 ## [0.1.0] - 16/09/2020
 ### Alteraçãoes
 - Melhoria na identificação dos parâmetros das funções customizadas
