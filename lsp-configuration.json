@@ -5,7 +5,8 @@
     "brackets": [
         ["{", "}"],
         ["[", "]"],
-        ["(", ")"]
+        ["(", ")"],
+        ["Inicio", "Fim"]
     ],
     "autoClosingPairs": [
         ["{", "}"],
@@ -15,7 +16,8 @@
 		{ "open": "\"", "close": "\"", "notIn": ["string"] },
 		{ "open": "`", "close": "`", "notIn": ["string", "comment"] },
 		{ "open": "@", "close": "@", "notIn": ["string", "comment"] },
-		{ "open": "/**", "close": " */", "notIn": ["string"] }
+		{ "open": "/**", "close": " */", "notIn": ["string"] },
+		{ "open": "Inicio", "close": " Fim;", "notIn": ["string", "comment"] }
     ],
     "surroundingPairs": [
         ["{", "}"],
@@ -27,5 +29,11 @@
     "indentationRules": {
         "increaseIndentPattern": "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*|(inicio|Inicio))$",
         "decreaseIndentPattern": "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$"
-    }
+    },
+    "folding": {
+        "markers": {
+          "start": "^\\s*@--\\s*#?(bloco|Bloco)\\b(\\s\\'.*\\')?\\s*--@",
+          "end": "^\\s*@--\\s*#?(fimbloco|FimBloco|Fimbloco)\\b(\\s\\'.*\\')?\\s*--@"
+        }
+      }
 }
