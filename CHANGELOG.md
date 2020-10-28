@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [0.1.2] - 28/10/2020
+### Adicionado
+- Adicionada documentação dos métodos: **AbrirArquivo** e **LerNovaLinha**
+
 ## [0.1.1] - 18/09/2020
 ### Adicionado
 - Opção gerar um "bloco de código" utilizando a sintaxe para abrir/fechar:
