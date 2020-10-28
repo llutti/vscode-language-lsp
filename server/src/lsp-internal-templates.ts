@@ -4336,6 +4336,44 @@ export const templatesInternos: LSPTemplateClass[] = [
 		]
 	},
 	{
+		label: "AbrirArquivo",
+		type: 2,
+		documentation: "Esta função abre o arquivo passado como parâmetro. Pode ser utilizada para testar se um arquivo existe em um determinado local.",
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "aArquivo",
+				documenation: "Nome do arquivo a ser aberto.",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "nRetorno",
+				documenation: "Variável que receberá o resultado da função. Se o arquivo for aberto corretamente, ela receberá 1. Caso contrário, ela receberá 0.",
+				isReturnValue: true
+			}
+		]
+	},
+	{
+		label: "LerNovaLinha",
+		type: 2,
+		documentation: "Esta função funciona em conjunto com a função 'AbrirArquivo'. Após abrir o arquivo é possível ler linha a linha do arquivo.",
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "aLinha",
+				documenation: "Variável que receberá o conteúdo de cada linha do arquivo.",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "nRetorno",
+				documenation: "Se conseguiu ler a linha normalmente vai retornar 1. Caso contrário se chegou no final do arquivo o retorno será 0(zero).",
+				isReturnValue: true
+			}
+		]
+	},
+	{
 		label: "Abrir",
 		type: 2,
 		parameters: [
