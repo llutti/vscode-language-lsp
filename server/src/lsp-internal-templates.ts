@@ -4342,13 +4342,13 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "aArquivo",
+				name: "Arquivo",
 				documenation: "Nome do arquivo a ser aberto.",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "nRetorno",
+				name: "Retorno",
 				documenation: "Variável que receberá o resultado da função. Se o arquivo for aberto corretamente, ela receberá 1. Caso contrário, ela receberá 0.",
 				isReturnValue: true
 			}
@@ -4361,13 +4361,13 @@ export const templatesInternos: LSPTemplateClass[] = [
 		parameters: [
 			{
 				type: EParameterType.Alfa,
-				name: "aLinha",
+				name: "Linha",
 				documenation: "Variável que receberá o conteúdo de cada linha do arquivo.",
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
-				name: "nRetorno",
+				name: "Retorno",
 				documenation: "Se conseguiu ler a linha normalmente vai retornar 1. Caso contrário se chegou no final do arquivo o retorno será 0(zero).",
 				isReturnValue: true
 			}
