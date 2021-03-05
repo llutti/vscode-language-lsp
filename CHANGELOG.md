@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [0.1.3] - 05/03/2021
+### Adicionado
+- Adicionada documentação dos métodos: **Base64Decode**, **Base64Encode** e **WebCodificaUrl**
+
 ## [0.1.2] - 28/10/2020
 ### Adicionado
 - Adicionada documentação dos métodos: **AbrirArquivo** e **LerNovaLinha**

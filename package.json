@@ -2,7 +2,7 @@
     "name": "lsp",
     "displayName": "LSP Language Service",
     "description": "Linguagem Senior de Programação",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "publisher": "llutti",
     "icon": "images/icon.png",
     "license": "SEE LICENSE IN LICENSE.md",
