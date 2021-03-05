@@ -15,7 +15,12 @@ let workspaceFolder: string | null;
 connection.onInitialize(
 	(params) =>
 	{
-		workspaceFolder = params.rootUri;
+		if ((params.workspaceFolders)
+			&& (params.workspaceFolders?.length >= 1))
+		{
+			workspaceFolder = params.workspaceFolders[0].uri;
+		}
+
 		return {
 			capabilities: {
 				textDocumentSync: TextDocumentSyncKind.Incremental,
