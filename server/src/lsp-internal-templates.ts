@@ -5620,5 +5620,62 @@ export const templatesInternos: LSPTemplateClass[] = [
 				isReturnValue: true
 			}
 		]
+	},
+	{
+		label: "Base64Decode",
+		documentation: 'Decodifica um valor base64 passado.',
+		type: 2,
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "Texto",
+				documenation: 'Contém o texto original que necessita ser decodificado',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				documenation: 'Contém o texto decodificado',
+				isReturnValue: true
+			}
+		]
+	},
+	{
+		label: "Base64Encode",
+		documentation: 'Codifica para base64 o conteúdo passado.',
+		type: 2,
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "Texto",
+				documenation: 'Contém o texto original que necessita ser codificado',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				documenation: 'Contém o texto codificado',
+				isReturnValue: true
+			}
+		]
+	},
+	{
+		label: "WebCodificaUrl",
+		documentation: 'Esta função faz a codificação dos caracteres de forma a concatenar em URLs de forma segura.',
+		type: 2,
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "Texto",
+				documenation: 'Contém o texto original que necessita ser codificado',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				documenation: 'Contém o texto codificado',
+				isReturnValue: true
+			}
+		]
 	}
 ]
