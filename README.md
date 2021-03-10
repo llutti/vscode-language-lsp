@@ -5,21 +5,24 @@
     <img src="images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">LSP para Visual Studio Code</h3>
+  <h2 align="center">LSP para Visual Studio Code</h2>
 
   <p align="center">
     Esta extensão adiciona o suporte à <b>Linguagem Senior de Programação</b>, também conhecida como LSP, ao Visual Studio Code.
   </p>
 </p>
 
-A extensão atualmente suporta:
+Aqui estão alguns dos recursos que o **LSP** oferece:
 
 * Colorização
 * Autocomplete
 * Apresentação de parâmetros das funções (nativas e customizadas)
 * Snippets (trechos de códigos previamente configurados)
 
-# Modo de usar
+<br>
+<br>
+
+# **Recursos**
 
 ## Colorização
 
