@@ -2,6 +2,9 @@
 
 Alterações realizadas na extensão.
 
+## [1.0.0] - 11/03/2021
+- Publicação no marketplace do VSCode
+
 ## [0.1.3] - 05/03/2021
 ### Adicionado
 - Adicionada documentação dos métodos: **Base64Decode**, **Base64Encode** e **WebCodificaUrl**
