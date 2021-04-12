@@ -20,7 +20,7 @@
 			"patterns": [
 				{
 					"name": "keyword.other.lsp",
-					"match": "\\b(?i:(abrir|abrirarquivo|atualizarcampos|cancel|cancela|chamarfuncao|retorna|desabilitarbotao|desabilitarcampo|desabilitartodos|desfazertransacao|erro|end|escondercampo|fechar|fim|finalizartransacao|formatar|gravar|gravarnl|grid|habilitarbotao|habilitarcampo|habilitartodos|iniciartransacao|inicio|inserir|ler|lernl|lernovalinha|regra|tabela|vapara|vaparacampo|vaparapagina))\\b"
+					"match": "\\b(?i:(abrir|abrirarquivo|atualizarcampos|cancel|cancela|chamarfuncao|retorna|desabilitarbotao|desabilitarcampo|desabilitartodos|desfazertransacao|erro|end|escondercampo|fechar|fim|finalizartransacao|formatar|gravar|gravarnl|gravarnleol|grid|habilitarbotao|habilitarcampo|habilitartodos|iniciartransacao|inicio|inserir|ler|lernl|lernovalinha|regra|tabela|vapara|vaparacampo|vaparapagina))\\b"
 				},
 				{
 					"name": "keyword.control.lsp",
