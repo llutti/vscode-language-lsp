@@ -4320,17 +4320,64 @@ export const templatesInternos: LSPTemplateClass[] = [
 		]
 	},
 	{
-		label: "Gravarnl",
+		label: "Abrir",
+		type: 3,
+		documentation: 'Abre arquivos no disco local ou na rede. Se a função for bem sucedida, o valor de retorno será o manipulador de arquivo. Este valor não poderá ser alterado, caso contrário a regra não terá condições de operar com o arquivo. Se a função falhar, um erro acontece e a regra é cancelada.',
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "NomeArquivo",
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "ModoAbertura [Ler|Gravar|LerNL|GravarNL]",
+				documenation:
+				{
+					kind: 'markdown',
+					value: 'Determina o modo de abertura do arquivo:\n'
+						+ '-**Ler**: Leitura binária\n'
+						+ '-**Gravar**: Escrita binária\n'
+						+ '-**LerNL**: Leitura em modo texto\n'
+						+ '-**GravarNL**: Escrita em modo texto\n'
+				},
+				isReturnValue: false
+			}
+		]
+	},
+	{
+		label: "Fechar",
 		type: 2,
+		documentation: 'Fecha um arquivo previamente aberto.',
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "NomeArquivo",
+				isReturnValue: false
+			}
+		]
+	},
+	{
+		label: "Gravar",
+		type: 3,
+		documentation: 'Escreve determinado número de bytes para um arquivo binário e retorna o número de bytes gravados no arquivo.',
 		parameters: [
 			{
 				type: EParameterType.Numero,
-				name: "nManArquivo",
+				name: "ManipuladorArquivo",
+				documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Alfa,
-				name: "aVar",
+				name: "Dados",
+				documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo.',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "NumeroDeBytes",
+				documenation: 'Indica o número de bytes que devem ser lidos do arquivo.',
 				isReturnValue: false
 			}
 		]
@@ -4376,21 +4423,119 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "Abrir",
 		type: 2,
+		documentation: 'Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.',
 		parameters: [
 			{
-				type: EParameterType.Alfa,
-				name: "NomeArq",
+				type: EParameterType.Numero,
+				name: "ManipuladorArquivo",
+				documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
 				isReturnValue: false
 			},
 			{
-				type: EParameterType.Numero,
-				name: "ModoAbertura [Ler|Gravar|LerNL|GravarNL]",
+				type: EParameterType.Alfa,
+				name: "ValorLinha",
+				documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
 				isReturnValue: false
 			}
 		]
 	},
 	{
-		label: "ExecutaTelaSgi",
+		label: "GravarNL",
+		type: 2,
+		documentation: 'Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.',
+		parameters: [
+			{
+				type: EParameterType.Numero,
+				name: "ManipuladorArquivo",
+				documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "ValorLinha",
+				documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
+				isReturnValue: false
+			}
+		]
+	},
+	{
+		label: "GravarNLEOL",
+		type: 2,
+		documentation: 'Grava uma linha em um arquivo texto com a opção de incluir a quebra de linha ao final.',
+		parameters: [
+			{
+				type: EParameterType.Numero,
+				name: "ManipuladorArquivo",
+				documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "ValorLinha",
+				documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "UseEOL [0:Não | 1:Sim]",
+				documenation: 'Determina se deve ou não ser adicionada a quebra de linha ao final.',
+				isReturnValue: false
+			}
+		]
+	},
+	{
+		label: "Ler",
+		type: 3,
+		documentation:{
+			kind: 'markdown',
+			value: 'Lê determinado números de bytes do arquivo binário indicado. Esta função retorna o **número de bytes** que foram **lidos** do arquivo. Se a leitura atingiu o final do arquivo, o retorno será o **número de bytes lidos** até o final do arquivo.'
+		},
+		parameters: [
+			{
+				type: EParameterType.Numero,
+				name: "ManipuladorArquivo",
+				documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				documenation: 'Indica a variável de onde os dados serão obtidos para leitura.',
+				isReturnValue: true
+			},
+			{
+				type: EParameterType.Numero,
+				name: "NumeroDeBytes",
+				documenation: 'Indica o número de bytes que devem ser lidos do arquivo.',
+				isReturnValue: false
+			}
+		]
+	},
+	{
+		label: "LerNL",
+		type: 3,
+		documentation:{
+			kind: 'markdown',
+			value: 'Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n'
+			+ '**Observação:** A função LerNL considera apenas como quebra de linha *“CRLF”* ou *“#13#10”*, padrão do sistema operacional Windows.'
+		},
+		parameters: [
+			{
+				type: EParameterType.Numero,
+				name: "ManipuladorArquivo",
+				documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Alfa,
+				name: "Retorno",
+				documenation: 'Indica a variável de onde os dados serão obtidos para leitura.',
+				isReturnValue: true
+			}
+		]
+	},
+	{
+		label: "ExecutaTelaSGI",
 		documentation: "Esta função executa a tela do SGI passada como parâmetro. Se a tela for executada com sucesso, a função retornará 1. Caso contrário, retornará 0.",
 		type: 2,
 		parameters: [
