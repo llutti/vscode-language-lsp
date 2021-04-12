@@ -4335,11 +4335,12 @@ export const templatesInternos: LSPTemplateClass[] = [
 				documenation:
 				{
 					kind: 'markdown',
-					value: 'Determina o modo de abertura do arquivo:\n'
-						+ '-**Ler**: Leitura binária\n'
-						+ '-**Gravar**: Escrita binária\n'
-						+ '-**LerNL**: Leitura em modo texto\n'
-						+ '-**GravarNL**: Escrita em modo texto\n'
+					value:
+						'Determina o modo de abertura do arquivo:\n'
+						+ '  - **Ler**: Leitura binária\n'
+						+ '  - **Gravar**: Escrita binária\n'
+						+ '  - **LerNL**: Leitura em modo texto\n'
+						+ '  - **GravarNL**: Escrita em modo texto\n'
 				},
 				isReturnValue: false
 			}
@@ -4384,8 +4385,8 @@ export const templatesInternos: LSPTemplateClass[] = [
 	},
 	{
 		label: "AbrirArquivo",
-		type: 2,
-		documentation: "Esta função abre o arquivo passado como parâmetro. Pode ser utilizada para testar se um arquivo existe em um determinado local.",
+		type: 3,
+		documentation: "Esta função abre o arquivo passado como parâmetro. Pode ser utilizada para testar se um arquivo existe em um determinado local. Se o arquivo for aberto corretamente, a função retornará 1. Se ocorrer algum problema e o arquivo não puder ser aberto, ela retornará 0.",
 		parameters: [
 			{
 				type: EParameterType.Alfa,
@@ -4417,25 +4418,6 @@ export const templatesInternos: LSPTemplateClass[] = [
 				name: "Retorno",
 				documenation: "Se conseguiu ler a linha normalmente vai retornar 1. Caso contrário se chegou no final do arquivo o retorno será 0(zero).",
 				isReturnValue: true
-			}
-		]
-	},
-	{
-		label: "Abrir",
-		type: 2,
-		documentation: 'Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.',
-		parameters: [
-			{
-				type: EParameterType.Numero,
-				name: "ManipuladorArquivo",
-				documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
-				isReturnValue: false
-			},
-			{
-				type: EParameterType.Alfa,
-				name: "ValorLinha",
-				documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
-				isReturnValue: false
 			}
 		]
 	},
@@ -4486,7 +4468,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "Ler",
 		type: 3,
-		documentation:{
+		documentation: {
 			kind: 'markdown',
 			value: 'Lê determinado números de bytes do arquivo binário indicado. Esta função retorna o **número de bytes** que foram **lidos** do arquivo. Se a leitura atingiu o final do arquivo, o retorno será o **número de bytes lidos** até o final do arquivo.'
 		},
@@ -4514,10 +4496,10 @@ export const templatesInternos: LSPTemplateClass[] = [
 	{
 		label: "LerNL",
 		type: 3,
-		documentation:{
+		documentation: {
 			kind: 'markdown',
 			value: 'Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n'
-			+ '**Observação:** A função LerNL considera apenas como quebra de linha *“CRLF”* ou *“#13#10”*, padrão do sistema operacional Windows.'
+				+ '**Observação:** A função LerNL considera apenas como quebra de linha *“CRLF”* ou *“#13#10”*, padrão do sistema operacional Windows.'
 		},
 		parameters: [
 			{
