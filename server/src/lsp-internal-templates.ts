@@ -3532,7 +3532,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 		label: "ExecSQLEx",
 		documentation: {
 			kind: 'markdown',
-			value: "Executa um comando SQL no banco. Nessa função podem ser usadas para as operações Insert , Update , Delete.\n\n**Observação**: Poderão ser utilizados comandos nativos do Banco de Dados e é permitido acessar objetos que não constam no TBS."
+			value: "Executa um comando SQL no banco. Nessa função podem ser usadas para as operações Insert ,Update ,Delete.\n\n**Observação**: Poderão ser utilizados comandos nativos do Banco de Dados e é permitido acessar objetos que não constam no TBS."
 		},
 		type: 2,
 		parameters: [
@@ -4195,7 +4195,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 		label: "SQL_UsarSQLSenior2",
 		documentation: {
 			kind: 'markdown',
-			value: "Informa se o comando a ser definido para o cursor utiliza a sintaxe de linguagem Senior ou a sintaxe nativa (linguagem originada da base de dados utilizada, por exemplo Oracle e SQL Server).<br>Para utilização de comandos nativos é necessário desabilitar as rotina de abrangência através da função SQL_UsarAbrangencia e, em seguida, informar que não será utilizado a linguagem Senior."
+			value: 'Informa se o comando a ser definido para o cursor utiliza a sintaxe de linguagem Senior ou a sintaxe nativa (linguagem originada da base de dados utilizada, por exemplo Oracle e SQL Server).\n\nPara utilização de comandos nativos é **necessário desabilitar** as rotina de abrangência através da função **SQL_UsarAbrangencia** e, em seguida, informar que não será utilizado a linguagem Senior.'
 		},
 		type: 2,
 		parameters: [
@@ -4542,7 +4542,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 		type: 3,
 		documentation: {
 			kind: 'markdown',
-			value: 'Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n'
+			value: 'Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n\n'
 				+ '**Observação:** A função LerNL considera apenas como quebra de linha *“CRLF”* ou *“#13#10”*, padrão do sistema operacional Windows.'
 		},
 		parameters: [
