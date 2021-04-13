@@ -327,7 +327,7 @@ export class LSPContext
 
 	public static registerClasses(fileUri: string, classes: LSPClass[]): void
 	{
-		const newClassLookup: { [fullTypeOrUri: string]: LSPClass } = Object.create(null);
+		const newClassLookup: { [fullTypeOrUri: string]: LSPClass } = {}; // Object.create(null);
 		Object
 			.keys(this._classLookup)
 			.forEach(

@@ -1,4 +1,4 @@
-import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, TransportKind } from 'vscode-languageclient/node';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 
 import { ExtensionContext, workspace } from 'vscode';
 
@@ -8,16 +8,17 @@ let client: LanguageClient;
 
 export async function activate(context: ExtensionContext)
 {
-	let serverModule = context.asAbsolutePath(path.join('server', 'out', 'server.js'));
-	let debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
+	const serverModule = context.asAbsolutePath(path.join('server', 'out', 'server.js'));
 
-	let serverOptions: ServerOptions = {
+	const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
+
+	const serverOptions: ServerOptions = {
 		run: { module: serverModule, transport: TransportKind.ipc },
 		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
 	};
 
-	let clientOptions: LanguageClientOptions = {
-		documentSelector: ['lsp'],
+	const clientOptions: LanguageClientOptions = {
+		documentSelector: [{ scheme: 'file', language: 'lsp' }],
 		synchronize: {
 			fileEvents: workspace.createFileSystemWatcher('{**/*.txt,**/*.lspt,**/*.json}')
 		},
@@ -25,7 +26,7 @@ export async function activate(context: ExtensionContext)
 		//   config,
 		//   globalSnippetDir
 		// },
-		revealOutputChannelOn: RevealOutputChannelOn.Never
+		// revealOutputChannelOn: RevealOutputChannelOn.Never
 	};
 
 	// Create the language client and start the client.
@@ -49,6 +50,7 @@ export async function activate(context: ExtensionContext)
 	// 	}
 	// }));
 
+	// Start the client. This will also launch the server
 	client.start();
 }
 
