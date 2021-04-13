@@ -3778,6 +3778,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: true
 			}
 		]
@@ -3790,6 +3791,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: true
 			}
 		]
@@ -3802,6 +3804,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -3819,6 +3822,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			}
 		]
@@ -3831,6 +3835,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			}
 		]
@@ -3843,6 +3848,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			}
 		]
@@ -3855,6 +3861,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			}
 		]
@@ -3867,6 +3874,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			}
 		]
@@ -3879,6 +3887,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -3901,6 +3910,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -3923,6 +3933,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -3945,6 +3956,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -3967,6 +3979,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -3989,6 +4002,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4011,6 +4025,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4028,6 +4043,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4050,6 +4066,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4072,6 +4089,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4094,6 +4112,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4116,6 +4135,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4138,6 +4158,7 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
@@ -4160,11 +4181,34 @@ export const templatesInternos: LSPTemplateClass[] = [
 			{
 				type: EParameterType.Alfa,
 				name: "aObjeto",
+				documenation: 'Informe o cursor.',
 				isReturnValue: false
 			},
 			{
 				type: EParameterType.Numero,
 				name: "nUsar",
+				isReturnValue: false
+			}
+		]
+	},
+	{
+		label: "SQL_UsarSQLSenior2",
+		documentation: {
+			kind: 'markdown',
+			value: "Informa se o comando a ser definido para o cursor utiliza a sintaxe de linguagem Senior ou a sintaxe nativa (linguagem originada da base de dados utilizada, por exemplo Oracle e SQL Server).<br>Para utilização de comandos nativos é necessário desabilitar as rotina de abrangência através da função SQL_UsarAbrangencia e, em seguida, informar que não será utilizado a linguagem Senior."
+		},
+		type: 2,
+		parameters: [
+			{
+				type: EParameterType.Alfa,
+				name: "aObjeto",
+				documenation: 'Informe o cursor.',
+				isReturnValue: false
+			},
+			{
+				type: EParameterType.Numero,
+				name: "nUsar",
+				documenation: '0 para definir que não será utilizada sintaxe SQL Senior 2 ou um valor diferente de zero para definir que será utilizada a sintaxe SQL Senior 2.',
 				isReturnValue: false
 			}
 		]
