@@ -1,7 +1,7 @@
 {
     "name": "lsp",
-    "displayName": "LSP Language Service",
-    "description": "Linguagem Senior de Programação",
+    "displayName": "LSP - Linguagem Senior de Programação",
+    "description": "Suporte para a Linguagem Senior de Programação",
     "version": "1.0.1",
     "publisher": "llutti",
     "icon": "images/icon.png",
@@ -59,9 +59,9 @@
         "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
     },
     "devDependencies": {
-        "@types/node": "^14.14.33",
-        "@typescript-eslint/parser": "^4.17.0",
-        "eslint": "^7.21.0",
-        "typescript": "^4.2.3"
+        "@types/node": "^14.14.37",
+        "@typescript-eslint/parser": "^4.22.0",
+        "eslint": "^7.24.0",
+        "typescript": "^4.2.4"
     }
 }
