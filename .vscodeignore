@@ -6,6 +6,7 @@ README-example.md
 CHANGELOG-example.md
 old/**
 p.bat
+*.lspt
 
 **/*.ts
 **/*.map
