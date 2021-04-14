@@ -1,14 +1,14 @@
-import { CancellationToken, CompletionItem, CompletionItemKind, CompletionParams, CompletionTriggerKind, Hover, ParameterInformation, Position, SignatureHelp, SignatureInformation, TextDocumentPositionParams } from 'vscode-languageserver';
+import { CancellationToken, CompletionItem, CompletionItemKind, CompletionParams, Hover, ParameterInformation, SignatureHelp, SignatureInformation, TextDocumentPositionParams } from 'vscode-languageserver/node';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
 import { LSPClass, LSPTemplateClass } from './lsp-elements';
 
-const tokenSplitter = /([\w\$]+)/g;                     // Captures symbol names
+// const tokenSplitter = /([\w\$]+)/g;                     // Captures symbol names
 const symbolMatcher = /[\w\$]+/g;                       // Like above but non-capturing
 const firstSymbolMatcher = /(^[\w\$]+)/;                // Like above but from start of string only
-const ambientValidator = /(?:^|\(|\[|,)\s*[\w\$]+$/g;   // Matches strings that end with an ambient symbol; fails for sub properties – ...hopefully
+// const ambientValidator = /(?:^|\(|\[|,)\s*[\w\$]+$/g;   // Matches strings that end with an ambient symbol; fails for sub properties – ...hopefully
 const braceMatcher = /{(?:(?!{).)*?}/g;                 // Matches well paired braces
 const bracketMatcher = /\[(?:(?!\[).)*?\]/g;            // Matches well paired square brackets
-const matchedParens = /\((?:(?!\().)*?\)/g;             // Matches well paired parentheses
+// const matchedParens = /\((?:(?!\().)*?\)/g;             // Matches well paired parentheses
 
 const delimitadores = /[\(\)\,\.\/\s]/gi
 const CR = '\r'.charCodeAt(0);
