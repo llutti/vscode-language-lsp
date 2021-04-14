@@ -1,7 +1,5 @@
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
-
 import { ExtensionContext, workspace } from 'vscode';
-
 import * as path from 'path';
 
 let client: LanguageClient;
@@ -22,11 +20,6 @@ export async function activate(context: ExtensionContext)
 		synchronize: {
 			fileEvents: workspace.createFileSystemWatcher('{**/*.txt,**/*.lspt,**/*.json}')
 		},
-		// initializationOptions: {
-		//   config,
-		//   globalSnippetDir
-		// },
-		// revealOutputChannelOn: RevealOutputChannelOn.Never
 	};
 
 	// Create the language client and start the client.
@@ -37,45 +30,9 @@ export async function activate(context: ExtensionContext)
 		clientOptions
 	);
 
-	// const collection = languages.createDiagnosticCollection('lsp');
-	// if (window.activeTextEditor)
-	// {
-	// 	updateDiagnostics(window.activeTextEditor.document, collection);
-	// }
-	// context.subscriptions.push(window.onDidChangeActiveTextEditor(editor =>
-	// {
-	// 	if (editor)
-	// 	{
-	// 		updateDiagnostics(editor.document, collection);
-	// 	}
-	// }));
-
 	// Start the client. This will also launch the server
 	client.start();
 }
-
-// function updateDiagnostics(document: TextDocument, collection: DiagnosticCollection): void
-// {
-// 	if (document)
-// 	{
-// 		// console.log('updateDiagnostics document.uri', document.uri);
-
-// 		// collection.set(document.uri, [{
-// 		// 	code: '',
-// 		// 	message: 'cannot assign twice to immutable variable `x`',
-// 		// 	range: new vscode.Range(new vscode.Position(3, 4), new vscode.Position(3, 10)),
-// 		// 	severity: vscode.DiagnosticSeverity.Error,
-// 		// 	source: '',
-// 		// 	relatedInformation: [
-// 		// 		new vscode.DiagnosticRelatedInformation(new vscode.Location(document.uri, new vscode.Range(new vscode.Position(1, 8), new vscode.Position(1, 9))), 'first assignment to `x`')
-// 		// 	]
-// 		// }]);
-// 	}
-// 	else
-// 	{
-// 		collection.clear();
-// 	}
-// }
 
 export function deactivate(): Thenable<void> | undefined
 {
