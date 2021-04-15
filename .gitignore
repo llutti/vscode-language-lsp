@@ -7,8 +7,10 @@ dist
 *-example.md
 vsc-extension-quickstart.md
 *.bat
+*.bak
 old
 *.lspt
+lixo.*
 
 # lock files
 package-lock.json
