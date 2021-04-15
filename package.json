@@ -15,7 +15,7 @@
         "url": "https://github.com/llutti/vscode-language-lsp/issues"
     },
     "engines": {
-        "vscode": "^1.52.0"
+        "vscode": "^1.54.0"
     },
     "categories": [
         "Programming Languages",
@@ -56,7 +56,7 @@
                     "LSP"
                 ],
                 "extensions": [
-                    "lspt"
+                    ".lspt"
                 ],
                 "configuration": "./lsp-configuration.json"
             }
