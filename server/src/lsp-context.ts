@@ -215,7 +215,14 @@ export class LSPContext
     }
 
     let sigLabel = '';
-    const callOuter = line.substring(0, charIndex).toLowerCase();
+    let callOuter = line.substring(0, charIndex).toLowerCase();
+    const pos = callOuter.indexOf('=');
+
+    if (pos > 0)
+    {
+      callOuter = callOuter.substring(pos + 1).trim();
+    }
+
     const funcao = this._classLookup[callOuter];
 
     if (!funcao)
