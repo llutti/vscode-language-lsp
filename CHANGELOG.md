@@ -2,9 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.0.1] - 14/04/2021
+## [1.0.1] - 16/04/2021
 ### Adicionado
 - Documentação das funções para manipulação de arquivos texto.
+- Melhoria na documentação das funções de envio de e-mail.
 
 ## [1.0.0] - 11/03/2021
 - Publicação no marketplace do VSCode
