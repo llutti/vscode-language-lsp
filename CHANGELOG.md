@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [1.0.3] - 16/04/2021
+### Alteraçãoes
+- Melhorar a apresentação dos parâmetros das funções durante a digitação.
+
 ## [1.0.1] - 16/04/2021
 ### Adicionado
 - Documentação das funções para manipulação de arquivos texto.
