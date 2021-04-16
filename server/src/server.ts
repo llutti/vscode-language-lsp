@@ -143,7 +143,7 @@ documents.onDidOpen(evt =>
 documents.onDidChangeContent(change =>
 {
   LSPContext.registerClasses(change.document.uri, LSPParser.parseFile(change.document.uri, change.document.getText()));
-  validateTextDocument(change.document);
+  //validateTextDocument(change.document);
 });
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void>
