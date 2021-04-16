@@ -17,7 +17,6 @@ const Patterns = {
   // MATCHED_PARENS: /\((?:(?!\().)*?\)/g
 };
 
-
 export class LSPParser
 {
   private static wipClass: LSPClass;
