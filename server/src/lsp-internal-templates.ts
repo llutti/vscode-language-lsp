@@ -1,20 +1,20 @@
-import { EParameterType, LSPTemplateClass } from './lsp-elements';
+import { EParameterType, LSPTemplateClass, LSPTypeObject } from './lsp-elements';
 
 export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "cVerdadeiro",
     documentation: 'Constante que representa o valor "1"',
-    type: 21
+    type: LSPTypeObject.Constant
   },
   {
     label: "cFalso",
     documentation: 'Constante que representa o valor "0"',
-    type: 21
+    type: LSPTypeObject.Constant
   },
   {
     label: "AlfaParaInt",
     documentation: "Converte um texto para um número não formatado",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -30,7 +30,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ConverteMascara",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'Esta função converte um valor de entrada (numérico, data, hora ou cadeia de caracteres), para o tipo de dado cadeia de caracteres.',
     parameters: [
       {
@@ -63,7 +63,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "MontaData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -89,7 +89,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "IntParaAlfa",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -105,7 +105,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WInsSelecaodaLista",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -136,7 +136,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WInsSelecaodoBanco",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -182,7 +182,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WAdicionanoHTML",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -203,7 +203,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WAdicionaListaErros",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -219,7 +219,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "TrocaString",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'Procura por um trecho específico dentro de um texto e o substitui, retornando um novo texto.',
     parameters: [
       {
@@ -250,7 +250,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "DescItemLista",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -271,7 +271,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "DesmontaData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -297,7 +297,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ConverteDataBanco",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -313,7 +313,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ConverteMinutosHoras",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -330,7 +330,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetornaEscala",
     documentation: "Retorna a escala do colaborador em determinada data, considerando as programações de troca de escala e histórico do colaborador",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -386,7 +386,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetSalDat",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -422,7 +422,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "LiquidoFolha",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -468,7 +468,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "LiquidoFerias",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -519,7 +519,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "LiquidoRescisao",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -575,7 +575,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCheckValInteger",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -607,7 +607,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCheckValString",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -639,7 +639,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCheckValData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -665,7 +665,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCheckValHora",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -691,7 +691,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCheckValCheckBox",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -712,7 +712,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WLerHTML",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -728,7 +728,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetColabPorCodUsu",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -754,7 +754,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCountFields",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'Retorna a quantidade de campos passados pela ação do HTML',
     parameters: [
       {
@@ -766,7 +766,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WReturnFieldsName",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -782,7 +782,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "CopiarAlfa",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -803,7 +803,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "DeletarAlfa",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -824,7 +824,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "LerPosicaoAlfa",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -845,7 +845,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "PosicaoAlfa",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -866,7 +866,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "TamanhoAlfa",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -882,7 +882,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaHorario",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'A função Retornahorario calcula o horário na hora em que é chamada, considerando as programações de troca de horário, escala e ponte. Na escala de Busca Automática retorna o horário base e não o horário apurado.',
     parameters: [
       {
@@ -920,7 +920,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ExtensoSemana",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'Esta função monta o extenso do dia da semana de uma determinada data.',
     parameters: [
       {
@@ -938,7 +938,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaEscala",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -984,7 +984,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Para",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1006,7 +1006,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetDifDat",
     documentation: "Esta função retorna a diferença em dias, meses ou anos entre duas datas.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1033,7 +1033,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RestoDivisao",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1054,7 +1054,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Divide",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1081,7 +1081,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "TruncarValor",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1092,7 +1092,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetHtmlFicReg",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1128,7 +1128,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WStrtoJavaScript",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1144,7 +1144,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "TiraEspacos",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1160,23 +1160,45 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ConverteParaMaiusculo",
-    type: 2,
+    type: LSPTypeObject.Method,
+    documentation: 'Converte o conteúdo de uma variável do tipo Alfa para maiúsculo.',
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "TextoConverter",
+        documenation: 'Variável de entrada com o conteúdo que será convertido para maiúsculo.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "TextoConvertido",
+        documenation: 'Variável de saída que receberá o conteúdo convertido.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    label: "ConverteParaMinusculo",
+    type: LSPTypeObject.Method,
+    documentation: 'Converte o conteúdo de uma variável do tipo Alfa para minúsculo.',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "TextoConverter",
+        documenation: 'Variável de entrada com o conteúdo que será convertido para minúsculo.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "TextoConvertido",
+        documenation: 'Variável de saída que receberá o conteúdo convertido.',
         isReturnValue: true
       }
     ]
   },
   {
     label: "WAlteraValorCampo",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1192,7 +1214,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "MontaAbrangencia",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1213,7 +1235,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "__Inserir",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1224,7 +1246,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCheckValDouble",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1255,7 +1277,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetQtdVagLoc",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'A função RetQtdVagLoc tem como objetivo retornar a quantidade de vagas disponíveis em um determinado local, cargo e data passados como parâmetros, ou seja, é a diferença entre a quantidade de vagas do quadro previsto e a quantidade de vagas do quadro efetivo.',
     parameters: [
       {
@@ -1308,7 +1330,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "BusCadChefe",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1370,46 +1392,54 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "EnviaEMail",
     documentation: "Função que permite enviar e-mails. (CodErroEnviaEmail e MsgErroEnviaEmail)",
-    type: 3,
+    type: LSPTypeObject.Function,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "Rememetente",
+        documenation: 'Endereço Eletrônico do Remetente do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Destinatario",
+        documenation: 'Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaPara",
+        documenation: 'Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaOcultaPara",
+        documenation: 'Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Assunto",
+        documenation: 'Assunto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Texto",
+        documenation: 'Texto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Anexos",
+        documenation: 'Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "PapelCarta",
+        documenation: 'Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim).',
         isReturnValue: false
       }
     ]
@@ -1417,58 +1447,73 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "EnviaEMailHTML",
     documentation: "Função que permite enviar e-mails em formato HTML e com imagens no corpo do E-mail. (CodErroEnviaEmail e MsgErroEnviaEmail)",
-    type: 3,
+    type: LSPTypeObject.Function,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "Rememetente",
+        documenation: 'Endereço Eletrônico do Remetente do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Destinatario",
+        documenation: 'Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaPara",
+        documenation: 'Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaOcultaPara",
+        documenation: 'Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Assunto",
+        documenation: 'Assunto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Texto",
+        documenation: 'Texto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Anexos",
+        documenation: 'Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "TratarAnexo",
+        documenation: {
+          kind: 'markdown',
+          value: 'Indicar o código de qual tratamento deve ser dado às imagens do email, podendo ser:'
+            + '  - **HimEmbeded**: Os links apontam para figuras que seguem anexas à mensagem e são exibidas em seu corpo. **Atenção**: esta opção possui uma limitação: não podem existir duas imagens com o mesmo nome de arquivo, pois a imagem vai em anexo implicitamente. Portanto, se existirem duas imagens com o mesmo nome de arquivo, a exibição poderá apresentar problemas.'
+            + '  - **HimLink**: Os links indicam imagens externas à mensagem, não recebendo nenhum tipo de tratamento. *Exemplo*: <IMG SRC="http://www.senior.com.br/figuras/senior.gif">'
+            + '  - **HimAttach**: Os links apontam para figuras que seguem anexas à mensagem, mas não são exibidas no corpo da mensagem e sim na lista de arquivos anexos.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "PapelCarta",
+        documenation: 'Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim).',
         isReturnValue: false
       }
     ]
   },
   {
     label: "BusEmailFunc",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1499,7 +1544,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaBatidaHorario",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1540,7 +1585,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ExtrasIntervalo",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1571,7 +1616,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetMinRefHTr",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1582,7 +1627,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetVinEmp",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1608,7 +1653,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaCodLoc",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1624,7 +1669,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetTurCol",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -1655,7 +1700,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "InsClauSQLWhere",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1671,7 +1716,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaHorarioApurado",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1707,7 +1752,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "DataHoje",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -1718,7 +1763,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaAnoData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -1734,7 +1779,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaMesData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -1750,7 +1795,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaDiaData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -1766,7 +1811,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "AlteraControle",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1787,7 +1832,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaDiaSemana",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -1803,7 +1848,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "AdicionarCampo",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1829,7 +1874,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Chave",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1841,7 +1886,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "VerDatFer",
     documentation: "Procura se a data específica é um feriado para o colaborador. Para isto, verifica pela filial e pela escala. Se a data for feriado,  retornará 1. Caso contrário, retornará 0.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1868,7 +1913,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetNivLoc",
     documentation: "Função que retorna a quantidade de níveis do local informado",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1894,7 +1939,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Concatena",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1921,7 +1966,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ArredondarValor",
     documentation: "Esta função arredonda determinado valor, conforme a quantidade de casa decimais informada",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -1938,12 +1983,12 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "InicioVtr",
     documentation: "Função para preparar os recursos de máquina (alocar memória) para o cálculo de Vale Transporte",
-    type: 2
+    type: LSPTypeObject.Method
   },
   {
     label: "VerFaltasVtr",
     documentation: "Verificar se o colaborador teve faltas no período para perda de vale transporte",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2000,7 +2045,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "LerPassesVtr",
     documentation: "Verifica se houve digitação de Passes de Vale Transporte",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2037,7 +2082,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalcularVtr",
     documentation: "Esta função calcula o valor e a quantidade de passes de vale transporte",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2084,7 +2129,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GravarVtr",
     documentation: "Grava os passes na tabela R028PVT, calculada anteriormente pela função CalculaVtr",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2116,11 +2161,11 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "FinalVtr",
     documentation: "Libera as estruturas alocadas anteriormente pela função CalculaVtr",
-    type: 2
+    type: LSPTypeObject.Method
   },
   {
     label: "ListaSecao",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2132,7 +2177,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetEscEmp",
     documentation: "Retorna a escala do funcionário em uma determinada data",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2159,7 +2204,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "VerAbrBHR",
     documentation: "Esta função verifica se o colaborador está incluído na abrangência de um determinado banco de horas",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2196,7 +2241,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "WWriteCookie",
     documentation: "Grava um campo no Cookie ativo",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2213,7 +2258,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetSinEmp",
     documentation: "Esta função retorna o código do sindicato de um colaborador em uma determinada data na variável de sistema CodSinEmp",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2240,7 +2285,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalIdaEmp",
     documentation: "cula a idade do colaborador na Data de Referência",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2267,7 +2312,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalculaQtdMinutos",
     documentation: "Calcula a quantidade de minutos existente entre uma Data/Hora Inicial e uma Data/Hora Final",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -2299,7 +2344,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetornaNumLoc",
     documentation: "Converte o código do local para o número do local. Considera a data setada em DatRef",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2316,7 +2361,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetornaNivelLocal",
     documentation: "Retorna uma fração do código do local do nível inicial até o nível final informados",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2348,7 +2393,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetornaAscII",
     documentation: "Esta função retorna o caractere ASCII de um número.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2365,7 +2410,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "PertenceGrupo",
     documentation: "Identifica se o usuário ativo pertence ao grupo de usuários passado como parâmetro. Se pertencer retornará 1, caso contrário retornará 0",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2377,7 +2422,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "WSetarCalculo",
     documentation: "Função utilizada para setar o código de cálculo para processos automáticos, via regra (Somente RubiWeb)",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2394,7 +2439,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "UltimoDia",
     documentation: "Esta função verifica qual é o último dia do mês/ano da data informada, retornando esta nova data dia/mês/ano na própria variável indicada",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -2406,7 +2451,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetLocEmp",
     documentation: "Retorna o local do funcionário em uma determinada data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2433,7 +2478,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "WSQLSenior2paraSQLNativo",
     documentation: "Retorna a Sintaxe de um comando SQL Senior2 para o SQL Nativo, correspondente ao banco que estiver sendo utilizado",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2450,7 +2495,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalculaTotCol",
     documentation: "Esta função calcula o totalizador do evento, valor ou referência, de acordo com o cálculo, totalizador e o colaborador enviados por parâmetro.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2487,7 +2532,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SelectData",
     documentation: "Função na qual é possível executar qualquer SELECT",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2509,7 +2554,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetCampoNumero",
     documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2531,7 +2576,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetCampoAlfa",
     documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2553,7 +2598,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetSitEmp",
     documentation: "Retorna a Situação do Colaborador em uma determinda Data (Retorna na variável SitEmp)",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2580,7 +2625,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetCodUsuPorColab",
     documentation: "Esta função retornará o código do usuário associadr. Caso não houver retornará zero.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2602,7 +2647,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "MontarSQLHistoricoSeq",
     documentation: "Esta função retorna um SQL com base em uma data e seqüência para uso com os históricos do sistema",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2624,7 +2669,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "MontarSQLHistorico",
     documentation: "Retorna um SQL com base em uma data para uso com os históricos do sistema",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2646,7 +2691,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetSalEmp",
     documentation: "Esta função retorna o salário do funcionário em uma determinada data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2673,7 +2718,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "WTextoParaFormatoHTML",
     documentation: "Retorna a expressão alfanumérica passada como parâmetro convertida para HTML",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2690,7 +2735,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetEstCarEmp",
     documentation: "Função que retorna a estrutura de cargos utilizada pela empresa na data informada.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2707,7 +2752,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalTotFolha",
     documentation: "Utilizada para carregar as variáveis de sistema",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2734,7 +2779,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetCarEmp",
     documentation: "Retorna o Cargo do funcionário em uma determinada data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2761,7 +2806,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetNomCodNiv",
     documentation: "Retorna o Nome e o código do Local do Empregado em um determinado nível.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2808,7 +2853,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "TiraAcentos",
     documentation: "Retira os caracteres especiais, retornando o texto em maíusculo.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2825,7 +2870,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalSalEmpCS",
     documentation: "Esta função retorna o salário do funcionário em relação ao tipo",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2857,7 +2902,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ExtensoMes",
     documentation: "Esta função retorna o nome por extenso do mês passado como parâmetro",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2874,7 +2919,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "BusSalClaNiv",
     documentation: "Esta função retorna o valor do salário da estrutura/classe/nível passados como parâmetro, e se desejar (informando tipo 2), o número de meses de complemento do nível salarial.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2921,7 +2966,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetExtMoeda",
     documentation: "Gera o extenso de um valor (moeda). Obs: não completa o espaço restante com o caracter “*”.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2938,7 +2983,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ExtensoNumero",
     documentation: "Retorna o valor por extenso do número passado como parâmetro.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2955,7 +3000,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ProximaPagina",
     documentation: "Permite verificar se uma determinada seção será impressa na próxima página.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -2972,7 +3017,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "BusHorBase",
     documentation: "Retorna o horário base do colaborador em uma determinada data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -2999,7 +3044,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "Minusculo",
     documentation: "Converte um valor alfanumérico de maiúsculo para minúsculo (SOMENTE NO RUBI)",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3021,7 +3066,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ExecutaRelatorio",
     documentation: "Permite que sejam executados relatórios através das regras.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3038,7 +3083,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SetaNumeroTelaEntrada",
     documentation: "Permite ao usuário alterar os valores numéricos da tela de entrada do modelo.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3055,7 +3100,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SetaDataTelaEntrada",
     documentation: "Permite ao usuário alterar os valores do tipo data da tela de entrada do modelo.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3072,7 +3117,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SetaAlfaTelaEntrada",
     documentation: "Permite ao usuário alterar os valores alfanuméricos da tela de entrada do modelo.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3089,7 +3134,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "EscondeCampoTelaEntrada",
     documentation: "Permite ao usuário esconder determinados campos da tela de entrada do modelo",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3101,7 +3146,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetCodNomLocNiv",
     documentation: "Retorna o nome e o código do local, no nível informado",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3138,7 +3183,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetNumLocNiv",
     documentation: "Retorna o código do local no nível passado como parâmetro.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3170,7 +3215,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ConvStrPNum",
     documentation: "Converte um valor tipo string para numérico.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3187,7 +3232,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "BuscaDiaSit",
     documentation: "Esta função retorna a quantidade de dias de uma situação em um período informado. Esta função não apresenta as seguintes situações: 15 (ronda) e 16 (todos os módulos)",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3229,7 +3274,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetSalEst",
     documentation: "Retorna o salário (sem nenhuma conversão) de uma Estrutura/Classe/Nível específica em uma determinada data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3256,7 +3301,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetBHRDat",
     documentation: "Esta função retorna o saldo do banco de horas conforme a data especificada para verificação. O valor que será retornado corresponderá ao saldo inicial da data. Não são considerados os lançamentos efetuados no dia.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3292,7 +3337,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ExcLanBhr",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3328,7 +3373,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "IncLanBhr",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3374,7 +3419,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetDatCmp",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3405,7 +3450,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetTabOrgEmp",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3427,7 +3472,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GravaFotoColaboradorEmDisco",
     documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3469,7 +3514,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "BusCadChefeLocal",
     documentation: "Busca o chefe de um local especificado.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3534,7 +3579,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       kind: 'markdown',
       value: "Executa um comando SQL no banco. Nessa função podem ser usadas para as operações Insert ,Update ,Delete.\n\n**Observação**: Poderão ser utilizados comandos nativos do Banco de Dados e é permitido acessar objetos que não constam no TBS."
     },
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3558,7 +3603,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "InserirAlfa",
     documentation: "Insere um ou mais caracteres em uma Variável/Campo, a partir da posição indicada. Havendo informação no campo alfa, no qual deseja-se inserir o texto, as que estiverem a partir da posicão indicada serão deslocadas para a direita e o que passar do tamanho definido do campo/variável será truncado.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3580,7 +3625,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "TempoTrabFun",
     documentation: "Esta função retorna o tempo de trabalho em meses, de um funcionário em um determinado período",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3622,7 +3667,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "MensagemLog",
     documentation: "Esta função cancela o processamento em execução e mostra a mensagem de erro passada como parâmetro",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3633,7 +3678,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetPrxClaNiv",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3675,7 +3720,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "InsSQLWhereSimples",
     documentation: "Permite Inserir uma cláusula WHERE dentro de um SQL durante a execução da regra de pré-seleção. As tabelas referenciadas no SQL não são incluídas na cláusula FROM do comando SQL.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3692,7 +3737,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetAdiEmp",
     documentation: "Esta função retorna o Adicional do funcionário em uma determinada data",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3719,7 +3764,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalculaQtdDep",
     documentation: "Calcula a quantidade de dependentes.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3746,7 +3791,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetEtbEmp",
     documentation: "Retorna a estabilidade do funcionário em uma determinada data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -3773,7 +3818,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_Criar",
     documentation: "Função que cria um cursor, ou um objeto para execução de SQL, e retorna no parâmetro \"Objeto\".",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3786,7 +3831,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_Destruir",
     documentation: "Função que destrói um cursor depois de sua utilização, o mesmo deve ser chamado quando o cursor não for mais utilizado.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3799,7 +3844,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_DefinirComando",
     documentation: "Função que aplica o comando SQL para o cursor passado como parâmetro.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3817,7 +3862,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_BOF",
     documentation: "Função que retorna se o cursor está na posição inicial (antes do primeiro registro). Se o cursor está na posição BOF, o valor retornado é 1 (um), caso contrário é 0 (zero).",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3830,7 +3875,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_EOF",
     documentation: "Função que retorna se o cursor está na posição final (depois do último registro). Se o cursor está na posição EOF, o valor retornado é 1 (um), caso contrário é 0 (zero)",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3843,7 +3888,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_AbrirCursor",
     documentation: "Função que abre o cursor depois de informado o SQL a ser utilizado.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3856,7 +3901,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_Proximo",
     documentation: "Função que posiciona o cursor no próximo registro.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3869,7 +3914,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_FecharCursor",
     documentation: "Função que fecha a pesquisa sendo feita pelo cursor.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3882,7 +3927,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_RetornarBoleano",
     documentation: "Função que retorna um valor boleano de um campo do registro do cursor.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3905,7 +3950,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_RetornarInteiro",
     documentation: "Função que retorna um valor inteiro de um campo do registro do cursor.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3928,7 +3973,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_RetornarFlutuante",
     documentation: "Função que retorna um valor flutuante de um campo do registro do cursor.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3951,7 +3996,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_RetornarData",
     documentation: "Função que retorna uma data de um campo do registro do cursor.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3974,7 +4019,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_RetornarAlfa",
     documentation: "Função que retorna um valor do tipo alfa (string) de um campo do registro do cursor.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -3997,7 +4042,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_RetornarBlob",
     documentation: "Função que retorna um Blob de um campo do registro do cursor.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4020,7 +4065,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_RetornarSeNulo",
     documentation: "Função que retorna um valor booleano, que significa se o campo é nulo ou não.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4038,7 +4083,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_DefinirBoleano",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo boleano.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4061,7 +4106,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_DefinirInteiro",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo inteiro.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4084,7 +4129,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_DefinirFlutuante",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo numérico com ponto flutuante.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4107,7 +4152,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_DefinirData",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4130,7 +4175,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_DefinirAlfa",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo alfanumérico.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4153,7 +4198,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_DefinirBlob",
     documentation: "Função que seta define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo blob.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4176,7 +4221,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SQL_UsarAbrangencia",
     documentation: "Função que informa ao cursor se é para utilizar abrangência de usuários.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4197,7 +4242,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       kind: 'markdown',
       value: 'Informa se o comando a ser definido para o cursor utiliza a sintaxe de linguagem Senior ou a sintaxe nativa (linguagem originada da base de dados utilizada, por exemplo Oracle e SQL Server).\n\nPara utilização de comandos nativos é **necessário desabilitar** as rotina de abrangência através da função **SQL_UsarAbrangencia** e, em seguida, informar que não será utilizado a linguagem Senior.'
     },
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4216,7 +4261,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CalSalEmp",
     documentation: "Retorna o salário do funcionário em relação ao tipo.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4248,7 +4293,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetQtdDiasUtil",
     documentation: "Retorna a quantidade de dias úteis dentro de um determinado período, levando-se em consideração os dias de segunda a sexta-feira, desde que não estejam cadastrados como feriado na Tabela de Feriados passada como parâmetro na função.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Data,
@@ -4275,7 +4320,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetApuPon",
     documentation: "Esta função retorna o tipo de apuração do colaborador, conforme o histórico de apuração.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4307,7 +4352,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetFilEmp",
     documentation: "Retorna a filial do funcionário em uma determinada data.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4334,7 +4379,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "CarregaImgControle",
     documentation: "Carregar uma imagem do banco ou arquivo para um controle imagem do modelo",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4365,7 +4410,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Abrir",
-    type: 3,
+    type: LSPTypeObject.Function,
     documentation: 'Abre arquivos no disco local ou na rede. Se a função for bem sucedida, o valor de retorno será o manipulador de arquivo. Este valor não poderá ser alterado, caso contrário a regra não terá condições de operar com o arquivo. Se a função falhar, um erro acontece e a regra é cancelada.',
     parameters: [
       {
@@ -4392,7 +4437,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Fechar",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'Fecha um arquivo previamente aberto.',
     parameters: [
       {
@@ -4404,7 +4449,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Gravar",
-    type: 3,
+    type: LSPTypeObject.Function,
     documentation: 'Escreve determinado número de bytes para um arquivo binário e retorna o número de bytes gravados no arquivo.',
     parameters: [
       {
@@ -4429,7 +4474,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "AbrirArquivo",
-    type: 3,
+    type: LSPTypeObject.Function,
     documentation: "Esta função abre o arquivo passado como parâmetro. Pode ser utilizada para testar se um arquivo existe em um determinado local. Se o arquivo for aberto corretamente, a função retornará 1. Se ocorrer algum problema e o arquivo não puder ser aberto, ela retornará 0.",
     parameters: [
       {
@@ -4448,7 +4493,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "LerNovaLinha",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: "Esta função funciona em conjunto com a função 'AbrirArquivo'. Após abrir o arquivo é possível ler linha a linha do arquivo.",
     parameters: [
       {
@@ -4467,7 +4512,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "GravarNL",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.',
     parameters: [
       {
@@ -4486,7 +4531,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "GravarNLEOL",
-    type: 2,
+    type: LSPTypeObject.Method,
     documentation: 'Grava uma linha em um arquivo texto com a opção de incluir a quebra de linha ao final.',
     parameters: [
       {
@@ -4511,7 +4556,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Ler",
-    type: 3,
+    type: LSPTypeObject.Function,
     documentation: {
       kind: 'markdown',
       value: 'Lê determinado números de bytes do arquivo binário indicado. Esta função retorna o **número de bytes** que foram **lidos** do arquivo. Se a leitura atingiu o final do arquivo, o retorno será o **número de bytes lidos** até o final do arquivo.'
@@ -4539,7 +4584,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "LerNL",
-    type: 3,
+    type: LSPTypeObject.Function,
     documentation: {
       kind: 'markdown',
       value: 'Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n\n'
@@ -4563,7 +4608,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ExecutaTelaSGI",
     documentation: "Esta função executa a tela do SGI passada como parâmetro. Se a tela for executada com sucesso, a função retornará 1. Caso contrário, retornará 0.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4574,7 +4619,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "GlbRetVarStr",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4590,7 +4635,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "GlbAdiVarStr",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4606,7 +4651,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "CarregaAbrUsu",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4632,7 +4677,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetornaAbrUsu",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4673,7 +4718,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "SetaValorFormula",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4689,7 +4734,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "BusCraTit",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4720,7 +4765,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "VerNumAbr",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4741,7 +4786,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "MontaCriteriosAperfeicoamento",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4812,7 +4857,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WPersonalizaMenuWeb",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4853,7 +4898,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetLocNiv",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4884,7 +4929,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "CarregaDistribuicaoEPI",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -4966,7 +5011,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GlbAdiVarNumDat",
     documentation: "Adiciona uma variável global numérica/data em memória",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -4983,7 +5028,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GlbAdiVarStr",
     documentation: "Adiciona uma variável global alfa numérica em memória",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5000,7 +5045,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GlbRetVarNumDat",
     documentation: "Retorna o conteúdo de uma variável global numérica, armazenada pela função GlbAdiVarNumDat. Exemplo: x := GlbRetVarNumDat(vNomVar);",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5012,7 +5057,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GlbRetVarStr",
     documentation: "Retorna o conteúdo de uma variável global armazenada pela função GlbAdiVarStr.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5028,7 +5073,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "AlteraValorFormula",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5044,7 +5089,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "RetHorPrvTrb",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5100,7 +5145,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "WCheckValImage",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5136,7 +5181,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "GravaImagemBanco",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5177,7 +5222,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Encriptar",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5198,7 +5243,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "Desencriptar",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5219,7 +5264,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "ArqExiste",
-    type: 2,
+    type: LSPTypeObject.Function,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5231,7 +5276,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetHorTrab",
     documentation: "Retorna a quantidade de horas trabalhadas num determinado período.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5278,7 +5323,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ConverteDataHoraDateTime",
     documentation: "A função serve para montar uma data e uma hora passados como parâmetro em uma string no formato datetime do banco.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5299,7 +5344,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "GeraHash",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5321,7 +5366,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "WRemoteAddr",
     documentation: "Retorna o endereço IP da estação que está acessando o sistema. Utilizada apenas nos sistemas Web.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5332,7 +5377,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "SegEntLe",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5349,7 +5394,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SegEntEhUsuario",
     documentation: "Esta função indica se o Usuário/Grupo passado em aObjeto é um usuário. Se sim o resultado direto da função é 1 senão será 0.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5361,7 +5406,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SegUsuAtivado",
     documentation: "Esta função indica se o acesso ao usuário passado em aObjeto está desativado. Se sim o resultado direto da função é 1 senão será 0.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5373,7 +5418,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SegEntQtdGrp",
     documentation: "Esta função retorna diretamente a quantidade de grupos do Usuário/Grupo passado em aObjeto.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5384,7 +5429,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "SegEntNome",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5400,7 +5445,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "SegUsuNomeComp",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5417,7 +5462,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SegUsuSetaSenha",
     documentation: "Esta função seta a senha do usuário passado em aObjeto através do parâmetro aNovaSenha retornando o aObjeto(Usuário) com a senha setada.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5434,7 +5479,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SegUsuSetaAtivado",
     documentation: "Esta função seta a opção Conta Desabilitada do usuário passado em aObjeto através do parâmetro nOpcao: 1 = Conta Habilitada ou 0 = Conta Desabilitada retornando aObjeto(Usuário) com a opção setada.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5450,7 +5495,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   },
   {
     label: "SegUsuDatExp",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5462,7 +5507,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetDiaHor",
     documentation: "Função que concatena os dias da semana que contenham o mesmo horário de curso.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5544,7 +5589,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetornaDistribuicaoEPI",
     documentation: "Retorna item a item dos resultados encontrados em CarregaDistribuicaoEPI. Os itens podem ser navegados através dos parâmetro TipOpe, que retorna o item escolhido na lista, como, primeiro, ultimo, próximo e anterior. A função CarregaDistribuicaoEPI deve sempre ser chamada antes da RetornaDistribuicaoEPI para que os dados sejam carregados anteriormente.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5606,7 +5651,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ValidaPISCPF",
     documentation: "Função para Validar um número de CPF ou PIS.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5628,7 +5673,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "TrocaCadastro",
     documentation: "Esta função tem a funcionalidade de efetuar a troca de cadastro de colaboradores.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5650,7 +5695,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "SegEntExistePorNome",
     documentation: "Essa função verifica pelo nome se o usuário/grupo existe.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5662,7 +5707,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "NumeroParaAlfa",
     documentation: "Converte um número para formato alfanumérico, mantendo as casas decimais e sem arredondar.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5679,7 +5724,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GravaFotoColaboradorEmDisco",
     documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5721,7 +5766,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "GravaFotoCandidatoEmDisco",
     documentation: "Grava a foto do candidato em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados,  no formato JPEG (*.JPG).",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5753,7 +5798,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "RetornaNomeUsuario",
     documentation: "É uma função que permite utilizar os nomes disponíveis no cadastro de propriedades do usuário no SGU - Senior Gerenciador de usuários.",
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
@@ -5770,7 +5815,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "ConverteCodificacaoString",
     documentation: 'Esta função altera a codificação de um texto contido em uma variável, onde este texto com a codificação alterada pode ser utilizado para comunicação com web services. Se o sistema não suportar a codificação informada, será emitida a seguinte mensagem: "A codificação X não é suportada. Verifique a documentação".',
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5795,7 +5840,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "Base64Decode",
     documentation: 'Decodifica um valor base64 passado.',
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5814,7 +5859,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "Base64Encode",
     documentation: 'Codifica para base64 o conteúdo passado.',
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -5833,7 +5878,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "WebCodificaUrl",
     documentation: 'Esta função faz a codificação dos caracteres de forma a concatenar em URLs de forma segura.',
-    type: 2,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
