@@ -2,7 +2,12 @@
 
 Alterações realizadas na extensão.
 
-## [1.0.3] - 16/04/2021
+## [1.0.2] - 19/04/2021
+### Adicionado
+- Validação de sintaxe da regra (em carater Experimental):
+  - Novo parâmetro para Ativar/Desativar a verificação
+  - Verificar a falta do ";" depois do "Fim" ou da definição de variáveis
+
 ### Alteraçãoes
 - Melhorar a apresentação dos parâmetros das funções durante a digitação.
 
