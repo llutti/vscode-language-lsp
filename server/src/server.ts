@@ -24,7 +24,7 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
-let hasDiagnosticRelatedInformationCapability = false;
+// let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) =>
 {
@@ -34,11 +34,11 @@ connection.onInitialize((params: InitializeParams) =>
 
   hasConfigurationCapability = !!(capabilities.workspace && !!capabilities.workspace.configuration);
   hasWorkspaceFolderCapability = !!(capabilities.workspace && !!capabilities.workspace.workspaceFolders);
-  hasDiagnosticRelatedInformationCapability = !!(
-    capabilities.textDocument &&
-    capabilities.textDocument.publishDiagnostics &&
-    capabilities.textDocument.publishDiagnostics.relatedInformation
-  );
+  // hasDiagnosticRelatedInformationCapability = !!(
+  //   capabilities.textDocument &&
+  //   capabilities.textDocument.publishDiagnostics &&
+  //   capabilities.textDocument.publishDiagnostics.relatedInformation
+  // );
 
   const result: InitializeResult = {
     capabilities: {
@@ -84,9 +84,14 @@ connection.onInitialized(() =>
 interface ILSPSettings
 {
   maxNumberOfProblems: number;
+  enabledSyntaxDiagnostic: boolean;
 }
 
-const defaultSettings: ILSPSettings = { maxNumberOfProblems: 1000 };
+const defaultSettings: ILSPSettings = {
+  maxNumberOfProblems: 1000,
+  enabledSyntaxDiagnostic: false
+};
+
 let globalSettings: ILSPSettings = defaultSettings;
 
 const documentSettings: Map<string, Thenable<ILSPSettings>> = new Map();
@@ -142,21 +147,31 @@ documents.onDidOpen(evt =>
 documents.onDidChangeContent(change =>
 {
   LSPContext.registerClasses(change.document.uri, LSPParser.parseFile(change.document.uri, change.document.getText()));
-  //validateTextDocument(change.document);
+  validateTextDocument(change.document);
 });
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void>
 {
   // In this simple example we get the settings for every validate run.
   const settings = await getDocumentSettings(textDocument.uri);
+  const diagnostics: Diagnostic[] = [];
+
+  if (settings.enabledSyntaxDiagnostic === false)
+  {
+    // Limpar os diagnósticos existentes
+    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+
+    return;
+  }
 
   // The validator creates diagnostics for all uppercase words length 2 and more
   const text = textDocument.getText();
-  const pattern = /\b[A-Z]{2,}\b/g;
+  const pattern = /(((definir)\s(alfa|cursor|data|lista|numero)\s(\w*))|(\b(fim)))\s[;]{0}/gmi;
   let m: RegExpExecArray | null;
 
   let problems = 0;
-  const diagnostics: Diagnostic[] = [];
+
+
   while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems)
   {
     problems++;
@@ -166,28 +181,30 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void>
         start: textDocument.positionAt(m.index),
         end: textDocument.positionAt(m.index + m[0].length)
       },
-      message: `${m[0]} is all uppercase.`,
-      source: 'ex'
+      message: `Faltou o ';'(ponto e vírgula).`
+      // source: 'ex'
     };
-    if (hasDiagnosticRelatedInformationCapability)
-    {
-      diagnostic.relatedInformation = [
-        {
-          location: {
-            uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range)
-          },
-          message: 'Spelling matters'
-        },
-        {
-          location: {
-            uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range)
-          },
-          message: 'Particularly for names'
-        }
-      ];
-    }
+
+    // if (hasDiagnosticRelatedInformationCapability)
+    // {
+    //   diagnostic.relatedInformation = [
+    //     {
+    //       location: {
+    //         uri: textDocument.uri,
+    //         range: Object.assign({}, diagnostic.range)
+    //       },
+    //       message: 'Spelling matters'
+    //     },
+    //     {
+    //       location: {
+    //         uri: textDocument.uri,
+    //         range: Object.assign({}, diagnostic.range)
+    //       },
+    //       message: 'Particularly for names'
+    //     }
+    //   ];
+    // }
+
     diagnostics.push(diagnostic);
   }
 
@@ -213,6 +230,13 @@ connection.onCompletion(
   async (docPos: TextDocumentPositionParams, token): Promise<CompletionItem[]> =>
   {
     return await LSPContext.getCompletions(docPos, token, documents.get(docPos.textDocument.uri));
+  }
+);
+
+connection.onCompletionResolve(
+  (item) =>
+  {
+    return item;
   }
 );
 

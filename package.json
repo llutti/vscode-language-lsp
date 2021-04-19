@@ -36,6 +36,12 @@
                     "default": 100,
                     "description": "Controls the maximum number of problems produced by the server."
                 },
+                "lsp.enabledSyntaxDiagnostic": {
+                    "scope": "resource",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Code Syntax checking (EXPERIMENTAL)."
+                },
                 "lsp.trace.server": {
                     "scope": "window",
                     "type": "string",
