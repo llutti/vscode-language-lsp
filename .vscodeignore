@@ -7,5 +7,7 @@ CHANGELOG-example.md
 old/**
 p.bat
 *.lspt
-
-
+client/src/**
+client/out/**
+server/src/**
+server/out/**
