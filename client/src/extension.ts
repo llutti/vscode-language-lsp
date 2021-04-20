@@ -6,7 +6,7 @@ let client: LanguageClient;
 
 export async function activate(context: ExtensionContext)
 {
-  const serverModule = context.asAbsolutePath(path.join('server', 'out', 'server.js'));
+  const serverModule = context.asAbsolutePath(path.join('dist', 'server.js'));
 
   const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
 
