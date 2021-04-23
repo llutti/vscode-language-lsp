@@ -82,8 +82,8 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "webpack --mode production",
-        "webpack": "tsc -b && webpack --mode development",
+        "vscode:prepublish": "webpack",
+        "webpack": "tsc -b && webpack --mode production",
         "webpack-dev": "tsc -b -w && webpack --mode development --watch",
         "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
     },
