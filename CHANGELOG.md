@@ -2,6 +2,13 @@
 
 Alterações realizadas na extensão.
 
+## [1.0.3] - 23/04/2021
+### Adicionado
+-
+
+### Alteraçãoes
+-
+
 ## [1.0.2] - 23/04/2021
 ### Adicionado
 - Validação de sintaxe da regra (em carater Experimental):
