@@ -11,7 +11,3 @@ vsc-extension-quickstart.md
 old
 *.lspt
 lixo.*
-
-# lock files
-package-lock.json
-yarn.lock
