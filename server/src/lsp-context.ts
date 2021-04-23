@@ -98,22 +98,29 @@ export class LSPContext
           { label: 'IDA', kind: CompletionItemKind.Method, insertText: 'IDA' },
           { label: 'Inserir', kind: CompletionItemKind.Method, insertText: 'Inserir();' },
           { label: 'Limpar', kind: CompletionItemKind.Method, insertText: 'Limpar();' },
-          { label: 'NumReg', kind: CompletionItemKind.Method, insertText: 'NumReg();' },
+          { label: 'NumReg', kind: CompletionItemKind.Method, insertText: 'NumReg;' },
           { label: 'Primeiro', kind: CompletionItemKind.Method, insertText: 'Primeiro();' },
           { label: 'Proximo', kind: CompletionItemKind.Method, insertText: 'Proximo();' },
           { label: 'QtdRegistros', kind: CompletionItemKind.Method, insertText: 'QtdRegistros;' },
-          { label: 'SetaNumReg', kind: CompletionItemKind.Method, insertText: 'SetaNumReg();' },
+          {
+            label: 'SetaNumReg',
+            documentation: 'Este procedimento ter como objetivo posicionar a lista de maneira absoluta. A posição da lista é a ordem do registro menos 1. A ordem do registro é influenciado pela chave que estiver ativa no momento da chamada.',
+            kind: CompletionItemKind.Method,
+            insertText: 'SetaNumReg(${1});',
+            insertTextFormat: 2 // Indica que é SnippetString
+          },
           {
             label: 'SetarChave',
             documentation: 'Coloca a lista em estado de edição de chave para que seja possível a manipulação dos valores da chave. Quando configurados estes valores será possível procurar os registro que possuem a chave informada. Isto será feito através do comando VaiParaChave que será visto a seguir.\nApaga os valores que estiverem na chave no momento da chamada. Para manter os valores da chave use o comando EditarChave.',
             kind: CompletionItemKind.Method,
-            insertText: 'SetarChave();'
+            insertText: 'SetarChave(${1});',
+            insertTextFormat: 2 // Indica que é SnippetString
           },
           { label: 'Ultimo', kind: CompletionItemKind.Method, insertText: 'Ultimo();' },
           {
             label: 'VaiParaChave',
             documentation: 'Procura pelo registro que tiver a chave configurada naquele momento. Exemplo: Consideremos que a chave da lista seja o código de cadastro do funcionário e que o mesmo tenha o valor 10 após a chamada do comando SetarChave. Quando o comando VaiParaChave for chamado a lista será posicionada no primeiro registro onde o número do cadastro do funcionário for 10. Se o registro com esta característica não for encontrado, a lista não será reposicionada.\nCaso o comando encontre o registro procurado, será retornado 1. Caso contrário será retornado 0 (zero).',
-            kind: CompletionItemKind.Method,
+            kind: CompletionItemKind.Function,
             insertText: 'VaiParaChave()'
           },
         ];
