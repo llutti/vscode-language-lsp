@@ -2,7 +2,7 @@
 
 Alterações realizadas na extensão.
 
-## [1.0.2] - 19/04/2021
+## [1.0.2] - 23/04/2021
 ### Adicionado
 - Validação de sintaxe da regra (em carater Experimental):
   - Novo parâmetro para Ativar/Desativar a verificação
