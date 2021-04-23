@@ -104,7 +104,10 @@ export class LSPContext
           { label: 'QtdRegistros', kind: CompletionItemKind.Method, insertText: 'QtdRegistros;' },
           {
             label: 'SetaNumReg',
-            documentation: 'Este procedimento ter como objetivo posicionar a lista de maneira absoluta. A posição da lista é a ordem do registro menos 1. A ordem do registro é influenciado pela chave que estiver ativa no momento da chamada.',
+            documentation: {
+              kind: 'markdown',
+              value: 'Este procedimento ter como objetivo posicionar a lista de maneira absoluta. A ordem do registro é influenciado pela chave que estiver ativa no momento da chamada.\n\nA posição da lista é a ordem do registro **menos 1** (*A posição é base Zero*).'
+            },
             kind: CompletionItemKind.Method,
             insertText: 'SetaNumReg(${1});',
             insertTextFormat: 2 // Indica que é SnippetString
