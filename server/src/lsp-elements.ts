@@ -60,7 +60,7 @@ export class LSPClass
     }
 
     const params = this.parameters?.map<string>(p => `${p.type} ${p.isReturnValue ? 'End ' : ''}${p.name}`).join(', ') || '';
-    const prefix = `[${this.isInternal ? 'Senior' : 'customizado'}]`;
+    const prefix = `[${this.isInternal ? 'Senior' : 'Customizado'}]`;
     const sufixo = this.type === LSPTypeObject.Function ? `: ${EParameterType.Numero}` : '';
 
     return `${prefix} ${this.label}(${params})${sufixo}`;
