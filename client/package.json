@@ -16,7 +16,7 @@
     "vscode-languageclient": "^7.0.0"
   },
   "devDependencies": {
-    "@types/node": "^15.0.2",
+    "@types/node": "^16.4.13",
     "@types/vscode": "^1.55.0"
   }
 }
