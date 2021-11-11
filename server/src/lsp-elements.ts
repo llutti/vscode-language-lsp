@@ -42,7 +42,7 @@ export class LSPClass
   public parameters?: LSPParameter[];
   public insertText?: string;
 
-  private isInternal: boolean
+  private isInternal: boolean;
 
   constructor(name: string, isInternal = false)
   {
