@@ -7,6 +7,7 @@ export enum EParameterType
   Data = 'Data',
   Funcao = 'Funcao',
   Lista = 'Lista',
+  Cursor = 'Cursor'
 }
 
 export enum LSPTypeObject
