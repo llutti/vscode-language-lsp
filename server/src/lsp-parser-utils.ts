@@ -1,7 +1,7 @@
 import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver/node';
 import { Position, Range } from 'vscode-languageserver-textdocument';
 
-type LSPTokenType = 'String' | 'Number' | 'Symbol' | 'CommentRow' | 'CommentMultipleLines' | 'Unknown';
+type LSPTokenType = 'Alfa' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada' | 'Desconhecido';
 
 interface LSPToken
 {
@@ -31,7 +31,7 @@ const parserContent = (text: string): LSPToken[] =>
 
 	const addToken = (params: { startToken: Position, endToken: Position, value: string, type?: LSPTokenType; }) =>
 	{
-		const { startToken, endToken, value, type = 'Unknown' } = params;
+		const { startToken, endToken, value, type = 'Desconhecido' } = params;
 
 		if (value !== '')
 		{
@@ -185,7 +185,7 @@ const parserContent = (text: string): LSPToken[] =>
 							character: charLinePosition
 						},
 						value: token,
-						type: 'CommentRow'
+						type: 'ComentarioLinha'
 					});
 				token = '';
 				adicionarSimbolo = false;
@@ -238,7 +238,7 @@ const parserContent = (text: string): LSPToken[] =>
 							character: charLinePosition
 						},
 						value: token,
-						type: 'CommentMultipleLines'
+						type: 'ComentarioBloco'
 					});
 				token = '';
 				adicionarSimbolo = false;
@@ -297,7 +297,7 @@ const parserContent = (text: string): LSPToken[] =>
 							character: charLinePosition
 						},
 						value: token,
-						type: 'String'
+						type: 'Alfa'
 					});
 
 				token = '';
@@ -314,7 +314,7 @@ const parserContent = (text: string): LSPToken[] =>
 							character: charLinePosition
 						},
 						value: charValue,
-						type: 'Symbol'
+						type: 'Simbolo'
 					});
 			}
 
@@ -367,7 +367,7 @@ const parserContent = (text: string): LSPToken[] =>
 						character: charLinePosition
 					},
 					value: token,
-					type: 'Number'
+					type: 'Numero'
 				});
 
 			ehIdentificador = false;
@@ -392,7 +392,7 @@ const parserContent = (text: string): LSPToken[] =>
 const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Diagnostic[] =>
 {
 	const diagnostics: Diagnostic[] = [];
-	const innerTokens = tokens.filter(t => (t.type !== 'CommentMultipleLines') && (t.type !== 'CommentRow'));
+	const innerTokens = tokens.filter(t => (t.type !== 'ComentarioBloco') && (t.type !== 'ComentarioLinha'));
 
 	const nextToken = (): LSPToken =>
 	{
@@ -409,8 +409,8 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			}
 
 		} while (
-			(token?.type === 'CommentMultipleLines')
-			|| (token?.type === 'CommentRow'));
+			(token?.type === 'ComentarioBloco')
+			|| (token?.type === 'ComentarioLinha'));
 
 		return token;
 	};
@@ -462,7 +462,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				tokenActive = nextToken();
 			}
 
-			if (tokenActive?.type !== 'Unknown')
+			if (tokenActive?.type !== 'Desconhecido')
 			{
 				sintaxeFuncaoValida = false;
 
@@ -472,7 +472,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			oldToken = tokenActive;
 			tokenActive = nextToken();
 
-			if (tokenActive?.type !== 'Symbol')
+			if (tokenActive?.type !== 'Simbolo')
 			{
 				sintaxeFuncaoValida = false;
 
@@ -530,7 +530,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			oldToken = tokenActive;
 			tokenActive = nextToken();
 
-			if (tokenActive?.type !== 'Number')
+			if (tokenActive?.type !== 'Numero')
 			{
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Error,
@@ -570,7 +570,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
-		if (tokenActive?.type === 'Unknown')
+		if (tokenActive?.type === 'Desconhecido')
 		{
 			switch (tokenActive?.value)
 			{
@@ -600,7 +600,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 						tokenActive = nextToken();
 
-						if (tokenActive?.type !== 'Unknown')
+						if (tokenActive?.type !== 'Desconhecido')
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
@@ -684,7 +684,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if (tokenActive?.type !== 'Unknown')
+						if (tokenActive?.type !== 'Desconhecido')
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
@@ -731,7 +731,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if (tokenActive?.type !== 'Unknown')
+						if (tokenActive?.type !== 'Desconhecido')
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
