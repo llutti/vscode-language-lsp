@@ -1,7 +1,7 @@
 import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver/node';
 import { Position, Range } from 'vscode-languageserver-textdocument';
 
-type LSPTokenType = 'Alfa' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada' | 'Desconhecido';
+type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada' | 'Desconhecido';
 
 interface LSPToken
 {
@@ -297,7 +297,7 @@ const parserContent = (text: string): LSPToken[] =>
 							character: charLinePosition
 						},
 						value: token,
-						type: 'Alfa'
+						type: 'Texto'
 					});
 
 				token = '';
@@ -317,9 +317,6 @@ const parserContent = (text: string): LSPToken[] =>
 						type: 'Simbolo'
 					});
 			}
-
-			// charPosition++;
-			// charLinePosition++;
 
 			continue;
 		}
@@ -445,16 +442,19 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		tokenActive = nextToken();
 
 		let sintaxeFuncaoValida = true;
+		let rangeError = oldToken.range;
 		while (tokenActive?.value !== ')')
 		{
 			if (tokenActive?.value !== 'NUMERO')
 			{
 				sintaxeFuncaoValida = false;
+				rangeError = tokenActive.range;
 
 				break;
 			}
 
 			oldToken = tokenActive;
+			rangeError = oldToken.range;
 			tokenActive = nextToken();
 
 			if (tokenActive?.value === 'END')
@@ -470,11 +470,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			}
 
 			oldToken = tokenActive;
+			rangeError = oldToken.range;
 			tokenActive = nextToken();
 
 			if (tokenActive?.type !== 'Simbolo')
 			{
 				sintaxeFuncaoValida = false;
+				rangeError = tokenActive.range;
 
 				break;
 			}
@@ -487,11 +489,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			if (tokenActive?.value !== ',')
 			{
 				sintaxeFuncaoValida = false;
+				rangeError = tokenActive.range;
 
 				break;
 			}
 
 			oldToken = tokenActive;
+			rangeError = oldToken.range;
 			tokenActive = nextToken();
 		}
 
@@ -499,7 +503,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		{
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Error,
-				range: oldToken.range,
+				range: rangeError,
 				message: `Definição da Função inválida.`
 			};
 			diagnostics.push(diagnostic);
