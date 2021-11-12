@@ -2,6 +2,9 @@
 
 Alterações realizadas na extensão.
 
+## [1.0.4] - 12/11/2021
+- Corrigir a validação de sintaxe para desconsiderar conteúdo "String"
+
 ## [1.0.3] - 12/11/2021
 
 - Validar Sintaxe das seguintes regras:

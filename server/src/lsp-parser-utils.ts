@@ -258,6 +258,13 @@ const parserContent = (text: string): LSPToken[] =>
 						break;
 					}
 
+					if ((charValue === '\\')
+						&& (oldCharValue !== '\\'))
+					{
+						token += charValue;
+						charValue = '';
+					}
+
 					if ((charValue === '"')
 						&& (oldCharValue !== '\\'))
 					{
@@ -523,178 +530,180 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
-		switch (tokenActive?.value)
+		if (tokenActive?.type === 'Unknown')
 		{
-			case 'DEFINIR':
-				{
-					tokenActive = nextToken();
-
-					let tipoVariavel = tokenActive?.value;
-					if (['ALFA', 'CURSOR', 'DATA', 'FUNCAO', 'LISTA', 'NUMERO'].includes(tokenActive?.value) === false)
+			switch (tokenActive?.value)
+			{
+				case 'DEFINIR':
 					{
-						if (ehWebservice() === true)
+						tokenActive = nextToken();
+
+						let tipoVariavel = tokenActive?.value;
+						if (['ALFA', 'CURSOR', 'DATA', 'FUNCAO', 'LISTA', 'NUMERO'].includes(tokenActive?.value) === false)
 						{
-							tipoVariavel = 'WEBSERVICE';
+							if (ehWebservice() === true)
+							{
+								tipoVariavel = 'WEBSERVICE';
+							}
+							else
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: tokenActive.range,
+									message: `Tipo da Variável inválido`
+								};
+								diagnostics.push(diagnostic);
+
+								continue;
+							}
 						}
-						else
+
+						tokenActive = nextToken();
+
+						if (tokenActive?.type !== 'Unknown')
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: tokenActive.range,
-								message: `Tipo da Variável inválido`
+								message: `Identificado inválido`
 							};
 							diagnostics.push(diagnostic);
 
 							continue;
 						}
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if ((['ALFA', 'CURSOR', 'DATA', 'LISTA', 'NUMERO', 'WEBSERVICE'].includes(tipoVariavel) === true)
+							&& (tokenActive?.value !== ';'))
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: oldToken.range,
+								message: `Faltou o ponto e vírgula. [;]`
+							};
+							diagnostics.push(diagnostic);
+
+							continue;
+						}
+
+						// TODO Criar tratamento para Definicao de numero com indexador. Exemplo: Definir Numero nValor[10];
+
+						if (tipoVariavel === 'FUNCAO')
+						{
+							if (checkSintaxeFuncao() === false)
+							{
+								continue;
+							}
+						}
+						break;
 					}
-
-					tokenActive = nextToken();
-
-					if (tokenActive?.type !== 'Unknown')
+				case 'FIM':
 					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Error,
-							range: tokenActive.range,
-							message: `Identificado inválido`
-						};
-						diagnostics.push(diagnostic);
+						oldToken = tokenActive;
+						tokenActive = nextToken();
 
-						continue;
+						if (tokenActive?.value !== ';')
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Warning,
+								range: oldToken.range,
+								message: `Faltou o ponto e vírgula. [;]`
+							};
+							diagnostics.push(diagnostic);
+
+							continue;
+						}
+
+						break;
 					}
-
-					oldToken = tokenActive;
-					tokenActive = nextToken();
-
-					if ((['ALFA', 'CURSOR', 'DATA', 'LISTA', 'NUMERO', 'WEBSERVICE'].includes(tipoVariavel) === true)
-						&& (tokenActive?.value !== ';'))
+				case 'FUNCAO':
 					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Error,
-							range: oldToken.range,
-							message: `Faltou o ponto e vírgula. [;]`
-						};
-						diagnostics.push(diagnostic);
+						oldToken = tokenActive;
+						tokenActive = nextToken();
 
-						continue;
-					}
+						if (tokenActive?.type !== 'Unknown')
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: tokenActive.range,
+								message: `Nome da função é inválido`
+							};
+							diagnostics.push(diagnostic);
 
-					// TODO Criar tratamento para Definicao de numero com indexador. Exemplo: Definir Numero nValor[10];
+							continue;
+						}
 
-					if (tipoVariavel === 'FUNCAO')
-					{
+						// TODO Verificar se a funcao já foi Definida
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
 						if (checkSintaxeFuncao() === false)
 						{
 							continue;
 						}
+						break;
 					}
+				case 'PARE':
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (tokenActive?.value !== ';')
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: oldToken.range,
+								message: `Faltou o ponto e vírgula. [;]`
+							};
+							diagnostics.push(diagnostic);
+
+							continue;
+						}
+
+						break;
+					}
+				case 'VAPARA':
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (tokenActive?.type !== 'Unknown')
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: tokenActive.range,
+								message: `Identificado o "LABEL" é inválido`
+							};
+							diagnostics.push(diagnostic);
+
+							continue;
+						}
+
+						// TODO Verificar se existe um Label com o nome definido
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+						if (tokenActive?.value !== ';')
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: oldToken.range,
+								message: `Faltou o ponto e vírgula. [;]`
+							};
+							diagnostics.push(diagnostic);
+
+							continue;
+						}
+
+						break;
+					}
+				default:
 					break;
-				}
-			case 'FIM':
-				{
-					oldToken = tokenActive;
-					tokenActive = nextToken();
-
-					if (tokenActive?.value !== ';')
-					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Warning,
-							range: oldToken.range,
-							message: `Faltou o ponto e vírgula. [;]`
-						};
-						diagnostics.push(diagnostic);
-
-						continue;
-					}
-
-					break;
-				}
-			case 'FUNCAO':
-				{
-					oldToken = tokenActive;
-					tokenActive = nextToken();
-
-					if (tokenActive?.type !== 'Unknown')
-					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Error,
-							range: tokenActive.range,
-							message: `Nome da função é inválido`
-						};
-						diagnostics.push(diagnostic);
-
-						continue;
-					}
-
-					// TODO Verificar se a funcao já foi Definida
-
-					oldToken = tokenActive;
-					tokenActive = nextToken();
-
-					if (checkSintaxeFuncao() === false)
-					{
-						continue;
-					}
-					break;
-				}
-			case 'PARE':
-				{
-					oldToken = tokenActive;
-					tokenActive = nextToken();
-
-					if (tokenActive?.value !== ';')
-					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Error,
-							range: oldToken.range,
-							message: `Faltou o ponto e vírgula. [;]`
-						};
-						diagnostics.push(diagnostic);
-
-						continue;
-					}
-
-					break;
-				}
-			case 'VAPARA':
-				{
-					oldToken = tokenActive;
-					tokenActive = nextToken();
-
-					if (tokenActive?.type !== 'Unknown')
-					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Error,
-							range: tokenActive.range,
-							message: `Identificado o "LABEL" é inválido`
-						};
-						diagnostics.push(diagnostic);
-
-						continue;
-					}
-
-					// TODO Verificar se existe um Label com o nome definido
-
-					oldToken = tokenActive;
-					tokenActive = nextToken();
-					if (tokenActive?.value !== ';')
-					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Error,
-							range: oldToken.range,
-							message: `Faltou o ponto e vírgula. [;]`
-						};
-						diagnostics.push(diagnostic);
-
-						continue;
-					}
-
-					break;
-				}
-			default:
-				break;
+			}
 		}
-
 		tokenActive = nextToken();
 	}
 
