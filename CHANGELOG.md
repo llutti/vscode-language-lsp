@@ -3,9 +3,14 @@
 Alterações realizadas na extensão.
 
 ## [1.0.5] - 12/11/2021
+### Adicionado
+- Checar a sintaxe da definição de número indexado. Exemplo: Definir Numero nMeses[12];
+
+### Correções
 - Limpar os "Problemas" quando um arquivo é fechado
 
 ## [1.0.4] - 12/11/2021
+### Correções
 - Corrigir a validação de sintaxe para desconsiderar conteúdo "String"
 
 ## [1.0.3] - 12/11/2021

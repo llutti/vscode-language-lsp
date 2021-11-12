@@ -575,7 +575,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if ((['ALFA', 'CURSOR', 'DATA', 'LISTA', 'NUMERO', 'WEBSERVICE'].includes(tipoVariavel) === true)
+						if ((['ALFA', 'CURSOR', 'DATA', 'LISTA', 'WEBSERVICE'].includes(tipoVariavel) === true)
 							&& (tokenActive?.value !== ';'))
 						{
 							const diagnostic: Diagnostic = {
@@ -588,7 +588,59 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							continue;
 						}
 
-						// TODO Criar tratamento para Definicao de numero com indexador. Exemplo: Definir Numero nValor[10];
+						if (tipoVariavel === 'NUMERO')
+						{
+							if (tokenActive?.value !== ';')
+							{
+								if (tokenActive?.value === '[')
+								{
+									oldToken = tokenActive;
+									tokenActive = nextToken();
+
+									if (tokenActive?.type !== 'Number')
+									{
+										const diagnostic: Diagnostic = {
+											severity: DiagnosticSeverity.Error,
+											range: oldToken.range,
+											message: `Número Inválido.`
+										};
+										diagnostics.push(diagnostic);
+
+										continue;
+									}
+
+									oldToken = tokenActive;
+									tokenActive = nextToken();
+
+									if (tokenActive?.value !== ']')
+									{
+										const diagnostic: Diagnostic = {
+											severity: DiagnosticSeverity.Error,
+											range: oldToken.range,
+											message: `Era esperado "]".`
+										};
+										diagnostics.push(diagnostic);
+
+										continue;
+									}
+
+									oldToken = tokenActive;
+									tokenActive = nextToken();
+								}
+
+								if (tokenActive?.value !== ';')
+								{
+									const diagnostic: Diagnostic = {
+										severity: DiagnosticSeverity.Error,
+										range: oldToken.range,
+										message: `Faltou o ponto e vírgula. [;]`
+									};
+									diagnostics.push(diagnostic);
+
+									continue;
+								}
+							}
+						}
 
 						if (tipoVariavel === 'FUNCAO')
 						{
