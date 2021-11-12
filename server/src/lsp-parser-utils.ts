@@ -1,7 +1,9 @@
 import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver/node';
 import { Position, Range } from 'vscode-languageserver-textdocument';
+import { EParameterType } from './lsp-elements';
+import { templatesInternos } from './lsp-internal-templates';
 
-type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada' ;
+type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'Comando' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada';
 
 interface LSPToken
 {
@@ -10,6 +12,10 @@ interface LSPToken
 	value: string;
 	type: LSPTokenType;
 }
+
+const LSPTipoDados: string[] = Object.entries(EParameterType).map(([, value]) => value.toUpperCase()).sort();
+const LSPPalavrasReservada: string[] = templatesInternos.map(t => t.label.toUpperCase()).sort();
+const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
 
 const parserContent = (text: string): LSPToken[] =>
 {
@@ -31,10 +37,26 @@ const parserContent = (text: string): LSPToken[] =>
 
 	const addToken = (params: { startToken: Position, endToken: Position, value: string, type?: LSPTokenType; }) =>
 	{
-		const { startToken, endToken, value, type = 'Identificador' } = params;
+		const { startToken, endToken, value } = params;
+		let { type = 'Identificador' } = params;
 
 		if (value !== '')
 		{
+			const upperValue = value?.toUpperCase();
+			if (type === 'Identificador')
+			{
+				if (LSPComando.includes(upperValue) === true)
+				{
+					type = 'Comando';
+				}
+				else
+					if ((LSPTipoDados.includes(upperValue) === true)
+						|| (LSPPalavrasReservada.includes(upperValue) === true))
+					{
+						type = 'PalavraReservada';
+					}
+			}
+
 			tokens.push(
 				{
 					innerId: ++innerId,
@@ -42,7 +64,7 @@ const parserContent = (text: string): LSPToken[] =>
 						start: startToken,
 						end: endToken
 					},
-					value: value?.toUpperCase(),
+					value: upperValue,
 					type
 				});
 		}
@@ -445,7 +467,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		let rangeError = oldToken.range;
 		while (tokenActive?.value !== ')')
 		{
-			if (tokenActive?.value !=='NUMERO')
+			if (tokenActive?.value !== 'NUMERO')
 			{
 				sintaxeFuncaoValida = false;
 				rangeError = tokenActive.range;
@@ -574,7 +596,9 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
-		if (tokenActive?.type === 'Identificador')
+		if ((tokenActive?.type === 'Comando')
+			|| (tokenActive?.type === 'Identificador')
+			|| (tokenActive?.type === 'PalavraReservada'))
 		{
 			switch (tokenActive?.value)
 			{
@@ -583,7 +607,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						tokenActive = nextToken();
 
 						let tipoVariavel = tokenActive?.value;
-						if (['ALFA', 'CURSOR', 'DATA', 'FUNCAO', 'LISTA', 'NUMERO'].includes(tokenActive?.value) === false)
+						if (LSPTipoDados.includes(tokenActive?.value) === false)
 						{
 							if (ehWebservice() === true)
 							{
