@@ -132,9 +132,19 @@ function getDocumentSettings(resource: string): Thenable<ILSPSettings>
 }
 
 // Only keep settings for open documents
-documents.onDidClose(e =>
+documents.onDidClose(async e =>
 {
   documentSettings.delete(e.document.uri);
+
+  const settings = await getDocumentSettings(e.document.uri);
+  if (settings.enabledSyntaxDiagnostic === true)
+  {
+    const diagnostics: Diagnostic[] = [];
+    // Limpar os diagnósticos existentes
+    connection.sendDiagnostics({ uri: e.document.uri, diagnostics });
+
+    return;
+  }
 });
 
 documents.onDidOpen(evt =>

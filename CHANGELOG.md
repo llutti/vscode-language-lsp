@@ -2,6 +2,9 @@
 
 Alterações realizadas na extensão.
 
+## [1.0.5] - 12/11/2021
+- Limpar os "Problemas" quando um arquivo é fechado
+
 ## [1.0.4] - 12/11/2021
 - Corrigir a validação de sintaxe para desconsiderar conteúdo "String"
 
