@@ -1,7 +1,7 @@
 import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver/node';
 import { Position, Range } from 'vscode-languageserver-textdocument';
 
-type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada' | 'Desconhecido';
+type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada' ;
 
 interface LSPToken
 {
@@ -31,7 +31,7 @@ const parserContent = (text: string): LSPToken[] =>
 
 	const addToken = (params: { startToken: Position, endToken: Position, value: string, type?: LSPTokenType; }) =>
 	{
-		const { startToken, endToken, value, type = 'Desconhecido' } = params;
+		const { startToken, endToken, value, type = 'Identificador' } = params;
 
 		if (value !== '')
 		{
@@ -445,7 +445,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		let rangeError = oldToken.range;
 		while (tokenActive?.value !== ')')
 		{
-			if (tokenActive?.value !== 'NUMERO')
+			if (tokenActive?.value !=='NUMERO')
 			{
 				sintaxeFuncaoValida = false;
 				rangeError = tokenActive.range;
@@ -462,7 +462,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				tokenActive = nextToken();
 			}
 
-			if (tokenActive?.type !== 'Desconhecido')
+			if (tokenActive?.type !== 'Identificador')
 			{
 				sintaxeFuncaoValida = false;
 
@@ -574,7 +574,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
-		if (tokenActive?.type === 'Desconhecido')
+		if (tokenActive?.type === 'Identificador')
 		{
 			switch (tokenActive?.value)
 			{
@@ -604,7 +604,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 						tokenActive = nextToken();
 
-						if (tokenActive?.type !== 'Desconhecido')
+						if (tokenActive?.type !== 'Identificador')
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
@@ -688,7 +688,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if (tokenActive?.type !== 'Desconhecido')
+						if (tokenActive?.type !== 'Identificador')
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
@@ -735,7 +735,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if (tokenActive?.type !== 'Desconhecido')
+						if (tokenActive?.type !== 'Identificador')
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
