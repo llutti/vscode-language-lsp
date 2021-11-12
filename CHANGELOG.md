@@ -2,12 +2,12 @@
 
 Alterações realizadas na extensão.
 
-## [1.0.3] - 23/04/2021
-### Adicionado
--
+## [1.0.3] - 12/11/2021
 
-### Alteraçãoes
--
+- Validar Sintaxe das seguintes regras:
+  - Definição de Variáveis
+  - Definição de Função
+  - Comando `Vapara`
 
 ## [1.0.2] - 23/04/2021
 ### Adicionado
@@ -15,7 +15,7 @@ Alterações realizadas na extensão.
   - Novo parâmetro para Ativar/Desativar a verificação
   - Verificar a falta do ";" depois do "Fim" ou da definição de variáveis
 
-### Alteraçãoes
+### Alterações
 - Melhorar a apresentação dos parâmetros das funções durante a digitação.
 
 ## [1.0.1] - 16/04/2021
@@ -44,7 +44,7 @@ Alterações realizadas na extensão.
 - Sempre que for digitado **Inicio** a palavra **Fim;** será adicionado automaticamente
 
 ## [0.1.0] - 16/09/2020
-### Alteraçãoes
+### Alterações
 - Melhoria na identificação dos parâmetros das funções customizadas
 - Melhoria na documentação do comando *ExecSQLEx*
 

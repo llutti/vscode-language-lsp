@@ -16,7 +16,7 @@ const NL = '\n'.charCodeAt(0);
 
 export class LSPContext
 {
-  private static _classLookup: { [fullTypeOrUri: string]: LSPClass } = Object.create(null);
+  private static _classLookup: { [fullTypeOrUri: string]: LSPClass; } = Object.create(null);
   private static _globalCompletions: CompletionItem[] = [];
 
   public static async getCompletions(textDocumentPosition: CompletionParams, cancellationToken: CancellationToken, document?: TextDocument): Promise<CompletionItem[]>
@@ -350,7 +350,7 @@ export class LSPContext
 
   public static registerClasses(fileUri: string, classes: LSPClass[]): void
   {
-    const newClassLookup: { [fullTypeOrUri: string]: LSPClass } = {}; // Object.create(null);
+    const newClassLookup: { [fullTypeOrUri: string]: LSPClass; } = {}; // Object.create(null);
     Object
       .keys(this._classLookup)
       .forEach(
@@ -398,7 +398,7 @@ export class LSPContext
     return charCode === CR || charCode === NL;
   }
 
-  private static getWordAtText(text: string, offset: number): { word: string; start: number; length: number }
+  private static getWordAtText(text: string, offset: number): { word: string; start: number; length: number; }
   {
     let textStart = offset;
     while (textStart > 0 && !LSPContext.isNewlineCharacter(text.charCodeAt(textStart - 1)) && !delimitadores.test(text[textStart - 1]))

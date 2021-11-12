@@ -3,7 +3,6 @@ import
   createConnection,
   TextDocuments,
   Diagnostic,
-  DiagnosticSeverity,
   ProposedFeatures,
   InitializeParams,
   DidChangeConfigurationNotification,
@@ -17,6 +16,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { LSPContext } from './lsp-context';
 import { templatesInternos } from './lsp-internal-templates';
 import { LSPParser } from './lsp-parser';
+import { checkSintaxe, parserContent } from './lsp-parser-utils';
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -24,7 +24,7 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
-// let hasDiagnosticRelatedInformationCapability = false;
+let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) =>
 {
@@ -34,11 +34,11 @@ connection.onInitialize((params: InitializeParams) =>
 
   hasConfigurationCapability = !!(capabilities.workspace && !!capabilities.workspace.configuration);
   hasWorkspaceFolderCapability = !!(capabilities.workspace && !!capabilities.workspace.workspaceFolders);
-  // hasDiagnosticRelatedInformationCapability = !!(
-  //   capabilities.textDocument &&
-  //   capabilities.textDocument.publishDiagnostics &&
-  //   capabilities.textDocument.publishDiagnostics.relatedInformation
-  // );
+  hasDiagnosticRelatedInformationCapability = !!(
+    capabilities.textDocument &&
+    capabilities.textDocument.publishDiagnostics &&
+    capabilities.textDocument.publishDiagnostics.relatedInformation
+  );
 
   const result: InitializeResult = {
     capabilities: {
@@ -140,6 +140,7 @@ documents.onDidClose(e =>
 documents.onDidOpen(evt =>
 {
   LSPContext.registerClasses(evt.document.uri, LSPParser.parseFile(evt.document.uri, evt.document.getText()));
+  validateTextDocument(evt.document);
 });
 
 // The content of a text document has changed. This event is emitted
@@ -164,49 +165,9 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void>
     return;
   }
 
-  // The validator creates diagnostics for all uppercase words length 2 and more
   const text = textDocument.getText();
-  const pattern = /(((definir)\s(alfa|cursor|data|lista|numero)\s(\w*))|(\b(fim)))\s[;]{0}/gmi;
-  let m: RegExpExecArray | null;
-
-  let problems = 0;
-
-
-  while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems)
-  {
-    problems++;
-    const diagnostic: Diagnostic = {
-      severity: DiagnosticSeverity.Warning,
-      range: {
-        start: textDocument.positionAt(m.index),
-        end: textDocument.positionAt(m.index + m[0].length)
-      },
-      message: `Faltou o ';'(ponto e vírgula).`
-      // source: 'ex'
-    };
-
-    // if (hasDiagnosticRelatedInformationCapability)
-    // {
-    //   diagnostic.relatedInformation = [
-    //     {
-    //       location: {
-    //         uri: textDocument.uri,
-    //         range: Object.assign({}, diagnostic.range)
-    //       },
-    //       message: 'Spelling matters'
-    //     },
-    //     {
-    //       location: {
-    //         uri: textDocument.uri,
-    //         range: Object.assign({}, diagnostic.range)
-    //       },
-    //       message: 'Particularly for names'
-    //     }
-    //   ];
-    // }
-
-    diagnostics.push(diagnostic);
-  }
+  const tokens = parserContent(text);
+  diagnostics.push(...checkSintaxe(settings.maxNumberOfProblems, tokens));
 
   // Send the computed diagnostics to VSCode.
   connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
