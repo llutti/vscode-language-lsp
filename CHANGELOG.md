@@ -4,9 +4,10 @@ Alterações realizadas na extensão.
 
 ## [1.0.5] - 12/11/2021
 ### Adicionado
-- Checar a sintaxe da definição de `Numero` indexado. Exemplo: `Definir Numero nMeses[12]`;
-- Checar a sintaxe da definição de `Alfa` indexado. Exemplo: `Definir Alfa aMeses[12]`;
-- Checar a sintaxe da definição de `Data` indexado. Exemplo: `Definir Data dMeses[12]`;
+- Checar a sintaxe da definição de `Numero` indexado. Exemplo: `Definir Numero nMeses[12];`
+- Checar a sintaxe da definição de `Alfa` indexado. Exemplo: `Definir Alfa aMeses[12];`
+- Checar a sintaxe da definição de `Data` indexado. Exemplo: `Definir Data dMeses[12];`
+- Não permitir utilizar Palavras reservadas da linguagem como identificadores
 
 ### Correções
 - Limpar os "Problemas" quando um arquivo é fechado
