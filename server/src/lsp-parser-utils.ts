@@ -523,6 +523,46 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		return true;
 	};
 
+	const checkSintaxeIndexadorVariavel = (): boolean =>
+	{
+		if (tokenActive?.value === '[')
+		{
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+
+			if (tokenActive?.type !== 'Number')
+			{
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: oldToken.range,
+					message: `Número Inválido.`
+				};
+				diagnostics.push(diagnostic);
+
+				return false;
+			}
+
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+
+			if (tokenActive?.value !== ']')
+			{
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: oldToken.range,
+					message: `Era esperado "]".`
+				};
+				diagnostics.push(diagnostic);
+
+				return false;
+			}
+
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+		}
+		return true;
+	};
+
 	let position = 0;
 	let oldToken: LSPToken;
 	let tokenActive = nextToken();
@@ -575,7 +615,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if ((['ALFA', 'CURSOR', 'DATA', 'LISTA', 'WEBSERVICE'].includes(tipoVariavel) === true)
+						if ((['CURSOR', 'LISTA', 'WEBSERVICE'].includes(tipoVariavel) === true)
 							&& (tokenActive?.value !== ';'))
 						{
 							const diagnostic: Diagnostic = {
@@ -588,44 +628,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							continue;
 						}
 
-						if (tipoVariavel === 'NUMERO')
+						if (['ALFA', 'DATA', 'NUMERO'].includes(tipoVariavel) === true)
 						{
 							if (tokenActive?.value !== ';')
 							{
-								if (tokenActive?.value === '[')
+								if (checkSintaxeIndexadorVariavel() === false)
 								{
-									oldToken = tokenActive;
-									tokenActive = nextToken();
-
-									if (tokenActive?.type !== 'Number')
-									{
-										const diagnostic: Diagnostic = {
-											severity: DiagnosticSeverity.Error,
-											range: oldToken.range,
-											message: `Número Inválido.`
-										};
-										diagnostics.push(diagnostic);
-
-										continue;
-									}
-
-									oldToken = tokenActive;
-									tokenActive = nextToken();
-
-									if (tokenActive?.value !== ']')
-									{
-										const diagnostic: Diagnostic = {
-											severity: DiagnosticSeverity.Error,
-											range: oldToken.range,
-											message: `Era esperado "]".`
-										};
-										diagnostics.push(diagnostic);
-
-										continue;
-									}
-
-									oldToken = tokenActive;
-									tokenActive = nextToken();
+									continue;
 								}
 
 								if (tokenActive?.value !== ';')
