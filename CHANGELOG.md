@@ -2,7 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.0.5] - 12/11/2021
+## [1.0.5] - 16/11/2021
+### Modificado
+- Remover parâmetro que permitir Ativar/Desativar validação de Sintaxe.
+
 ### Adicionado
 - Checar a sintaxe da definição de `Numero` indexado. Exemplo: `Definir Numero nMeses[12];`
 - Checar a sintaxe da definição de `Alfa` indexado. Exemplo: `Definir Alfa aMeses[12];`

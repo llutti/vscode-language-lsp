@@ -84,12 +84,10 @@ connection.onInitialized(() =>
 interface ILSPSettings
 {
   maxNumberOfProblems: number;
-  enabledSyntaxDiagnostic: boolean;
 }
 
 const defaultSettings: ILSPSettings = {
-  maxNumberOfProblems: 1000,
-  enabledSyntaxDiagnostic: false
+  maxNumberOfProblems: 1000
 };
 
 let globalSettings: ILSPSettings = defaultSettings;
@@ -136,15 +134,12 @@ documents.onDidClose(async e =>
 {
   documentSettings.delete(e.document.uri);
 
-  const settings = await getDocumentSettings(e.document.uri);
-  if (settings.enabledSyntaxDiagnostic === true)
-  {
-    const diagnostics: Diagnostic[] = [];
-    // Limpar os diagnósticos existentes
-    connection.sendDiagnostics({ uri: e.document.uri, diagnostics });
+  const diagnostics: Diagnostic[] = [];
+  // Limpar os diagnósticos existentes
+  connection.sendDiagnostics({ uri: e.document.uri, diagnostics });
 
-    return;
-  }
+  return;
+
 });
 
 documents.onDidOpen(evt =>
@@ -163,17 +158,8 @@ documents.onDidChangeContent(change =>
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void>
 {
-  // In this simple example we get the settings for every validate run.
   const settings = await getDocumentSettings(textDocument.uri);
   const diagnostics: Diagnostic[] = [];
-
-  if (settings.enabledSyntaxDiagnostic === false)
-  {
-    // Limpar os diagnósticos existentes
-    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-
-    return;
-  }
 
   const text = textDocument.getText();
   const tokens = parserContent(text);
