@@ -1322,7 +1322,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 										diagnostics.push(diagnostic);
 									}
 
-									removerBloco('Inicio');
+									removerBloco('Chave');
 								}
 
 								if (removerBloco('Se') === true)
