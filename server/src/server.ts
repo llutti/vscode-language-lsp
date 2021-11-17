@@ -134,12 +134,10 @@ documents.onDidClose(async e =>
 {
   documentSettings.delete(e.document.uri);
 
-  const diagnostics: Diagnostic[] = [];
   // Limpar os diagnósticos existentes
-  connection.sendDiagnostics({ uri: e.document.uri, diagnostics });
+  connection.sendDiagnostics({ uri: e.document.uri, diagnostics: [] });
 
   return;
-
 });
 
 documents.onDidOpen(evt =>
@@ -159,14 +157,11 @@ documents.onDidChangeContent(change =>
 async function validateTextDocument(textDocument: TextDocument): Promise<void>
 {
   const settings = await getDocumentSettings(textDocument.uri);
-  const diagnostics: Diagnostic[] = [];
-
   const text = textDocument.getText();
   const tokens = parserContent(text);
-  diagnostics.push(...checkSintaxe(settings.maxNumberOfProblems, tokens));
 
-  // Send the computed diagnostics to VSCode.
-  connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+  // Validar e enviar os erros ao VSCode
+  connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: [...checkSintaxe(settings.maxNumberOfProblems, tokens)] });
 }
 
 connection.onDidChangeWatchedFiles(_change =>
