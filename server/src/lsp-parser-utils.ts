@@ -591,7 +591,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Error,
 				range: oldToken.range,
-				message: `Faltou o ponto e vírgula. [;]1`
+				message: `Faltou o ponto e vírgula. [;]`
 			};
 			diagnostics.push(diagnostic);
 
@@ -963,7 +963,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]2`
+								message: `Faltou o ponto e vírgula. [;]`
 							};
 							diagnostics.push(diagnostic);
 
@@ -984,7 +984,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
 										range: oldToken.range,
-										message: `Faltou o ponto e vírgula. [;]3`
+										message: `Faltou o ponto e vírgula. [;]`
 									};
 									diagnostics.push(diagnostic);
 
@@ -1018,7 +1018,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Warning,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]4`
+								message: `Faltou o ponto e vírgula. [;]`
 							};
 							diagnostics.push(diagnostic);
 						}
@@ -1090,7 +1090,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]5`
+								message: `Faltou o ponto e vírgula. [;]`
 							};
 							diagnostics.push(diagnostic);
 
@@ -1229,7 +1229,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]6`
+								message: `Faltou o ponto e vírgula. [;]`
 							};
 							diagnostics.push(diagnostic);
 
