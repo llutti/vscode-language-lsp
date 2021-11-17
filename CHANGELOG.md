@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [1.1.1] - 17/11/2021
+### Modificado
+- Traducao das Propriedades no menu de configurações do VSCode.
+
 ## [1.1.0] - 17/11/2021
 ### Modificado
 - Remover parâmetro que permitir Ativar/Desativar validação de Sintaxe.
@@ -15,9 +19,9 @@ Alterações realizadas na extensão.
 - Checar a sintaxe da definição de `Enquanto`. Exemplo: `Enquanto ((SQL_EOF(cPesquisa) = cFalso)`
 - Checar a sintaxe da definição de `Para`. Exemplo: `Para (nIndex=1; nIndex<=10; nIndex++)`
 - Controle bloco para:
-  - Inicio/Fim
-  - {/}
-  - (/)
+  - `Inicio`/`Fim`
+  - `{`/`}`
+  - `(`/`)`
 
 ### Correções
 - Limpar os "Problemas" quando um arquivo é fechado

@@ -2,7 +2,7 @@
     "name": "lsp",
     "displayName": "LSP - Linguagem Senior de Programação",
     "description": "Suporte para a Linguagem Senior de Programação",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "publisher": "llutti",
     "icon": "images/icon.png",
     "license": "SEE LICENSE IN LICENSE.md",
@@ -28,24 +28,13 @@
     "contributes": {
         "configuration": {
             "type": "object",
-            "title": "LSP configuration",
+            "title": "%lsp.configuration.tittle%",
             "properties": {
                 "lsp.maxNumberOfProblems": {
                     "scope": "resource",
                     "type": "number",
                     "default": 100,
-                    "description": "Controls the maximum number of problems produced by the server."
-                },
-                "lsp.trace.server": {
-                    "scope": "window",
-                    "type": "string",
-                    "enum": [
-                        "off",
-                        "messages",
-                        "verbose"
-                    ],
-                    "default": "off",
-                    "description": "Traces the communication between VS Code and the language server."
+                    "description": "%lsp.configuration.maxNumberOfProblems.description%"
                 }
             }
         },

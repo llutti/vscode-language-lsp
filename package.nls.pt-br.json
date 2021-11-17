@@ -1,0 +1,4 @@
+{
+	"lsp.configuration.tittle": "LSP - Configuração",
+	"lsp.configuration.maxNumberOfProblems.description": "Controle do número máximo de problemas produzidos. (Defina ZERO para não verificar erros)"
+}
