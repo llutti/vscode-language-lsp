@@ -2,15 +2,22 @@
 
 Alterações realizadas na extensão.
 
-## [1.0.5] - 16/11/2021
+## [1.0.5] - 17/11/2021
 ### Modificado
 - Remover parâmetro que permitir Ativar/Desativar validação de Sintaxe.
 
 ### Adicionado
+- Não permitir utilizar Palavras reservadas da linguagem como identificadores
 - Checar a sintaxe da definição de `Numero` indexado. Exemplo: `Definir Numero nMeses[12];`
 - Checar a sintaxe da definição de `Alfa` indexado. Exemplo: `Definir Alfa aMeses[12];`
 - Checar a sintaxe da definição de `Data` indexado. Exemplo: `Definir Data dMeses[12];`
-- Não permitir utilizar Palavras reservadas da linguagem como identificadores
+- Checar a sintaxe da definição de `Se`. Exemplo: `Se (nNumCad > 0);`
+- Checar a sintaxe da definição de `Enquanto`. Exemplo: `Enquanto ((SQL_EOF(cPesquisa) = cFalso)`
+- Checar a sintaxe da definição de `Para`. Exemplo: `Para (nIndex=1; nIndex<=10; nIndex++)`
+- Controle bloco para:
+  - Inicio/Fim
+  - {/}
+  - (/)
 
 ### Correções
 - Limpar os "Problemas" quando um arquivo é fechado

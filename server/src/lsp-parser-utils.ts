@@ -13,9 +13,42 @@ interface LSPToken
 	type: LSPTokenType;
 }
 
+type LSPTipoBloco = 'Chave' | 'Se' | 'Inicio' | 'Para' | 'Enquanto' | 'Parenteses' | 'Desconhecido';
+interface Bloco
+{
+	tipo: LSPTipoBloco;
+	ativo: boolean;
+	origem: Position;
+}
+
 const LSPTipoDados: string[] = Object.entries(EParameterType).map(([, value]) => value.toUpperCase()).sort();
 const LSPPalavrasReservada: string[] = templatesInternos.map(t => t.label.toUpperCase()).sort();
 const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
+
+let blocos: Bloco[] = [];
+
+const adicionarBloco = (tipo: LSPTipoBloco, origem: Position): void =>
+{
+	blocos.push(
+		{
+			tipo,
+			ativo: true,
+			origem
+		});
+};
+
+const removerBloco = (tipo: LSPTipoBloco): boolean =>
+{
+	const bloco = blocos[blocos.length - 1];
+	if (bloco?.tipo !== tipo)
+	{
+		return false;
+	}
+
+	blocos = blocos.splice(0, blocos.length - 1);
+
+	return true;
+};
 
 const parserContent = (text: string): LSPToken[] =>
 {
@@ -98,7 +131,8 @@ const parserContent = (text: string): LSPToken[] =>
 			continue;
 		}
 
-		if (charValue === ' ')
+		if ((charValue === ' ')
+			|| (charValue === '\t'))
 		{
 			addToken(
 				{
@@ -280,8 +314,8 @@ const parserContent = (text: string): LSPToken[] =>
 						break;
 					}
 
-					if ((charValue === '\\')
-						&& (oldCharValue !== '\\'))
+					if (((charValue === '\\') || (charValue === '"'))
+						&& (oldCharValue === '\\'))
 					{
 						token += charValue;
 						charValue = '';
@@ -295,6 +329,8 @@ const parserContent = (text: string): LSPToken[] =>
 
 						break;
 					}
+
+
 
 					token += charValue;
 
@@ -589,15 +625,277 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		return true;
 	};
 
+	const checkSintaxeSeEnquanto = (): boolean =>
+	{
+		if (tokenActive?.value !== '(')
+		{
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Error,
+				range: tokenActive.range,
+				message: `Faltou abrir parenteses. [(]`
+			};
+			diagnostics.push(diagnostic);
+
+			return false;
+		}
+
+		adicionarBloco('Parenteses', tokenActive.range.start);
+
+		oldToken = tokenActive;
+		tokenActive = nextToken();
+		while (position <= innerTokens.length)
+		{
+			if ((tokenActive?.type === 'Comando')
+				|| (tokenActive?.type === 'Identificador')
+				|| (tokenActive?.type === 'Simbolo')
+				|| (tokenActive?.type === 'PalavraReservada'))
+			{
+				switch (tokenActive?.value)
+				{
+					case '(':
+						{
+							adicionarBloco('Parenteses', tokenActive.range.start);
+							break;
+						}
+					case ')':
+						{
+							if (removerBloco('Parenteses') === false)
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: tokenActive.range,
+									message: `Tentativa de Fechar Parenteses antes de Abrir`
+								};
+								diagnostics.push(diagnostic);
+
+								return false;
+							}
+
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							if (tokenActive?.value === ')')
+							{
+								continue;
+							}
+
+							const bloco = blocos[blocos.length - 1];
+							if (bloco?.tipo !== 'Parenteses')
+							{
+								return true;
+							}
+
+							if ((tokenActive?.value !== 'E')
+								&& (tokenActive?.value !== 'OU')
+								&& (tokenActive?.type !== 'Simbolo'))
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: tokenActive.range,
+									message: `Esperava-se "E" ou "OU"`
+								};
+								diagnostics.push(diagnostic);
+
+								return false;
+							}
+
+							continue;
+						}
+					case ';':
+					case 'INICIO':
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: oldToken.range,
+								message: `Esperava-se ")".`
+							};
+							diagnostics.push(diagnostic);
+
+							return false;
+						}
+				}
+			}
+
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+		}
+
+		return true;
+	};
+
+	const checkSintaxeParenteses = (): boolean =>
+	{
+		while (position <= innerTokens.length)
+		{
+			if ((tokenActive?.type === 'Comando')
+				|| (tokenActive?.type === 'Identificador')
+				|| (tokenActive?.type === 'Simbolo')
+				|| (tokenActive?.type === 'PalavraReservada'))
+			{
+				switch (tokenActive?.value)
+				{
+					case '(':
+						{
+							adicionarBloco('Parenteses', oldToken.range.start);
+
+							break;
+						}
+					case ')':
+						{
+							if (removerBloco('Parenteses') === false)
+							{
+								return false;
+							}
+
+							const bloco = blocos[blocos.length - 1];
+							if (bloco?.tipo !== 'Parenteses')
+							{
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								return true;
+							}
+
+							break;
+						}
+					case ';':
+					case '{':
+					case '}':
+					case 'SE':
+					case 'ENQUANTO':
+					case 'INICIO':
+					case 'FIM':
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: oldToken.range,
+								message: `Esperava-se ")".`
+							};
+							diagnostics.push(diagnostic);
+
+							return false;
+						}
+				}
+			}
+
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+		}
+
+		return true;
+	};
+
+	const checkSintaxePara = (): boolean =>
+	{
+		if (tokenActive?.value !== '(')
+		{
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Error,
+				range: tokenActive.range,
+				message: `Faltou abrir parenteses. [(]`
+			};
+			diagnostics.push(diagnostic);
+
+			return false;
+		}
+
+		adicionarBloco('Parenteses', tokenActive.range.start);
+
+		oldToken = tokenActive;
+		tokenActive = nextToken();
+		while (position <= innerTokens.length)
+		{
+			if ((tokenActive?.type === 'Comando')
+				|| (tokenActive?.type === 'Identificador')
+				|| (tokenActive?.type === 'Simbolo')
+				|| (tokenActive?.type === 'PalavraReservada'))
+			{
+				switch (tokenActive?.value)
+				{
+					case '(':
+						{
+							adicionarBloco('Parenteses', tokenActive.range.start);
+							break;
+						}
+					case ')':
+						{
+							if (removerBloco('Parenteses') === false)
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: tokenActive.range,
+									message: `Tentativa de Fechar Parenteses antes de Abrir`
+								};
+								diagnostics.push(diagnostic);
+
+								return false;
+							}
+
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							if (tokenActive?.value === ')')
+							{
+								continue;
+							}
+
+							const bloco = blocos[blocos.length - 1];
+							if (bloco?.tipo !== 'Parenteses')
+							{
+								return true;
+							}
+
+							if ((tokenActive?.value !== 'E')
+								&& (tokenActive?.value !== 'OU')
+								&& (tokenActive?.type !== 'Simbolo'))
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: tokenActive.range,
+									message: `Esperava-se "E" ou "OU"`
+								};
+								diagnostics.push(diagnostic);
+
+								return false;
+							}
+
+							continue;
+						}
+					case '{':
+					case '}':
+					case 'SE':
+					case 'ENQUANTO':
+					case 'INICIO':
+					case 'FIM':
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: oldToken.range,
+								message: `Esperava-se ")".`
+							};
+							diagnostics.push(diagnostic);
+
+							return false;
+						}
+				}
+			}
+
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+		}
+
+		return true;
+	};
+
 	let position = 0;
 	let oldToken: LSPToken;
 	let tokenActive = nextToken();
+	let permiteSenao = false;
 
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
 		if ((tokenActive?.type === 'Comando')
 			|| (tokenActive?.type === 'Identificador')
+			|| (tokenActive?.type === 'Simbolo')
 			|| (tokenActive?.type === 'PalavraReservada'))
 		{
 			switch (tokenActive?.value)
@@ -688,6 +986,12 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						}
 						break;
 					}
+				case 'INICIO':
+					{
+						adicionarBloco('Inicio', tokenActive.range.start);
+
+						break;
+					}
 				case 'FIM':
 					{
 						oldToken = tokenActive;
@@ -701,6 +1005,30 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								message: `Faltou o ponto e vírgula. [;]`
 							};
 							diagnostics.push(diagnostic);
+						}
+
+						if (removerBloco('Inicio') === false)
+						{
+							if (removerBloco('Se') === false)
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: oldToken.range,
+									message: `Encontrado um "FIM" sem um "INICIO" correspondente.`
+								};
+								diagnostics.push(diagnostic);
+
+								continue;
+							}
+
+							removerBloco('Inicio');
+						}
+
+						if (removerBloco('Se') === true)
+						{
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							permiteSenao = (tokenActive?.value === 'SENAO');
 
 							continue;
 						}
@@ -733,6 +1061,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						{
 							continue;
 						}
+
 						break;
 					}
 				case 'PARE':
@@ -754,6 +1083,114 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 						break;
 					}
+				case 'SE':
+					{
+						adicionarBloco('Se', tokenActive.range.start);
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (checkSintaxeSeEnquanto() === false)
+						{
+							continue;
+						}
+
+						if ((tokenActive?.value !== 'INICIO')
+							&& (tokenActive?.value !== '{'))
+						{
+							removerBloco('Se');
+
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Warning,
+								range: oldToken.range,
+								message: `É recomendado incluir um Bloco INICIO/FIM para o "SE".`
+							};
+							diagnostics.push(diagnostic);
+						}
+
+						continue;
+					}
+				case 'ENQUANTO':
+					{
+						// adicionarBloco('Enquanto', tokenActive.range.start);
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (checkSintaxeSeEnquanto() === false)
+						{
+							continue;
+						}
+
+						if ((tokenActive?.value !== 'INICIO')
+							&& (tokenActive?.value !== '{'))
+						{
+							removerBloco('Enquanto');
+
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Warning,
+								range: oldToken.range,
+								message: `É recomendado incluir um Bloco INICIO/FIM para o "ENQUANTO".`
+							};
+							diagnostics.push(diagnostic);
+						}
+
+						continue;
+					}
+				case 'PARA':
+					{
+						// adicionarBloco('Para', tokenActive.range.start);
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (checkSintaxePara() === false)
+						{
+							continue;
+						}
+
+						if ((tokenActive?.value !== 'INICIO')
+							&& (tokenActive?.value !== '{'))
+						{
+							removerBloco('Para');
+
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Warning,
+								range: oldToken.range,
+								message: `É recomendado incluir um Bloco INICIO/FIM para o "PARA".`
+							};
+							diagnostics.push(diagnostic);
+						}
+
+						continue;
+					}
+				case 'SENAO':
+					{
+						if (permiteSenao === false)
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Warning,
+								range: tokenActive.range,
+								message: `Encontrado um "SENAO" sem um "SE" correspondente.`
+							};
+							diagnostics.push(diagnostic);
+						}
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+						if ((tokenActive?.value !== 'INICIO')
+							&& (tokenActive?.value !== 'SE'))
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Warning,
+								range: oldToken.range,
+								message: `É recomendado incluir um Bloco INICIO/FIM para o "SENAO".`
+							};
+							diagnostics.push(diagnostic);
+
+						}
+						continue;
+					}
 				case 'VAPARA':
 					{
 						oldToken = tokenActive;
@@ -764,7 +1201,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: tokenActive.range,
-								message: `Identificado o "LABEL" é inválido`
+								message: `Identificador do "LABEL" é inválido`
 							};
 							diagnostics.push(diagnostic);
 
@@ -789,10 +1226,81 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 						break;
 					}
+				case '(':
+					{
+						adicionarBloco('Parenteses', tokenActive.range.start);
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (tokenActive?.value === ')')
+						{
+							removerBloco('Parenteses');
+
+							break;
+						}
+
+						if (checkSintaxeParenteses() === true)
+						{
+							continue;
+						}
+
+						break;
+					}
+				case ')':
+					{
+						if (removerBloco('Parenteses') === false)
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: tokenActive.range,
+								message: `Encontrado um ")" sem um "(" correspondente.`
+							};
+							diagnostics.push(diagnostic);
+						}
+
+						break;
+					}
+				case '{':
+					{
+						adicionarBloco('Chave', tokenActive.range.start);
+
+						break;
+					}
+				case '}':
+					{
+						if (removerBloco('Chave') === false)
+						{
+							if (removerBloco('Se') === false)
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Warning,
+									range: tokenActive.range,
+									message: `Encontrado um "}" sem um "{" correspondente.`
+								};
+								diagnostics.push(diagnostic);
+							}
+
+							removerBloco('Inicio');
+						}
+
+						if (removerBloco('Se') === true)
+						{
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							permiteSenao = (tokenActive?.value === 'SENAO');
+
+							continue;
+						}
+
+						break;
+					}
 				default:
 					break;
 			}
 		}
+
+		oldToken = tokenActive;
 		tokenActive = nextToken();
 	}
 
