@@ -1051,10 +1051,22 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								if (removerBloco('Se') === true)
 								{
+									if ((tokenActive?.type === 'Comando')
+										&& (tokenActive?.value === 'FIM'))
+									{
+										continue;
+									}
+
 									oldToken = tokenActive;
 									tokenActive = nextToken();
 									permiteSenao = (tokenActive?.value === 'SENAO');
 
+									continue;
+								}
+
+								if ((tokenActive?.type === 'Comando')
+									&& (tokenActive?.value === 'FIM'))
+								{
 									continue;
 								}
 
