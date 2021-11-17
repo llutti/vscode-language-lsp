@@ -13,42 +13,17 @@ interface LSPToken
 	type: LSPTokenType;
 }
 
-type LSPTipoBloco = 'Chave' | 'Se' | 'Inicio' | 'Para' | 'Enquanto' | 'Parenteses' | 'Desconhecido';
+type LSPTipoBloco = 'Chave' | 'Se' | 'Inicio' | 'Para' | 'Enquanto' | 'Parenteses';
 interface Bloco
 {
 	tipo: LSPTipoBloco;
 	ativo: boolean;
-	origem: Position;
+	range: Range;
 }
 
 const LSPTipoDados: string[] = Object.entries(EParameterType).map(([, value]) => value.toUpperCase()).sort();
 const LSPPalavrasReservada: string[] = templatesInternos.map(t => t.label.toUpperCase()).sort();
 const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
-
-let blocos: Bloco[] = [];
-
-const adicionarBloco = (tipo: LSPTipoBloco, origem: Position): void =>
-{
-	blocos.push(
-		{
-			tipo,
-			ativo: true,
-			origem
-		});
-};
-
-const removerBloco = (tipo: LSPTipoBloco): boolean =>
-{
-	const bloco = blocos[blocos.length - 1];
-	if (bloco?.tipo !== tipo)
-	{
-		return false;
-	}
-
-	blocos = blocos.splice(0, blocos.length - 1);
-
-	return true;
-};
 
 const parserContent = (text: string): LSPToken[] =>
 {
@@ -451,8 +426,33 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	{
 		return [];
 	}
+
+	let blocos: Bloco[] = [];
 	const diagnostics: Diagnostic[] = [];
 	const innerTokens = tokens.filter(t => (t.type !== 'ComentarioBloco') && (t.type !== 'ComentarioLinha'));
+
+	const adicionarBloco = (tipo: LSPTipoBloco, range: Range): void =>
+	{
+		blocos.push(
+			{
+				tipo,
+				ativo: true,
+				range
+			});
+	};
+
+	const removerBloco = (tipo: LSPTipoBloco): boolean =>
+	{
+		const bloco = blocos[blocos.length - 1];
+		if (bloco?.tipo !== tipo)
+		{
+			return false;
+		}
+
+		blocos = blocos.splice(0, blocos.length - 1);
+
+		return true;
+	};
 
 	const nextToken = (): LSPToken =>
 	{
@@ -644,7 +644,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			return false;
 		}
 
-		adicionarBloco('Parenteses', tokenActive.range.start);
+		adicionarBloco('Parenteses', tokenActive.range);
 
 		oldToken = tokenActive;
 		tokenActive = nextToken();
@@ -659,7 +659,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					case '(':
 						{
-							adicionarBloco('Parenteses', tokenActive.range.start);
+							adicionarBloco('Parenteses', tokenActive.range);
 							break;
 						}
 					case ')':
@@ -740,7 +740,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					case '(':
 						{
-							adicionarBloco('Parenteses', oldToken.range.start);
+							adicionarBloco('Parenteses', oldToken.range);
 
 							break;
 						}
@@ -803,7 +803,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			return false;
 		}
 
-		adicionarBloco('Parenteses', tokenActive.range.start);
+		adicionarBloco('Parenteses', tokenActive.range);
 
 		oldToken = tokenActive;
 		tokenActive = nextToken();
@@ -818,7 +818,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					case '(':
 						{
-							adicionarBloco('Parenteses', tokenActive.range.start);
+							adicionarBloco('Parenteses', tokenActive.range);
 							break;
 						}
 					case ')':
@@ -993,7 +993,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					}
 				case 'INICIO':
 					{
-						adicionarBloco('Inicio', tokenActive.range.start);
+						adicionarBloco('Inicio', tokenActive.range);
 
 						break;
 					}
@@ -1090,7 +1090,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					}
 				case 'SE':
 					{
-						adicionarBloco('Se', tokenActive.range.start);
+						adicionarBloco('Se', tokenActive.range);
 
 						oldToken = tokenActive;
 						tokenActive = nextToken();
@@ -1117,8 +1117,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					}
 				case 'ENQUANTO':
 					{
-						// adicionarBloco('Enquanto', tokenActive.range.start);
-
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
@@ -1144,8 +1142,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					}
 				case 'PARA':
 					{
-						// adicionarBloco('Para', tokenActive.range.start);
-
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
@@ -1233,7 +1229,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					}
 				case '(':
 					{
-						adicionarBloco('Parenteses', tokenActive.range.start);
+						adicionarBloco('Parenteses', tokenActive.range);
 
 						oldToken = tokenActive;
 						tokenActive = nextToken();
@@ -1268,7 +1264,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					}
 				case '{':
 					{
-						adicionarBloco('Chave', tokenActive.range.start);
+						adicionarBloco('Chave', tokenActive.range);
 
 						break;
 					}
@@ -1279,7 +1275,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							if (removerBloco('Se') === false)
 							{
 								const diagnostic: Diagnostic = {
-									severity: DiagnosticSeverity.Warning,
+									severity: DiagnosticSeverity.Error,
 									range: tokenActive.range,
 									message: `Encontrado um "}" sem um "{" correspondente.`
 								};
@@ -1308,6 +1304,19 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		oldToken = tokenActive;
 		tokenActive = nextToken();
 	}
+
+	blocos
+		.forEach(
+			bloco =>
+			{
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: bloco.range,
+					message: `Faltou Finalizar o Bloco "${bloco.tipo}".`
+				};
+				diagnostics.push(diagnostic);
+			}
+		);
 
 	return diagnostics;
 };
