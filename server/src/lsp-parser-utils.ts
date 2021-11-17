@@ -954,7 +954,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							continue;
 						}
 
-						if (['ALFA', 'DATA', 'NUMERO'].includes(tipoVariavel) === true)
+						if (['ALFA', 'DATA', 'NUMERO', 'Tabela'].includes(tipoVariavel) === true)
 						{
 							if (tokenActive?.value !== ';')
 							{

@@ -2,7 +2,7 @@
 
 Alterações realizadas na extensão.
 
-## [1.0.5] - 17/11/2021
+## [1.1.0] - 17/11/2021
 ### Modificado
 - Remover parâmetro que permitir Ativar/Desativar validação de Sintaxe.
 
@@ -21,6 +21,9 @@ Alterações realizadas na extensão.
 
 ### Correções
 - Limpar os "Problemas" quando um arquivo é fechado
+
+### Problema Conhecido
+- Quando um `Se` não tem um bloco `Inicio/Fim` é apresentado um alerta incorreto quando tem um `Senao` sem um `Se`
 
 ## [1.0.4] - 12/11/2021
 ### Correções
