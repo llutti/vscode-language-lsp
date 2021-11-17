@@ -441,6 +441,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	const diagnostics: Diagnostic[] = [];
 	const innerTokens = tokens.filter(t => (t.type !== 'ComentarioBloco') && (t.type !== 'ComentarioLinha'));
 
+	const ehPontoVirgula = (): boolean => (tokenActive?.type === 'Simbolo') && (tokenActive?.value === ';');
 	const adicionarBloco = (tipo: LSPTipoBloco, range: Range): void =>
 	{
 		blocos.push(
@@ -585,12 +586,12 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 		oldToken = tokenActive;
 		tokenActive = nextToken();
-		if (tokenActive?.value !== ';')
+		if (ehPontoVirgula() === false)
 		{
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Error,
 				range: oldToken.range,
-				message: `Faltou o ponto e vírgula. [;]`
+				message: `Faltou o ponto e vírgula. [;]1`
 			};
 			diagnostics.push(diagnostic);
 
@@ -957,12 +958,12 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						tokenActive = nextToken();
 
 						if ((['CURSOR', 'LISTA', 'WEBSERVICE'].includes(tipoVariavel) === true)
-							&& (tokenActive?.value !== ';'))
+							&& (ehPontoVirgula() === false))
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]`
+								message: `Faltou o ponto e vírgula. [;]2`
 							};
 							diagnostics.push(diagnostic);
 
@@ -971,19 +972,19 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 						if (['ALFA', 'DATA', 'NUMERO', 'Tabela'].includes(tipoVariavel) === true)
 						{
-							if (tokenActive?.value !== ';')
+							if (ehPontoVirgula() === false)
 							{
 								if (checkSintaxeIndexadorVariavel() === false)
 								{
 									continue;
 								}
 
-								if (tokenActive?.value !== ';')
+								if (ehPontoVirgula() === false)
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
 										range: oldToken.range,
-										message: `Faltou o ponto e vírgula. [;]`
+										message: `Faltou o ponto e vírgula. [;]3`
 									};
 									diagnostics.push(diagnostic);
 
@@ -1012,12 +1013,12 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if (tokenActive?.value !== ';')
+						if (ehPontoVirgula() === false)
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Warning,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]`
+								message: `Faltou o ponto e vírgula. [;]4`
 							};
 							diagnostics.push(diagnostic);
 						}
@@ -1084,12 +1085,12 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						oldToken = tokenActive;
 						tokenActive = nextToken();
 
-						if (tokenActive?.value !== ';')
+						if (ehPontoVirgula() === false)
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]`
+								message: `Faltou o ponto e vírgula. [;]5`
 							};
 							diagnostics.push(diagnostic);
 
@@ -1223,12 +1224,12 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 						oldToken = tokenActive;
 						tokenActive = nextToken();
-						if (tokenActive?.value !== ';')
+						if (ehPontoVirgula() === false)
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: oldToken.range,
-								message: `Faltou o ponto e vírgula. [;]`
+								message: `Faltou o ponto e vírgula. [;]6`
 							};
 							diagnostics.push(diagnostic);
 
