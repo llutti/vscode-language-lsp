@@ -167,9 +167,10 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void>
 
   const text = textDocument.getText();
   const tokens = parserContent(text);
+  const diagnostics = checkSintaxe(settings.maxNumberOfProblems, tokens);
 
   // Validar e enviar os erros ao VSCode
-  connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: [...checkSintaxe(settings.maxNumberOfProblems, tokens)] });
+  connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: [...diagnostics] });
 }
 
 connection.onDidChangeWatchedFiles(_change =>
