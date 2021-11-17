@@ -1,9 +1,10 @@
 import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver/node';
 import { Position, Range } from 'vscode-languageserver-textdocument';
-import { EParameterType } from './lsp-elements';
+import { EParameterType, LSPTypeObject } from './lsp-elements';
 import { templatesInternos } from './lsp-internal-templates';
 
-type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'Comando' | 'ComentarioBloco' | 'Identificador' | 'PalavraReservada';
+type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'Comando' | 'ComentarioBloco' | 'Identificador'
+	| 'PalavraReservada' | 'VariavelReservada' | 'TipoDado' | 'FuncaoCustomizada';
 
 interface LSPToken
 {
@@ -22,8 +23,9 @@ interface Bloco
 }
 
 const LSPTipoDados: string[] = Object.entries(EParameterType).map(([, value]) => value.toUpperCase()).sort();
-const LSPPalavrasReservada: string[] = templatesInternos.map(t => t.label.toUpperCase()).sort();
 const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
+const LSPPalavrasReservada: string[] = templatesInternos.filter(t => t.type !== LSPTypeObject.Constant).map(t => t.label.toUpperCase()).sort();
+const LSPVariaveisReservada: string[] = templatesInternos.filter(t => t.type === LSPTypeObject.Constant).map(t => t.label.toUpperCase()).sort();
 
 const parserContent = (text: string): LSPToken[] =>
 {
@@ -34,7 +36,7 @@ const parserContent = (text: string): LSPToken[] =>
 	let charPosition = 0;
 	let charValue = '';
 	let nextCharValue = '';
-	let token = '';
+	let token: string | null = null;
 	let lineNumber = 0;
 	let charLinePosition = 0;
 	let startToken: Position = {
@@ -42,27 +44,36 @@ const parserContent = (text: string): LSPToken[] =>
 		character: 0
 	};
 	let ehIdentificador = false;
-
-	const addToken = (params: { startToken: Position, endToken: Position, value: string, type?: LSPTokenType; }) =>
+	const conactenarToken = (value: string) => token === null ? token = value : token += value;
+	const addToken = (params: { startToken: Position, endToken: Position, value: string | null, type?: LSPTokenType; }) =>
 	{
 		const { startToken, endToken, value } = params;
 		let { type = 'Identificador' } = params;
 
-		if (value !== '')
+		if (value !== null)
 		{
 			const upperValue = value?.toUpperCase();
 			if (type === 'Identificador')
 			{
-				if (LSPComando.includes(upperValue) === true)
+				if (LSPPalavrasReservada.includes(upperValue) === true)
 				{
-					type = 'Comando';
+					type = 'PalavraReservada';
 				}
 				else
-					if ((LSPTipoDados.includes(upperValue) === true)
-						|| (LSPPalavrasReservada.includes(upperValue) === true))
+					if (LSPVariaveisReservada.includes(upperValue) === true)
 					{
-						type = 'PalavraReservada';
+						type = 'VariavelReservada';
 					}
+					else
+						if (LSPTipoDados.includes(upperValue) === true)
+						{
+							type = 'TipoDado';
+						}
+						else
+							if (LSPComando.includes(upperValue) === true)
+							{
+								type = 'Comando';
+							}
 			}
 
 			tokens.push(
@@ -92,7 +103,7 @@ const parserContent = (text: string): LSPToken[] =>
 					},
 					value: token
 				});
-			token = '';
+			token = null;
 
 			break;
 		}
@@ -120,7 +131,7 @@ const parserContent = (text: string): LSPToken[] =>
 				});
 
 			ehIdentificador = false;
-			token = '';
+			token = null;
 			charPosition++;
 			charLinePosition++;
 			startToken = {
@@ -143,7 +154,7 @@ const parserContent = (text: string): LSPToken[] =>
 					},
 					value: token
 				});
-			token = '';
+			token = null;
 
 			if (nextCharValue === '\n')
 			{
@@ -177,7 +188,7 @@ const parserContent = (text: string): LSPToken[] =>
 			let adicionarSimbolo = true;
 
 			ehIdentificador = false;
-			token = '';
+			token = null;
 			charPosition++;
 			charLinePosition++;
 			startToken = {
@@ -200,7 +211,7 @@ const parserContent = (text: string): LSPToken[] =>
 						break;
 					}
 
-					token += charValue;
+					conactenarToken(charValue);
 
 					charPosition++;
 					charLinePosition++;
@@ -218,7 +229,7 @@ const parserContent = (text: string): LSPToken[] =>
 						value: token,
 						type: 'ComentarioLinha'
 					});
-				token = '';
+				token = null;
 				adicionarSimbolo = false;
 			}
 
@@ -246,7 +257,7 @@ const parserContent = (text: string): LSPToken[] =>
 						break;
 					}
 
-					token += charValue;
+					conactenarToken(charValue);
 					charPosition++;
 					charLinePosition++;
 
@@ -271,7 +282,7 @@ const parserContent = (text: string): LSPToken[] =>
 						value: token,
 						type: 'ComentarioBloco'
 					});
-				token = '';
+				token = null;
 				adicionarSimbolo = false;
 			}
 
@@ -281,6 +292,7 @@ const parserContent = (text: string): LSPToken[] =>
 				let oldCharValue = charValue;
 				charValue = text.charAt(charPosition);
 				nextCharValue = text.charAt(charPosition + 1);
+				token = ''; // Inicializar para quando for uma String vazia
 
 				while (true)
 				{
@@ -292,7 +304,7 @@ const parserContent = (text: string): LSPToken[] =>
 					if (((charValue === '\\') || (charValue === '"'))
 						&& (oldCharValue === '\\'))
 					{
-						token += charValue;
+						conactenarToken(charValue);
 						charValue = '';
 					}
 
@@ -305,9 +317,7 @@ const parserContent = (text: string): LSPToken[] =>
 						break;
 					}
 
-
-
-					token += charValue;
+					conactenarToken(charValue);
 
 					charPosition++;
 					charLinePosition++;
@@ -333,7 +343,7 @@ const parserContent = (text: string): LSPToken[] =>
 						type: 'Texto'
 					});
 
-				token = '';
+				token = null;
 				adicionarSimbolo = false;
 			}
 
@@ -366,13 +376,13 @@ const parserContent = (text: string): LSPToken[] =>
 					},
 					value: token
 				});
-			token = '';
+			token = null;
 
 			let decimalDelimiterValid = true;
 			while ((numbersValids.includes(charValue) === true)
 				|| ((decimalDelimiterValid === true) && (charValue === ',')))
 			{
-				token += charValue;
+				conactenarToken(charValue);
 
 				if (charValue === ',')
 				{
@@ -401,7 +411,7 @@ const parserContent = (text: string): LSPToken[] =>
 				});
 
 			ehIdentificador = false;
-			token = '';
+			token = null;
 			startToken = {
 				line: lineNumber,
 				character: charLinePosition
@@ -411,7 +421,7 @@ const parserContent = (text: string): LSPToken[] =>
 		}
 
 		ehIdentificador = true;
-		token += charValue;
+		conactenarToken(charValue);
 		charPosition++;
 		charLinePosition++;
 	}
@@ -468,8 +478,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				break;
 			}
 
-		} while (
-			(token?.type === 'ComentarioBloco')
+		} while ((token?.type === 'ComentarioBloco')
 			|| (token?.type === 'ComentarioLinha'));
 
 		return token;
@@ -650,10 +659,10 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		tokenActive = nextToken();
 		while (position <= innerTokens.length)
 		{
-			if ((tokenActive?.type === 'Comando')
-				|| (tokenActive?.type === 'Identificador')
-				|| (tokenActive?.type === 'Simbolo')
-				|| (tokenActive?.type === 'PalavraReservada'))
+			if ((tokenActive?.type !== 'Texto')
+				&& (tokenActive?.type !== 'Numero')
+				&& (tokenActive?.type !== 'ComentarioLinha')
+				&& (tokenActive?.type !== 'ComentarioBloco'))
 			{
 				switch (tokenActive?.value)
 				{
@@ -731,10 +740,10 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	{
 		while (position <= innerTokens.length)
 		{
-			if ((tokenActive?.type === 'Comando')
-				|| (tokenActive?.type === 'Identificador')
-				|| (tokenActive?.type === 'Simbolo')
-				|| (tokenActive?.type === 'PalavraReservada'))
+			if ((tokenActive?.type !== 'Texto')
+				&& (tokenActive?.type !== 'Numero')
+				&& (tokenActive?.type !== 'ComentarioLinha')
+				&& (tokenActive?.type !== 'ComentarioBloco'))
 			{
 				switch (tokenActive?.value)
 				{
@@ -809,10 +818,10 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		tokenActive = nextToken();
 		while (position <= innerTokens.length)
 		{
-			if ((tokenActive?.type === 'Comando')
-				|| (tokenActive?.type === 'Identificador')
-				|| (tokenActive?.type === 'Simbolo')
-				|| (tokenActive?.type === 'PalavraReservada'))
+			if ((tokenActive?.type !== 'Texto')
+				&& (tokenActive?.type !== 'Numero')
+				&& (tokenActive?.type !== 'ComentarioLinha')
+				&& (tokenActive?.type !== 'ComentarioBloco'))
 			{
 				switch (tokenActive?.value)
 				{
@@ -898,10 +907,10 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
-		if ((tokenActive?.type === 'Comando')
-			|| (tokenActive?.type === 'Identificador')
-			|| (tokenActive?.type === 'Simbolo')
-			|| (tokenActive?.type === 'PalavraReservada'))
+		if ((tokenActive?.type !== 'Texto')
+			&& (tokenActive?.type !== 'Numero')
+			&& (tokenActive?.type !== 'ComentarioLinha')
+			&& (tokenActive?.type !== 'ComentarioBloco'))
 		{
 			switch (tokenActive?.value)
 			{
@@ -910,7 +919,8 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						tokenActive = nextToken();
 
 						let tipoVariavel = tokenActive?.value;
-						if (LSPTipoDados.includes(tokenActive?.value) === false)
+						// if (LSPTipoDados.includes(tokenActive?.value) === false)
+						if (tokenActive?.type !== 'TipoDado')
 						{
 							if (ehWebservice() === true)
 							{
