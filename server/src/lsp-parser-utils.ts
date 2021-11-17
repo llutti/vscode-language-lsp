@@ -446,6 +446,11 @@ const parserContent = (text: string): LSPToken[] =>
 
 const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Diagnostic[] =>
 {
+	// Se maxNumberOfProblems for ZERO nao validar nada
+	if (maxNumberOfProblems === 0)
+	{
+		return [];
+	}
 	const diagnostics: Diagnostic[] = [];
 	const innerTokens = tokens.filter(t => (t.type !== 'ComentarioBloco') && (t.type !== 'ComentarioLinha'));
 

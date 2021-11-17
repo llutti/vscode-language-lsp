@@ -157,6 +157,14 @@ documents.onDidChangeContent(change =>
 async function validateTextDocument(textDocument: TextDocument): Promise<void>
 {
   const settings = await getDocumentSettings(textDocument.uri);
+
+  // Se maxNumberOfProblems for ZERO nao validar nada
+  if (settings.maxNumberOfProblems === 0)
+  {
+    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: [] });
+    return;
+  }
+
   const text = textDocument.getText();
   const tokens = parserContent(text);
 
