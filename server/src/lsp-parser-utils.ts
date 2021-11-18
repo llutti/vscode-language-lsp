@@ -26,7 +26,7 @@ const LSPTipoDados: string[] = Object
 	.entries(EParameterType)
 	.map(([, value]) => value.toUpperCase()).sort();
 
-const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
+const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'EXECSQL', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
 
 const LSPPalavrasReservada: string[] = templatesInternos
 	.filter(t => (t.type !== LSPTypeObject.Constant) && (t.label.toUpperCase() !== 'PARA'))
@@ -451,6 +451,23 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	const innerTokens = tokens.filter(t => (t.type !== 'ComentarioBloco') && (t.type !== 'ComentarioLinha'));
 
 	const ehPontoVirgula = (): boolean => (tokenActive?.type === 'Simbolo') && (tokenActive?.value === ';');
+
+	const validarPontoVirgula = (severity: DiagnosticSeverity = DiagnosticSeverity.Error): boolean =>
+	{
+		if (ehPontoVirgula() === false)
+		{
+			const diagnostic: Diagnostic = {
+				severity,
+				range: oldToken.range,
+				message: `Faltou o ponto e vírgula. [;]`
+			};
+			diagnostics.push(diagnostic);
+
+			return false;
+		}
+		return true;
+	};
+
 	const adicionarBloco = (tipo: LSPTipoBloco, range: Range): void =>
 	{
 		blocos.push(
@@ -595,18 +612,9 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 		oldToken = tokenActive;
 		tokenActive = nextToken();
-		if (ehPontoVirgula() === false)
-		{
-			const diagnostic: Diagnostic = {
-				severity: DiagnosticSeverity.Error,
-				range: oldToken.range,
-				message: `Faltou o ponto e vírgula. [;]`
-			};
-			diagnostics.push(diagnostic);
 
-			return false;
-		}
-		return true;
+		return validarPontoVirgula();
+
 	};
 
 	const checkSintaxeIndexadorVariavel = (): boolean =>
@@ -966,17 +974,12 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								oldToken = tokenActive;
 								tokenActive = nextToken();
 
-								if ((['CURSOR', 'LISTA', 'WEBSERVICE'].includes(tipoVariavel) === true)
-									&& (ehPontoVirgula() === false))
+								if (['CURSOR', 'LISTA', 'WEBSERVICE'].includes(tipoVariavel) === true)
 								{
-									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Error,
-										range: oldToken.range,
-										message: `Faltou o ponto e vírgula. [;]`
-									};
-									diagnostics.push(diagnostic);
-
-									continue;
+									if (validarPontoVirgula() === false)
+									{
+										continue;
+									}
 								}
 
 								if (['ALFA', 'DATA', 'NUMERO', 'Tabela'].includes(tipoVariavel) === true)
@@ -988,15 +991,8 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 											continue;
 										}
 
-										if (ehPontoVirgula() === false)
+										if (validarPontoVirgula() === false)
 										{
-											const diagnostic: Diagnostic = {
-												severity: DiagnosticSeverity.Error,
-												range: oldToken.range,
-												message: `Faltou o ponto e vírgula. [;]`
-											};
-											diagnostics.push(diagnostic);
-
 											continue;
 										}
 									}
@@ -1022,15 +1018,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								oldToken = tokenActive;
 								tokenActive = nextToken();
 
-								if (ehPontoVirgula() === false)
-								{
-									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Warning,
-										range: oldToken.range,
-										message: `Faltou o ponto e vírgula. [;]`
-									};
-									diagnostics.push(diagnostic);
-								}
+								validarPontoVirgula(DiagnosticSeverity.Warning);
 
 								if (removerBloco('Inicio') === false)
 								{
@@ -1106,15 +1094,8 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								oldToken = tokenActive;
 								tokenActive = nextToken();
 
-								if (ehPontoVirgula() === false)
+								if (validarPontoVirgula() === false)
 								{
-									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Error,
-										range: oldToken.range,
-										message: `Faltou o ponto e vírgula. [;]`
-									};
-									diagnostics.push(diagnostic);
-
 									continue;
 								}
 
@@ -1171,6 +1152,34 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								}
 
 								continue;
+							}
+						case 'EXECSQL':
+							{
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								if ((tokenActive?.type !== 'Identificador')
+									&& (tokenActive?.type !== 'Texto'))
+								{
+									const diagnostic: Diagnostic = {
+										severity: DiagnosticSeverity.Error,
+										range: tokenActive.range,
+										message: `Parâmetro inválido.`
+									};
+									diagnostics.push(diagnostic);
+
+									continue;
+								}
+
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								if (validarPontoVirgula() === false)
+								{
+									continue;
+								}
+
+								break;
 							}
 						case 'PARA':
 							{
@@ -1245,15 +1254,8 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								oldToken = tokenActive;
 								tokenActive = nextToken();
-								if (ehPontoVirgula() === false)
+								if (validarPontoVirgula() === false)
 								{
-									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Error,
-										range: oldToken.range,
-										message: `Faltou o ponto e vírgula. [;]`
-									};
-									diagnostics.push(diagnostic);
-
 									continue;
 								}
 
