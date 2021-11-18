@@ -18,6 +18,7 @@ Aqui estão alguns dos recursos que o **LSP** oferece:
 * Autocomplete
 * Apresentação de parâmetros das funções (nativas e customizadas)
 * Snippets (trechos de códigos previamente configurados)
+* Validação de Sintaxe (*em desenvolvimento*)
 
 <br>
 <br>
@@ -63,6 +64,12 @@ Posicionando o cursor em um parâmetro e prescionando `CTRL+SHIFT+Space` são ap
 Diversos trechos de códigos comuns para o dia-a-dia
 
  ![snippets](https://github.com/llutti/vscode-language-lsp/raw/master/screenshots/snippets.png)
+
+## Validação de Sintaxe
+
+Realiza a verificação semântica do código durante a digitação e sempre que o arquivo é aberto. Para isso será realizada uma *compilação* simplificada e apenas algumas regras básicas foram implementadas. Quando encontrar uma inconsistência, será apresentado como *ERRO* ou *AVISO*.
+
+ ![snippets](https://github.com/llutti/vscode-language-lsp/raw/master/screenshots/validacao-sintaxe.png)
 
 
 ## Licença
