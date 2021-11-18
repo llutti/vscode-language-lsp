@@ -1862,12 +1862,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       },
       {
         type: EParameterType.Numero,
-        name: "[",
-        isReturnValue: false
-      },
-      {
-        type: EParameterType.Numero,
-        name: "Tamanho]",
+        name: "Tamanho",
         isReturnValue: false
       }
     ]
