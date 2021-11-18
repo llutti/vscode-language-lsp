@@ -69,7 +69,7 @@ Diversos trechos de códigos comuns para o dia-a-dia
 
 Realiza a verificação semântica do código durante a digitação e sempre que o arquivo é aberto. Para isso será realizada uma *compilação* simplificada e apenas algumas regras básicas foram implementadas. Quando encontrar uma inconsistência, será apresentado como *ERRO* ou *AVISO*.
 
- ![snippets](https://github.com/llutti/vscode-language-lsp/raw/master/screenshots/validacao-sintaxe.png)
+ ![validacao-sintaxe](https://github.com/llutti/vscode-language-lsp/raw/master/screenshots/validacao-sintaxe.png)
 
 
 ## Licença
