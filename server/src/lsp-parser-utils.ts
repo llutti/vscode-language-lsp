@@ -524,7 +524,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		return retorno;
 	};
 
-	const checkSintaxeFuncao = (): boolean =>
+	const checkSintaxeDefinirFuncao = (): boolean =>
 	{
 		if (tokenActive?.value !== '(')
 		{
@@ -614,7 +614,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		tokenActive = nextToken();
 
 		return validarPontoVirgula();
-
 	};
 
 	const checkSintaxeIndexadorVariavel = (): boolean =>
@@ -1000,7 +999,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								if (tipoVariavel === 'FUNCAO')
 								{
-									if (checkSintaxeFuncao() === false)
+									if (checkSintaxeDefinirFuncao() === false)
 									{
 										continue;
 									}
@@ -1082,7 +1081,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								oldToken = tokenActive;
 								tokenActive = nextToken();
 
-								if (checkSintaxeFuncao() === false)
+								if (checkSintaxeDefinirFuncao() === false)
 								{
 									continue;
 								}
