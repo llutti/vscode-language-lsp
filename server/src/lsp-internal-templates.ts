@@ -3577,7 +3577,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     label: "ExecSQLEx",
     documentation: {
       kind: 'markdown',
-      value: "Executa um comando SQL no banco. Nessa função podem ser usadas para as operações Insert ,Update ,Delete.\n\n**Observação**: Poderão ser utilizados comandos nativos do Banco de Dados e é permitido acessar objetos que não constam no TBS."
+      value: "Executa um comando SQL no banco. Nessa função podem ser usadas para as operações Insert, Update, Delete.\n\n**Observação**: Poderão ser utilizados comandos nativos do Banco de Dados e é permitido acessar objetos que não constam no TBS. **Para isso é necessário desativar a opção *Usar SQL Senior 2* da regra. **"
     },
     type: LSPTypeObject.Method,
     parameters: [
