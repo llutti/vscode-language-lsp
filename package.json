@@ -71,7 +71,7 @@
         "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
     },
     "devDependencies": {
-        "@types/node": "^16.11.7",
+        "@types/node": "^16.11.9",
         "@typescript-eslint/eslint-plugin": "^5.4.0",
         "@typescript-eslint/parser": "^5.4.0",
         "eslint": "^8.2.0",
