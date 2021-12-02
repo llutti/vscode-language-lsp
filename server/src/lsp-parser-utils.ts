@@ -925,6 +925,14 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
+		// if (tokenActive?.value === 'FUNCAO'){
+		// 	const diagnostic: Diagnostic = {
+		// 		severity: DiagnosticSeverity.Warning,
+		// 		range: tokenActive.range,
+		// 		message: `Tipo do Token: ${tokenActive?.type}`
+		// 	};
+		// 	diagnostics.push(diagnostic);
+		// }
 		switch (tokenActive?.type)
 		{
 			case 'Comando':
@@ -1053,35 +1061,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								if ((tokenActive?.type === 'Comando')
 									&& (tokenActive?.value === 'FIM'))
-								{
-									continue;
-								}
-
-								break;
-							}
-						case 'FUNCAO':
-							{
-								oldToken = tokenActive;
-								tokenActive = nextToken();
-
-								if (tokenActive?.type !== 'Identificador')
-								{
-									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Error,
-										range: tokenActive.range,
-										message: `Nome da função é inválido`
-									};
-									diagnostics.push(diagnostic);
-
-									continue;
-								}
-
-								// TODO Verificar se a funcao já foi Definida
-
-								oldToken = tokenActive;
-								tokenActive = nextToken();
-
-								if (checkSintaxeDefinirFuncao() === false)
 								{
 									continue;
 								}
@@ -1264,6 +1243,43 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 					break;
 				}
+				case 'TipoDado':
+					{
+						switch (tokenActive?.value)
+						{
+							case 'FUNCAO':
+								{
+									oldToken = tokenActive;
+									tokenActive = nextToken();
+
+									if (tokenActive?.type !== 'Identificador')
+									{
+										const diagnostic: Diagnostic = {
+											severity: DiagnosticSeverity.Error,
+											range: tokenActive.range,
+											message: `Nome da função é inválido`
+										};
+										diagnostics.push(diagnostic);
+
+										continue;
+									}
+
+									// TODO Verificar se a funcao já foi Definida
+
+									oldToken = tokenActive;
+									tokenActive = nextToken();
+
+									if (checkSintaxeDefinirFuncao() === false)
+									{
+										continue;
+									}
+
+									break;
+								}
+						}
+
+						break;
+					}
 			case 'Simbolo':
 				{
 					switch (tokenActive?.value)
