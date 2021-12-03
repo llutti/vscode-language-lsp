@@ -648,7 +648,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		return true;
 	};
 
-	const checkSintaxeFuncao = (): boolean =>
+	const checkSintaxeFuncao = (customizada = false): boolean =>
 	{
 		if (tokenActive?.value !== '(')
 		{
@@ -796,6 +796,67 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						}
 					default:
 						{
+							if (tokenActive?.value === '.')
+							{
+								if (oldToken?.type === 'Identificador')
+								{
+									oldToken = tokenActive;
+									rangeError = oldToken.range;
+									tokenActive = nextToken();
+
+									if (tokenActive?.type === 'Identificador')
+									{
+										continue;
+									}
+								}
+							}
+
+							if (['+', '-', '*', '/'].includes(tokenActive?.value) === true)
+							{
+								if (oldToken?.type === 'Numero')
+								{
+									oldToken = tokenActive;
+									rangeError = oldToken.range;
+									tokenActive = nextToken();
+
+									if ((tokenActive?.type === 'Numero')
+										|| (tokenActive?.type === 'Identificador'))
+									{
+										continue;
+									}
+								}
+								else
+									if (oldToken?.type === 'Identificador')
+									{
+										oldToken = tokenActive;
+										rangeError = oldToken.range;
+										tokenActive = nextToken();
+
+										if ((tokenActive?.type === 'Numero')
+											|| (tokenActive?.type === 'Identificador'))
+										{
+											continue;
+										}
+										// const diagnostic: Diagnostic = {
+										// 	severity: DiagnosticSeverity.Information,
+										// 	range: oldToken.range,
+										// 	message: `LOG: ${tokenActive?.type} | ${tokenActive?.value} | ${oldToken?.value}`
+										// };
+										// diagnostics.push(diagnostic);
+
+										if ((tokenActive?.type === 'Simbolo')
+											&& (tokenActive?.value === oldToken?.value)
+											&& (['+', '-'].includes(oldToken?.value) === true))
+										{
+											oldToken = tokenActive;
+											rangeError = oldToken.range;
+											tokenActive = nextToken();
+
+											continue;
+										}
+									}
+							}
+
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
 								range: tokenActive.range,
@@ -812,6 +873,23 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			else
 			{
 				foiVirgula = false;
+
+				if (customizada === true)
+				{
+					if (tokenActive?.type === 'Texto')
+					{
+						const diagnostic: Diagnostic = {
+							severity: DiagnosticSeverity.Error,
+							range: tokenActive.range,
+							message: `Não é permitir parâmetro do tipo "Texto" em funções customizadas.`
+						};
+						diagnostics.push(diagnostic);
+
+						sintaxeFuncaoValida = false;
+						finalizarWhile = true;
+						continue;
+					}
+				}
 
 				// TODO validar quantidade de paramentros com base nas especificacoes
 				// TODO validar o tipo dos dados
