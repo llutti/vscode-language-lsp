@@ -28,10 +28,10 @@ const LSPTipoDados: string[] = Object
 
 const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'EXECSQL', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
 
-const LSPPalavrasReservada: string[] = ['DEFINIRCAMPOS',
+const LSPPalavrasReservada: string[] = ['DEFINIRCAMPOS', 'LIMPAR',
 	...templatesInternos
-	.filter(t => (t.type !== LSPTypeObject.Constant) && (t.label.toUpperCase() !== 'PARA'))
-	.map(t => t.label.toUpperCase())].sort();
+		.filter(t => (t.type !== LSPTypeObject.Constant) && (t.label.toUpperCase() !== 'PARA'))
+		.map(t => t.label.toUpperCase())].sort();
 
 const LSPVariaveisReservada: string[] = templatesInternos
 	.filter(t => t.type === LSPTypeObject.Constant)
@@ -41,6 +41,7 @@ const parserContent = (text: string): LSPToken[] =>
 {
 	const delimiters = '><,.;=()[]{}\\/+-*@"';
 	const numbersValids = '0123456789';
+	const decimalDelimiterChar = '.';
 	const tokens: LSPToken[] = [];
 	let innerId = 0;
 	let charPosition = 0;
@@ -99,6 +100,7 @@ const parserContent = (text: string): LSPToken[] =>
 		}
 	};
 
+	let ehNumeroNegativo = false;
 	/*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
 	while (true)
 	{
@@ -205,6 +207,15 @@ const parserContent = (text: string): LSPToken[] =>
 				line: lineNumber,
 				character: charLinePosition
 			};
+
+			if (charValue === '-')
+			{
+				if (numbersValids.includes(text.charAt(charPosition)) === true)
+				{
+					ehNumeroNegativo = true;
+					continue;
+				}
+			}
 
 			// Comentario de Linha
 			if (charValue === '@')
@@ -390,14 +401,18 @@ const parserContent = (text: string): LSPToken[] =>
 
 			let decimalDelimiterValid = true;
 			while ((numbersValids.includes(charValue) === true)
-				|| ((decimalDelimiterValid === true) && (charValue === ',')))
+				|| ((decimalDelimiterValid === true) && (charValue === decimalDelimiterChar)))
 			{
-				conactenarToken(charValue);
-
-				if (charValue === ',')
+				if (charValue === decimalDelimiterChar)
 				{
+					if (numbersValids.includes(text.charAt(charPosition + 1)) === false)
+					{
+						break;
+					}
 					decimalDelimiterValid = false;
 				}
+
+				conactenarToken(charValue);
 
 				charPosition++;
 				charLinePosition++;
@@ -407,6 +422,11 @@ const parserContent = (text: string): LSPToken[] =>
 				}
 
 				charValue = text.charAt(charPosition);
+			}
+
+			if (ehNumeroNegativo === true)
+			{
+				token = '-' + token;
 			}
 
 			addToken(
@@ -431,6 +451,7 @@ const parserContent = (text: string): LSPToken[] =>
 		}
 
 		ehIdentificador = true;
+		ehNumeroNegativo = false;
 		conactenarToken(charValue);
 		charPosition++;
 		charLinePosition++;
@@ -768,6 +789,19 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							}
 
 							break;
+						}
+					default:
+						{
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Error,
+								range: tokenActive.range,
+								message: `Símbolo Inválido.`
+							};
+							diagnostics.push(diagnostic);
+
+							sintaxeFuncaoValida = false;
+							finalizarWhile = true;
+							continue;
 						}
 				}
 			}
