@@ -2,6 +2,9 @@
 
 Alterações realizadas na extensão.
 
+## [1.1.2] - 13/12/2021
+
+
 ## [1.1.1] - 03/12/2021
 ### Modificado
 - Tradução das Propriedades no menu de configurações do VSCode.
