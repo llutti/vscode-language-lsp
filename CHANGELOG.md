@@ -4,7 +4,7 @@ Alterações realizadas na extensão.
 
 ## [1.1.1] - 03/12/2021
 ### Modificado
-- Traducao das Propriedades no menu de configurações do VSCode.
+- Tradução das Propriedades no menu de configurações do VSCode.
 - Melhoria e ampliação da lógica para verificação da sintaxe.
 - Melhoria na detecção dos números negativos e com decimais.
 
@@ -90,7 +90,7 @@ Alterações realizadas na extensão.
 
 ## [0.0.8] - 14/09/2020
 ### Adicionado
-- Foram adicionadas as contantes *cVerdadeiro* e *cFalso* no *AutoComplete*
+- Foram adicionadas as constantes *cVerdadeiro* e *cFalso* no *AutoComplete*
 
 ### Alterações
 - Refatorar a estrutura do Client (remover os providers Hover e SignatureHelp)
