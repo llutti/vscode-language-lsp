@@ -47,6 +47,7 @@ const parserContent = (text: string): LSPToken[] =>
 	let charPosition = 0;
 	let charValue = '';
 	let nextCharValue = '';
+	let ehNumeroNegativo = false;
 	let token: string | null = null;
 	let lineNumber = 0;
 	let charLinePosition = 0;
@@ -100,7 +101,6 @@ const parserContent = (text: string): LSPToken[] =>
 		}
 	};
 
-	let ehNumeroNegativo = false;
 	/*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
 	while (true)
 	{
@@ -143,6 +143,7 @@ const parserContent = (text: string): LSPToken[] =>
 				});
 
 			ehIdentificador = false;
+			ehNumeroNegativo = false;
 			token = null;
 			charPosition++;
 			charLinePosition++;
@@ -174,6 +175,7 @@ const parserContent = (text: string): LSPToken[] =>
 			}
 
 			ehIdentificador = false;
+			ehNumeroNegativo = false;
 			lineNumber++;
 			charLinePosition = 0;
 			charPosition++;
@@ -200,6 +202,7 @@ const parserContent = (text: string): LSPToken[] =>
 			let adicionarSimbolo = true;
 
 			ehIdentificador = false;
+			ehNumeroNegativo = false;
 			token = null;
 			charPosition++;
 			charLinePosition++;
@@ -440,6 +443,7 @@ const parserContent = (text: string): LSPToken[] =>
 					type: 'Numero'
 				});
 
+			ehNumeroNegativo = false;
 			ehIdentificador = false;
 			token = null;
 			startToken = {
