@@ -1394,7 +1394,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									removerBloco('Se');
 
 									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Warning,
+										severity: DiagnosticSeverity.Information,
 										range: oldToken.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "SE".`
 									};
@@ -1419,7 +1419,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									removerBloco('Enquanto');
 
 									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Warning,
+										severity: DiagnosticSeverity.Information,
 										range: oldToken.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "ENQUANTO".`
 									};
@@ -1472,7 +1472,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									removerBloco('Para');
 
 									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Warning,
+										severity: DiagnosticSeverity.Information,
 										range: oldToken.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "PARA".`
 									};
@@ -1499,7 +1499,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									&& (tokenActive?.value !== 'SE'))
 								{
 									const diagnostic: Diagnostic = {
-										severity: DiagnosticSeverity.Warning,
+										severity: DiagnosticSeverity.Information,
 										range: oldToken.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "SENAO".`
 									};
