@@ -616,6 +616,169 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		return validarPontoVirgula();
 	};
 
+	const checkSintaxeExpressao = (): boolean =>
+	{
+		// TODO Implementar Logica
+		return true;
+	};
+
+	const checkSintaxeFuncao = (): boolean =>
+	{
+		if (tokenActive?.value !== '(')
+		{
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Error,
+				range: oldToken.range,
+				message: `Faltou abrir parenteses. [(]`
+			};
+			diagnostics.push(diagnostic);
+
+			return false;
+		}
+
+		adicionarBloco('Parenteses', tokenActive.range);
+
+		oldToken = tokenActive;
+		tokenActive = nextToken();
+
+		if (tokenActive?.value === ')')
+		{
+			removerBloco('Parenteses');
+
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+
+			return validarPontoVirgula();
+		}
+
+		let sintaxeFuncaoValida = true;
+		let finalizarWhile = false;
+		let rangeError = oldToken.range;
+		let foiVirgula = false;
+
+		while (position <= innerTokens.length)
+		{
+			if (finalizarWhile === true)
+			{
+				break;
+			}
+
+			if (tokenActive?.type === 'Simbolo')
+			{
+				switch (tokenActive?.value)
+				{
+					case ',':
+						{
+							if (foiVirgula === true)
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: rangeError,
+									message: `Faltou informar parâmetro.`
+								};
+								diagnostics.push(diagnostic);
+
+								sintaxeFuncaoValida = false;
+								finalizarWhile = true;
+								continue;
+							}
+
+							foiVirgula = true;
+
+							break;
+						}
+					case '(':
+						{
+							adicionarBloco('Parenteses', oldToken.range);
+
+							if (checkSintaxeExpressao() === false)
+							{
+								sintaxeFuncaoValida = false;
+								finalizarWhile = true;
+								continue;
+							}
+
+							break;
+						}
+					case ')':
+						{
+							// const diagnostic: Diagnostic = {
+							// 	severity: DiagnosticSeverity.Hint,
+							// 	range: oldToken.range,
+							// 	message: `LOG: )`
+							// };
+							// diagnostics.push(diagnostic);
+
+							if (foiVirgula === true)
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: rangeError,
+									message: `Faltou informar parâmetro.`
+								};
+								diagnostics.push(diagnostic);
+
+								sintaxeFuncaoValida = false;
+								finalizarWhile = true;
+								continue;
+							}
+
+							if (removerBloco('Parenteses') === false)
+							{
+								const diagnostic: Diagnostic = {
+									severity: DiagnosticSeverity.Error,
+									range: rangeError,
+									message: `Tentativa de Fechar Parenteses antes de Abrir.`
+								};
+								diagnostics.push(diagnostic);
+
+								sintaxeFuncaoValida = false;
+								finalizarWhile = true;
+								continue;
+							}
+
+							const bloco = blocos[blocos.length - 1];
+							if (bloco?.tipo !== 'Parenteses')
+							{
+								// const diagnostic: Diagnostic = {
+								// 	severity: DiagnosticSeverity.Hint,
+								// 	range: oldToken.range,
+								// 	message: `LOG: Bloco nao eh parenteses`
+								// };
+								// diagnostics.push(diagnostic);
+
+								finalizarWhile = true;
+								continue;
+							}
+
+							break;
+						}
+				}
+			}
+			else
+			{
+				foiVirgula = false;
+
+				// TODO validar quantidade de paramentros com base nas especificacoes
+				// TODO validar o tipo dos dados
+			}
+
+			oldToken = tokenActive;
+			rangeError = oldToken.range;
+			tokenActive = nextToken();
+		}
+
+		if (sintaxeFuncaoValida === false)
+		{
+			return false;
+		}
+
+		oldToken = tokenActive;
+		tokenActive = nextToken();
+
+		return validarPontoVirgula();
+	};
+
 	const checkSintaxeIndexadorVariavel = (): boolean =>
 	{
 		if (tokenActive?.value === '[')
@@ -925,7 +1088,8 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
-		// if (tokenActive?.value === 'FUNCAO'){
+		// if (tokenActive?.value?.startsWith('SQL_'))
+		// {
 		// 	const diagnostic: Diagnostic = {
 		// 		severity: DiagnosticSeverity.Warning,
 		// 		range: tokenActive.range,
@@ -1243,43 +1407,43 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 					break;
 				}
-				case 'TipoDado':
+			case 'TipoDado':
+				{
+					switch (tokenActive?.value)
 					{
-						switch (tokenActive?.value)
-						{
-							case 'FUNCAO':
+						case 'FUNCAO':
+							{
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								if (tokenActive?.type !== 'Identificador')
 								{
-									oldToken = tokenActive;
-									tokenActive = nextToken();
+									const diagnostic: Diagnostic = {
+										severity: DiagnosticSeverity.Error,
+										range: tokenActive.range,
+										message: `Nome da função é inválido`
+									};
+									diagnostics.push(diagnostic);
 
-									if (tokenActive?.type !== 'Identificador')
-									{
-										const diagnostic: Diagnostic = {
-											severity: DiagnosticSeverity.Error,
-											range: tokenActive.range,
-											message: `Nome da função é inválido`
-										};
-										diagnostics.push(diagnostic);
-
-										continue;
-									}
-
-									// TODO Verificar se a funcao já foi Definida
-
-									oldToken = tokenActive;
-									tokenActive = nextToken();
-
-									if (checkSintaxeDefinirFuncao() === false)
-									{
-										continue;
-									}
-
-									break;
+									continue;
 								}
-						}
 
-						break;
+								// TODO Verificar se a funcao já foi Definida
+
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								if (checkSintaxeDefinirFuncao() === false)
+								{
+									continue;
+								}
+
+								break;
+							}
 					}
+
+					break;
+				}
 			case 'Simbolo':
 				{
 					switch (tokenActive?.value)
@@ -1353,6 +1517,18 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								break;
 							}
+					}
+
+					break;
+				}
+			case 'PalavraReservada':
+				{
+					oldToken = tokenActive;
+					tokenActive = nextToken();
+
+					if (checkSintaxeFuncao() === false)
+					{
+						continue;
 					}
 
 					break;
