@@ -28,9 +28,10 @@ const LSPTipoDados: string[] = Object
 
 const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'EXECSQL', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
 
-const LSPPalavrasReservada: string[] = templatesInternos
+const LSPPalavrasReservada: string[] = ['DEFINIRCAMPOS',
+	...templatesInternos
 	.filter(t => (t.type !== LSPTypeObject.Constant) && (t.label.toUpperCase() !== 'PARA'))
-	.map(t => t.label.toUpperCase()).sort();
+	.map(t => t.label.toUpperCase())].sort();
 
 const LSPVariaveisReservada: string[] = templatesInternos
 	.filter(t => t.type === LSPTypeObject.Constant)
@@ -641,14 +642,29 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		oldToken = tokenActive;
 		tokenActive = nextToken();
 
-		if (tokenActive?.value === ')')
+		if (tokenActive?.type === 'Simbolo')
 		{
-			removerBloco('Parenteses');
+			if (tokenActive?.value === ')')
+			{
+				removerBloco('Parenteses');
 
-			oldToken = tokenActive;
-			tokenActive = nextToken();
+				oldToken = tokenActive;
+				tokenActive = nextToken();
 
-			return validarPontoVirgula();
+				return validarPontoVirgula();
+			}
+
+			if (['('].includes(tokenActive?.value) === false)
+			{
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: oldToken.range,
+					message: `Parâmetro inválido.`
+				};
+				diagnostics.push(diagnostic);
+
+				return false;
+			}
 		}
 
 		let sintaxeFuncaoValida = true;
@@ -1088,10 +1104,11 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
-		// if (tokenActive?.value?.startsWith('SQL_'))
+		// if (tokenActive?.value?.startsWith('DEFINIRCAMPOS'))
+		// if (tokenActive?.value === 'DEFINIRCAMPOS')
 		// {
 		// 	const diagnostic: Diagnostic = {
-		// 		severity: DiagnosticSeverity.Warning,
+		// 		severity: DiagnosticSeverity.Information,
 		// 		range: tokenActive.range,
 		// 		message: `Tipo do Token: ${tokenActive?.type}`
 		// 	};
