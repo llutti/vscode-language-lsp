@@ -1011,22 +1011,34 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "UnidadeRetorno",
-        documenation: '1-Dia|2-Meses|3-Anos|4-Meses c/Ajuste|5-Anos c/Ajuste|4-Meses c/Ajuste[DI/DF]',
+        documenation: {
+          kind: 'markdown',
+          value: 'Tipo de retorno desejado, podendo ser:\n'
+            + '- 1 - Quantidade de dias\n'
+            + '- 2 - Quantidade de meses\n'
+            + '- 3 - Quantidade de anos\n'
+            + '- 4 - Quantidade de meses com ajuste\n'
+            + '- 5 - Quantidade de anos com ajuste\n'
+            + '- 6 - Quantidade de meses com ajuste pelas datas início e fim'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Data,
         name: "DataIni",
+        documenation: 'Data Inicial',
         isReturnValue: false
       },
       {
         type: EParameterType.Data,
         name: "DataFim",
+        documenation: 'Data Final',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "Retorno",
+        documenation: 'Variável que irá receber o valor calculado',
         isReturnValue: true
       }
     ]
