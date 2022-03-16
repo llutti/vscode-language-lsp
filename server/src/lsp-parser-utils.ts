@@ -644,7 +644,136 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 	const checkSintaxeExpressao = (): boolean =>
 	{
-		// TODO Implementar Logica
+		if ((tokenActive?.type !== 'Numero')
+			&& (tokenActive?.type !== 'Identificador')
+			&& (tokenActive?.type !== 'Texto')
+			&& ((tokenActive?.type === 'Simbolo') && (tokenActive?.value !== '(')))
+		{
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Error,
+				range: tokenActive.range,
+				message: `Expressão Inválida.`
+			};
+			diagnostics.push(diagnostic);
+
+			return false;
+		}
+
+		if (tokenActive?.type === 'Texto')
+		{
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+
+			while (position <= innerTokens.length)
+			{
+				if ((tokenActive?.type !== 'Simbolo')
+					|| (tokenActive?.value !== '+'))
+				{
+					const diagnostic: Diagnostic = {
+						severity: DiagnosticSeverity.Error,
+						range: tokenActive.range,
+						message: `Era esperado um "+".`
+					};
+					diagnostics.push(diagnostic);
+
+					return false;
+				}
+
+				oldToken = tokenActive;
+				tokenActive = nextToken();
+
+				if ((tokenActive?.type !== 'Texto')
+					&& (tokenActive?.type !== 'Identificador'))
+				{
+					const diagnostic: Diagnostic = {
+						severity: DiagnosticSeverity.Error,
+						range: tokenActive.range,
+						message: `Era esperado um "Texto" ou uma "Variável".`
+					};
+					diagnostics.push(diagnostic);
+
+					return false;
+				}
+
+				oldToken = tokenActive;
+				tokenActive = nextToken();
+
+				if ((tokenActive?.type === 'Simbolo')
+					&& (tokenActive?.value === ')'))
+				{
+					oldToken = tokenActive;
+					tokenActive = nextToken();
+
+					return removerBloco('Parenteses');
+				}
+			}
+			return false;
+		}
+
+		// if (tokenActive?.type === 'Numero')
+		// {
+		// 	oldToken = tokenActive;
+		// 	tokenActive = nextToken();
+
+		// 	while (position <= innerTokens.length)
+		// 	{
+		// 		if ((tokenActive?.type !== 'Simbolo')
+		// 			|| (tokenActive?.value !== '+'))
+		// 		{
+		// 			const diagnostic: Diagnostic = {
+		// 				severity: DiagnosticSeverity.Error,
+		// 				range: tokenActive.range,
+		// 				message: `Era esperado um "+".`
+		// 			};
+		// 			diagnostics.push(diagnostic);
+
+		// 			return false;
+		// 		}
+
+		// 		oldToken = tokenActive;
+		// 		tokenActive = nextToken();
+
+		// 		if ((tokenActive?.type === 'Simbolo')
+		// 			&& (tokenActive?.value === '('))
+		// 		{
+		// 			adicionarBloco('Parenteses', tokenActive.range);
+
+		// 			oldToken = tokenActive;
+		// 			tokenActive = nextToken();
+
+		// 			if (checkSintaxeExpressao() === false)
+		// 			{
+		// 				return false;
+		// 			}
+
+		// 			continue;
+		// 		}
+
+		// 		if ((tokenActive?.type === 'Simbolo')
+		// 			&& (tokenActive?.value === ')'))
+		// 		{
+		// 			return removerBloco('Parenteses');
+		// 		}
+
+		// 		if ((tokenActive?.type !== 'Texto')
+		// 			&& (tokenActive?.type !== 'Identificador'))
+		// 		{
+		// 			const diagnostic: Diagnostic = {
+		// 				severity: DiagnosticSeverity.Error,
+		// 				range: tokenActive.range,
+		// 				message: `Era esperado um "Texto" ou uma "Variável".`
+		// 			};
+		// 			diagnostics.push(diagnostic);
+
+		// 			return false;
+		// 		}
+
+		// 		oldToken = tokenActive;
+		// 		tokenActive = nextToken();
+		// 	}
+		// }
+
+
 		return true;
 	};
 
@@ -732,14 +861,17 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						{
 							adicionarBloco('Parenteses', oldToken.range);
 
+							oldToken = tokenActive;
+							rangeError = oldToken.range;
+							tokenActive = nextToken();
+
 							if (checkSintaxeExpressao() === false)
 							{
 								sintaxeFuncaoValida = false;
 								finalizarWhile = true;
-								continue;
 							}
 
-							break;
+							continue;
 						}
 					case ')':
 						{
@@ -1666,6 +1798,22 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 					break;
 				}
+			// case 'Identificador':
+			// 	{
+			// 		oldToken = tokenActive;
+			// 		tokenActive = nextToken();
+
+			// 		if ((tokenActive?.type === 'Simbolo')
+			// 			&& (tokenActive?.value === '='))
+			// 		{
+			// 			oldToken = tokenActive;
+			// 			tokenActive = nextToken();
+
+			// 			checkSintaxeExpressao();
+			// 		}
+
+			// 		continue;
+			// 	}
 		}
 
 		oldToken = tokenActive;
