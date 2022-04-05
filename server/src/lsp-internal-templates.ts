@@ -1893,7 +1893,7 @@ export const templatesInternos: LSPTemplateClass[] = [
   {
     label: "VerDatFer",
     documentation: "Procura se a data específica é um feriado para o colaborador. Para isto, verifica pela filial e pela escala. Se a data for feriado,  retornará 1. Caso contrário, retornará 0.",
-    type: LSPTypeObject.Method,
+    type: LSPTypeObject.Function,
     parameters: [
       {
         type: EParameterType.Numero,
