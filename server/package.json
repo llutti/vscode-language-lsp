@@ -16,6 +16,6 @@
     "vscode-languageserver-textdocument": "^1.0.4"
   },
   "devDependencies": {
-    "@types/vscode": "^1.65.0"
+    "@types/vscode": "^1.66.0"
   }
 }
