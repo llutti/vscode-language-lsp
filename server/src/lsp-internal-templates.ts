@@ -36,7 +36,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "TipoDado",
-        documenation: '1:Número | 2:Dinheiro(valor) | 3:Data | 4:Hora | 5:Alfa',
+        documentation: '1:Número | 2:Dinheiro(valor) | 3:Data | 4:Hora | 5:Alfa',
         isReturnValue: false
       },
       {
@@ -52,7 +52,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Mascara",
-        documenation:
+        documentation:
         {
           kind: 'markdown',
           value: 'Para pesquisar os valores válidos, acessar a [documentação da Senior](https://documentacao.senior.com.br/tecnologia/6.2.35/index.htm#cbds/mascara.htm)'
@@ -225,25 +225,25 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "TextoInicial",
-        documenation: 'Texto original',
+        documentation: 'Texto original',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "TextoPesquisar",
-        documenation: 'Trecho específico que deve ser buscado no texto original',
+        documentation: 'Trecho específico que deve ser buscado no texto original',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "NovoTexto",
-        documenation: 'Texto que irá substituir o trecho específico buscado',
+        documentation: 'Texto que irá substituir o trecho específico buscado',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Variável que irá receber o novo texto retornado pela função',
+        documentation: 'Variável que irá receber o novo texto retornado pela função',
         isReturnValue: true
       }
     ]
@@ -600,7 +600,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "TamMax",
-        documenation: 'Tamanho Máximo',
+        documentation: 'Tamanho Máximo',
         isReturnValue: false
       }
     ]
@@ -632,7 +632,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "TamMax",
-        documenation: 'Tamanho Máximo',
+        documentation: 'Tamanho Máximo',
         isReturnValue: false
       }
     ]
@@ -908,7 +908,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "ConsiderarFeriado",
-        documenation: 'Indica se é para retornar se é feriado ou não. Valores possíveis "S" | "N"',
+        documentation: 'Indica se é para retornar se é feriado ou não. Valores possíveis "S" | "N"',
         isReturnValue: false
       },
       {
@@ -931,7 +931,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Variável tipo Alfa que receberá o extenso do dia da semana.',
+        documentation: 'Variável tipo Alfa que receberá o extenso do dia da semana.',
         isReturnValue: true
       }
     ]
@@ -1011,7 +1011,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "UnidadeRetorno",
-        documenation: {
+        documentation: {
           kind: 'markdown',
           value: 'Tipo de retorno desejado, podendo ser:\n'
             + '- 1 - Quantidade de dias\n'
@@ -1026,19 +1026,19 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Data,
         name: "DataIni",
-        documenation: 'Data Inicial',
+        documentation: 'Data Inicial',
         isReturnValue: false
       },
       {
         type: EParameterType.Data,
         name: "DataFim",
-        documenation: 'Data Final',
+        documentation: 'Data Final',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "Retorno",
-        documenation: 'Variável que irá receber o valor calculado',
+        documentation: 'Variável que irá receber o valor calculado',
         isReturnValue: true
       }
     ]
@@ -1081,7 +1081,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "TipoDivisao",
-        documenation: '1-Normal|2-Resto|3-Parte inteira da divisão',
+        documentation: '1-Normal|2-Resto|3-Parte inteira da divisão',
         isReturnValue: false
       },
       {
@@ -1178,13 +1178,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "TextoConverter",
-        documenation: 'Variável de entrada com o conteúdo que será convertido para maiúsculo.',
+        documentation: 'Variável de entrada com o conteúdo que será convertido para maiúsculo.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "TextoConvertido",
-        documenation: 'Variável de saída que receberá o conteúdo convertido.',
+        documentation: 'Variável de saída que receberá o conteúdo convertido.',
         isReturnValue: true
       }
     ]
@@ -1197,13 +1197,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "TextoConverter",
-        documenation: 'Variável de entrada com o conteúdo que será convertido para minúsculo.',
+        documentation: 'Variável de entrada com o conteúdo que será convertido para minúsculo.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "TextoConvertido",
-        documenation: 'Variável de saída que receberá o conteúdo convertido.',
+        documentation: 'Variável de saída que receberá o conteúdo convertido.',
         isReturnValue: true
       }
     ]
@@ -1335,7 +1335,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "TipVag",
-        documenation: 'Quando a empresa utiliza o tipo de vaga deve informar qual o tipo de vaga que deseja consultar, senão deve informar um parâmetro default igual a 1.',
+        documentation: 'Quando a empresa utiliza o tipo de vaga deve informar qual o tipo de vaga que deseja consultar, senão deve informar um parâmetro default igual a 1.',
         isReturnValue: false
       }
     ]
@@ -1409,49 +1409,49 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Rememetente",
-        documenation: 'Endereço Eletrônico do Remetente do e-mail.',
+        documentation: 'Endereço Eletrônico do Remetente do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Destinatario",
-        documenation: 'Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaPara",
-        documenation: 'Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaOcultaPara",
-        documenation: 'Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Assunto",
-        documenation: 'Assunto do e-mail.',
+        documentation: 'Assunto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Texto",
-        documenation: 'Texto do e-mail.',
+        documentation: 'Texto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Anexos",
-        documenation: 'Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "PapelCarta",
-        documenation: 'Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim).',
+        documentation: 'Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim).',
         isReturnValue: false
       }
     ]
@@ -1464,49 +1464,49 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Rememetente",
-        documenation: 'Endereço Eletrônico do Remetente do e-mail.',
+        documentation: 'Endereço Eletrônico do Remetente do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Destinatario",
-        documenation: 'Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaPara",
-        documenation: 'Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CopiaOcultaPara",
-        documenation: 'Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Assunto",
-        documenation: 'Assunto do e-mail.',
+        documentation: 'Assunto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Texto",
-        documenation: 'Texto do e-mail.',
+        documentation: 'Texto do e-mail.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Anexos",
-        documenation: 'Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
+        documentation: 'Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;).',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "TratarAnexo",
-        documenation: {
+        documentation: {
           kind: 'markdown',
           value: 'Indicar o código de qual tratamento deve ser dado às imagens do email, podendo ser:'
             + '  - **HimEmbeded**: Os links apontam para figuras que seguem anexas à mensagem e são exibidas em seu corpo. **Atenção**: esta opção possui uma limitação: não podem existir duas imagens com o mesmo nome de arquivo, pois a imagem vai em anexo implicitamente. Portanto, se existirem duas imagens com o mesmo nome de arquivo, a exibição poderá apresentar problemas.'
@@ -1518,7 +1518,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "PapelCarta",
-        documenation: 'Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim).',
+        documentation: 'Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim).',
         isReturnValue: false
       }
     ]
@@ -3596,13 +3596,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "Sucesso",
-        documenation: 'Os valores possíveis são: 0: Sucesso | 1: Erro.',
+        documentation: 'Os valores possíveis são: 0: Sucesso | 1: Erro.',
         isReturnValue: true
       },
       {
         type: EParameterType.Alfa,
         name: "MensagemErro",
-        documenation: 'Texto com a Mensagem de erro gerado pela execução do Comando SQL.',
+        documentation: 'Texto com a Mensagem de erro gerado pela execução do Comando SQL.',
         isReturnValue: true
       }
     ]
@@ -3830,7 +3830,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: true
       }
     ]
@@ -3843,7 +3843,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: true
       }
     ]
@@ -3856,7 +3856,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -3874,7 +3874,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       }
     ]
@@ -3887,7 +3887,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       }
     ]
@@ -3900,7 +3900,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       }
     ]
@@ -3913,7 +3913,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       }
     ]
@@ -3926,7 +3926,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       }
     ]
@@ -3939,7 +3939,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -3962,7 +3962,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -3985,7 +3985,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4008,7 +4008,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4031,7 +4031,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4054,7 +4054,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4077,7 +4077,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4095,7 +4095,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4118,7 +4118,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4141,7 +4141,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4164,7 +4164,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4187,7 +4187,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4210,7 +4210,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4233,7 +4233,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
@@ -4254,13 +4254,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
-        documenation: 'Informe o cursor.',
+        documentation: 'Informe o cursor.',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "nUsar",
-        documenation: '0 para definir que não será utilizada sintaxe SQL Senior 2 ou um valor diferente de zero para definir que será utilizada a sintaxe SQL Senior 2.',
+        documentation: '0 para definir que não será utilizada sintaxe SQL Senior 2 ou um valor diferente de zero para definir que será utilizada a sintaxe SQL Senior 2.',
         isReturnValue: false
       }
     ]
@@ -4428,7 +4428,7 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "ModoAbertura [Ler|Gravar|LerNL|GravarNL]",
-        documenation:
+        documentation:
         {
           kind: 'markdown',
           value:
@@ -4462,19 +4462,19 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "ManipuladorArquivo",
-        documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+        documentation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Dados",
-        documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo.',
+        documentation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo.',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "NumeroDeBytes",
-        documenation: 'Indica o número de bytes que devem ser lidos do arquivo.',
+        documentation: 'Indica o número de bytes que devem ser lidos do arquivo.',
         isReturnValue: false
       }
     ]
@@ -4487,13 +4487,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Arquivo",
-        documenation: "Nome do arquivo a ser aberto.",
+        documentation: "Nome do arquivo a ser aberto.",
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "Retorno",
-        documenation: "Variável que receberá o resultado da função. Se o arquivo for aberto corretamente, ela receberá 1. Caso contrário, ela receberá 0.",
+        documentation: "Variável que receberá o resultado da função. Se o arquivo for aberto corretamente, ela receberá 1. Caso contrário, ela receberá 0.",
         isReturnValue: true
       }
     ]
@@ -4506,13 +4506,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Linha",
-        documenation: "Variável que receberá o conteúdo de cada linha do arquivo.",
+        documentation: "Variável que receberá o conteúdo de cada linha do arquivo.",
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "Retorno",
-        documenation: "Se conseguiu ler a linha normalmente vai retornar 1. Caso contrário se chegou no final do arquivo o retorno será 0(zero).",
+        documentation: "Se conseguiu ler a linha normalmente vai retornar 1. Caso contrário se chegou no final do arquivo o retorno será 0(zero).",
         isReturnValue: true
       }
     ]
@@ -4525,13 +4525,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "ManipuladorArquivo",
-        documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+        documentation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "ValorLinha",
-        documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
+        documentation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
         isReturnValue: false
       }
     ]
@@ -4544,19 +4544,19 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "ManipuladorArquivo",
-        documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+        documentation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "ValorLinha",
-        documenation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
+        documentation: 'Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto.',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
         name: "UseEOL [0:Não | 1:Sim]",
-        documenation: 'Determina se deve ou não ser adicionada a quebra de linha ao final.',
+        documentation: 'Determina se deve ou não ser adicionada a quebra de linha ao final.',
         isReturnValue: false
       }
     ]
@@ -4572,19 +4572,19 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "ManipuladorArquivo",
-        documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+        documentation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Indica a variável de onde os dados serão obtidos para leitura.',
+        documentation: 'Indica a variável de onde os dados serão obtidos para leitura.',
         isReturnValue: true
       },
       {
         type: EParameterType.Numero,
         name: "NumeroDeBytes",
-        documenation: 'Indica o número de bytes que devem ser lidos do arquivo.',
+        documentation: 'Indica o número de bytes que devem ser lidos do arquivo.',
         isReturnValue: false
       }
     ]
@@ -4601,13 +4601,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Numero,
         name: "ManipuladorArquivo",
-        documenation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
+        documentation: 'Determina o manipulador de arquivo para onde os dados serão gravados.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Indica a variável de onde os dados serão obtidos para leitura.',
+        documentation: 'Indica a variável de onde os dados serão obtidos para leitura.',
         isReturnValue: true
       }
     ]
@@ -5827,19 +5827,19 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Texto",
-        documenation: 'Contém o texto original que necessita ter sua codificação alterada',
+        documentation: 'Contém o texto original que necessita ter sua codificação alterada',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Codificacao",
-        documenation: 'Nome da codificação que ser utilizada, suporta as codificações: "UTF-8" ou "WINDOWS-1252"',
+        documentation: 'Nome da codificação que ser utilizada, suporta as codificações: "UTF-8" ou "WINDOWS-1252"',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Contém o texto com a codificação alterada',
+        documentation: 'Contém o texto com a codificação alterada',
         isReturnValue: true
       }
     ]
@@ -5852,13 +5852,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Texto",
-        documenation: 'Contém o texto original que necessita ser decodificado',
+        documentation: 'Contém o texto original que necessita ser decodificado',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Contém o texto decodificado',
+        documentation: 'Contém o texto decodificado',
         isReturnValue: true
       }
     ]
@@ -5871,13 +5871,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Texto",
-        documenation: 'Contém o texto original que necessita ser codificado',
+        documentation: 'Contém o texto original que necessita ser codificado',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Contém o texto codificado',
+        documentation: 'Contém o texto codificado',
         isReturnValue: true
       }
     ]
@@ -5890,13 +5890,13 @@ export const templatesInternos: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: "Texto",
-        documenation: 'Contém o texto original que necessita ser codificado',
+        documentation: 'Contém o texto original que necessita ser codificado',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "Retorno",
-        documenation: 'Contém o texto codificado',
+        documentation: 'Contém o texto codificado',
         isReturnValue: true
       }
     ]

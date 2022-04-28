@@ -22,7 +22,7 @@ export interface LSPParameter
 {
   type: EParameterType;
   name: string;
-  documenation?: string | MarkupContent;
+  documentation?: string | MarkupContent;
   isReturnValue: boolean;
 }
 
@@ -34,6 +34,7 @@ export interface LSPTemplateClass
   parameters?: LSPParameter[];
   insertText?: string;
 }
+
 export class LSPClass
 {
   public readonly name: string;
