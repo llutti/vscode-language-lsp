@@ -18,13 +18,26 @@ import { templatesInternos } from './lsp-internal-templates';
 import { LSPParser } from './lsp-parser';
 import { checkSintaxe, parserContent } from './lsp-parser-utils';
 
+interface ILSPSettings
+{
+  maxNumberOfProblems: number;
+}
+
 const connection = createConnection(ProposedFeatures.all);
 
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
+const defaultSettings: ILSPSettings = {
+  maxNumberOfProblems: 1000,
+};
+
+const documentSettings: Map<string, Thenable<ILSPSettings>> = new Map();
+
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+
+let globalSettings: ILSPSettings = defaultSettings;
 
 connection.onInitialize((params: InitializeParams) =>
 {
@@ -80,19 +93,6 @@ connection.onInitialized(() =>
 
   LSPParser.initialise().then();
 });
-
-interface ILSPSettings
-{
-  maxNumberOfProblems: number;
-}
-
-const defaultSettings: ILSPSettings = {
-  maxNumberOfProblems: 1000
-};
-
-let globalSettings: ILSPSettings = defaultSettings;
-
-const documentSettings: Map<string, Thenable<ILSPSettings>> = new Map();
 
 connection.onDidChangeConfiguration(change =>
 {
