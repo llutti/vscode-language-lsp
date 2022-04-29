@@ -1,6 +1,6 @@
 import { CancellationToken, CompletionItem, CompletionItemKind, CompletionParams, Hover, ParameterInformation, SignatureHelp, SignatureInformation, TextDocumentPositionParams, Position } from 'vscode-languageserver/node';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
-import { LSPClass, LSPTemplateClass } from './lsp-elements';
+import { LSPClass, LSPSeniorSystems, LSPTemplateClass } from './lsp-elements';
 
 // const tokenSplitter = /([\w\$]+)/g;                     // Captures symbol names
 const symbolMatcher = /[\w]+/g;                            // Like above but non-capturing
@@ -19,7 +19,7 @@ export class LSPContext
   private static _classLookup: { [fullTypeOrUri: string]: LSPClass; } = Object.create(null);
   private static _globalCompletions: CompletionItem[] = [];
 
-  public static async getCompletions(textDocumentPosition: CompletionParams, cancellationToken: CancellationToken, document?: TextDocument): Promise<CompletionItem[]>
+  public static async getCompletions(textDocumentPosition: CompletionParams, cancellationToken: CancellationToken, document?: TextDocument, seniorSystemDefault?: LSPSeniorSystems): Promise<CompletionItem[]>
   {
     if (!document)
     {
@@ -40,14 +40,14 @@ export class LSPContext
       };
 
       const fullLine = document?.getText({ start, end }).trim() || '';
-      let line = fullLine.substr(0, charIndex + 1).trim();
+      let line = fullLine.substring(0, charIndex + 1).trim();
       if (this.positionInsideStringLiteral(line))
       {
         return [];
       }
 
       firstSymbolMatcher.lastIndex = 0;
-      const result = firstSymbolMatcher.exec(fullLine.substr(charIndex + 1));
+      const result = firstSymbolMatcher.exec(fullLine.substring(charIndex + 1));
       if (result)
       {
         line += result[1];
@@ -133,20 +133,50 @@ export class LSPContext
       return [];
     }
 
-    return Object.keys(this._classLookup).map<CompletionItem>(
-      key =>
-      {
-        const classe = this._classLookup[key];
-        return {
-          label: classe.label,
-          kind: classe.type,
-          detail: classe?.signature(),
-          documentation: classe?.documentation
-        };
-      });
+    return Object.keys(this._classLookup)
+      .filter(
+        key =>
+        {
+          if ((!seniorSystemDefault)
+            || (seniorSystemDefault === LSPSeniorSystems.SENIOR))
+          {
+            return true;
+          }
+
+          const classe = this._classLookup[key];
+
+          return [LSPSeniorSystems.SENIOR, LSPSeniorSystems.CUSTOMIZADO, seniorSystemDefault].includes(classe.system);
+        })
+      .map<CompletionItem>(
+        key =>
+        {
+          const classe = this._classLookup[key];
+
+          return {
+            label: classe.label,
+            kind: classe.type,
+            detail: classe?.signature(),
+            documentation: classe?.documentation
+          };
+        });
   }
 
-  public static async getSignatureHelp(textDocumentPosition: TextDocumentPositionParams, token: CancellationToken, document?: TextDocument): Promise<SignatureHelp | null>
+  private static ehValidoSistema(systemOfClass: LSPSeniorSystems, seniorSystemDefault?: LSPSeniorSystems): boolean
+  {
+    if (!seniorSystemDefault)
+    {
+      return true;
+    }
+
+    if (seniorSystemDefault == LSPSeniorSystems.SENIOR)
+    {
+      return true;
+    }
+
+    return [LSPSeniorSystems.SENIOR, LSPSeniorSystems.CUSTOMIZADO, seniorSystemDefault].includes(systemOfClass);
+  }
+
+  public static async getSignatureHelp(textDocumentPosition: TextDocumentPositionParams, token: CancellationToken, document?: TextDocument, seniorSystemDefault?: LSPSeniorSystems): Promise<SignatureHelp | null>
   {
     if (!document)
     {
@@ -240,6 +270,11 @@ export class LSPContext
       return null;
     }
 
+    if (LSPContext.ehValidoSistema(funcao.system, seniorSystemDefault) === false)
+    {
+      return null;
+    }
+
     const sigParamemterInfos: ParameterInformation[] = [];
 
     if (funcao.parameters)
@@ -270,7 +305,7 @@ export class LSPContext
     };
   }
 
-  public static async getHoverInfo(position: Position, document?: TextDocument): Promise<Hover | null>
+  public static async getHoverInfo(position: Position, document?: TextDocument, seniorSystemDefault?: LSPSeniorSystems): Promise<Hover | null>
   {
     try
     {
@@ -299,7 +334,7 @@ export class LSPContext
       const index = document.offsetAt(position) - document.offsetAt(start);
       const identificador = LSPContext.getWordAtText(fullLine, index);
 
-      const line = fullLine.substr(0, charIndex + 1).trim();
+      const line = fullLine.substring(0, charIndex + 1).trim();
       if (this.positionInsideStringLiteral(line))
       {
         return null;
@@ -307,6 +342,11 @@ export class LSPContext
 
       const classe = this._classLookup[identificador.word];
       if (!classe)
+      {
+        return null;
+      }
+
+      if (LSPContext.ehValidoSistema(classe.system, seniorSystemDefault) === false)
       {
         return null;
       }
@@ -381,7 +421,7 @@ export class LSPContext
   {
     templates.forEach(template =>
     {
-      const lspClass = LSPClass.fromTemplate(template, true);
+      const lspClass = LSPClass.fromTemplate(template);
 
       this.registerClass(lspClass);
 

@@ -1,3 +1,4 @@
+import { hrtime } from 'process';
 import { MarkupContent } from 'vscode-languageserver/node';
 
 export enum EParameterType
@@ -26,8 +27,17 @@ export interface LSPParameter
   isReturnValue: boolean;
 }
 
+export enum LSPSeniorSystems
+{
+  'HCM' = 'HCM',
+  'ERP' = 'ERP',
+  'SENIOR' = 'SENIOR',
+  'CUSTOMIZADO' = 'CUSTOMIZADO'
+}
+
 export interface LSPTemplateClass
 {
+  system: LSPSeniorSystems
   label: string;
   type: LSPTypeObject;
   documentation?: string | MarkupContent;
@@ -44,15 +54,14 @@ export class LSPClass
   public type?: LSPTypeObject;
   public parameters?: LSPParameter[];
   public insertText?: string;
+  public readonly system: LSPSeniorSystems;
 
-  private isInternal: boolean;
-
-  constructor(name: string, isInternal = false)
+  constructor(system: LSPSeniorSystems, name: string)
   {
     this.name = name.toLowerCase();
-    this.isInternal = isInternal;
     this.label = '';
     this.fileUri = 'interno';
+    this.system = system;
   }
 
   public signature(): string
@@ -63,15 +72,15 @@ export class LSPClass
     }
 
     const params = this.parameters?.map<string>(p => `${p.type} ${p.isReturnValue ? 'End ' : ''}${p.name}`).join(', ') || '';
-    const prefix = `[${this.isInternal ? 'Senior' : 'Customizado'}]`;
+    const prefix = `[${this.system}]`;
     const sufixo = this.type === LSPTypeObject.Function ? `: ${EParameterType.Numero}` : '';
 
     return `${prefix} ${this.label}(${params})${sufixo}`;
   }
 
-  public static fromTemplate(template: LSPTemplateClass, isInternal = false): LSPClass
+  public static fromTemplate(template: LSPTemplateClass): LSPClass
   {
-    const novaClasse = new LSPClass(template.label, isInternal);
+    const novaClasse = new LSPClass(template.system, template.label);
 
     novaClasse.label = template.label;
     novaClasse.documentation = template.documentation;

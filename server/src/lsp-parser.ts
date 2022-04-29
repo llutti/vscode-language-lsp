@@ -1,4 +1,4 @@
-import { EParameterType, LSPClass, LSPParameter, LSPTypeObject } from './lsp-elements';
+import { EParameterType, LSPClass, LSPParameter, LSPSeniorSystems, LSPTypeObject } from './lsp-elements';
 
 const Patterns = {
   // IMPORT: /\bimport\s+([\w$\.\*]+)/,
@@ -47,7 +47,7 @@ export class LSPParser
 
         if (result)
         {
-          const classe = new LSPClass(result[3], false);
+          const classe = new LSPClass(LSPSeniorSystems.CUSTOMIZADO, result[3]);
 
           classe.label = result[3];
           classe.type = LSPTypeObject.Method;

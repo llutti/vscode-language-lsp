@@ -1,52 +1,39 @@
-import { EParameterType, LSPTemplateClass, LSPTypeObject } from './lsp-elements';
+import { EParameterType, LSPSeniorSystems, LSPTemplateClass, LSPTypeObject } from './lsp-elements';
 
-export const templatesInternos: LSPTemplateClass[] = [
+export const templatesInternosSENIOR: LSPTemplateClass[] = [
   {
-    label: "cVerdadeiro",
-    documentation: 'Constante que representa o valor "1"',
-    type: LSPTypeObject.Constant
-  },
-  {
-    label: "cFalso",
-    documentation: 'Constante que representa o valor "0"',
-    type: LSPTypeObject.Constant
-  },
-  {
-    label: "AlfaParaInt",
-    documentation: "Converte um texto para um número não formatado",
-    type: LSPTypeObject.Method,
-    parameters: [
-      {
-        type: EParameterType.Alfa,
-        name: "Origem",
-        isReturnValue: false
-      },
-      {
-        type: EParameterType.Numero,
-        name: "Retorno",
-        isReturnValue: true
-      }
-    ]
-  },
-  {
+    system: LSPSeniorSystems.SENIOR,
     label: "ConverteMascara",
     type: LSPTypeObject.Method,
-    documentation: 'Esta função converte um valor de entrada (numérico, data, hora ou cadeia de caracteres), para o tipo de dado cadeia de caracteres.',
+    documentation: {
+      kind: 'markdown',
+      value: 'Esta função converte um valor de entrada (*numérico*, *data*, *hora* ou *cadeia de caracteres*), para o tipo de dado cadeia de caracteres.'
+    },
     parameters: [
       {
         type: EParameterType.Numero,
         name: "TipoDado",
-        documentation: '1:Número | 2:Dinheiro(valor) | 3:Data | 4:Hora | 5:Alfa',
+        documentation: {
+          kind: 'markdown',
+          value: 'Código que determina o tipo do **ValorOriginal**:\n'
+            + '- 1: Número\n'
+            + '- 2: Dinheiro (valor)\n'
+            + '- 3: Data\n'
+            + '- 4: Hora\n'
+            + '- 5: Alfa\n'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
-        name: "ValorNum",
+        name: "ValorOriginal",
+        documentation: 'Valor a ser convertido',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "ValorStr",
+        name: "Retorno",
+        documentation: 'Variável que receberá o resultado da conversão',
         isReturnValue: true
       },
       {
@@ -55,13 +42,40 @@ export const templatesInternos: LSPTemplateClass[] = [
         documentation:
         {
           kind: 'markdown',
-          value: 'Para pesquisar os valores válidos, acessar a [documentação da Senior](https://documentacao.senior.com.br/tecnologia/6.2.35/index.htm#cbds/mascara.htm)'
+          value: 'Especificar o formato com que o resultado da conversão deverá ser apresentado.\n'
+            + 'Para pesquisar os valores válidos, acessar a [documentação da Senior](https://documentacao.senior.com.br/tecnologia/6.2.35/index.htm#cbds/mascara.htm)'
         },
         isReturnValue: false
       }
     ]
   },
   {
+    system: LSPSeniorSystems.SENIOR,
+    label: "IntParaAlfa",
+    documentation: {
+      kind: 'markdown',
+      value: 'Converte um número para formato alfanumérico.\n'
+        + '\n'
+        + '**ATENÇÃO**: O *valor numérico* está limitado a até 15 caracteres.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Numero,
+        name: "Origem",
+        documentation: 'Valor que será convertido.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Retorno",
+        documentation: 'Variável que receberá o valor convertido.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
     label: "MontaData",
     type: LSPTypeObject.Method,
     parameters: [
@@ -88,22 +102,53 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
-    label: "IntParaAlfa",
+    system: LSPSeniorSystems.SENIOR,
+    label: "AlfaParaInt",
+    documentation: "Converte um texto para um número não formatado",
     type: LSPTypeObject.Method,
     parameters: [
       {
-        type: EParameterType.Numero,
+        type: EParameterType.Alfa,
         name: "Origem",
         isReturnValue: false
       },
       {
-        type: EParameterType.Alfa,
+        type: EParameterType.Numero,
         name: "Retorno",
         isReturnValue: true
       }
     ]
   },
   {
+    system: LSPSeniorSystems.SENIOR,
+    label: "UltimoDia",
+    documentation: "Esta função verifica qual é o último dia do mês/ano da data informada, retornando esta nova data dia/mês/ano na própria variável indicada",
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Data,
+        name: "Mes",
+        isReturnValue: true
+      }
+    ]
+  },
+];
+
+export const templatesInternosHCM: LSPTemplateClass[] = [
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "cVerdadeiro",
+    documentation: 'Constante que representa o valor "1"',
+    type: LSPTypeObject.Constant
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "cFalso",
+    documentation: 'Constante que representa o valor "0"',
+    type: LSPTypeObject.Constant
+  },
+  {
+    system: LSPSeniorSystems.HCM,
     label: "WInsSelecaodaLista",
     type: LSPTypeObject.Method,
     parameters: [
@@ -135,6 +180,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WInsSelecaodoBanco",
     type: LSPTypeObject.Method,
     parameters: [
@@ -181,6 +227,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WAdicionanoHTML",
     type: LSPTypeObject.Method,
     parameters: [
@@ -202,6 +249,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WAdicionaListaErros",
     type: LSPTypeObject.Method,
     parameters: [
@@ -218,6 +266,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "TrocaString",
     type: LSPTypeObject.Method,
     documentation: 'Procura por um trecho específico dentro de um texto e o substitui, retornando um novo texto.',
@@ -249,6 +298,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "DescItemLista",
     type: LSPTypeObject.Method,
     parameters: [
@@ -270,6 +320,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "DesmontaData",
     type: LSPTypeObject.Method,
     parameters: [
@@ -296,6 +347,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ConverteDataBanco",
     type: LSPTypeObject.Method,
     parameters: [
@@ -312,6 +364,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ConverteMinutosHoras",
     type: LSPTypeObject.Method,
     parameters: [
@@ -328,6 +381,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaEscala",
     documentation: "Retorna a escala do colaborador em determinada data, considerando as programações de troca de escala e histórico do colaborador",
     type: LSPTypeObject.Method,
@@ -385,6 +439,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetSalDat",
     type: LSPTypeObject.Method,
     parameters: [
@@ -421,6 +476,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "LiquidoFolha",
     type: LSPTypeObject.Method,
     parameters: [
@@ -467,6 +523,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "LiquidoFerias",
     type: LSPTypeObject.Method,
     parameters: [
@@ -518,6 +575,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "LiquidoRescisao",
     type: LSPTypeObject.Method,
     parameters: [
@@ -574,6 +632,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCheckValInteger",
     type: LSPTypeObject.Method,
     parameters: [
@@ -606,6 +665,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCheckValString",
     type: LSPTypeObject.Method,
     parameters: [
@@ -638,6 +698,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCheckValData",
     type: LSPTypeObject.Method,
     parameters: [
@@ -664,6 +725,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCheckValHora",
     type: LSPTypeObject.Method,
     parameters: [
@@ -690,6 +752,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCheckValCheckBox",
     type: LSPTypeObject.Method,
     parameters: [
@@ -711,6 +774,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WLerHTML",
     type: LSPTypeObject.Method,
     parameters: [
@@ -727,6 +791,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetColabPorCodUsu",
     type: LSPTypeObject.Method,
     parameters: [
@@ -753,6 +818,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCountFields",
     type: LSPTypeObject.Method,
     documentation: 'Retorna a quantidade de campos passados pela ação do HTML',
@@ -765,6 +831,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WReturnFieldsName",
     type: LSPTypeObject.Method,
     parameters: [
@@ -781,6 +848,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CopiarAlfa",
     type: LSPTypeObject.Method,
     parameters: [
@@ -802,6 +870,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "DeletarAlfa",
     type: LSPTypeObject.Method,
     parameters: [
@@ -823,6 +892,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "LerPosicaoAlfa",
     type: LSPTypeObject.Method,
     parameters: [
@@ -844,6 +914,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "PosicaoAlfa",
     type: LSPTypeObject.Method,
     parameters: [
@@ -865,6 +936,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "TamanhoAlfa",
     type: LSPTypeObject.Method,
     parameters: [
@@ -881,6 +953,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaHorario",
     type: LSPTypeObject.Method,
     documentation: 'A função Retornahorario calcula o horário na hora em que é chamada, considerando as programações de troca de horário, escala e ponte. Na escala de Busca Automática retorna o horário base e não o horário apurado.',
@@ -919,6 +992,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExtensoSemana",
     type: LSPTypeObject.Method,
     documentation: 'Esta função monta o extenso do dia da semana de uma determinada data.',
@@ -937,6 +1011,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaEscala",
     type: LSPTypeObject.Method,
     parameters: [
@@ -983,6 +1058,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Para",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1004,6 +1080,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetDifDat",
     documentation: "Esta função retorna a diferença em dias, meses ou anos entre duas datas.",
     type: LSPTypeObject.Method,
@@ -1014,12 +1091,12 @@ export const templatesInternos: LSPTemplateClass[] = [
         documentation: {
           kind: 'markdown',
           value: 'Tipo de retorno desejado, podendo ser:\n'
-            + '- 1 - Quantidade de dias\n'
-            + '- 2 - Quantidade de meses\n'
-            + '- 3 - Quantidade de anos\n'
-            + '- 4 - Quantidade de meses com ajuste\n'
-            + '- 5 - Quantidade de anos com ajuste\n'
-            + '- 6 - Quantidade de meses com ajuste pelas datas início e fim'
+            + '- 1: Quantidade de dias\n'
+            + '- 2: Quantidade de meses\n'
+            + '- 3: Quantidade de anos\n'
+            + '- 4: Quantidade de meses com ajuste\n'
+            + '- 5: Quantidade de anos com ajuste\n'
+            + '- 6: Quantidade de meses com ajuste pelas datas início e fim'
         },
         isReturnValue: false
       },
@@ -1044,6 +1121,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RestoDivisao",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1065,6 +1143,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Divide",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1092,6 +1171,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "TruncarValor",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1103,6 +1183,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetHtmlFicReg",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1139,6 +1220,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WStrtoJavaScript",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1155,6 +1237,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "TiraEspacos",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1171,6 +1254,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ConverteParaMaiusculo",
     type: LSPTypeObject.Method,
     documentation: 'Converte o conteúdo de uma variável do tipo Alfa para maiúsculo.',
@@ -1190,6 +1274,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ConverteParaMinusculo",
     type: LSPTypeObject.Method,
     documentation: 'Converte o conteúdo de uma variável do tipo Alfa para minúsculo.',
@@ -1209,6 +1294,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WAlteraValorCampo",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1225,6 +1311,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "MontaAbrangencia",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1246,6 +1333,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "__Inserir",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1257,6 +1345,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCheckValDouble",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1288,6 +1377,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetQtdVagLoc",
     type: LSPTypeObject.Method,
     documentation: 'A função RetQtdVagLoc tem como objetivo retornar a quantidade de vagas disponíveis em um determinado local, cargo e data passados como parâmetros, ou seja, é a diferença entre a quantidade de vagas do quadro previsto e a quantidade de vagas do quadro efetivo.',
@@ -1341,6 +1431,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "BusCadChefe",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1402,6 +1493,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "EnviaEMail",
     documentation: "Função que permite enviar e-mails. (CodErroEnviaEmail e MsgErroEnviaEmail)",
     type: LSPTypeObject.Function,
@@ -1457,6 +1549,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "EnviaEMailHTML",
     documentation: "Função que permite enviar e-mails em formato HTML e com imagens no corpo do E-mail. (CodErroEnviaEmail e MsgErroEnviaEmail)",
     type: LSPTypeObject.Function,
@@ -1524,6 +1617,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "BusEmailFunc",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1555,6 +1649,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaBatidaHorario",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1596,6 +1691,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExtrasIntervalo",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1627,6 +1723,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetMinRefHTr",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1638,6 +1735,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetVinEmp",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1664,6 +1762,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaCodLoc",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1680,6 +1779,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetTurCol",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1711,6 +1811,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "InsClauSQLWhere",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1727,6 +1828,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaHorarioApurado",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1763,6 +1865,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "DataHoje",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1774,6 +1877,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaAnoData",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1790,6 +1894,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaMesData",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1806,6 +1911,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaDiaData",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1822,6 +1928,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "AlteraControle",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1843,6 +1950,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaDiaSemana",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1859,6 +1967,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "AdicionarCampo",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1880,6 +1989,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Chave",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1891,6 +2001,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "VerDatFer",
     documentation: "Procura se a data específica é um feriado para o colaborador. Para isto, verifica pela filial e pela escala. Se a data for feriado,  retornará 1. Caso contrário, retornará 0.",
     type: LSPTypeObject.Function,
@@ -1918,6 +2029,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetNivLoc",
     documentation: "Função que retorna a quantidade de níveis do local informado",
     type: LSPTypeObject.Method,
@@ -1945,6 +2057,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Concatena",
     type: LSPTypeObject.Method,
     parameters: [
@@ -1971,6 +2084,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ArredondarValor",
     documentation: "Esta função arredonda determinado valor, conforme a quantidade de casa decimais informada",
     type: LSPTypeObject.Method,
@@ -1988,11 +2102,13 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "InicioVtr",
     documentation: "Função para preparar os recursos de máquina (alocar memória) para o cálculo de Vale Transporte",
     type: LSPTypeObject.Method
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "VerFaltasVtr",
     documentation: "Verificar se o colaborador teve faltas no período para perda de vale transporte",
     type: LSPTypeObject.Method,
@@ -2050,6 +2166,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "LerPassesVtr",
     documentation: "Verifica se houve digitação de Passes de Vale Transporte",
     type: LSPTypeObject.Method,
@@ -2087,6 +2204,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalcularVtr",
     documentation: "Esta função calcula o valor e a quantidade de passes de vale transporte",
     type: LSPTypeObject.Method,
@@ -2134,6 +2252,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GravarVtr",
     documentation: "Grava os passes na tabela R028PVT, calculada anteriormente pela função CalculaVtr",
     type: LSPTypeObject.Method,
@@ -2166,11 +2285,13 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "FinalVtr",
     documentation: "Libera as estruturas alocadas anteriormente pela função CalculaVtr",
     type: LSPTypeObject.Method
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ListaSecao",
     type: LSPTypeObject.Method,
     parameters: [
@@ -2182,6 +2303,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetEscEmp",
     documentation: "Retorna a escala do funcionário em uma determinada data",
     type: LSPTypeObject.Method,
@@ -2209,6 +2331,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "VerAbrBHR",
     documentation: "Esta função verifica se o colaborador está incluído na abrangência de um determinado banco de horas",
     type: LSPTypeObject.Method,
@@ -2246,6 +2369,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WWriteCookie",
     documentation: "Grava um campo no Cookie ativo",
     type: LSPTypeObject.Method,
@@ -2263,6 +2387,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetSinEmp",
     documentation: "Esta função retorna o código do sindicato de um colaborador em uma determinada data na variável de sistema CodSinEmp",
     type: LSPTypeObject.Method,
@@ -2290,6 +2415,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalIdaEmp",
     documentation: "cula a idade do colaborador na Data de Referência",
     type: LSPTypeObject.Method,
@@ -2317,6 +2443,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalculaQtdMinutos",
     documentation: "Calcula a quantidade de minutos existente entre uma Data/Hora Inicial e uma Data/Hora Final",
     type: LSPTypeObject.Method,
@@ -2349,6 +2476,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaNumLoc",
     documentation: "Converte o código do local para o número do local. Considera a data setada em DatRef",
     type: LSPTypeObject.Method,
@@ -2366,6 +2494,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaNivelLocal",
     documentation: "Retorna uma fração do código do local do nível inicial até o nível final informados",
     type: LSPTypeObject.Method,
@@ -2398,6 +2527,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaAscII",
     documentation: "Esta função retorna o caractere ASCII de um número.",
     type: LSPTypeObject.Method,
@@ -2415,6 +2545,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "PertenceGrupo",
     documentation: "Identifica se o usuário ativo pertence ao grupo de usuários passado como parâmetro. Se pertencer retornará 1, caso contrário retornará 0",
     type: LSPTypeObject.Method,
@@ -2427,6 +2558,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WSetarCalculo",
     documentation: "Função utilizada para setar o código de cálculo para processos automáticos, via regra (Somente RubiWeb)",
     type: LSPTypeObject.Method,
@@ -2444,18 +2576,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
-    label: "UltimoDia",
-    documentation: "Esta função verifica qual é o último dia do mês/ano da data informada, retornando esta nova data dia/mês/ano na própria variável indicada",
-    type: LSPTypeObject.Method,
-    parameters: [
-      {
-        type: EParameterType.Data,
-        name: "Mes",
-        isReturnValue: false
-      }
-    ]
-  },
-  {
+    system: LSPSeniorSystems.HCM,
     label: "RetLocEmp",
     documentation: "Retorna o local do funcionário em uma determinada data.",
     type: LSPTypeObject.Method,
@@ -2483,6 +2604,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WSQLSenior2paraSQLNativo",
     documentation: "Retorna a Sintaxe de um comando SQL Senior2 para o SQL Nativo, correspondente ao banco que estiver sendo utilizado",
     type: LSPTypeObject.Method,
@@ -2500,6 +2622,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalculaTotCol",
     documentation: "Esta função calcula o totalizador do evento, valor ou referência, de acordo com o cálculo, totalizador e o colaborador enviados por parâmetro.",
     type: LSPTypeObject.Method,
@@ -2537,6 +2660,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SelectData",
     documentation: "Função na qual é possível executar qualquer SELECT",
     type: LSPTypeObject.Method,
@@ -2559,6 +2683,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetCampoNumero",
     documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
     type: LSPTypeObject.Method,
@@ -2581,6 +2706,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetCampoAlfa",
     documentation: "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
     type: LSPTypeObject.Method,
@@ -2603,6 +2729,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetSitEmp",
     documentation: "Retorna a Situação do Colaborador em uma determinda Data (Retorna na variável SitEmp)",
     type: LSPTypeObject.Method,
@@ -2630,6 +2757,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetCodUsuPorColab",
     documentation: "Esta função retornará o código do usuário associadr. Caso não houver retornará zero.",
     type: LSPTypeObject.Method,
@@ -2652,6 +2780,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "MontarSQLHistoricoSeq",
     documentation: "Esta função retorna um SQL com base em uma data e seqüência para uso com os históricos do sistema",
     type: LSPTypeObject.Method,
@@ -2674,6 +2803,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "MontarSQLHistorico",
     documentation: "Retorna um SQL com base em uma data para uso com os históricos do sistema",
     type: LSPTypeObject.Method,
@@ -2696,6 +2826,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetSalEmp",
     documentation: "Esta função retorna o salário do funcionário em uma determinada data.",
     type: LSPTypeObject.Method,
@@ -2723,6 +2854,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WTextoParaFormatoHTML",
     documentation: "Retorna a expressão alfanumérica passada como parâmetro convertida para HTML",
     type: LSPTypeObject.Method,
@@ -2740,6 +2872,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetEstCarEmp",
     documentation: "Função que retorna a estrutura de cargos utilizada pela empresa na data informada.",
     type: LSPTypeObject.Method,
@@ -2757,6 +2890,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalTotFolha",
     documentation: "Utilizada para carregar as variáveis de sistema",
     type: LSPTypeObject.Method,
@@ -2784,6 +2918,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetCarEmp",
     documentation: "Retorna o Cargo do funcionário em uma determinada data.",
     type: LSPTypeObject.Method,
@@ -2811,6 +2946,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetNomCodNiv",
     documentation: "Retorna o Nome e o código do Local do Empregado em um determinado nível.",
     type: LSPTypeObject.Method,
@@ -2858,6 +2994,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "TiraAcentos",
     documentation: "Retira os caracteres especiais, retornando o texto em maíusculo.",
     type: LSPTypeObject.Method,
@@ -2875,6 +3012,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalSalEmpCS",
     documentation: "Esta função retorna o salário do funcionário em relação ao tipo",
     type: LSPTypeObject.Method,
@@ -2907,6 +3045,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExtensoMes",
     documentation: "Esta função retorna o nome por extenso do mês passado como parâmetro",
     type: LSPTypeObject.Method,
@@ -2924,6 +3063,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "BusSalClaNiv",
     documentation: "Esta função retorna o valor do salário da estrutura/classe/nível passados como parâmetro, e se desejar (informando tipo 2), o número de meses de complemento do nível salarial.",
     type: LSPTypeObject.Method,
@@ -2971,6 +3111,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetExtMoeda",
     documentation: "Gera o extenso de um valor (moeda). Obs: não completa o espaço restante com o caracter “*”.",
     type: LSPTypeObject.Method,
@@ -2988,6 +3129,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExtensoNumero",
     documentation: "Retorna o valor por extenso do número passado como parâmetro.",
     type: LSPTypeObject.Method,
@@ -3005,6 +3147,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ProximaPagina",
     documentation: "Permite verificar se uma determinada seção será impressa na próxima página.",
     type: LSPTypeObject.Method,
@@ -3022,6 +3165,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "BusHorBase",
     documentation: "Retorna o horário base do colaborador em uma determinada data.",
     type: LSPTypeObject.Method,
@@ -3049,6 +3193,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Minusculo",
     documentation: "Converte um valor alfanumérico de maiúsculo para minúsculo (SOMENTE NO RUBI)",
     type: LSPTypeObject.Method,
@@ -3071,6 +3216,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExecutaRelatorio",
     documentation: "Permite que sejam executados relatórios através das regras.",
     type: LSPTypeObject.Method,
@@ -3088,6 +3234,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SetaNumeroTelaEntrada",
     documentation: "Permite ao usuário alterar os valores numéricos da tela de entrada do modelo.",
     type: LSPTypeObject.Method,
@@ -3105,6 +3252,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SetaDataTelaEntrada",
     documentation: "Permite ao usuário alterar os valores do tipo data da tela de entrada do modelo.",
     type: LSPTypeObject.Method,
@@ -3122,6 +3270,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SetaAlfaTelaEntrada",
     documentation: "Permite ao usuário alterar os valores alfanuméricos da tela de entrada do modelo.",
     type: LSPTypeObject.Method,
@@ -3139,6 +3288,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "EscondeCampoTelaEntrada",
     documentation: "Permite ao usuário esconder determinados campos da tela de entrada do modelo",
     type: LSPTypeObject.Method,
@@ -3151,6 +3301,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetCodNomLocNiv",
     documentation: "Retorna o nome e o código do local, no nível informado",
     type: LSPTypeObject.Method,
@@ -3188,6 +3339,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetNumLocNiv",
     documentation: "Retorna o código do local no nível passado como parâmetro.",
     type: LSPTypeObject.Method,
@@ -3220,6 +3372,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ConvStrPNum",
     documentation: "Converte um valor tipo string para numérico.",
     type: LSPTypeObject.Method,
@@ -3237,6 +3390,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "BuscaDiaSit",
     documentation: "Esta função retorna a quantidade de dias de uma situação em um período informado. Esta função não apresenta as seguintes situações: 15 (ronda) e 16 (todos os módulos)",
     type: LSPTypeObject.Method,
@@ -3279,6 +3433,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetSalEst",
     documentation: "Retorna o salário (sem nenhuma conversão) de uma Estrutura/Classe/Nível específica em uma determinada data.",
     type: LSPTypeObject.Method,
@@ -3306,6 +3461,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetBHRDat",
     documentation: "Esta função retorna o saldo do banco de horas conforme a data especificada para verificação. O valor que será retornado corresponderá ao saldo inicial da data. Não são considerados os lançamentos efetuados no dia.",
     type: LSPTypeObject.Method,
@@ -3343,6 +3499,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExcLanBhr",
     type: LSPTypeObject.Method,
     parameters: [
@@ -3379,6 +3536,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "IncLanBhr",
     type: LSPTypeObject.Method,
     parameters: [
@@ -3425,6 +3583,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetDatCmp",
     type: LSPTypeObject.Method,
     parameters: [
@@ -3456,6 +3615,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetTabOrgEmp",
     type: LSPTypeObject.Method,
     parameters: [
@@ -3477,6 +3637,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GravaFotoColaboradorEmDisco",
     documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
     type: LSPTypeObject.Method,
@@ -3519,6 +3680,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "BusCadChefeLocal",
     documentation: "Busca o chefe de um local especificado.",
     type: LSPTypeObject.Method,
@@ -3581,6 +3743,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExecSQLEx",
     documentation: {
       kind: 'markdown',
@@ -3608,6 +3771,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "InserirAlfa",
     documentation: "Insere um ou mais caracteres em uma Variável/Campo, a partir da posição indicada. Havendo informação no campo alfa, no qual deseja-se inserir o texto, as que estiverem a partir da posicão indicada serão deslocadas para a direita e o que passar do tamanho definido do campo/variável será truncado.",
     type: LSPTypeObject.Method,
@@ -3630,6 +3794,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "TempoTrabFun",
     documentation: "Esta função retorna o tempo de trabalho em meses, de um funcionário em um determinado período",
     type: LSPTypeObject.Method,
@@ -3672,6 +3837,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "MensagemLog",
     documentation: "Esta função cancela o processamento em execução e mostra a mensagem de erro passada como parâmetro",
     type: LSPTypeObject.Method,
@@ -3684,6 +3850,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetPrxClaNiv",
     type: LSPTypeObject.Method,
     parameters: [
@@ -3725,6 +3892,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "InsSQLWhereSimples",
     documentation: "Permite Inserir uma cláusula WHERE dentro de um SQL durante a execução da regra de pré-seleção. As tabelas referenciadas no SQL não são incluídas na cláusula FROM do comando SQL.",
     type: LSPTypeObject.Method,
@@ -3742,6 +3910,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetAdiEmp",
     documentation: "Esta função retorna o Adicional do funcionário em uma determinada data",
     type: LSPTypeObject.Method,
@@ -3769,6 +3938,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalculaQtdDep",
     documentation: "Calcula a quantidade de dependentes.",
     type: LSPTypeObject.Method,
@@ -3796,6 +3966,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetEtbEmp",
     documentation: "Retorna a estabilidade do funcionário em uma determinada data.",
     type: LSPTypeObject.Method,
@@ -3823,6 +3994,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_Criar",
     documentation: "Função que cria um cursor, ou um objeto para execução de SQL, e retorna no parâmetro \"Objeto\".",
     type: LSPTypeObject.Method,
@@ -3836,6 +4008,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_Destruir",
     documentation: "Função que destrói um cursor depois de sua utilização, o mesmo deve ser chamado quando o cursor não for mais utilizado.",
     type: LSPTypeObject.Method,
@@ -3849,6 +4022,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_DefinirComando",
     documentation: "Função que aplica o comando SQL para o cursor passado como parâmetro.",
     type: LSPTypeObject.Method,
@@ -3867,6 +4041,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_BOF",
     documentation: "Função que retorna se o cursor está na posição inicial (antes do primeiro registro). Se o cursor está na posição BOF, o valor retornado é 1 (um), caso contrário é 0 (zero).",
     type: LSPTypeObject.Method,
@@ -3880,6 +4055,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_EOF",
     documentation: "Função que retorna se o cursor está na posição final (depois do último registro). Se o cursor está na posição EOF, o valor retornado é 1 (um), caso contrário é 0 (zero)",
     type: LSPTypeObject.Method,
@@ -3893,6 +4069,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_AbrirCursor",
     documentation: "Função que abre o cursor depois de informado o SQL a ser utilizado.",
     type: LSPTypeObject.Method,
@@ -3906,6 +4083,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_Proximo",
     documentation: "Função que posiciona o cursor no próximo registro.",
     type: LSPTypeObject.Method,
@@ -3919,6 +4097,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_FecharCursor",
     documentation: "Função que fecha a pesquisa sendo feita pelo cursor.",
     type: LSPTypeObject.Method,
@@ -3932,6 +4111,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_RetornarBoleano",
     documentation: "Função que retorna um valor boleano de um campo do registro do cursor.",
     type: LSPTypeObject.Method,
@@ -3955,6 +4135,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_RetornarInteiro",
     documentation: "Função que retorna um valor inteiro de um campo do registro do cursor.",
     type: LSPTypeObject.Method,
@@ -3978,6 +4159,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_RetornarFlutuante",
     documentation: "Função que retorna um valor flutuante de um campo do registro do cursor.",
     type: LSPTypeObject.Method,
@@ -4001,6 +4183,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_RetornarData",
     documentation: "Função que retorna uma data de um campo do registro do cursor.",
     type: LSPTypeObject.Method,
@@ -4024,6 +4207,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_RetornarAlfa",
     documentation: "Função que retorna um valor do tipo alfa (string) de um campo do registro do cursor.",
     type: LSPTypeObject.Method,
@@ -4047,6 +4231,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_RetornarBlob",
     documentation: "Função que retorna um Blob de um campo do registro do cursor.",
     type: LSPTypeObject.Method,
@@ -4070,6 +4255,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_RetornarSeNulo",
     documentation: "Função que retorna um valor booleano, que significa se o campo é nulo ou não.",
     type: LSPTypeObject.Method,
@@ -4088,6 +4274,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_DefinirBoleano",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo boleano.",
     type: LSPTypeObject.Method,
@@ -4111,6 +4298,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_DefinirInteiro",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo inteiro.",
     type: LSPTypeObject.Method,
@@ -4134,6 +4322,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_DefinirFlutuante",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo numérico com ponto flutuante.",
     type: LSPTypeObject.Method,
@@ -4157,6 +4346,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_DefinirData",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo data.",
     type: LSPTypeObject.Method,
@@ -4180,6 +4370,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_DefinirAlfa",
     documentation: "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo alfanumérico.",
     type: LSPTypeObject.Method,
@@ -4203,6 +4394,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_DefinirBlob",
     documentation: "Função que seta define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo blob.",
     type: LSPTypeObject.Method,
@@ -4226,6 +4418,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_UsarAbrangencia",
     documentation: "Função que informa ao cursor se é para utilizar abrangência de usuários.",
     type: LSPTypeObject.Method,
@@ -4244,6 +4437,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SQL_UsarSQLSenior2",
     documentation: {
       kind: 'markdown',
@@ -4266,6 +4460,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CalSalEmp",
     documentation: "Retorna o salário do funcionário em relação ao tipo.",
     type: LSPTypeObject.Method,
@@ -4298,6 +4493,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetQtdDiasUtil",
     documentation: "Retorna a quantidade de dias úteis dentro de um determinado período, levando-se em consideração os dias de segunda a sexta-feira, desde que não estejam cadastrados como feriado na Tabela de Feriados passada como parâmetro na função.",
     type: LSPTypeObject.Method,
@@ -4325,6 +4521,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetApuPon",
     documentation: "Esta função retorna o tipo de apuração do colaborador, conforme o histórico de apuração.",
     type: LSPTypeObject.Method,
@@ -4357,6 +4554,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetFilEmp",
     documentation: "Retorna a filial do funcionário em uma determinada data.",
     type: LSPTypeObject.Method,
@@ -4384,6 +4582,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CarregaImgControle",
     documentation: "Carregar uma imagem do banco ou arquivo para um controle imagem do modelo",
     type: LSPTypeObject.Method,
@@ -4416,6 +4615,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Abrir",
     type: LSPTypeObject.Function,
     documentation: 'Abre arquivos no disco local ou na rede. Se a função for bem sucedida, o valor de retorno será o manipulador de arquivo. Este valor não poderá ser alterado, caso contrário a regra não terá condições de operar com o arquivo. Se a função falhar, um erro acontece e a regra é cancelada.',
@@ -4443,6 +4643,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Fechar",
     type: LSPTypeObject.Method,
     documentation: 'Fecha um arquivo previamente aberto.',
@@ -4455,6 +4656,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Gravar",
     type: LSPTypeObject.Function,
     documentation: 'Escreve determinado número de bytes para um arquivo binário e retorna o número de bytes gravados no arquivo.',
@@ -4480,6 +4682,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "AbrirArquivo",
     type: LSPTypeObject.Function,
     documentation: "Esta função abre o arquivo passado como parâmetro. Pode ser utilizada para testar se um arquivo existe em um determinado local. Se o arquivo for aberto corretamente, a função retornará 1. Se ocorrer algum problema e o arquivo não puder ser aberto, ela retornará 0.",
@@ -4499,6 +4702,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "LerNovaLinha",
     type: LSPTypeObject.Method,
     documentation: "Esta função funciona em conjunto com a função 'AbrirArquivo'. Após abrir o arquivo é possível ler linha a linha do arquivo.",
@@ -4518,6 +4722,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GravarNL",
     type: LSPTypeObject.Method,
     documentation: 'Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.',
@@ -4537,6 +4742,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GravarNLEOL",
     type: LSPTypeObject.Method,
     documentation: 'Grava uma linha em um arquivo texto com a opção de incluir a quebra de linha ao final.',
@@ -4562,6 +4768,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Ler",
     type: LSPTypeObject.Function,
     documentation: {
@@ -4590,6 +4797,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "LerNL",
     type: LSPTypeObject.Function,
     documentation: {
@@ -4613,6 +4821,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ExecutaTelaSGI",
     documentation: "Esta função executa a tela do SGI passada como parâmetro. Se a tela for executada com sucesso, a função retornará 1. Caso contrário, retornará 0.",
     type: LSPTypeObject.Method,
@@ -4625,6 +4834,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GlbRetVarStr",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4641,6 +4851,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GlbAdiVarStr",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4657,6 +4868,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CarregaAbrUsu",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4683,6 +4895,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaAbrUsu",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4724,6 +4937,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SetaValorFormula",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4740,6 +4954,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "BusCraTit",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4771,6 +4986,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "VerNumAbr",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4792,6 +5008,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "MontaCriteriosAperfeicoamento",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4863,6 +5080,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WPersonalizaMenuWeb",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4904,6 +5122,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetLocNiv",
     type: LSPTypeObject.Method,
     parameters: [
@@ -4935,6 +5154,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "CarregaDistribuicaoEPI",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5016,6 +5236,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GlbAdiVarNumDat",
     documentation: "Adiciona uma variável global numérica/data em memória",
     type: LSPTypeObject.Method,
@@ -5033,6 +5254,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GlbAdiVarStr",
     documentation: "Adiciona uma variável global alfa numérica em memória",
     type: LSPTypeObject.Method,
@@ -5050,6 +5272,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GlbRetVarNumDat",
     documentation: "Retorna o conteúdo de uma variável global numérica, armazenada pela função GlbAdiVarNumDat. Exemplo: x := GlbRetVarNumDat(vNomVar);",
     type: LSPTypeObject.Method,
@@ -5062,6 +5285,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GlbRetVarStr",
     documentation: "Retorna o conteúdo de uma variável global armazenada pela função GlbAdiVarStr.",
     type: LSPTypeObject.Method,
@@ -5079,6 +5303,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "AlteraValorFormula",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5095,6 +5320,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetHorPrvTrb",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5151,6 +5377,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WCheckValImage",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5187,6 +5414,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GravaImagemBanco",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5228,6 +5456,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Encriptar",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5249,6 +5478,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Desencriptar",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5270,6 +5500,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ArqExiste",
     type: LSPTypeObject.Function,
     parameters: [
@@ -5281,6 +5512,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetHorTrab",
     documentation: "Retorna a quantidade de horas trabalhadas num determinado período.",
     type: LSPTypeObject.Method,
@@ -5328,6 +5560,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ConverteDataHoraDateTime",
     documentation: "A função serve para montar uma data e uma hora passados como parâmetro em uma string no formato datetime do banco.",
     type: LSPTypeObject.Method,
@@ -5350,6 +5583,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GeraHash",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5371,6 +5605,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WRemoteAddr",
     documentation: "Retorna o endereço IP da estação que está acessando o sistema. Utilizada apenas nos sistemas Web.",
     type: LSPTypeObject.Method,
@@ -5383,6 +5618,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegEntLe",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5399,6 +5635,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegEntEhUsuario",
     documentation: "Esta função indica se o Usuário/Grupo passado em aObjeto é um usuário. Se sim o resultado direto da função é 1 senão será 0.",
     type: LSPTypeObject.Method,
@@ -5411,6 +5648,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegUsuAtivado",
     documentation: "Esta função indica se o acesso ao usuário passado em aObjeto está desativado. Se sim o resultado direto da função é 1 senão será 0.",
     type: LSPTypeObject.Method,
@@ -5423,6 +5661,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegEntQtdGrp",
     documentation: "Esta função retorna diretamente a quantidade de grupos do Usuário/Grupo passado em aObjeto.",
     type: LSPTypeObject.Method,
@@ -5435,6 +5674,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegEntNome",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5451,6 +5691,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegUsuNomeComp",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5467,6 +5708,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegUsuSetaSenha",
     documentation: "Esta função seta a senha do usuário passado em aObjeto através do parâmetro aNovaSenha retornando o aObjeto(Usuário) com a senha setada.",
     type: LSPTypeObject.Method,
@@ -5484,6 +5726,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegUsuSetaAtivado",
     documentation: "Esta função seta a opção Conta Desabilitada do usuário passado em aObjeto através do parâmetro nOpcao: 1 = Conta Habilitada ou 0 = Conta Desabilitada retornando aObjeto(Usuário) com a opção setada.",
     type: LSPTypeObject.Method,
@@ -5501,6 +5744,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegUsuDatExp",
     type: LSPTypeObject.Method,
     parameters: [
@@ -5512,6 +5756,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetDiaHor",
     documentation: "Função que concatena os dias da semana que contenham o mesmo horário de curso.",
     type: LSPTypeObject.Method,
@@ -5594,6 +5839,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaDistribuicaoEPI",
     documentation: "Retorna item a item dos resultados encontrados em CarregaDistribuicaoEPI. Os itens podem ser navegados através dos parâmetro TipOpe, que retorna o item escolhido na lista, como, primeiro, ultimo, próximo e anterior. A função CarregaDistribuicaoEPI deve sempre ser chamada antes da RetornaDistribuicaoEPI para que os dados sejam carregados anteriormente.",
     type: LSPTypeObject.Method,
@@ -5656,6 +5902,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ValidaPISCPF",
     documentation: "Função para Validar um número de CPF ou PIS.",
     type: LSPTypeObject.Method,
@@ -5678,6 +5925,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "TrocaCadastro",
     documentation: "Esta função tem a funcionalidade de efetuar a troca de cadastro de colaboradores.",
     type: LSPTypeObject.Method,
@@ -5700,6 +5948,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "SegEntExistePorNome",
     documentation: "Essa função verifica pelo nome se o usuário/grupo existe.",
     type: LSPTypeObject.Method,
@@ -5712,6 +5961,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "NumeroParaAlfa",
     documentation: "Converte um número para formato alfanumérico, mantendo as casas decimais e sem arredondar.",
     type: LSPTypeObject.Method,
@@ -5729,6 +5979,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GravaFotoColaboradorEmDisco",
     documentation: "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
     type: LSPTypeObject.Method,
@@ -5771,6 +6022,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "GravaFotoCandidatoEmDisco",
     documentation: "Grava a foto do candidato em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados,  no formato JPEG (*.JPG).",
     type: LSPTypeObject.Method,
@@ -5803,6 +6055,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "RetornaNomeUsuario",
     documentation: "É uma função que permite utilizar os nomes disponíveis no cadastro de propriedades do usuário no SGU - Senior Gerenciador de usuários.",
     type: LSPTypeObject.Method,
@@ -5820,6 +6073,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "ConverteCodificacaoString",
     documentation: 'Esta função altera a codificação de um texto contido em uma variável, onde este texto com a codificação alterada pode ser utilizado para comunicação com web services. Se o sistema não suportar a codificação informada, será emitida a seguinte mensagem: "A codificação X não é suportada. Verifique a documentação".',
     type: LSPTypeObject.Method,
@@ -5845,6 +6099,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Base64Decode",
     documentation: 'Decodifica um valor base64 passado.',
     type: LSPTypeObject.Method,
@@ -5864,6 +6119,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "Base64Encode",
     documentation: 'Codifica para base64 o conteúdo passado.',
     type: LSPTypeObject.Method,
@@ -5883,6 +6139,7 @@ export const templatesInternos: LSPTemplateClass[] = [
     ]
   },
   {
+    system: LSPSeniorSystems.HCM,
     label: "WebCodificaUrl",
     documentation: 'Esta função faz a codificação dos caracteres de forma a concatenar em URLs de forma segura.',
     type: LSPTypeObject.Method,
@@ -5897,6 +6154,66 @@ export const templatesInternos: LSPTemplateClass[] = [
         type: EParameterType.Alfa,
         name: "Retorno",
         documentation: 'Contém o texto codificado',
+        isReturnValue: true
+      }
+    ]
+  }
+];
+
+
+export const templatesInternosERP: LSPTemplateClass[] = [
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "RetDiaSemana",
+    documentation: 'Essa função retorna o dia da semana em forma de número da data de entrada.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Numero,
+        name: "Data",
+        documentation: 'Data que deverá ter o dia da semana identificado.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "Dia",
+        documentation: {
+          kind: 'markdown',
+          value: 'Número que representa do dia da semana:\n'
+            + '- 0: Domingo\n'
+            + '- 1: Segunda-feira\n'
+            + '- 2: Terça-feira\n'
+            + '- 3: Quarta-feira\n'
+            + '- 4: Quinta-feira\n'
+            + '- 5: Sexta-feira\n'
+            + '- 6: Sábado'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "RetornarQtdDiasAno",
+    documentation: 'Esta função tem por objetivo retornar a quantidade de dias do ano tomando como base o ano da data passada. Dependendo do parâmetro **TipoAno**, pode retornar a quantidade de dias do ano considerando ano comercial ou ano civil.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Numero,
+        name: "Data",
+        documentation: 'Data base a ser verificada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "TipoAno",
+        documentation: {
+          kind: 'markdown',
+          value: 'Indica o tipo de ano que se deseja verificar:\n'
+            + '- 0: *Ano Útil* - Verifica a quantidade de dias com referência no ano útil, atualmente é considerado 252\n'
+            + '- 1: *Ano Comercial* - Verifica a quantidade de dias com referência no ano comercial, atualmente é considerado 360\n'
+            + '- 2: *Ano Civil* - Verifica a quantidade de dias com referência no ano civil, considerando ano bissexto, trará 365 ou 366\n'
+        },
         isReturnValue: true
       }
     ]

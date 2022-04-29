@@ -14,13 +14,15 @@ import
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { LSPContext } from './lsp-context';
-import { templatesInternos } from './lsp-internal-templates';
+import { templatesInternosERP, templatesInternosHCM, templatesInternosSENIOR } from './lsp-internal-templates';
 import { LSPParser } from './lsp-parser';
 import { checkSintaxe, parserContent } from './lsp-parser-utils';
+import { LSPSeniorSystems } from './lsp-elements';
 
 interface ILSPSettings
 {
   maxNumberOfProblems: number;
+  seniorSystem: Exclude<LSPSeniorSystems, typeof LSPSeniorSystems.CUSTOMIZADO>;
 }
 
 const connection = createConnection(ProposedFeatures.all);
@@ -29,6 +31,7 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 const defaultSettings: ILSPSettings = {
   maxNumberOfProblems: 1000,
+  seniorSystem: LSPSeniorSystems.SENIOR,
 };
 
 const documentSettings: Map<string, Thenable<ILSPSettings>> = new Map();
@@ -43,7 +46,9 @@ connection.onInitialize((params: InitializeParams) =>
 {
   const capabilities = params.capabilities;
 
-  LSPContext.loadInternalTemplates(templatesInternos);
+  LSPContext.loadInternalTemplates(templatesInternosSENIOR);
+  LSPContext.loadInternalTemplates(templatesInternosHCM);
+  LSPContext.loadInternalTemplates(templatesInternosERP);
 
   hasConfigurationCapability = !!(capabilities.workspace && !!capabilities.workspace.configuration);
   hasWorkspaceFolderCapability = !!(capabilities.workspace && !!capabilities.workspace.workspaceFolders);
@@ -182,7 +187,8 @@ connection.onDidChangeWatchedFiles(_change =>
 connection.onHover(
   async ({ textDocument: { uri }, position }) =>
   {
-    return await LSPContext.getHoverInfo(position, documents.get(uri));
+    const settings = await getDocumentSettings(uri);
+    return await LSPContext.getHoverInfo(position, documents.get(uri), settings.seniorSystem);
   }
 );
 
@@ -190,7 +196,8 @@ connection.onHover(
 connection.onCompletion(
   async (docPos: TextDocumentPositionParams, token): Promise<CompletionItem[]> =>
   {
-    return await LSPContext.getCompletions(docPos, token, documents.get(docPos.textDocument.uri));
+    const settings = await getDocumentSettings(docPos.textDocument.uri);
+    return await LSPContext.getCompletions(docPos, token, documents.get(docPos.textDocument.uri), settings.seniorSystem);
   }
 );
 
@@ -204,7 +211,8 @@ connection.onCompletionResolve(
 connection.onSignatureHelp(
   async (docPos, token) =>
   {
-    return await LSPContext.getSignatureHelp(docPos, token, documents.get(docPos.textDocument.uri));
+    const settings = await getDocumentSettings(docPos.textDocument.uri);
+    return await LSPContext.getSignatureHelp(docPos, token, documents.get(docPos.textDocument.uri), settings.seniorSystem);
   }
 );
 

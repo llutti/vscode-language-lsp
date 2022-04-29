@@ -1,7 +1,7 @@
 import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver/node';
 import { Position, Range } from 'vscode-languageserver-textdocument';
 import { EParameterType, LSPTypeObject } from './lsp-elements';
-import { templatesInternos } from './lsp-internal-templates';
+import { templatesInternosERP, templatesInternosHCM, templatesInternosSENIOR } from './lsp-internal-templates';
 
 type LSPTokenType = 'Texto' | 'Numero' | 'Simbolo' | 'ComentarioLinha' | 'Comando' | 'ComentarioBloco' | 'Identificador'
 	| 'PalavraReservada' | 'VariavelReservada' | 'TipoDado' | 'FuncaoCustomizada';
@@ -29,11 +29,13 @@ const LSPTipoDados: string[] = Object
 const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'EXECSQL', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
 
 const LSPPalavrasReservada: string[] = ['DEFINIRCAMPOS', 'LIMPAR',
-	...templatesInternos
+	...[...templatesInternosSENIOR,
+	...templatesInternosHCM,
+	...templatesInternosERP]
 		.filter(t => (t.type !== LSPTypeObject.Constant) && (t.label.toUpperCase() !== 'PARA'))
 		.map(t => t.label.toUpperCase())].sort();
 
-const LSPVariaveisReservada: string[] = templatesInternos
+const LSPVariaveisReservada: string[] = templatesInternosHCM
 	.filter(t => t.type === LSPTypeObject.Constant)
 	.map(t => t.label.toUpperCase()).sort();
 

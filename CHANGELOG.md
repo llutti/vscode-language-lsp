@@ -2,8 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.1.2] - 13/12/2021
-
+## [1.2.0] - 29/04/2021
+### Adicionado
+- Adicionado recursos (funções, métodos, constantes) do ERP da Senior
+- Novo parâmetro que permite filtar os recursos por sistema. O valor padrão é "**HCM**"
 
 ## [1.1.1] - 03/12/2021
 ### Modificado
