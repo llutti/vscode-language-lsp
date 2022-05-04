@@ -6164,6 +6164,89 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
 export const templatesInternosERP: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.ERP,
+    label: "AbrirTelaSistema",
+    documentation: 'Esta função serve para abrir uma tela do sistema utilizando parâmetros.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "NomeTela",
+        documentation: 'Nome da tela do sistema. Formatos: "F999XXX" ou "F999XXX_ABCD"',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Parametros",
+        documentation: 'Parametros da tela.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "Resultado",
+        documentation: {
+          kind: 'markdown',
+          value: 'Resultado da chamada:\n'
+            + '- 0: Tela foi aberta com sucesso\n'
+            + '- -1: Tela não encontrada. Com o parâmetro global **AbrTelEsp** ativo, qualquer erro de abertura de tela resultará em -1 em vez de apresentar uma mensagem\n'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "CNPJValido",
+    documentation: 'Esta função verifica se um CNPJ informado é realmente válido.\n\n'
+                 + 'Esta validade é determinada pelo do cálculo do dígito verificador através do módulo 11. Deve ser informada as 14 posições do CNPJ, isto é, se ele iniciar com zero deve ser passado todos os zeros a esquerda para uma validação com sucesso.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "NumCNPJ",
+        documentation: 'Número do CNPJ (com 14 digitos)',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Resultado",
+        documentation: {
+          kind: 'markdown',
+          value: 'Retorna se o CNPJ é válido ou não:\n'
+            + '- S: Válido\n'
+            + '- N: Inválido\n'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "CPFValido",
+    documentation: 'Esta função verifica se um CPF informado é realmente válido.\n\n'
+                 + 'Esta validade é determinada pelo do cálculo do dígito verificador através do módulo 11. Deve ser informada as 11 posições do CPF, isto é, se ele iniciar com zero deve ser passado todos os zeros a esquerda para uma validação com sucesso.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "NumCPF",
+        documentation: 'Número do CPF (com 14 digitos)',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Resultado",
+        documentation: {
+          kind: 'markdown',
+          value: 'Retorna se o CPF é válido ou não:\n'
+            + '- S: Válido\n'
+            + '- N: Inválido\n'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
     label: "RetDiaSemana",
     documentation: 'Essa função retorna o dia da semana em forma de número da data de entrada.',
     type: LSPTypeObject.Method,
