@@ -6195,6 +6195,206 @@ export const templatesInternosERP: LSPTemplateClass[] = [
   },
   {
     system: LSPSeniorSystems.ERP,
+    label: "AdicionaComponenteModelo",
+    documentation: 'Essa função adiciona um novo componente no modelo de produção.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "CodMod",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "CodEtg",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "SeqMod",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "CodCmp",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "TipRdm",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "VlrRdm",
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "AdicionaConsumoComponente",
+    documentation: 'Essa função adiciona um consumo para uma derivação do modelo no componente.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "CodMod",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "CodEtg",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "SeqMod",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "CodDer",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "CodCmp",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "DerCmp",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "QtdUti",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "PerPrd",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "QtdFrq",
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "AdicionaEstagioRoteiro",
+    documentation: 'Essa função adiciona um consumo para uma derivação do modelo no componente.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "CodRot",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "CodEtg",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "SfxEtr",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "TmpFix",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "CodSer",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "CodFor",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "FilPro",
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "AdicionaOperacaoManualRoteiro",
+    documentation: 'Essa função cria uma nova sequência de operação no estágio do roteiro.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "pParam",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Retorno",
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
+    label: "AdicionaOperacaoRoteiro",
+    documentation: 'Essa função cria uma nova sequência de operação no estágio do roteiro. Não é necessário informar fornecedor e serviço. Todas as operações adicionadas serão do tipo automática.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "CodRot",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "CodEtg",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "SfxEtr",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "SeqRot",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "SfxSeq",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "CodOpr",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "CodSer",
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "CodSer",
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
     label: "CNPJValido",
     documentation: 'Esta função verifica se um CNPJ informado é realmente válido.\n\n'
                  + 'Esta validade é determinada pelo do cálculo do dígito verificador através do módulo 11. Deve ser informada as 14 posições do CNPJ, isto é, se ele iniciar com zero deve ser passado todos os zeros a esquerda para uma validação com sucesso.',
