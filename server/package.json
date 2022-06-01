@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "vscode-languageserver": "^8.0.1",
-    "vscode-languageserver-textdocument": "^1.0.4"
+    "vscode-languageserver-textdocument": "^1.0.5"
   },
   "devDependencies": {
     "@types/vscode": "^1.67.0"
