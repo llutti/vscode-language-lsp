@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.1] - 28/07/2022
+### Modificado
+- Corrigir classificação do `Inicio`/`Fim` para ter o mesmo tratamento dos `[colchetes]` ou `[parenteses]` ao realçar os "pares".
+
 ## [1.2.0] - 04/05/2021
 ### Adicionado
 - Adicionado recursos (funções, métodos, constantes) do ERP da Senior

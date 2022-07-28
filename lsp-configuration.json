@@ -6,7 +6,7 @@
       ["{", "}"],
       ["[", "]"],
       ["(", ")"],
-      ["Inicio", "Fim"]
+      ["inicio", "fim"]
   ],
   "autoClosingPairs": [
       ["{", "}"],
@@ -17,7 +17,7 @@
   { "open": "`", "close": "`", "notIn": ["string", "comment"] },
   { "open": "@", "close": "@", "notIn": ["string", "comment"] },
   { "open": "/**", "close": " */", "notIn": ["string"] },
-  { "open": "Inicio", "close": " Fim;", "notIn": ["string", "comment"] }
+  { "open": "inicio", "close": " fim;", "notIn": ["string", "comment"] }
   ],
   "surroundingPairs": [
       ["{", "}"],
