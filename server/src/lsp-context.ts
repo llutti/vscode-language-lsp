@@ -1,6 +1,6 @@
 import { CancellationToken, CompletionItem, CompletionItemKind, CompletionParams, Hover, ParameterInformation, SignatureHelp, SignatureInformation, TextDocumentPositionParams, Position } from 'vscode-languageserver/node';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
-import { LSPClass, LSPSeniorSystems, LSPTemplateClass } from './lsp-elements';
+import { LSPClass, LSPSeniorSystems, LSPTemplateClass, LSPTypeObject } from './lsp-elements';
 
 // const tokenSplitter = /([\w\$]+)/g;                     // Captures symbol names
 const symbolMatcher = /[\w]+/g;                            // Like above but non-capturing
@@ -395,14 +395,16 @@ export class LSPContext
       return false;
     }
 
-    const classe = this._classLookup[token];
+    const classe = this._classLookup[token.toLowerCase()];
 
     if (!classe)
     {
       return false;
     }
 
-    return classe?.system === LSPSeniorSystems.CUSTOMIZADO;
+    // console.log(token, classe, (classe?.system === LSPSeniorSystems.CUSTOMIZADO) && (classe?.type === LSPTypeObject.Method));
+
+    return (classe?.system === LSPSeniorSystems.CUSTOMIZADO) && (classe?.type === LSPTypeObject.Method);
   }
 
   public static registerClasses(fileUri: string, classes: LSPClass[]): void
