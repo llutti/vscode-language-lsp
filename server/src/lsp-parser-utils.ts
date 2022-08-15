@@ -1363,6 +1363,9 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
 		// debugExecID++;
+		// console.log(debugExecID);
+		// console.dir(tokenActive, { depth: 4 });
+
 		// if (tokenActive?.value?.startsWith('DEFINIRCAMPOS'))
 		// if (tokenActive?.value === 'DEFINIRCAMPOS')
 		// {
@@ -1686,10 +1689,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				}
 			case 'ComentarioLinha':
 				{
-					// console.log(debugExecID);
-
-					// console.dir(tokenActive, { depth: 4 });
-
 					if (tokenActive?.valid === false)
 					{
 						const diagnostic: Diagnostic = {
