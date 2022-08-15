@@ -109,8 +109,6 @@ class LSPDocumentSemanticTokensProvider implements DocumentSemanticTokensProvide
 
     for (const token of parsedTokens)
     {
-      this.client.info(`${token.text} >> ${token.tokenType}`);
-
       builder.push(
         token.line,
         token.startChar,
