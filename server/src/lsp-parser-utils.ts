@@ -12,6 +12,7 @@ interface LSPToken
 	range: Range;
 	value: string;
 	type: LSPTokenType;
+	valid: boolean;
 }
 
 type LSPTipoBloco = 'Chave' | 'Se' | 'Inicio' | 'Para' | 'Enquanto' | 'Parenteses';
@@ -26,7 +27,7 @@ const LSPTipoDados: string[] = Object
 	.entries(EParameterType)
 	.map(([, value]) => value.toUpperCase()).sort();
 
-const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'ENQUANTO', 'EXECSQL', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
+const LSPComando: string[] = ['CONTINUE', 'DEFINIR', 'END', 'ENQUANTO', 'EXECSQL', 'FIM', 'INICIO', 'FUNCAO', 'PARA', 'PARE', 'SE', 'SENAO', 'VAPARA'].sort();
 
 const LSPPalavrasReservada: string[] = ['DEFINIRCAMPOS', 'LIMPAR',
 	...[...templatesInternosSENIOR,
@@ -59,9 +60,9 @@ const parserContent = (text: string): LSPToken[] =>
 	};
 	let ehIdentificador = false;
 	const conactenarToken = (value: string) => token === null ? token = value : token += value;
-	const addToken = (params: { startToken: Position, endToken: Position, value: string | null, type?: LSPTokenType; }) =>
+	const addToken = (params: { startToken: Position, endToken: Position, value: string | null, type?: LSPTokenType, valid?: boolean }) =>
 	{
-		const { startToken, endToken, value } = params;
+		const { startToken, endToken, value, valid = true } = params;
 		let { type = 'Identificador' } = params;
 
 		if (value !== null)
@@ -98,7 +99,8 @@ const parserContent = (text: string): LSPToken[] =>
 						end: endToken
 					},
 					value: upperValue,
-					type
+					type,
+					valid
 				});
 		}
 	};
@@ -225,24 +227,27 @@ const parserContent = (text: string): LSPToken[] =>
 			// Comentario de Linha
 			if (charValue === '@')
 			{
+				let comentarioValido = false;
+
 				charValue = text.charAt(charPosition);
 				nextCharValue = text.charAt(charPosition + 1);
 
-				while ((charValue !== '@')
+				while ((charPosition < text.length)
 					&& (charValue !== '\r')
 					&& (charValue !== '\n'))
 				{
-					if (charPosition >= text.length)
-					{
-						break;
-					}
-
 					conactenarToken(charValue);
 
 					charPosition++;
 					charLinePosition++;
 					charValue = text.charAt(charPosition);
 					nextCharValue = text.charAt(charPosition + 1);
+
+					if (charValue === '@')
+					{
+						comentarioValido = true;
+						break;
+					}
 				}
 
 				addToken(
@@ -253,7 +258,8 @@ const parserContent = (text: string): LSPToken[] =>
 							character: charLinePosition
 						},
 						value: token,
-						type: 'ComentarioLinha'
+						type: 'ComentarioLinha',
+						valid: comentarioValido
 					});
 				token = null;
 				adicionarSimbolo = false;
@@ -476,7 +482,9 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 	let blocos: Bloco[] = [];
 	const diagnostics: Diagnostic[] = [];
-	const innerTokens = tokens.filter(t => (t.type !== 'ComentarioBloco') && (t.type !== 'ComentarioLinha'));
+	const innerTokens = tokens
+		.filter(t => (t.type !== 'ComentarioBloco'))
+		.filter(t => (t.type !== 'ComentarioLinha') || ((t.type === 'ComentarioLinha') && (t.valid === false)));
 
 	const ehPontoVirgula = (): boolean => (tokenActive?.type === 'Simbolo') && (tokenActive?.value === ';');
 
@@ -533,8 +541,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				break;
 			}
 
-		} while ((token?.type === 'ComentarioBloco')
-			|| (token?.type === 'ComentarioLinha'));
+		} while (token?.type === 'ComentarioBloco');
 
 		return token;
 	};
@@ -1351,9 +1358,11 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	let tokenActive = nextToken();
 	let permiteSenao = false;
 
+	// let debugExecID = 0;
 	while ((position <= innerTokens.length)
 		&& (diagnostics.length < maxNumberOfProblems))
 	{
+		// debugExecID++;
 		// if (tokenActive?.value?.startsWith('DEFINIRCAMPOS'))
 		// if (tokenActive?.value === 'DEFINIRCAMPOS')
 		// {
@@ -1397,7 +1406,8 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								tokenActive = nextToken();
 
-								if (tokenActive?.type !== 'Identificador')
+								if ((tokenActive?.type !== 'Identificador')
+									&& (tokenActive?.type !== 'FuncaoCustomizada'))
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
@@ -1670,6 +1680,24 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								break;
 							}
+					}
+
+					break;
+				}
+			case 'ComentarioLinha':
+				{
+					// console.log(debugExecID);
+
+					// console.dir(tokenActive, { depth: 4 });
+
+					if (tokenActive?.valid === false)
+					{
+						const diagnostic: Diagnostic = {
+							severity: DiagnosticSeverity.Error,
+							range: tokenActive.range,
+							message: `Comentário de Linha não finalizado corretamente.`
+						};
+						diagnostics.push(diagnostic);
 					}
 
 					break;

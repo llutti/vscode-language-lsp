@@ -193,7 +193,7 @@ export class LSPContext
       character: 0,
     };
 
-    let line = document?.getText({ start, end }).substr(0, textDocumentPosition.position.character).trim() || '';
+    let line = document?.getText({ start, end }).substring(0, textDocumentPosition.position.character).trim() || '';
     line = line.replace(braceMatcher, '');
     line = line.replace(bracketMatcher, '');
 
@@ -386,6 +386,23 @@ export class LSPContext
       return { contents: 'CATCH:' + error };
     }
 
+  }
+
+  public static isCustomFunction(token: string): boolean
+  {
+    if (!token)
+    {
+      return false;
+    }
+
+    const classe = this._classLookup[token];
+
+    if (!classe)
+    {
+      return false;
+    }
+
+    return classe?.system === LSPSeniorSystems.CUSTOMIZADO;
   }
 
   public static registerClasses(fileUri: string, classes: LSPClass[]): void

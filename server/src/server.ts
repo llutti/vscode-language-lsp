@@ -2,7 +2,6 @@ import
 {
   createConnection,
   TextDocuments,
-  Diagnostic,
   ProposedFeatures,
   InitializeParams,
   DidChangeConfigurationNotification,
@@ -64,7 +63,6 @@ connection.onInitialize((params: InitializeParams) =>
 
       completionProvider: { resolveProvider: true, triggerCharacters: ['.'] },
       signatureHelpProvider: { triggerCharacters: ['(', ','] },
-
       hoverProvider: {}
     }
   };
@@ -98,6 +96,49 @@ connection.onInitialized(() =>
 
   LSPParser.initialise().then();
 });
+
+interface UnencodedSemanticToken
+{
+  text: string;
+  line: number;
+  startChar: number;
+  length: number;
+  tokenType: string;
+  tokenModifiers: string[];
+}
+
+async function handleSemanticTokens(params: {
+  textDocument: TextDocument
+}): Promise<UnencodedSemanticToken[]>
+{
+  const { textDocument } = params;
+  // const settings = await getDocumentSettings(textDocument.uri);
+  const text = documents.get(textDocument.uri)?.getText() ?? '';
+  const tokens = parserContent(text);
+  const result: UnencodedSemanticToken[] = [];
+
+  tokens
+    .filter(token => token.type === 'Identificador')
+    .filter(token => LSPContext.isCustomFunction(token?.value) === true)
+    .forEach(
+      token =>
+      {
+        result
+          .push(
+            {
+              text: token.value,
+              line: token.range.start.line,
+              startChar: token.range.start.character,
+              length: token.value.length,
+              tokenType: token.type,
+              tokenModifiers: [],
+            });
+      });
+
+  return result;
+}
+
+connection.onRequest('getSemanticTokens', handleSemanticTokens);
 
 connection.onDidChangeConfiguration(change =>
 {
@@ -163,13 +204,6 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void>
 {
   const settings = await getDocumentSettings(textDocument.uri);
 
-  // Se maxNumberOfProblems for ZERO nao validar nada
-  if (settings.maxNumberOfProblems === 0)
-  {
-    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: [] });
-    return;
-  }
-
   const text = textDocument.getText();
   const tokens = parserContent(text);
   const diagnostics = checkSintaxe(settings.maxNumberOfProblems, tokens);
@@ -178,11 +212,11 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void>
   connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: [...diagnostics] });
 }
 
-connection.onDidChangeWatchedFiles(_change =>
-{
-  // Monitored files have change in VSCode
-  connection.console.log('We received an file change event');
-});
+// connection.onDidChangeWatchedFiles(_change =>
+// {
+//   // Monitored files have change in VSCode
+//   connection.console.log('We received an file change event');
+// });
 
 connection.onHover(
   async ({ textDocument: { uri }, position }) =>
