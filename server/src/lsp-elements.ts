@@ -1,4 +1,3 @@
-import { hrtime } from 'process';
 import { MarkupContent } from 'vscode-languageserver/node';
 
 export enum EParameterType

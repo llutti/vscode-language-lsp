@@ -19,7 +19,6 @@ const Patterns = {
 
 export class LSPParser
 {
-  private static wipClass: LSPClass;
   private static isReady: PromiseLike<any> = Promise.resolve();
 
   public static initialise(): PromiseLike<any>
