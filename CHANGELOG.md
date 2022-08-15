@@ -5,6 +5,7 @@ Alterações realizadas na extensão.
 ## [1.2.2] - 15/08/2022
 ### Adicionado
 - Verificar sintaxe dos comentários de linha.
+- Destacar (colorir) funções customizadas.
 
 ## [1.2.1] - 28/07/2022
 ### Modificado
