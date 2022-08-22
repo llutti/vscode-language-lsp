@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.3] - 22/08/2022
+### Modificado
+- Não gerar erro quando encontra um comentário de linha sem conteúdo (`@@`).
+
 ## [1.2.2] - 15/08/2022
 ### Adicionado
 - Verificar sintaxe dos comentários de linha.

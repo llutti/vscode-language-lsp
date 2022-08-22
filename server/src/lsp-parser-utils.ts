@@ -231,22 +231,29 @@ const parserContent = (text: string): LSPToken[] =>
 
 				charValue = text.charAt(charPosition);
 				nextCharValue = text.charAt(charPosition + 1);
-
-				while ((charPosition < text.length)
-					&& (charValue !== '\r')
-					&& (charValue !== '\n'))
+				if (charValue === '@')
 				{
-					conactenarToken(charValue);
-
-					charPosition++;
-					charLinePosition++;
-					charValue = text.charAt(charPosition);
-					nextCharValue = text.charAt(charPosition + 1);
-
-					if (charValue === '@')
+					comentarioValido = true;
+					token = '';
+				}
+				else
+				{
+					while ((charPosition < text.length)
+						&& (charValue !== '\r')
+						&& (charValue !== '\n'))
 					{
-						comentarioValido = true;
-						break;
+						conactenarToken(charValue);
+
+						charPosition++;
+						charLinePosition++;
+						charValue = text.charAt(charPosition);
+						nextCharValue = text.charAt(charPosition + 1);
+
+						if (charValue === '@')
+						{
+							comentarioValido = true;
+							break;
+						}
 					}
 				}
 
