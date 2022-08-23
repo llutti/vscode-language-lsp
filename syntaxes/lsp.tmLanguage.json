@@ -31,7 +31,7 @@
 					"match": "\\b(?i:(e|ou))\\b"
 				},
 				{
-					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|lista|numero))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|lista|numero))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"name": "storage.type.prototype.lsp"
@@ -49,7 +49,7 @@
 					}
 				},
 				{
-					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(funcao))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(funcao))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"name": "storage.type.prototype.lsp"
@@ -67,7 +67,7 @@
 					}
 				},
 				{
-					"match": "\\b(?i:(funcao))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(funcao))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"name": "storage.type.function.lsp"
@@ -78,7 +78,7 @@
 					}
 				},
 				{
-					"match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?i:(end))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?i:(end))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"patterns": [
@@ -96,7 +96,7 @@
 					}
 				},
 				{
-					"match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"patterns": [
@@ -140,7 +140,7 @@
 				},
 				{
 					"name": "variable.other.readwrite.lsp",
-					"match": "@?[_[:alpha:]][_[:alnum:]]*"
+					"match": "[_[:alpha:]][_[:alnum:]]*"
 				}
 			]
 		},
