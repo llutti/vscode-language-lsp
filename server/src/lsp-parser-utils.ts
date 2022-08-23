@@ -488,10 +488,19 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	}
 
 	let blocos: Bloco[] = [];
-	const diagnostics: Diagnostic[] = [];
-	const innerTokens = tokens
-		.filter(t => (t.type !== 'ComentarioBloco'))
-		.filter(t => (t.type !== 'ComentarioLinha') || ((t.type === 'ComentarioLinha') && (t.valid === false)));
+	const diagnostics: Diagnostic[] = tokens
+		.filter(t => (t.type === 'ComentarioLinha') && (t.valid === false))
+		.map<Diagnostic>(
+			token =>
+			{
+				return {
+					severity: DiagnosticSeverity.Error,
+					range: token.range,
+					message: 'Comentário de Linha não finalizado corretamente.'
+				};
+			});
+
+	const innerTokens = tokens.filter(t => (t.type !== 'ComentarioBloco') && (t.type !== 'ComentarioLinha'));
 
 	const ehPontoVirgula = (): boolean => (tokenActive?.type === 'Simbolo') && (tokenActive?.value === ';');
 
@@ -1690,20 +1699,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 								break;
 							}
-					}
-
-					break;
-				}
-			case 'ComentarioLinha':
-				{
-					if (tokenActive?.valid === false)
-					{
-						const diagnostic: Diagnostic = {
-							severity: DiagnosticSeverity.Error,
-							range: tokenActive.range,
-							message: `Comentário de Linha não finalizado corretamente.`
-						};
-						diagnostics.push(diagnostic);
 					}
 
 					break;
