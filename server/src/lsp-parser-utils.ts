@@ -1389,7 +1389,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
 										range: tokenActive.range,
-										message: `Identificado inválido`
+										message: `Identificador inválido`
 									};
 									diagnostics.push(diagnostic);
 
