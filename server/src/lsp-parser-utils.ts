@@ -568,7 +568,9 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 		while (innerTokens[position]?.value === '.')
 		{
+			oldToken = tokenActive;
 			tokenActive = nextToken(); // Ponto
+			oldToken = tokenActive;
 			tokenActive = nextToken(); // Identificador
 		}
 
@@ -589,6 +591,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			return false;
 		}
 
+		oldToken = tokenActive;
 		tokenActive = nextToken();
 
 		let sintaxeFuncaoValida = true;
@@ -609,6 +612,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 			if (tokenActive?.value === 'END')
 			{
+				oldToken = tokenActive;
 				tokenActive = nextToken();
 			}
 
@@ -734,70 +738,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			}
 			return false;
 		}
-
-		// if (tokenActive?.type === 'Numero')
-		// {
-		// 	oldToken = tokenActive;
-		// 	tokenActive = nextToken();
-
-		// 	while (position <= innerTokens.length)
-		// 	{
-		// 		if ((tokenActive?.type !== 'Simbolo')
-		// 			|| (tokenActive?.value !== '+'))
-		// 		{
-		// 			const diagnostic: Diagnostic = {
-		// 				severity: DiagnosticSeverity.Error,
-		// 				range: tokenActive.range,
-		// 				message: `Era esperado um "+".`
-		// 			};
-		// 			diagnostics.push(diagnostic);
-
-		// 			return false;
-		// 		}
-
-		// 		oldToken = tokenActive;
-		// 		tokenActive = nextToken();
-
-		// 		if ((tokenActive?.type === 'Simbolo')
-		// 			&& (tokenActive?.value === '('))
-		// 		{
-		// 			adicionarBloco('Parenteses', tokenActive.range);
-
-		// 			oldToken = tokenActive;
-		// 			tokenActive = nextToken();
-
-		// 			if (checkSintaxeExpressao() === false)
-		// 			{
-		// 				return false;
-		// 			}
-
-		// 			continue;
-		// 		}
-
-		// 		if ((tokenActive?.type === 'Simbolo')
-		// 			&& (tokenActive?.value === ')'))
-		// 		{
-		// 			return removerBloco('Parenteses');
-		// 		}
-
-		// 		if ((tokenActive?.type !== 'Texto')
-		// 			&& (tokenActive?.type !== 'Identificador'))
-		// 		{
-		// 			const diagnostic: Diagnostic = {
-		// 				severity: DiagnosticSeverity.Error,
-		// 				range: tokenActive.range,
-		// 				message: `Era esperado um "Texto" ou uma "Variável".`
-		// 			};
-		// 			diagnostics.push(diagnostic);
-
-		// 			return false;
-		// 		}
-
-		// 		oldToken = tokenActive;
-		// 		tokenActive = nextToken();
-		// 	}
-		// }
-
 
 		return true;
 	};
@@ -1400,6 +1340,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					{
 						case 'DEFINIR':
 							{
+								oldToken = tokenActive;
 								tokenActive = nextToken();
 
 								let tipoVariavel = tokenActive?.value;
@@ -1423,6 +1364,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									}
 								}
 
+								oldToken = tokenActive;
 								tokenActive = nextToken();
 
 								if ((tokenActive?.type !== 'Identificador')
@@ -1478,7 +1420,22 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							{
 								adicionarBloco('Inicio', tokenActive.range);
 
-								break;
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								if ((tokenActive?.type === 'Comando')
+									&& (tokenActive?.value === 'FIM'))
+								{
+									const diagnostic: Diagnostic = {
+										severity: DiagnosticSeverity.Information,
+										range: oldToken.range,
+										message: 'Bloco INICIO/FIM vazio.',
+										code: '0123'
+									};
+									diagnostics.push(diagnostic);
+								}
+
+								continue;
 							}
 						case 'FIM':
 							{
@@ -1783,7 +1740,22 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							{
 								adicionarBloco('Chave', tokenActive.range);
 
-								break;
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								if ((tokenActive?.type === 'Simbolo')
+									&& (tokenActive?.value === '}'))
+								{
+									const diagnostic: Diagnostic = {
+										severity: DiagnosticSeverity.Information,
+										range: oldToken.range,
+										message: 'Bloco {/} vazio.',
+										code: '0124'
+									};
+									diagnostics.push(diagnostic);
+								}
+
+								continue;
 							}
 						case '}':
 							{
@@ -1829,22 +1801,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 					break;
 				}
-			// case 'Identificador':
-			// 	{
-			// 		oldToken = tokenActive;
-			// 		tokenActive = nextToken();
-
-			// 		if ((tokenActive?.type === 'Simbolo')
-			// 			&& (tokenActive?.value === '='))
-			// 		{
-			// 			oldToken = tokenActive;
-			// 			tokenActive = nextToken();
-
-			// 			checkSintaxeExpressao();
-			// 		}
-
-			// 		continue;
-			// 	}
 		}
 
 		oldToken = tokenActive;

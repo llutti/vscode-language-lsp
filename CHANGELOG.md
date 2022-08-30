@@ -2,7 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.3] - 22/08/2022
+## [1.2.3] - 30/08/2022
+### Adicionado
+- Informar que a existência de bloco `Inicio`/`Fim` ou `{chaves}` vazio.
+
 ### Modificado
 - Não gerar erro quando encontra um comentário de linha sem conteúdo (`@@`).
 
