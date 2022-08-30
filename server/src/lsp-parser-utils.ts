@@ -235,6 +235,14 @@ const parserContent = (text: string): LSPToken[] =>
 				{
 					comentarioValido = true;
 					token = '';
+
+					charPosition++;
+					charLinePosition++;
+					startToken = {
+						line: lineNumber,
+						character: charLinePosition
+					};
+
 				}
 				else
 				{
@@ -252,6 +260,14 @@ const parserContent = (text: string): LSPToken[] =>
 						if (charValue === '@')
 						{
 							comentarioValido = true;
+
+							charPosition++;
+							charLinePosition++;
+							startToken = {
+								line: lineNumber,
+								character: charLinePosition
+							};
+
 							break;
 						}
 					}
