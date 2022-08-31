@@ -31,7 +31,7 @@
 					"match": "\\b(?i:(e|ou))\\b"
 				},
 				{
-					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|lista|numero))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
+					"match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|lista|numero|tabela))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
 					"captures": {
 						"1": {
 							"name": "storage.type.prototype.lsp"
@@ -136,7 +136,7 @@
 				},
 				{
 					"name": "keyword.other.lsp",
-					"match": "\\b(?i:(definir|alfa|cursor|data|funcao|lista|numero))\\b"
+					"match": "\\b(?i:(definir|alfa|cursor|data|funcao|lista|numero|tabela))\\b"
 				},
 				{
 					"name": "variable.other.readwrite.lsp",
@@ -190,7 +190,7 @@
 			]
 		},
 		"type-builtin": {
-			"match": "\\b(?i:(alfa|cursor|data|funcao|lista|numero))\\b",
+			"match": "\\b(?i:(alfa|cursor|data|funcao|lista|numero|tabela))\\b",
 			"captures": {
 				"1": {
 					"name": "support.type.primitive.lsp"
