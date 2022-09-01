@@ -93,20 +93,20 @@ export class LSPContext
             insertText: 'EfetivarCampos();'
           },
           { label: 'Excluir', kind: CompletionItemKind.Method, insertText: 'Excluir();' },
-          { label: 'FDA', kind: CompletionItemKind.Method, insertText: 'FDA' },
+          { label: 'FDA', kind: CompletionItemKind.Function, insertText: 'FDA' },
           { label: 'Gravar', kind: CompletionItemKind.Method, insertText: 'Gravar();' },
-          { label: 'IDA', kind: CompletionItemKind.Method, insertText: 'IDA' },
+          { label: 'IDA', kind: CompletionItemKind.Function, insertText: 'IDA' },
           { label: 'Inserir', kind: CompletionItemKind.Method, insertText: 'Inserir();' },
           { label: 'Limpar', kind: CompletionItemKind.Method, insertText: 'Limpar();' },
-          { label: 'NumReg', kind: CompletionItemKind.Method, insertText: 'NumReg;' },
+          { label: 'NumReg', kind: CompletionItemKind.Function, insertText: 'NumReg;' },
           { label: 'Primeiro', kind: CompletionItemKind.Method, insertText: 'Primeiro();' },
           { label: 'Proximo', kind: CompletionItemKind.Method, insertText: 'Proximo();' },
-          { label: 'QtdRegistros', kind: CompletionItemKind.Method, insertText: 'QtdRegistros;' },
+          { label: 'QtdRegistros', kind: CompletionItemKind.Function, insertText: 'QtdRegistros;' },
           {
             label: 'SetaNumReg',
             documentation: {
               kind: 'markdown',
-              value: 'Este procedimento ter como objetivo posicionar a lista de maneira absoluta. A ordem do registro é influenciado pela chave que estiver ativa no momento da chamada.\n\nA posição da lista é a ordem do registro **menos 1** (*A posição é base Zero*).'
+              value: 'Este procedimento tem como objetivo posicionar a lista de maneira absoluta. A ordem do registro é influenciado pela chave que estiver ativa no momento da chamada.\n\nA posição da lista é a ordem do registro **menos 1** (*A posição é base Zero*).'
             },
             kind: CompletionItemKind.Method,
             insertText: 'SetaNumReg(${1});',
@@ -114,9 +114,9 @@ export class LSPContext
           },
           {
             label: 'SetarChave',
-            documentation: 'Coloca a lista em estado de edição de chave para que seja possível a manipulação dos valores da chave. Quando configurados estes valores será possível procurar os registro que possuem a chave informada. Isto será feito através do comando VaiParaChave que será visto a seguir.\nApaga os valores que estiverem na chave no momento da chamada. Para manter os valores da chave use o comando EditarChave.',
+            documentation: 'Coloca a lista em estado de edição de chave para que seja possível a manipulação dos valores da chave. Quando configurados estes valores, será possível procurar os registro que possuem a chave informada. Isto será feito através do comando VaiParaChave que será visto a seguir.\nApaga os valores que estiverem na chave no momento da chamada. Para manter os valores da chave use o comando EditarChave.',
             kind: CompletionItemKind.Method,
-            insertText: 'SetarChave(${1});',
+            insertText: 'SetarChave();',
             insertTextFormat: 2 // Indica que é SnippetString
           },
           { label: 'Ultimo', kind: CompletionItemKind.Method, insertText: 'Ultimo();' },
