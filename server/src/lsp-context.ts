@@ -352,7 +352,7 @@ export class LSPContext
       }
 
       let hoverContents = `\`\`\`lsp\n${classe.signature()}\n\`\`\``;
-      if (classe.documentation)
+      if (classe?.documentation)
       {
         hoverContents = hoverContents + '\n---\n';
         if (typeof classe.documentation !== 'string')
@@ -363,6 +363,11 @@ export class LSPContext
         {
           hoverContents = hoverContents + classe.documentation?.toString();
         }
+      }
+
+      if (classe?.link)
+      {
+        hoverContents = hoverContents + `\n\n[Documentação Oficial](${classe.link})`;
       }
 
       const range: Range = {

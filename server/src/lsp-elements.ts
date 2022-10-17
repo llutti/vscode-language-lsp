@@ -42,6 +42,7 @@ export interface LSPTemplateClass
   documentation?: string | MarkupContent;
   parameters?: LSPParameter[];
   insertText?: string;
+  link?: string;
 }
 
 export class LSPClass
@@ -50,6 +51,7 @@ export class LSPClass
   public label: string;
   public fileUri: string;
   public documentation?: string | MarkupContent;
+  public link?: string;
   public type?: LSPTypeObject;
   public parameters?: LSPParameter[];
   public insertText?: string;
@@ -86,6 +88,7 @@ export class LSPClass
     novaClasse.type = template.type;
     novaClasse.parameters = template.parameters;
     novaClasse.insertText = template.insertText;
+    novaClasse.link = template.link;
 
     return novaClasse;
   }

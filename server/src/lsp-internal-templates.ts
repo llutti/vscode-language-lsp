@@ -181,6 +181,713 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   },
   {
     system: LSPSeniorSystems.HCM,
+    label: "addJSONInJSONArray",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função adiciona um novo JSON a um JSONArray (lista de múltiplos JSON) passado por parâmetro.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addjsoninjsonarray.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSON, contendo uma lista (array) de elementos JSON, onde será adicionado um novo elemento.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor no formato JSONArray contendo o JSON adicionado.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "addKeyAndDecimalValueInJSON",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função adiciona um elemento com valor numérico decimal no JSON passado por parâmetro.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyanddecimalvalueinjson.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser adicionada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "valor",
+        documentation: 'Valor numérico decimal correspondente à chave adicionada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor no formato JSON com o elemento adicionado.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "addKeyAndIntegerValueInJSON",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função adiciona um elemento com valor numérico inteiro no JSON passado por parâmetro.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandintegervalueinjson.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser adicionada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "valor",
+        documentation: 'Valor Alfa correspondente à chave adicionada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor no formato JSON com o elemento adicionado.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "addKeyAndTDateTimeValueInJSON",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função adiciona um elemento com valor do tipo data no JSON passado por parâmetro. A data será formatada no padrão ISO 8601.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandtdatetimevalueinjson.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser adicionada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Data,
+        name: "valor",
+        documentation: 'Data correspondente à chave adicionada. Pode também ser informado um valor decimal corresponde a dias e horas, contando a partir de 31/12/1900.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor no formato JSON com o elemento adicionado.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "addKeyAndTDateTimeValueInJSON",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função adiciona um elemento com valor do tipo data no JSON passado por parâmetro. A data será formatada conforme máscara passada por parâmetro.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandtdatetimevaluemaskinjson.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser adicionada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Data,
+        name: "valor",
+        documentation: 'Data correspondente à chave adicionada. Pode também ser informado um valor decimal corresponde a dias e horas, contando a partir de 31/12/1900.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "mask",
+        documentation: {
+          kind: 'markdown',
+          value: 'Máscara usada para formatar a data passada por parâmetro.\n'
+               + '| Máscara | Descrição |\n'
+               + '| ------- | --------- |\n'
+               + '| dd | Identificação do dia |\n'
+               + '| MM | Identificação do mês |\n'
+               + '| yy | Identificação do ano com dois dígitos |\n'
+               + '| yyyy | Identificação do ano com quatro dígitos |\n'
+               + '| / | Separador de data |\n'
+               + '| - | Separador de data |\n'
+               + '| . | Separador de data |\n'
+               + '| T | Separador entre data e hora |\n'
+               + '| HH | Identificação da hora |\n'
+               + '| mm | Identificação de minutos |\n'
+               + '| ss | Identificação de segundos |\n'
+               + '| : | Separador de hora |\n'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor no formato JSON com o elemento adicionado.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "addKeyAndStringValueInJSON",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função adiciona um elemento com valor Alfa no JSON passado por parâmetro.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandstringvalueinjson.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser adicionada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "valor",
+        documentation: 'Valor numérico inteiro correspondente à chave adicionada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor no formato JSON com o elemento adicionado.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayDateTime",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna uma data na posição especificada do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydatetime.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde será extraído um valor Data na posição indicada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "mask",
+        documentation: {
+          kind: 'markdown',
+          value: 'Máscara do formato de data identificada no JSON.\n'
+               + '| Máscara | Descrição |\n'
+               + '| ------- | --------- |\n'
+               + '| dd | Identificação do dia |\n'
+               + '| MM | Identificação do mês |\n'
+               + '| yy | Identificação do ano com dois dígitos |\n'
+               + '| yyyy | Identificação do ano com quatro dígitos |\n'
+               + '| / | Separador de data |\n'
+               + '| - | Separador de data |\n'
+               + '| . | Separador de data |\n'
+               + '| T | Separador entre data e hora |\n'
+               + '| HH | Identificação da hora |\n'
+               + '| mm | Identificação de minutos |\n'
+               + '| ss | Identificação de segundos |\n'
+               + '| : | Separador de hora |\n'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Data,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayDateTimeByTag",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna uma data na posição e chave especificadas do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydatetimebytag.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde será extraído um valor Data associado à chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSONArray.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "mask",
+        documentation: {
+          kind: 'markdown',
+          value: 'Máscara do formato de data identificada no JSON.\n'
+               + '| Máscara | Descrição |\n'
+               + '| ------- | --------- |\n'
+               + '| dd | Identificação do dia |\n'
+               + '| MM | Identificação do mês |\n'
+               + '| yy | Identificação do ano com dois dígitos |\n'
+               + '| yyyy | Identificação do ano com quatro dígitos |\n'
+               + '| / | Separador de data |\n'
+               + '| - | Separador de data |\n'
+               + '| . | Separador de data |\n'
+               + '| T | Separador entre data e hora |\n'
+               + '| HH | Identificação da hora |\n'
+               + '| mm | Identificação de minutos |\n'
+               + '| ss | Identificação de segundos |\n'
+               + '| : | Separador de hora |\n'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Data,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayDecimal",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor numérico decimal na posição especificada do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydecimal.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde será extraído um valor numérico na posição indicada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayDecimalByTag",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor numérico decimal na posição e chave especificadas do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydecimalbytag.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde será extraído um valor numérico associado a chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSONArray.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayInteger",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor numérico inteiro na posição especificada do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarrayinteger.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde será extraído um valor numérico na posição indicada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayIntegerByTag",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor numérico inteiro na posição e chave especificadas do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarrayintegerbytag.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde o valor numérico será extraído.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSONArray.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayString",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor Alfa na posição especificada do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraystring.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde será extraído um valor Alfa na posição indicada.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getItemJSONArrayStringByTag",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor Alfa na posição e chave especificadas do JSONArray.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraystringbytag.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, de onde será extraído um valor Alfa associado à chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSONArray.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "index",
+        documentation: 'Posição do JSONArray, sendo a primeira posição de valor 0 (zero).',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima na posição requisitada.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getJSONArrayLength",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna o tamanho do JSONArray passado por parâmetro.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonarraylength.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSonArray",
+        documentation: 'Conteúdo no formato JSONArray, que terá seu tamanho medido.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "retorno",
+        documentation: 'Retorno com o tamanho (quantidade de elementos) do JSONArray.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getJSONArrayObj",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um objeto do tipo JSONArray (matriz contida no JSON) associado a uma chave do JSON.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonarrayobj.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON, de onde será extraído o JSONArray associado à chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor no formato JSONArray identificado pela chave acima.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getJSONDateTime",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna uma data associada a uma chave.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsondatetime.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON de onde será extraído o valor de um elemento associado à chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "mask",
+        documentation: {
+          kind: 'markdown',
+          value: 'Máscara do formato de data identificada no JSON.\n'
+               + '| Máscara | Descrição |\n'
+               + '| ------- | --------- |\n'
+               + '| dd | Identificação do dia |\n'
+               + '| MM | Identificação do mês |\n'
+               + '| yy | Identificação do ano com dois dígitos |\n'
+               + '| yyyy | Identificação do ano com quatro dígitos |\n'
+               + '| / | Separador de data |\n'
+               + '| - | Separador de data |\n'
+               + '| . | Separador de data |\n'
+               + '| T | Separador entre data e hora |\n'
+               + '| HH | Identificação da hora |\n'
+               + '| mm | Identificação de minutos |\n'
+               + '| ss | Identificação de segundos |\n'
+               + '| : | Separador de hora |\n'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Data,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getJSONInteger",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor numérico inteiro associado a uma chave do JSON.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsoninteger.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON de onde será extraído o valor de um elemento associado à chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getJSONObj",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um JSON contido em outro JSON e associado a uma chave.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonobj.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON, de onde será extraído outro JSON contido.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSON contido.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno no formato JSON identificado pela chave acima.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getJSONString",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor Alfa associado a uma chave do JSON.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonstring.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON de onde será extraído o valor de um elemento associado a chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "getJSONDecimal",
+    type: LSPTypeObject.Method,
+    documentation: 'Esta função retorna um valor numérico decimal associado a uma chave.',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsondecimal.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "jSon",
+        documentation: 'Conteúdo no formato JSON de onde será extraído o valor de um elemento associado a chave.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "chave",
+        documentation: 'Chave a ser identificada no JSON.',
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "retorno",
+        documentation: 'Retorno do valor identificado pela chave acima.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
     label: "WInsSelecaodoBanco",
     type: LSPTypeObject.Method,
     parameters: [
@@ -6397,7 +7104,7 @@ export const templatesInternosERP: LSPTemplateClass[] = [
     system: LSPSeniorSystems.ERP,
     label: "CNPJValido",
     documentation: 'Esta função verifica se um CNPJ informado é realmente válido.\n\n'
-                 + 'Esta validade é determinada pelo do cálculo do dígito verificador através do módulo 11. Deve ser informada as 14 posições do CNPJ, isto é, se ele iniciar com zero deve ser passado todos os zeros a esquerda para uma validação com sucesso.',
+      + 'Esta validade é determinada pelo do cálculo do dígito verificador através do módulo 11. Deve ser informada as 14 posições do CNPJ, isto é, se ele iniciar com zero deve ser passado todos os zeros a esquerda para uma validação com sucesso.',
     type: LSPTypeObject.Method,
     parameters: [
       {
@@ -6423,7 +7130,7 @@ export const templatesInternosERP: LSPTemplateClass[] = [
     system: LSPSeniorSystems.ERP,
     label: "CPFValido",
     documentation: 'Esta função verifica se um CPF informado é realmente válido.\n\n'
-                 + 'Esta validade é determinada pelo do cálculo do dígito verificador através do módulo 11. Deve ser informada as 11 posições do CPF, isto é, se ele iniciar com zero deve ser passado todos os zeros a esquerda para uma validação com sucesso.',
+      + 'Esta validade é determinada pelo do cálculo do dígito verificador através do módulo 11. Deve ser informada as 11 posições do CPF, isto é, se ele iniciar com zero deve ser passado todos os zeros a esquerda para uma validação com sucesso.',
     type: LSPTypeObject.Method,
     parameters: [
       {
