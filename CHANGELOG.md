@@ -2,6 +2,14 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.4] - 18/01/2023
+### Adicionado
+- Funções da SENIOR para manipulação da Barra de progresso dos relatórios
+  - `OcultaBarraProgressoRelatorio`
+  - `AtualizaBarraProgreso`
+  - `IniciaBarraProgresso`
+  - `FinalizaBarraProgresso`.
+
 ## [1.2.3] - 17/10/2022
 ### Adicionado
 - Informar que a existência de bloco `Inicio`/`Fim` ou `{chaves}` vazio.

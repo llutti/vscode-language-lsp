@@ -132,6 +132,111 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       }
     ]
   },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "OcultaBarraProgressoRelatorio",
+    documentation: {
+      kind: 'markdown',
+      value: 'Responsável por ocultar a barra de progresso padrão durante a execução de relatórios. Em conjunto com as funções IniciaBarraProgresso, AtualizaBarraProgresso, FinalizaBarraProgresso, permite ao usuário criar e controlar uma barra de progresso.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Ocultar",
+        documentation: {
+          kind: 'markdown',
+          value: 'Ocultar a barra de progresso durante a execução de relatórios.\n'
+            + '- SIM: Ocultar a barra\n'
+            + '- Qualquer valor diferente de "SIM", a barra de progresso padrão será exibida normalmente.\n'
+            + '**ATENÇÃO**: O *valor* deverá ser escrito em Maiúsculo.'
+        },
+        isReturnValue: false
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "IniciaBarraProgresso",
+    documentation: {
+      kind: 'markdown',
+      value: 'Inicia a barra de progresso utilizada para mostrar ao usuário o andamento de um processo mais extenso.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Numero,
+        name: "VlrMax",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável numérica que recebe o valor máximo da barra de progresso.'
+        },
+        isReturnValue: false
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "AtualizaBarraProgresso",
+    documentation: {
+      kind: 'markdown',
+      value: 'Atualiza as mensagens apresentadas na tela da barra de progresso..'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Texto1",
+        documentation: {
+          kind: 'markdown',
+          value: 'O valor que será mostrado na **primeira linha** da barra de progresso.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Texto2",
+        documentation: {
+          kind: 'markdown',
+          value: 'O valor que será mostrado na **segunda linha** da barra de progresso.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Incrementa",
+        documentation: {
+          kind: 'markdown',
+          value: 'Indica se incrementa ou não a barra de progresso, deve ser utilizado SIM ou NÃO.\n'
+            + '\n'
+            + '**ATENÇÃO**: O *valor* deverá ser escrito em Maiúsculo.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "Incrementa",
+        documentation: {
+          kind: 'markdown',
+          value: 'Indica o tipo de atualização dos parâmetros acima.\n'
+            + '- 1: Atualiza apenas o campo Texto1\n'
+            + '- 2: Atualiza apenas o campo Texto2\n'
+            + '- 3: Atualiza todos os campos\n'
+            + '- 4: Não atualiza o texto dos campos\n'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "Sintaxe:FinalizaBarraProgresso",
+    documentation: {
+      kind: 'markdown',
+      value: 'Finaliza a tela de barra de progresso.'
+    },
+    type: LSPTypeObject.Method,
+  },
 ];
 
 export const templatesInternosHCM: LSPTemplateClass[] = [
@@ -336,20 +441,20 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
         documentation: {
           kind: 'markdown',
           value: 'Máscara usada para formatar a data passada por parâmetro.\n'
-               + '| Máscara | Descrição |\n'
-               + '| ------- | --------- |\n'
-               + '| dd | Identificação do dia |\n'
-               + '| MM | Identificação do mês |\n'
-               + '| yy | Identificação do ano com dois dígitos |\n'
-               + '| yyyy | Identificação do ano com quatro dígitos |\n'
-               + '| / | Separador de data |\n'
-               + '| - | Separador de data |\n'
-               + '| . | Separador de data |\n'
-               + '| T | Separador entre data e hora |\n'
-               + '| HH | Identificação da hora |\n'
-               + '| mm | Identificação de minutos |\n'
-               + '| ss | Identificação de segundos |\n'
-               + '| : | Separador de hora |\n'
+            + '| Máscara | Descrição |\n'
+            + '| ------- | --------- |\n'
+            + '| dd | Identificação do dia |\n'
+            + '| MM | Identificação do mês |\n'
+            + '| yy | Identificação do ano com dois dígitos |\n'
+            + '| yyyy | Identificação do ano com quatro dígitos |\n'
+            + '| / | Separador de data |\n'
+            + '| - | Separador de data |\n'
+            + '| . | Separador de data |\n'
+            + '| T | Separador entre data e hora |\n'
+            + '| HH | Identificação da hora |\n'
+            + '| mm | Identificação de minutos |\n'
+            + '| ss | Identificação de segundos |\n'
+            + '| : | Separador de hora |\n'
         },
         isReturnValue: false
       },
@@ -419,20 +524,20 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
         documentation: {
           kind: 'markdown',
           value: 'Máscara do formato de data identificada no JSON.\n'
-               + '| Máscara | Descrição |\n'
-               + '| ------- | --------- |\n'
-               + '| dd | Identificação do dia |\n'
-               + '| MM | Identificação do mês |\n'
-               + '| yy | Identificação do ano com dois dígitos |\n'
-               + '| yyyy | Identificação do ano com quatro dígitos |\n'
-               + '| / | Separador de data |\n'
-               + '| - | Separador de data |\n'
-               + '| . | Separador de data |\n'
-               + '| T | Separador entre data e hora |\n'
-               + '| HH | Identificação da hora |\n'
-               + '| mm | Identificação de minutos |\n'
-               + '| ss | Identificação de segundos |\n'
-               + '| : | Separador de hora |\n'
+            + '| Máscara | Descrição |\n'
+            + '| ------- | --------- |\n'
+            + '| dd | Identificação do dia |\n'
+            + '| MM | Identificação do mês |\n'
+            + '| yy | Identificação do ano com dois dígitos |\n'
+            + '| yyyy | Identificação do ano com quatro dígitos |\n'
+            + '| / | Separador de data |\n'
+            + '| - | Separador de data |\n'
+            + '| . | Separador de data |\n'
+            + '| T | Separador entre data e hora |\n'
+            + '| HH | Identificação da hora |\n'
+            + '| mm | Identificação de minutos |\n'
+            + '| ss | Identificação de segundos |\n'
+            + '| : | Separador de hora |\n'
         },
         isReturnValue: false
       },
@@ -475,20 +580,20 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
         documentation: {
           kind: 'markdown',
           value: 'Máscara do formato de data identificada no JSON.\n'
-               + '| Máscara | Descrição |\n'
-               + '| ------- | --------- |\n'
-               + '| dd | Identificação do dia |\n'
-               + '| MM | Identificação do mês |\n'
-               + '| yy | Identificação do ano com dois dígitos |\n'
-               + '| yyyy | Identificação do ano com quatro dígitos |\n'
-               + '| / | Separador de data |\n'
-               + '| - | Separador de data |\n'
-               + '| . | Separador de data |\n'
-               + '| T | Separador entre data e hora |\n'
-               + '| HH | Identificação da hora |\n'
-               + '| mm | Identificação de minutos |\n'
-               + '| ss | Identificação de segundos |\n'
-               + '| : | Separador de hora |\n'
+            + '| Máscara | Descrição |\n'
+            + '| ------- | --------- |\n'
+            + '| dd | Identificação do dia |\n'
+            + '| MM | Identificação do mês |\n'
+            + '| yy | Identificação do ano com dois dígitos |\n'
+            + '| yyyy | Identificação do ano com quatro dígitos |\n'
+            + '| / | Separador de data |\n'
+            + '| - | Separador de data |\n'
+            + '| . | Separador de data |\n'
+            + '| T | Separador entre data e hora |\n'
+            + '| HH | Identificação da hora |\n'
+            + '| mm | Identificação de minutos |\n'
+            + '| ss | Identificação de segundos |\n'
+            + '| : | Separador de hora |\n'
         },
         isReturnValue: false
       },
@@ -753,20 +858,20 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
         documentation: {
           kind: 'markdown',
           value: 'Máscara do formato de data identificada no JSON.\n'
-               + '| Máscara | Descrição |\n'
-               + '| ------- | --------- |\n'
-               + '| dd | Identificação do dia |\n'
-               + '| MM | Identificação do mês |\n'
-               + '| yy | Identificação do ano com dois dígitos |\n'
-               + '| yyyy | Identificação do ano com quatro dígitos |\n'
-               + '| / | Separador de data |\n'
-               + '| - | Separador de data |\n'
-               + '| . | Separador de data |\n'
-               + '| T | Separador entre data e hora |\n'
-               + '| HH | Identificação da hora |\n'
-               + '| mm | Identificação de minutos |\n'
-               + '| ss | Identificação de segundos |\n'
-               + '| : | Separador de hora |\n'
+            + '| Máscara | Descrição |\n'
+            + '| ------- | --------- |\n'
+            + '| dd | Identificação do dia |\n'
+            + '| MM | Identificação do mês |\n'
+            + '| yy | Identificação do ano com dois dígitos |\n'
+            + '| yyyy | Identificação do ano com quatro dígitos |\n'
+            + '| / | Separador de data |\n'
+            + '| - | Separador de data |\n'
+            + '| . | Separador de data |\n'
+            + '| T | Separador entre data e hora |\n'
+            + '| HH | Identificação da hora |\n'
+            + '| mm | Identificação de minutos |\n'
+            + '| ss | Identificação de segundos |\n'
+            + '| : | Separador de hora |\n'
         },
         isReturnValue: false
       },
