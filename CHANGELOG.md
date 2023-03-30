@@ -2,13 +2,30 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.5] - 30/03/2023
+### Adicionado
+- Funções da SENIOR para integração com o **LDAP** e/ou **AD**.
+  - `ADAdicionaAtributoEntidade`
+  - `ADAlteraEntidade`
+  - `ADAlteraEntidadeDN`
+  - `ADAlteraEntidadePorAtributos`
+  - `ADAtribuiSenha`
+  - `ADBuscaEntidade`
+  - `ADBuscaEntidadeEx`
+  - `ADCriaUsuario`
+  - `ADDeletaEntidade`
+  - `ADDeletaValorAtributo`
+  - `ADFinalizaAlteracao`
+  - `ADIniciaAlteracao`
+  - `ADPegaValorAtributoEntidade`
+
 ## [1.2.4] - 18/01/2023
 ### Adicionado
-- Funções da SENIOR para manipulação da Barra de progresso dos relatórios
+- Funções da SENIOR para manipulação da Barra de progresso dos relatórios.
   - `OcultaBarraProgressoRelatorio`
   - `AtualizaBarraProgreso`
   - `IniciaBarraProgresso`
-  - `FinalizaBarraProgresso`.
+  - `FinalizaBarraProgresso`
 
 ## [1.2.3] - 17/10/2022
 ### Adicionado
