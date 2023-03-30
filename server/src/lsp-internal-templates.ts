@@ -180,7 +180,7 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
     label: "AtualizaBarraProgresso",
     documentation: {
       kind: 'markdown',
-      value: 'Atualiza as mensagens apresentadas na tela da barra de progresso..'
+      value: 'Atualiza as mensagens apresentadas na tela da barra de progresso.'
     },
     type: LSPTypeObject.Method,
     parameters: [
@@ -236,6 +236,487 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       value: 'Finaliza a tela de barra de progresso.'
     },
     type: LSPTypeObject.Method,
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADBuscaEntidade",
+    documentation: {
+      kind: 'markdown',
+      value: 'Busca uma entidade no servidor **LDAP** ou **AD**. Se nenhuma entidade for encontrada, a função retornará **0** (zero). Se apenas uma entidade for encontrada, a função retornará **1** e a entidade será retornada na variável EndObjReturn. Se mais de uma entidade for encontrada, a função irá lançar um erro.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Filter",
+        documentation: {
+          kind: 'markdown',
+          value: 'Filtro de busca para encontrar a entidade desejada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "EndObjReturn",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável de retorno do objeto da entidade encontrada. Se mais de uma ou nenhuma entidade for encontrada, nada será retornado neste parâmetro.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADAdicionaAtributoEntidade",
+    documentation: {
+      kind: 'markdown',
+      value: 'Adiciona atributo em uma entidade no servidor **LDAP** ou **AD**.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "EntObj",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto da entidade a ser alterada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Attr",
+        documentation: {
+          kind: 'markdown',
+          value: 'Atributo que deseja-se adicionar. Mesmo que o atributo já exista, será adicionado, caso o servidor não permitir mais de um valor no atributo informado, uma exceção do servidor será lançada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "NewValue",
+        documentation: {
+          kind: 'markdown',
+          value: 'Novo valor para o atributo.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que a entidade foi alterado. **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADAlteraEntidade",
+    documentation: {
+      kind: 'markdown',
+      value: 'Altera entidade no servidor **LDAP** ou **AD**.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "EntObj",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto da entidade a ser alterada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Attr",
+        documentation: {
+          kind: 'markdown',
+          value: 'Atributo que deseja-se alterar. Se o atributo não existir, ele será criado.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "NewValue",
+        documentation: {
+          kind: 'markdown',
+          value: 'Novo valor para o atributo.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que a entidade foi alterado. **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADAlteraEntidadeDN",
+    documentation: {
+      kind: 'markdown',
+      value: 'Alterar o **BaseDN** da entidade.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "BaseDN",
+        documentation: {
+          kind: 'markdown',
+          value: '**BaseDN**, com o nome da entidade.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "NewBaseDN",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nova **baseDN**, com o nome da entidade.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que a entidade foi alterado. **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADAlteraEntidadePorAtributos",
+    documentation: {
+      kind: 'markdown',
+      value: 'Altera entidade no servidor **LDAP** ou **AD** por atributos.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Filter",
+        documentation: {
+          kind: 'markdown',
+          value: 'Filtro de busca da entidade a ser alterado. Se mais de uma ou nenhuma entidade for encontrada, **uma exceção será lançada**.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Attr",
+        documentation: {
+          kind: 'markdown',
+          value: 'Atributo que deseja-se alterar. Se o atributo não existir, ele será criado.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "NewValue",
+        documentation: {
+          kind: 'markdown',
+          value: 'Novo valor para o atributo.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que a entidade foi alterado. **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "EndObjReturn",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável de retorno do objeto da entidade alterada. O conteúdo desta variável pode ser passado para outras funções relacionadas.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADAtribuiSenha",
+    documentation: {
+      kind: 'markdown',
+      value: 'Muda a senha de usuário. Para executar esta função é necessário uma conexão segura (**SSL**).'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "UserObj",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto do usuário a ser alterado.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Pwd",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nova senha para o usuário.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que o usuário foi alterado.  **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADBuscaEntidadeEx",
+    documentation: {
+      kind: 'markdown',
+      value: 'Busca uma entidade no servidor **LDAP** ou **AD**, retornando a quantidade de entidades encontradas.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Filter",
+        documentation: {
+          kind: 'markdown',
+          value: 'Filtro de busca para encontrar a entidade desejada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "EndObjReturn",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável de retorno do objeto da entidade encontrada. Se mais de uma ou nenhuma entidade for encontrada, nada será retornado neste parâmetro.'
+        },
+        isReturnValue: true
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "EndMsgErro",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável de retorno da mensagem de erro, se houver. Quando mais de uma entidade for encontrada, esta variável conterá o valor "Mais de uma entidade foi encontrada.".'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADCriaUsuario",
+    documentation: {
+      kind: 'markdown',
+      value: 'Cria usuário no servidor **LDAP** ou **AD**. Alguns atributos são pré-definidos na **Central de configurações** > **Opções de segurança** > **LDAP e NTLM**, guia **Integração**.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "UserName",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nome do usuário que será criado. Caso o usuário já existir no servidor, uma exceção do servidor será lançada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "OU",
+        documentation: {
+          kind: 'markdown',
+          value: 'Unidade organizacional que o usuário será criado.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que o usuário foi alterado.  **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "UserObjReturn",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável de retorno do objeto do usuário criado. O conteúdo desta variável pode ser passado para outras funções relacionadas.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADDeletaEntidade",
+    documentation: {
+      kind: 'markdown',
+      value: 'Exclui uma entidade do servidor **LDAP** ou **AD**.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Filter",
+        documentation: {
+          kind: 'markdown',
+          value: 'Filtro de busca da entidade a ser alterado. Se mais de uma ou nenhuma entidade for encontrada, uma exceção será lançada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que a entidade foi excluída. **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADDeletaValorAtributo",
+    documentation: {
+      kind: 'markdown',
+      value: 'Exclui o valor de um atributo de uma entidade, removendo também o atributo correspondente. Existem atributos com vários valores, neste caso, esta função pode ser bastante útil, removendo apenas o valor desejado.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "EntObj",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto da entidade a ser alterada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Attr",
+        documentation: {
+          kind: 'markdown',
+          value: 'Atributo que deseja-se deletar. Se o atributo não existir, nada será feito.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Value",
+        documentation: {
+          kind: 'markdown',
+          value: 'Valor do atributo que deseja-se deletar. Se o valor não existir, nada será feito. Se for passado **""**, todos os valores do atributo serão excluídos. Quando o campo é obrigatório, o servidor retorna uma mensagem.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Motive",
+        documentation: {
+          kind: 'markdown',
+          value: 'Motivo que a entidade foi alterado. **Não é permitido passar ""**.'
+        },
+        isReturnValue: false
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADFinalizaAlteracao",
+    documentation: {
+      kind: 'markdown',
+      value: 'Libera conexão com o servidor **LDAP** ou **AD**. Quando a função **ADIniciaAlteracao** é chamada, obrigatoriamente este deverá ser chamada no final da execução da regra.'
+    },
+    type: LSPTypeObject.Method,
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADIniciaAlteracao",
+    documentation: {
+      kind: 'markdown',
+      value: 'Cria conexão com o servidor **LDAP** ou **AD**, assim otimizando as próximas ações no servidor. Sem a chamada desta função, cada função chamada para efetuar integração **LDAP** ou **AD** irá criar a conexão e finalizar.'
+    },
+    type: LSPTypeObject.Method,
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ADPegaValorAtributoEntidade",
+    documentation: {
+      kind: 'markdown',
+      value: 'Busca o valor de um atributo de entidade no servidor **LDAP** ou **AD**. Se o atributo não for encontrado, a função retornará **0 (zero)**.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "EntObj",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto da entidade a ser alterada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Attr",
+        documentation: {
+          kind: 'markdown',
+          value: 'AAtributo que deseja-se ler o valor. Se o atributo não for encontrado, a função retornará **0 (zero)**.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Index",
+        documentation: {
+          kind: 'markdown',
+          value: 'Índice do valor, como é possível que uma entidade tenha vários valores para um atributo, é necessário informar este parâmetro. Se for passado um índice inexistente, o parâmetro **ValueReturn** terá o conteúdo **""**.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "ValueReturn",
+        documentation: {
+          kind: 'markdown',
+          value: 'Valor do atributo lido.'
+        },
+        isReturnValue: true
+      }
+    ]
   },
 ];
 
