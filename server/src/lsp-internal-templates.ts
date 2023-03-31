@@ -694,7 +694,7 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
         name: "Attr",
         documentation: {
           kind: 'markdown',
-          value: 'AAtributo que deseja-se ler o valor. Se o atributo não for encontrado, a função retornará **0 (zero)**.'
+          value: 'Atributo que deseja-se ler o valor. Se o atributo não for encontrado, a função retornará **0 (zero)**.'
         },
         isReturnValue: false
       },
@@ -718,6 +718,7 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       }
     ]
   },
+
 ];
 
 export const templatesInternosHCM: LSPTemplateClass[] = [
@@ -6913,16 +6914,57 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegEntLe",
+    documentation: {
+      kind: 'markdown',
+      value: 'Lê uma entidade (ou seja, um usuário ou grupo) a partir de seu código.'
+    },
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
         name: "nCodEnt",
+        documentation: {
+          kind: 'markdown',
+          value: 'Código da entidade (usuário ou grupo) que será lido.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Entidade correspondente ao código.'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegEntLePorNome",
+    documentation: {
+      kind: 'markdown',
+      value: 'Lê uma entidade (ou seja, um usuário ou grupo) a partir de seu nome.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aNome",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nome do usuário ou grupo a ser lido.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Entidade correspondente ao código.'
+        },
         isReturnValue: true
       }
     ]
@@ -6930,12 +6972,16 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegEntEhUsuario",
-    documentation: "Esta função indica se o Usuário/Grupo passado em aObjeto é um usuário. Se sim o resultado direto da função é 1 senão será 0.",
-    type: LSPTypeObject.Method,
+    documentation: "Indica se o Usuário/Grupo passado em aObjeto é um usuário. Se sim o resultado direto da função é 1 senão será 0.",
+    type: LSPTypeObject.Function,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário/grupo a ser verificado se é um usuário.'
+        },
         isReturnValue: false
       }
     ]
@@ -6943,12 +6989,16 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegUsuAtivado",
-    documentation: "Esta função indica se o acesso ao usuário passado em aObjeto está desativado. Se sim o resultado direto da função é 1 senão será 0.",
-    type: LSPTypeObject.Method,
+    documentation: "Indica se o acesso ao usuário passado em aObjeto está desativado. Se sim o resultado direto da função é 1 senão será 0.",
+    type: LSPTypeObject.Function,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário no qual será indicado se seu acesso está desativado.'
+        },
         isReturnValue: false
       }
     ]
@@ -6956,12 +7006,16 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegEntQtdGrp",
-    documentation: "Esta função retorna diretamente a quantidade de grupos do Usuário/Grupo passado em aObjeto.",
-    type: LSPTypeObject.Method,
+    documentation: "Retorna diretamente a quantidade de grupos do Usuário/Grupo passado em aObjeto.",
+    type: LSPTypeObject.Function,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário/grupo no qual será retornado a data de criação do mesmo.'
+        },
         isReturnValue: false
       }
     ]
@@ -6969,16 +7023,28 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegEntNome",
+    documentation: {
+      kind: 'markdown',
+      value: 'Retorna o nome do usuário/grupo.'
+    },
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto que deseja retornar o nome.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "aNome",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nome que foi retornado do respectivo objeto.'
+        },
         isReturnValue: true
       }
     ]
@@ -6986,16 +7052,28 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegUsuNomeComp",
+    documentation: {
+      kind: 'markdown',
+      value: 'Retorna em o nome completo do usuário/grupo.'
+    },
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário/grupo no qual receberá seu nome completo.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "aNome",
+        documentation: {
+          kind: 'markdown',
+          value: 'Retorna o nome completo do usuário/grupo.'
+        },
         isReturnValue: true
       }
     ]
@@ -7003,17 +7081,25 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegUsuSetaSenha",
-    documentation: "Esta função seta a senha do usuário passado em aObjeto através do parâmetro aNovaSenha retornando o aObjeto(Usuário) com a senha setada.",
+    documentation: "Seta a senha do usuário e o retorna com a senha definida.",
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário que será setada a senha.'
+        },
         isReturnValue: true
       },
       {
         type: EParameterType.Alfa,
         name: "aNovaSenha",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nova senha a ser setada para o usuário.'
+        },
         isReturnValue: false
       }
     ]
@@ -7021,17 +7107,30 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegUsuSetaAtivado",
-    documentation: "Esta função seta a opção Conta Desabilitada do usuário passado em aObjeto através do parâmetro nOpcao: 1 = Conta Habilitada ou 0 = Conta Desabilitada retornando aObjeto(Usuário) com a opção setada.",
+    documentation: {
+      kind: 'markdown',
+      value: 'Seta a opção **Conta Desabilitada** do usuário e o retorna com a opção definida.'
+    },
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário a ser setada a opção.'
+        },
         isReturnValue: true
       },
       {
         type: EParameterType.Numero,
-        name: "nOpcao [0:Desabilitar | 1: Habilitar]",
+        name: "nOpcao",
+        documentation: {
+          kind: 'markdown',
+          value: 'Define se a conta do usuário estará habilitada:\n'
+            + '- 0: Desabilitar\n'
+            + '- 1: Habilitar'
+        },
         isReturnValue: false
       }
     ]
@@ -7039,13 +7138,226 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "SegUsuDatExp",
+    documentation: {
+      kind: 'markdown',
+      value: 'Retorna a data de expiração da conta do usuário.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário no qual será retornada a data da expiração de sua conta.'
+        },
+        isReturnValue: false
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegUsuCria",
+    documentation: {
+      kind: 'markdown',
+      value: 'Cria um novo Usuário, retornando o Usuário com todas as suas especificações.'
+    },
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
         name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário novo a ser criado e retornado.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegEntSetaNome",
+    documentation: {
+      kind: 'markdown',
+      value: 'Após criar o usuário/grupo, esta função seta o nome deste usuário/grupo e o retorna com o nome definido.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário/grupo que será setado o **novo nome**.'
+        },
         isReturnValue: false
-      }
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "aNovoNome",
+        documentation: {
+          kind: 'markdown',
+          value: 'Novo nome a ser setado.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegUsuSetaNomeComp",
+    documentation: {
+      kind: 'markdown',
+      value: 'Seta o Nome Completo do Usuário e o retorna com o nome completo definido.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário que será setado o nome.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "aNome",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nome a ser setado.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegEntSetaDesc",
+    documentation: {
+      kind: 'markdown',
+      value: 'Seta a descrição do usuário/grupo e o retorna com a descrição definida.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário ou grupo no qual será descrito.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "aDescricao",
+        documentation: {
+          kind: 'markdown',
+          value: 'Descrição do usuário ou grupo.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegEntCodigo",
+    documentation: {
+      kind: 'markdown',
+      value: 'Retorna o código do usuário/grupo.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto no qual o respectivo código é retornado.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegUsuSetaGrpAcs",
+    documentation: {
+      kind: 'markdown',
+      value: 'Seta um grupo de acesso do usuário e o retorna o usuário com o grupo de acesso definido.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário com o novo grupo setado.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "nValor",
+        documentation: {
+          kind: 'markdown',
+          value: 'Código de um grupo de usuários.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegEntAdicGrp",
+    documentation: {
+      kind: 'markdown',
+      value: 'Adiciona uma permissão de acesso ao grupo para o usuário e o retorna com a nova permissão.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Usuário a ser adicionado a nova permissão de acesso a grupos.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "nCodGrp",
+        documentation: {
+          kind: 'markdown',
+          value: 'Código de um grupo de usuários.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "SegEntGrava",
+    documentation: {
+      kind: 'markdown',
+      value: 'Após todas as funções de criação e manipulação de opções de usuários/grupos esta função deve ser chamada para efetivar a criação do usuário/grupo.'
+    },
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "aObjeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Entidade a ser gravada.'
+        },
+        isReturnValue: false
+      },
     ]
   },
   {
@@ -7450,7 +7762,63 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
         isReturnValue: true
       }
     ]
-  }
+  },
+  {
+    system: LSPSeniorSystems.HCM,
+    label: "AssociaUsuColab",
+    documentation: {
+      kind: 'markdown',
+      value: 'Associar um usuário a um colaborador. Se a associação for efetuada com sucesso, retornará 1. Caso contrário, retornará 0.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Numero,
+        name: "nNumEmp",
+        documentation: {
+          kind: 'markdown',
+          value: 'Código da empresa.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "nTipCol",
+        documentation: {
+          kind: 'markdown',
+          value: 'Código do tipo de colaborador'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "nNumCad",
+        documentation: {
+          kind: 'markdown',
+          value: 'Cadastro do colaborador'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "nCriUsu",
+        documentation: {
+          kind: 'markdown',
+          value: 'Código da opção para abrangência do usuário associado ao colaborador (Conforme lista R034USU.CriUsu).'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "nCodUsu",
+        documentation: {
+          kind: 'markdown',
+          value: 'Código do usuário que deverá ser associado ao colaborador.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
 ];
 
 

@@ -2,6 +2,20 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.6] - 31/03/2023
+### Adicionado
+- Funções da SENIOR para gestão de usuários no SGU.
+  - `AssociaUsuColab`
+  - `SegEntAdicGrp`
+  - `SegEntCodigo`
+  - `SegEntGrava`
+  - `SegEntLePorNome`
+  - `SegEntSetaNome`
+  - `SegEntSetaDesc`
+  - `SegUsuCria`
+  - `SegUsuSetaGrpAcs`
+  - `SegUsuSetaNomeComp`
+
 ## [1.2.5] - 30/03/2023
 ### Adicionado
 - Funções da SENIOR para integração com o **LDAP** e/ou **AD**.
