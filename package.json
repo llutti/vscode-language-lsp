@@ -6,7 +6,7 @@
     "publisher": "llutti",
     "icon": "images/icon.png",
     "license": "LICENSE.md",
-    "homepage": "https://github.com/llutti/vscode-language-lsp/blob/master/README.md",
+    "homepage": "https://github.com/llutti/vscode-language-lsp/blob/main/README.md",
     "repository": {
         "type": "git",
         "url": "https://github.com/llutti/vscode-language-lsp.git"
