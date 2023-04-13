@@ -2,7 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.6] - 31/03/2023
+## [1.2.6] - 13/04/2023
+### Corrigir
+- Corrigir o link para as imagens do Readme.
+
 ### Adicionado
 - Funções da SENIOR para gestão de usuários no SGU.
   - `AssociaUsuColab`
