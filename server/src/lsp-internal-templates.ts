@@ -758,6 +758,35 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       }
     ]
   },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "GeraSenha",
+    documentation: {
+      kind: 'markdown',
+      value: 'Retorna uma sequência de caracteres alfanuméricos aleatoriamente.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Numero,
+        name: "TamanhoSenha",
+        documentation: {
+          kind: 'markdown',
+          value: 'Quantidade de caracteres que a senha possuirá.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "SenhaGerada",
+        documentation: {
+          kind: 'markdown',
+          value: 'Sequência de caracteres alfanuméricos aleatórios, a senha em si.'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
 ];
 
 export const templatesInternosHCM: LSPTemplateClass[] = [

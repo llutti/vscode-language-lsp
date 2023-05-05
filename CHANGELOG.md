@@ -6,6 +6,7 @@ Alterações realizadas na extensão.
 ### Adicionado
 - Funções da SENIOR:
   - `ExecProg`
+  - `GeraSenha`
 
 ## [1.2.6] - 13/04/2023
 ### Corrigir
