@@ -725,7 +725,7 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       kind: 'markdown',
       value: 'Permite a execução de aplicativos durante a execução de regras.'
     },
-    type: LSPTypeObject.Function,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -765,7 +765,7 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       kind: 'markdown',
       value: 'Retorna uma sequência de caracteres alfanuméricos aleatoriamente.'
     },
-    type: LSPTypeObject.Function,
+    type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
