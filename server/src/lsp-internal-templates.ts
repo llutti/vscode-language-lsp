@@ -718,7 +718,46 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       }
     ]
   },
-
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ExecProg",
+    documentation: {
+      kind: 'markdown',
+      value: 'Permite a execução de aplicativos durante a execução de regras.'
+    },
+    type: LSPTypeObject.Function,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "nomePrograma",
+        documentation: {
+          kind: 'markdown',
+          value: 'Caminho do diretório e nome do programa a ser executado com sua extensão.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "parametroComando",
+        documentation: {
+          kind: 'markdown',
+          value: 'Parâmetros que podem ser incluídos na execução do programa.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "Esperar",
+        documentation: {
+          kind: 'markdown',
+          value: 'Indica o comportamento da execução da regra:\n'
+            + '- 0: Executa o programa e ao mesmo tempo continua a execução da regra;\n'
+            + '- 1: Aguarda a execução do programa para prosseguir com a execução da regra\n'
+        },
+        isReturnValue: false
+      }
+    ]
+  },
 ];
 
 export const templatesInternosHCM: LSPTemplateClass[] = [

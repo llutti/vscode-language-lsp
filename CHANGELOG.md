@@ -2,6 +2,11 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.7] - 05/05/2023
+### Adicionado
+- Funções da SENIOR:
+  - `ExecProg`
+
 ## [1.2.6] - 13/04/2023
 ### Corrigir
 - Corrigir o link para as imagens do Readme.
