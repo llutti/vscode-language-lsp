@@ -751,8 +751,8 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
         documentation: {
           kind: 'markdown',
           value: 'Indica o comportamento da execução da regra:\n'
-            + '- 0: Executa o programa e ao mesmo tempo continua a execução da regra;\n'
-            + '- 1: Aguarda a execução do programa para prosseguir com a execução da regra\n'
+            + '- **0** : Executa o programa e ao mesmo tempo continua a execução da regra;\n'
+            + '- **1** : Aguarda a execução do programa para prosseguir com a execução da regra\n'
         },
         isReturnValue: false
       }
