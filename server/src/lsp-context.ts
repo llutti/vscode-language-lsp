@@ -254,7 +254,6 @@ export class LSPContext
       return null;
     }
 
-    let sigLabel = '';
     let callOuter = line.substring(0, charIndex).toLowerCase();
     const pos = callOuter.indexOf('=');
 
@@ -290,8 +289,7 @@ export class LSPContext
       }
     }
 
-    sigLabel = funcao.signature();
-
+    const sigLabel = funcao.signature();
     const lspSignature: SignatureInformation = {
       label: sigLabel,
       documentation: funcao?.documentation,

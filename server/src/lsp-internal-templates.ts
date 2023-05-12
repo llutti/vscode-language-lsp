@@ -43,7 +43,7 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
         {
           kind: 'markdown',
           value: 'Especificar o formato com que o resultado da conversão deverá ser apresentado.\n'
-            + 'Para pesquisar os valores válidos, acessar a [documentação da Senior](https://documentacao.senior.com.br/tecnologia/6.2.35/index.htm#cbds/mascara.htm)'
+            + 'Para pesquisar os valores válidos, acessar a [documentação da Senior](https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#cbds/mascara.htm)'
         },
         isReturnValue: false
       }
@@ -718,7 +718,77 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       }
     ]
   },
-
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "ExecProg",
+    documentation: {
+      kind: 'markdown',
+      value: 'Permite a execução de aplicativos durante a execução de regras.'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/gerais/execprog.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "nomePrograma",
+        documentation: {
+          kind: 'markdown',
+          value: 'Caminho do diretório e nome do programa a ser executado com sua extensão.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "parametroComando",
+        documentation: {
+          kind: 'markdown',
+          value: 'Parâmetros que podem ser incluídos na execução do programa.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Numero,
+        name: "Esperar",
+        documentation: {
+          kind: 'markdown',
+          value: 'Indica o comportamento da execução da regra:\n'
+            + '- **0** : Executa o programa e ao mesmo tempo continua a execução da regra;\n'
+            + '- **1** : Aguarda a execução do programa para prosseguir com a execução da regra\n'
+        },
+        isReturnValue: false
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "GeraSenha",
+    documentation: {
+      kind: 'markdown',
+      value: 'Retorna uma sequência de caracteres alfanuméricos aleatoriamente.'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/gerais/gerasenha.htm',
+    parameters: [
+      {
+        type: EParameterType.Numero,
+        name: "TamanhoSenha",
+        documentation: {
+          kind: 'markdown',
+          value: 'Quantidade de caracteres que a senha possuirá.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "SenhaGerada",
+        documentation: {
+          kind: 'markdown',
+          value: 'Sequência de caracteres alfanuméricos aleatórios, a senha em si.'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
 ];
 
 export const templatesInternosHCM: LSPTemplateClass[] = [
@@ -771,7 +841,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "addJSONInJSONArray",
     type: LSPTypeObject.Method,
     documentation: 'Esta função adiciona um novo JSON a um JSONArray (lista de múltiplos JSON) passado por parâmetro.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addjsoninjsonarray.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/addjsoninjsonarray.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -798,7 +868,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "addKeyAndDecimalValueInJSON",
     type: LSPTypeObject.Method,
     documentation: 'Esta função adiciona um elemento com valor numérico decimal no JSON passado por parâmetro.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyanddecimalvalueinjson.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/addkeyanddecimalvalueinjson.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -831,7 +901,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "addKeyAndIntegerValueInJSON",
     type: LSPTypeObject.Method,
     documentation: 'Esta função adiciona um elemento com valor numérico inteiro no JSON passado por parâmetro.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandintegervalueinjson.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/addkeyandintegervalueinjson.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -864,7 +934,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "addKeyAndTDateTimeValueInJSON",
     type: LSPTypeObject.Method,
     documentation: 'Esta função adiciona um elemento com valor do tipo data no JSON passado por parâmetro. A data será formatada no padrão ISO 8601.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandtdatetimevalueinjson.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/addkeyandtdatetimevalueinjson.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -897,7 +967,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "addKeyAndTDateTimeValueInJSON",
     type: LSPTypeObject.Method,
     documentation: 'Esta função adiciona um elemento com valor do tipo data no JSON passado por parâmetro. A data será formatada conforme máscara passada por parâmetro.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandtdatetimevaluemaskinjson.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/addkeyandtdatetimevaluemaskinjson.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -953,7 +1023,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "addKeyAndStringValueInJSON",
     type: LSPTypeObject.Method,
     documentation: 'Esta função adiciona um elemento com valor Alfa no JSON passado por parâmetro.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/addkeyandstringvalueinjson.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/addkeyandstringvalueinjson.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -986,7 +1056,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayDateTime",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna uma data na posição especificada do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydatetime.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarraydatetime.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1036,7 +1106,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayDateTimeByTag",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna uma data na posição e chave especificadas do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydatetimebytag.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarraydatetimebytag.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1092,7 +1162,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayDecimal",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor numérico decimal na posição especificada do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydecimal.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarraydecimal.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1119,7 +1189,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayDecimalByTag",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor numérico decimal na posição e chave especificadas do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraydecimalbytag.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarraydecimalbytag.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1152,7 +1222,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayInteger",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor numérico inteiro na posição especificada do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarrayinteger.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarrayinteger.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1179,7 +1249,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayIntegerByTag",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor numérico inteiro na posição e chave especificadas do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarrayintegerbytag.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarrayintegerbytag.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1212,7 +1282,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayString",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor Alfa na posição especificada do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraystring.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarraystring.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1239,7 +1309,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getItemJSONArrayStringByTag",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor Alfa na posição e chave especificadas do JSONArray.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getitemjsonarraystringbytag.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getitemjsonarraystringbytag.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1272,7 +1342,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getJSONArrayLength",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna o tamanho do JSONArray passado por parâmetro.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonarraylength.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getjsonarraylength.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1293,7 +1363,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getJSONArrayObj",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um objeto do tipo JSONArray (matriz contida no JSON) associado a uma chave do JSON.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonarrayobj.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getjsonarrayobj.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1320,7 +1390,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getJSONDateTime",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna uma data associada a uma chave.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsondatetime.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getjsondatetime.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1370,7 +1440,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getJSONInteger",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor numérico inteiro associado a uma chave do JSON.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsoninteger.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getjsoninteger.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1397,7 +1467,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getJSONObj",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um JSON contido em outro JSON e associado a uma chave.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonobj.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getjsonobj.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1424,7 +1494,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getJSONString",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor Alfa associado a uma chave do JSON.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsonstring.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getjsonstring.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
@@ -1451,7 +1521,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
     label: "getJSONDecimal",
     type: LSPTypeObject.Method,
     documentation: 'Esta função retorna um valor numérico decimal associado a uma chave.',
-    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.1/customizacoes/funcoes/getjsondecimal.htm',
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/customizacoes/funcoes/getjsondecimal.htm',
     parameters: [
       {
         type: EParameterType.Alfa,
