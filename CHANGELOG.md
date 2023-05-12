@@ -2,7 +2,7 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.7] - 05/05/2023
+## [1.2.7] - 12/05/2023
 ### Adicionado
 - Funções da SENIOR:
   - `ExecProg`
