@@ -112,85 +112,87 @@ export function splitAndSanitize(rawCode: string): string[]
   let state = SanitizationState.BASE;
   let sanitizedLine: string, char: string, nextChar: string, stringDelineator: string, i: number, l: number;
 
-  rawLines.forEach(rawLine =>
-  {
-    sanitizedLine = '';
-    state = state === SanitizationState.STRING ? SanitizationState.BASE : state;
-    nextChar = rawLine[0];
-
-    charLoop: for (i = 0, l = rawLine.length; i < l; i++)
-    {
-      char = nextChar;
-      nextChar = rawLine[i + 1];
-
-      stateSwitch: switch (state)
+  rawLines
+    .forEach(
+      rawLine =>
       {
-        case SanitizationState.BASE:
-          charSwitch: switch (char)
-          {
-            case `'`:
-            case `"`:
-              state = SanitizationState.STRING;
-              stringDelineator = char;
-              break charSwitch;
-            case `/`:
-              if (nextChar === `/`)
-              {
-                sanitizedLine += `//`;
-                break charLoop;
-              }
-              if (nextChar === `*`)
-              {
-                sanitizedLine += `/*`;
-                i++;
-                state = SanitizationState.BLOCK_COMMENT;
-                break stateSwitch;
-              }
-              break charSwitch;
-            case `@`:
-              state = SanitizationState.LINE_COMMENT;
-              break stateSwitch;
-          }
-          sanitizedLine += char;
-          break stateSwitch;
+        sanitizedLine = '';
+        state = state === SanitizationState.STRING ? SanitizationState.BASE : state;
+        nextChar = rawLine[0];
 
-        case SanitizationState.STRING:
-          charSwitch: switch (char)
+        charLoop: for (i = 0, l = rawLine.length; i < l; i++)
+        {
+          char = nextChar;
+          nextChar = rawLine[i + 1];
+
+          stateSwitch: switch (state)
           {
-            case `\\`:
-              sanitizedLine += ` `;
-              i++;
-              break charSwitch;
-            case stringDelineator:
+            case SanitizationState.BASE:
+              charSwitch: switch (char)
+              {
+                case `'`:
+                case `"`:
+                  state = SanitizationState.STRING;
+                  stringDelineator = char;
+                  break charSwitch;
+                case `/`:
+                  if (nextChar === `/`)
+                  {
+                    sanitizedLine += `//`;
+                    break charLoop;
+                  }
+                  if (nextChar === `*`)
+                  {
+                    sanitizedLine += `/*`;
+                    i++;
+                    state = SanitizationState.BLOCK_COMMENT;
+                    break stateSwitch;
+                  }
+                  break charSwitch;
+                case `@`:
+                  state = SanitizationState.LINE_COMMENT;
+                  break stateSwitch;
+              }
               sanitizedLine += char;
-              state = SanitizationState.BASE;
               break stateSwitch;
-          }
-          sanitizedLine += ` `;
-          break stateSwitch;
 
-        case SanitizationState.BLOCK_COMMENT:
-          if (char === `*` && nextChar === `/`)
-          {
-            sanitizedLine += `*/`;
-            i++;
-            state = SanitizationState.BASE;
+            case SanitizationState.STRING:
+              charSwitch: switch (char)
+              {
+                case `\\`:
+                  sanitizedLine += ` `;
+                  i++;
+                  break charSwitch;
+                case stringDelineator:
+                  sanitizedLine += char;
+                  state = SanitizationState.BASE;
+                  break stateSwitch;
+              }
+              sanitizedLine += ` `;
+              break stateSwitch;
+
+            case SanitizationState.BLOCK_COMMENT:
+              if (char === `*` && nextChar === `/`)
+              {
+                sanitizedLine += `*/`;
+                i++;
+                state = SanitizationState.BASE;
+              }
+              else
+              {
+                sanitizedLine += ' ';
+              }
+              break stateSwitch;
+            case SanitizationState.LINE_COMMENT:
+              if (char === `@`)
+              {
+                sanitizedLine += `@`;
+                state = SanitizationState.BASE;
+              }
           }
-          else
-          {
-            sanitizedLine += ' ';
-          }
-          break stateSwitch;
-        case SanitizationState.LINE_COMMENT:
-          if (char === `@`)
-          {
-            sanitizedLine += `@`;
-            state = SanitizationState.BASE;
-          }
-      }
-    }
-    sanitizedLines.push(sanitizedLine);
-  });
+        }
+        sanitizedLines.push(sanitizedLine);
+      });
 
   return sanitizedLines;
 }

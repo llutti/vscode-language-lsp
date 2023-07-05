@@ -107,9 +107,7 @@ interface UnencodedSemanticToken
   tokenModifiers: string[];
 }
 
-async function handleSemanticTokens(params: {
-  textDocument: TextDocument
-}): Promise<UnencodedSemanticToken[]>
+async function handleSemanticTokens(params: { textDocument: TextDocument }): Promise<UnencodedSemanticToken[]>
 {
   const { textDocument } = params;
   // const settings = await getDocumentSettings(textDocument.uri);
