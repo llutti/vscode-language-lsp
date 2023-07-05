@@ -3057,31 +3057,46 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "ExtrasIntervalo",
+    documentation: 'Busca a quantidade de horas extras efetuadas dentro de um intervalo.',
     type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/index.htm#customizacoes/funcoes/funcao_extrasintervalo.htm',
     parameters: [
       {
         type: EParameterType.Numero,
-        name: "horaini",
+        name: "horaInicial",
+        documentation: 'Hora Inicial.',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
-        name: "horafim",
+        name: "horaFinal",
+        documentation: 'Hora Final.',
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
-        name: "diaext",
+        name: "diaExt",
+        documentation:
+        {
+          kind: 'markdown',
+          value:
+            'Determina qual DIA será pesquisada a Hora Extra realizada:\n'
+            + '- **0**: Retornar Extras Efetuadas no **Dia Atual**\n'
+            + '- **1**: Retornar Extras Efetuadas no **Dia Seguinte**\n'
+            + '- **2**: Retornar Extras Efetuadas no **Dia Anterior**\n'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
-        name: "qtddiu",
+        name: "qtdDiurna",
+        documentation: 'Variável para retorno das horas extras diurnas neste período.',
         isReturnValue: true
       },
       {
         type: EParameterType.Numero,
-        name: "qtdnot",
+        name: "qtdNoturna",
+        documentation: 'Variável para retorno das horas extras noturnas neste período.',
         isReturnValue: true
       }
     ]
@@ -3128,16 +3143,24 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "RetornaCodLoc",
+    documentation:
+    {
+      kind: 'markdown',
+      value: 'Retorna o Código do Local (*codLoc*) baseando-se no **NumLoc** informado.'
+    },
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/index.htm#customizacoes/funcoes/retornacodloc.htm',
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Numero,
         name: "NumLoc",
+        documentation: 'Número do Local.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
         name: "CodLoc",
+        documentation: 'Variável que retornará o Código do Local (*codLoc*)',
         isReturnValue: true
       }
     ]
@@ -3177,16 +3200,28 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "InsClauSQLWhere",
+    documentation: 'Esta função inclui uma cláusula WHERE no código SQL, montado pelo gerador, na seção detalhe escolhida. As tabelas referenciadas no SQL são incluídas na cláusula FROM do comando SQL.',
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/gerador-de-relatorios/insclausqlwhere.htm',
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
-        name: "SectionName",
+        name: "NomeSecao",
+        documentation:
+        {
+          kind: 'markdown',
+          value: 'Nome da **seção Detalhe**, pela qual se deseja incluir a cláusula **WHERE**.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "WhereClau",
+        name: "ClausulaWhere",
+        documentation:
+        {
+          kind: 'markdown',
+          value: '**Código SQL**, para inclusão da cláusula **WHERE** no código SQL montado pela seção detalhe determinada.'
+        },
         isReturnValue: false
       }
     ]
@@ -3294,21 +3329,56 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "AlteraControle",
+    documentation:
+    {
+      kind: 'markdown',
+      value: 'Permite alterar o conteúdo de algumas **propriedades dos controles**'
+    },
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.1/index.htm#lsp/funcoes/gerador-de-relatorios/alteracontrole.htm',
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
-        name: "Nome_Controle",
+        name: "NomeControle",
+        documentation:
+        {
+          kind: 'markdown',
+          value: 'Nome do controle que será modificado'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "Nome_Propriedade",
+        name: "Propriedade",
+        documentation:
+        {
+          kind: 'markdown',
+          value: 'Nome da propriedade do controle que será modificada.\n'
+            + '\nAs propriedades disponíveis para alteração são:\n'
+            + '- Alinhamento\n'
+            + '- Conf. Gráfico\n'
+            + '- Cor\n'
+            + '- Desenho\n'
+            + '- Descrição\n'
+            + '- Edição Campo\n'
+            + '- Fonte\n'
+            + '- Imprimir\n'
+            + '- Imprimir Seção Vazia\n'
+            + '- Justificado\n'
+            + '- Salto Página\n'
+            + '- Tam.Automático\n'
+            + '- Transparente\n'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "Valor_Propriedade",
+        name: "NovoValor",
+        documentation:
+        {
+          kind: 'markdown',
+          value: 'Novo valor da propriedade indicada'
+        },
         isReturnValue: false
       }
     ]

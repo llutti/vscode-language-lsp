@@ -2,6 +2,14 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.8] - 05/07/2023
+### Adicionado
+- Documentação das funções:
+  - `AlteraControle`
+  - `ExtrasIntervalo`
+  - `InsClauSQLWhere`
+  - `RetornaCodLoc`
+
 ## [1.2.7] - 12/05/2023
 ### Adicionado
 - Funções da SENIOR:
