@@ -3334,7 +3334,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
       kind: 'markdown',
       value: 'Permite alterar o conteúdo de algumas **propriedades dos controles**'
     },
-    link: 'https://documentacao.senior.com.br/tecnologia/5.10.1/index.htm#lsp/funcoes/gerador-de-relatorios/alteracontrole.htm',
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/gerador-de-relatorios/alteracontrole.htm',
     type: LSPTypeObject.Method,
     parameters: [
       {
@@ -6850,41 +6850,87 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
   {
     system: LSPSeniorSystems.HCM,
     label: "GravaImagemBanco",
+    documentation: {
+      kind: 'markdown',
+      value: 'É uma função genérica que permite gravar imagens em qualquer tabela do sistema, '
+        + 'sendo que o parâmetro imagem pode ser uma referência passada pelo retorno da função **WCheckValImage**.\n'
+        + '\n'
+        + '**OBSERVAÇÃO**:\n'
+        + '\n'
+        + 'Ao gravar a imagem na base, independentemente da extensão, ela será automaticamente convertida '
+        + 'para o formato JPG. Por conta disso, é possível que a imagem perca um pouco da qualidade.'
+    },
+    link: 'https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.3/index.htm#customizacoes/funcoes/funcao_gravaimagembanco.htm',
     type: LSPTypeObject.Method,
     parameters: [
       {
         type: EParameterType.Alfa,
-        name: "aTabela",
+        name: "NomeTabela",
+        documentation: 'Nome da tabela no banco de dados que armazenará a imagem.',
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "aCamposChave",
+        name: "CamposChave",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nome e valores dos campos chave que serão utilizados no SQL separados por ";".\n'
+            + '**Exemplo**: "NumEmp=1;TipCol=1;NumCad=1"\n'
+            + '\n'
+            + '**ATENÇÃO**: \n'
+            + 'Não deverá existir **nenhum espaço em branco**.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "aOutrosCampos",
+        name: "OutrosCampos",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nome e valores dos campos restantes (**exceto a chave e o campo imagem**)'
+            + ' que serão utilizados no SQL de inclusão separados por ";".\n'
+            + 'Deve-se informar somente campos que sejam obrigatórios ou se desejar os campos opcionais.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "aCampoImagem",
+        name: "NomeCampoImagem",
+        documentation: {
+          kind: 'markdown',
+          value: 'Nome do campo no banco de dados que armazenará a imagem'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Numero,
-        name: "aOrigem",
+        name: "Origem",
+        documentation: {
+          kind: 'markdown',
+          value: 'Informa a **Origem** da imagem:\n'
+            + '- 1: Arquivo\n'
+            + '- 2: Upload'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "aArquivo",
+        name: "Arquivo",
+        documentation: {
+          kind: 'markdown',
+          value: 'Quando a **Origem** for:\n'
+            + '- **Arquivo** [1]: deve-se indicar o caminho completo do arquivo.\n'
+            + '- **Upload** [2]: deve-se indicar a variável **de Retorno** da função **WCheckValImage**.'
+        },
         isReturnValue: false
       },
       {
         type: EParameterType.Alfa,
-        name: "aMensagem",
+        name: "MensagemErro",
+        documentation: {
+          kind: 'markdown',
+          value: 'Mensagem de erro, sendo que o valor padrão quando não ocorrer erros será em branco.'
+        },
         isReturnValue: true
       }
     ]
