@@ -2,6 +2,11 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.9] - 28/07/2023
+### Adicionado
+- Documentação das funções:
+  - `GravaImagemBanco`
+
 ## [1.2.8] - 05/07/2023
 ### Adicionado
 - Documentação das funções:
