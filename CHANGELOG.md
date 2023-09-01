@@ -2,7 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.9] - 28/07/2023
+## [1.2.9] - 01/09/2023
+### Corrigir
+- Corrigir "TypeError: Cannot read properties of null (reading 'range')" [Issues #8](https://github.com/llutti/vscode-language-lsp/issues/8)
+
 ### Adicionado
 - Documentação das funções:
   - `GravaImagemBanco`

@@ -506,12 +506,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	let blocos: Bloco[] = [];
 	const diagnostics: Diagnostic[] = tokens
 		.filter(t => (t.type === 'ComentarioLinha') && (t.valid === false))
+		.filter(t => !!t?.range)
 		.map<Diagnostic>(
 			token =>
 			{
 				return {
 					severity: DiagnosticSeverity.Error,
-					range: token.range,
+					range: token?.range,
 					message: 'Comentário de Linha não finalizado corretamente.'
 				};
 			});
@@ -524,12 +525,15 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	{
 		if (ehPontoVirgula() === false)
 		{
-			const diagnostic: Diagnostic = {
-				severity,
-				range: oldToken.range,
-				message: `Faltou o ponto e vírgula. [;]`
-			};
-			diagnostics.push(diagnostic);
+			if (oldToken?.range)
+			{
+				const diagnostic: Diagnostic = {
+					severity,
+					range: oldToken?.range,
+					message: `Faltou o ponto e vírgula. [;]`
+				};
+				diagnostics.push(diagnostic);
+			}
 
 			return false;
 		}
@@ -597,12 +601,15 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	{
 		if (tokenActive?.value !== '(')
 		{
-			const diagnostic: Diagnostic = {
-				severity: DiagnosticSeverity.Error,
-				range: oldToken.range,
-				message: `Faltou abrir parenteses. [(]`
-			};
-			diagnostics.push(diagnostic);
+			if (oldToken?.range)
+			{
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: oldToken?.range,
+					message: `Faltou abrir parenteses. [(]`
+				};
+				diagnostics.push(diagnostic);
+			}
 
 			return false;
 		}
@@ -611,19 +618,19 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		tokenActive = nextToken();
 
 		let sintaxeFuncaoValida = true;
-		let rangeError = oldToken.range;
+		let rangeError = oldToken?.range;
 		while (tokenActive?.value !== ')')
 		{
 			if (tokenActive?.value !== 'NUMERO')
 			{
 				sintaxeFuncaoValida = false;
-				rangeError = tokenActive.range;
+				rangeError = tokenActive?.range;
 
 				break;
 			}
 
 			oldToken = tokenActive;
-			rangeError = oldToken.range;
+			rangeError = oldToken?.range;
 			tokenActive = nextToken();
 
 			if (tokenActive?.value === 'END')
@@ -640,13 +647,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			}
 
 			oldToken = tokenActive;
-			rangeError = oldToken.range;
+			rangeError = oldToken?.range;
 			tokenActive = nextToken();
 
 			if (tokenActive?.type !== 'Simbolo')
 			{
 				sintaxeFuncaoValida = false;
-				rangeError = tokenActive.range;
+				rangeError = tokenActive?.range;
 
 				break;
 			}
@@ -659,13 +666,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			if (tokenActive?.value !== ',')
 			{
 				sintaxeFuncaoValida = false;
-				rangeError = tokenActive.range;
+				rangeError = tokenActive?.range;
 
 				break;
 			}
 
 			oldToken = tokenActive;
-			rangeError = oldToken.range;
+			rangeError = oldToken?.range;
 			tokenActive = nextToken();
 		}
 
@@ -696,7 +703,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		{
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Error,
-				range: tokenActive.range,
+				range: tokenActive?.range,
 				message: `Expressão Inválida.`
 			};
 			diagnostics.push(diagnostic);
@@ -716,7 +723,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					const diagnostic: Diagnostic = {
 						severity: DiagnosticSeverity.Error,
-						range: tokenActive.range,
+						range: tokenActive?.range,
 						message: `Era esperado um "+".`
 					};
 					diagnostics.push(diagnostic);
@@ -732,7 +739,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					const diagnostic: Diagnostic = {
 						severity: DiagnosticSeverity.Error,
-						range: tokenActive.range,
+						range: tokenActive?.range,
 						message: `Era esperado um "Texto" ou uma "Variável".`
 					};
 					diagnostics.push(diagnostic);
@@ -764,7 +771,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		{
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Error,
-				range: oldToken.range,
+				range: oldToken?.range,
 				message: `Faltou abrir parenteses. [(]`
 			};
 			diagnostics.push(diagnostic);
@@ -772,7 +779,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			return false;
 		}
 
-		adicionarBloco('Parenteses', tokenActive.range);
+		adicionarBloco('Parenteses', tokenActive?.range);
 
 		oldToken = tokenActive;
 		tokenActive = nextToken();
@@ -793,7 +800,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			{
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Error,
-					range: oldToken.range,
+					range: oldToken?.range,
 					message: `Parâmetro inválido.`
 				};
 				diagnostics.push(diagnostic);
@@ -804,7 +811,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 		let sintaxeFuncaoValida = true;
 		let finalizarWhile = false;
-		let rangeError = oldToken.range;
+		let rangeError = oldToken?.range;
 		let foiVirgula = false;
 
 		while (position <= innerTokens.length)
@@ -840,10 +847,10 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						}
 					case '(':
 						{
-							adicionarBloco('Parenteses', oldToken.range);
+							adicionarBloco('Parenteses', oldToken?.range);
 
 							oldToken = tokenActive;
-							rangeError = oldToken.range;
+							rangeError = oldToken?.range;
 							tokenActive = nextToken();
 
 							if (checkSintaxeExpressao() === false)
@@ -856,13 +863,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						}
 					case ')':
 						{
-							// const diagnostic: Diagnostic = {
-							// 	severity: DiagnosticSeverity.Hint,
-							// 	range: oldToken.range,
-							// 	message: `LOG: )`
-							// };
-							// diagnostics.push(diagnostic);
-
 							if (foiVirgula === true)
 							{
 								const diagnostic: Diagnostic = {
@@ -894,13 +894,6 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							const bloco = blocos[blocos.length - 1];
 							if (bloco?.tipo !== 'Parenteses')
 							{
-								// const diagnostic: Diagnostic = {
-								// 	severity: DiagnosticSeverity.Hint,
-								// 	range: oldToken.range,
-								// 	message: `LOG: Bloco nao eh parenteses`
-								// };
-								// diagnostics.push(diagnostic);
-
 								finalizarWhile = true;
 								continue;
 							}
@@ -914,7 +907,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								if (oldToken?.type === 'Identificador')
 								{
 									oldToken = tokenActive;
-									rangeError = oldToken.range;
+									rangeError = oldToken?.range;
 									tokenActive = nextToken();
 
 									if (tokenActive?.type === 'Identificador')
@@ -929,7 +922,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								if (oldToken?.type === 'Numero')
 								{
 									oldToken = tokenActive;
-									rangeError = oldToken.range;
+									rangeError = oldToken?.range;
 									tokenActive = nextToken();
 
 									if ((tokenActive?.type === 'Numero')
@@ -942,7 +935,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									if (oldToken?.type === 'Identificador')
 									{
 										oldToken = tokenActive;
-										rangeError = oldToken.range;
+										rangeError = oldToken?.range;
 										tokenActive = nextToken();
 
 										if ((tokenActive?.type === 'Numero')
@@ -950,19 +943,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 										{
 											continue;
 										}
-										// const diagnostic: Diagnostic = {
-										// 	severity: DiagnosticSeverity.Information,
-										// 	range: oldToken.range,
-										// 	message: `LOG: ${tokenActive?.type} | ${tokenActive?.value} | ${oldToken?.value}`
-										// };
-										// diagnostics.push(diagnostic);
 
 										if ((tokenActive?.type === 'Simbolo')
 											&& (tokenActive?.value === oldToken?.value)
 											&& (['+', '-'].includes(oldToken?.value) === true))
 										{
 											oldToken = tokenActive;
-											rangeError = oldToken.range;
+											rangeError = oldToken?.range;
 											tokenActive = nextToken();
 
 											continue;
@@ -972,7 +959,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
-								range: tokenActive.range,
+								range: tokenActive?.range,
 								message: `Símbolo Inválido.`
 							};
 							diagnostics.push(diagnostic);
@@ -993,7 +980,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					{
 						const diagnostic: Diagnostic = {
 							severity: DiagnosticSeverity.Error,
-							range: tokenActive.range,
+							range: tokenActive?.range,
 							message: `Não é permitir parâmetro do tipo "Texto" em funções customizadas.`
 						};
 						diagnostics.push(diagnostic);
@@ -1009,7 +996,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			}
 
 			oldToken = tokenActive;
-			rangeError = oldToken.range;
+			rangeError = oldToken?.range;
 			tokenActive = nextToken();
 		}
 
@@ -1035,7 +1022,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			{
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Error,
-					range: oldToken.range,
+					range: oldToken?.range,
 					message: `Número Inválido.`
 				};
 				diagnostics.push(diagnostic);
@@ -1050,7 +1037,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			{
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Error,
-					range: oldToken.range,
+					range: oldToken?.range,
 					message: `Era esperado "]".`
 				};
 				diagnostics.push(diagnostic);
@@ -1070,7 +1057,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		{
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Error,
-				range: tokenActive.range,
+				range: tokenActive?.range,
 				message: `Faltou abrir parenteses. [(]`
 			};
 			diagnostics.push(diagnostic);
@@ -1078,7 +1065,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			return false;
 		}
 
-		adicionarBloco('Parenteses', tokenActive.range);
+		adicionarBloco('Parenteses', tokenActive?.range);
 
 		oldToken = tokenActive;
 		tokenActive = nextToken();
@@ -1093,7 +1080,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					case '(':
 						{
-							adicionarBloco('Parenteses', tokenActive.range);
+							adicionarBloco('Parenteses', tokenActive?.range);
 							break;
 						}
 					case ')':
@@ -1102,7 +1089,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							{
 								const diagnostic: Diagnostic = {
 									severity: DiagnosticSeverity.Error,
-									range: tokenActive.range,
+									range: tokenActive?.range,
 									message: `Tentativa de Fechar Parenteses antes de Abrir`
 								};
 								diagnostics.push(diagnostic);
@@ -1129,7 +1116,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							{
 								const diagnostic: Diagnostic = {
 									severity: DiagnosticSeverity.Error,
-									range: tokenActive.range,
+									range: tokenActive?.range,
 									message: `Esperava-se "E" ou "OU"`
 								};
 								diagnostics.push(diagnostic);
@@ -1144,7 +1131,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
-								range: oldToken.range,
+								range: oldToken?.range,
 								message: `Esperava-se ")".`
 							};
 							diagnostics.push(diagnostic);
@@ -1174,7 +1161,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					case '(':
 						{
-							adicionarBloco('Parenteses', oldToken.range);
+							adicionarBloco('Parenteses', oldToken?.range);
 
 							break;
 						}
@@ -1206,7 +1193,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
-								range: oldToken.range,
+								range: oldToken?.range,
 								message: `Esperava-se ")".`
 							};
 							diagnostics.push(diagnostic);
@@ -1229,7 +1216,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		{
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Error,
-				range: tokenActive.range,
+				range: tokenActive?.range,
 				message: `Faltou abrir parenteses. [(]`
 			};
 			diagnostics.push(diagnostic);
@@ -1237,7 +1224,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			return false;
 		}
 
-		adicionarBloco('Parenteses', tokenActive.range);
+		adicionarBloco('Parenteses', tokenActive?.range);
 
 		oldToken = tokenActive;
 		tokenActive = nextToken();
@@ -1252,7 +1239,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					case '(':
 						{
-							adicionarBloco('Parenteses', tokenActive.range);
+							adicionarBloco('Parenteses', tokenActive?.range);
 							break;
 						}
 					case ')':
@@ -1261,7 +1248,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							{
 								const diagnostic: Diagnostic = {
 									severity: DiagnosticSeverity.Error,
-									range: tokenActive.range,
+									range: tokenActive?.range,
 									message: `Tentativa de Fechar Parenteses antes de Abrir`
 								};
 								diagnostics.push(diagnostic);
@@ -1288,7 +1275,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							{
 								const diagnostic: Diagnostic = {
 									severity: DiagnosticSeverity.Error,
-									range: tokenActive.range,
+									range: tokenActive?.range,
 									message: `Esperava-se "E" ou "OU"`
 								};
 								diagnostics.push(diagnostic);
@@ -1308,7 +1295,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 						{
 							const diagnostic: Diagnostic = {
 								severity: DiagnosticSeverity.Error,
-								range: oldToken.range,
+								range: oldToken?.range,
 								message: `Esperava-se ")" (SintaxePara).`
 							};
 							diagnostics.push(diagnostic);
@@ -1343,7 +1330,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		// {
 		// 	const diagnostic: Diagnostic = {
 		// 		severity: DiagnosticSeverity.Information,
-		// 		range: tokenActive.range,
+		// 		range: tokenActive?.range,
 		// 		message: `Tipo do Token: ${tokenActive?.type}`
 		// 	};
 		// 	diagnostics.push(diagnostic);
@@ -1369,13 +1356,15 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									}
 									else
 									{
-										const diagnostic: Diagnostic = {
-											severity: DiagnosticSeverity.Error,
-											range: tokenActive.range,
-											message: `Tipo da Variável inválido`
-										};
-										diagnostics.push(diagnostic);
-
+										if (tokenActive?.range)
+										{
+											const diagnostic: Diagnostic = {
+												severity: DiagnosticSeverity.Error,
+												range: tokenActive?.range,
+												message: `Tipo da Variável inválido`
+											};
+											diagnostics.push(diagnostic);
+										}
 										continue;
 									}
 								}
@@ -1388,7 +1377,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
-										range: tokenActive.range,
+										range: tokenActive?.range,
 										message: `Identificador inválido`
 									};
 									diagnostics.push(diagnostic);
@@ -1434,7 +1423,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							}
 						case 'INICIO':
 							{
-								adicionarBloco('Inicio', tokenActive.range);
+								adicionarBloco('Inicio', tokenActive?.range);
 
 								oldToken = tokenActive;
 								tokenActive = nextToken();
@@ -1444,7 +1433,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Information,
-										range: oldToken.range,
+										range: oldToken?.range,
 										message: 'Bloco INICIO/FIM vazio.',
 										code: '0123'
 									};
@@ -1466,7 +1455,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									{
 										const diagnostic: Diagnostic = {
 											severity: DiagnosticSeverity.Error,
-											range: oldToken.range,
+											range: oldToken?.range,
 											message: `Encontrado um "FIM" sem um "INICIO" correspondente.`
 										};
 										diagnostics.push(diagnostic);
@@ -1514,7 +1503,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							}
 						case 'SE':
 							{
-								adicionarBloco('Se', tokenActive.range);
+								adicionarBloco('Se', tokenActive?.range);
 
 								oldToken = tokenActive;
 								tokenActive = nextToken();
@@ -1531,7 +1520,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Information,
-										range: oldToken.range,
+										range: oldToken?.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "SE".`
 									};
 									diagnostics.push(diagnostic);
@@ -1556,7 +1545,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Information,
-										range: oldToken.range,
+										range: oldToken?.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "ENQUANTO".`
 									};
 									diagnostics.push(diagnostic);
@@ -1574,7 +1563,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
-										range: tokenActive.range,
+										range: tokenActive?.range,
 										message: `Parâmetro inválido.`
 									};
 									diagnostics.push(diagnostic);
@@ -1609,7 +1598,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Information,
-										range: oldToken.range,
+										range: oldToken?.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "PARA".`
 									};
 									diagnostics.push(diagnostic);
@@ -1623,7 +1612,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Warning,
-										range: tokenActive.range,
+										range: tokenActive?.range,
 										message: `Encontrado um "SENAO" sem um "SE" correspondente.`
 									};
 									diagnostics.push(diagnostic);
@@ -1636,7 +1625,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Information,
-										range: oldToken.range,
+										range: oldToken?.range,
 										message: `É recomendado incluir um Bloco INICIO/FIM para o "SENAO".`
 									};
 									diagnostics.push(diagnostic);
@@ -1653,7 +1642,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
-										range: tokenActive.range,
+										range: tokenActive?.range,
 										message: `Identificador do "LABEL" é inválido`
 									};
 									diagnostics.push(diagnostic);
@@ -1689,7 +1678,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
-										range: tokenActive.range,
+										range: tokenActive?.range,
 										message: `Nome da função é inválido`
 									};
 									diagnostics.push(diagnostic);
@@ -1719,7 +1708,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 					{
 						case '(':
 							{
-								adicionarBloco('Parenteses', tokenActive.range);
+								adicionarBloco('Parenteses', tokenActive?.range);
 
 								oldToken = tokenActive;
 								tokenActive = nextToken();
@@ -1744,7 +1733,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Error,
-										range: tokenActive.range,
+										range: tokenActive?.range,
 										message: `Encontrado um ")" sem um "(" correspondente.`
 									};
 									diagnostics.push(diagnostic);
@@ -1754,7 +1743,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 							}
 						case '{':
 							{
-								adicionarBloco('Chave', tokenActive.range);
+								adicionarBloco('Chave', tokenActive?.range);
 
 								oldToken = tokenActive;
 								tokenActive = nextToken();
@@ -1764,7 +1753,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								{
 									const diagnostic: Diagnostic = {
 										severity: DiagnosticSeverity.Information,
-										range: oldToken.range,
+										range: oldToken?.range,
 										message: 'Bloco {/} vazio.',
 										code: '0124'
 									};
@@ -1781,7 +1770,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 									{
 										const diagnostic: Diagnostic = {
 											severity: DiagnosticSeverity.Error,
-											range: tokenActive.range,
+											range: tokenActive?.range,
 											message: `Encontrado um "}" sem um "{" correspondente.`
 										};
 										diagnostics.push(diagnostic);
@@ -1824,12 +1813,13 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 	}
 
 	blocos
+		.filter(b => !!b?.range)
 		.forEach(
 			bloco =>
 			{
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Error,
-					range: bloco.range,
+					range: bloco?.range,
 					message: `Faltou Finalizar o Bloco "${bloco.tipo}".`
 				};
 				diagnostics.push(diagnostic);
