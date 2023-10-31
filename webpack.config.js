@@ -11,9 +11,8 @@ module.exports = {
 		__dirname: false,
 	},
 	mode: 'production',
-
 	entry: {
-		extension: './client/src/extension.ts',
+		extension: './client/out/extension.js',
 		server: './server/out/server.js'
 	},
 	output: {
