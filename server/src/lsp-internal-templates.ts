@@ -789,6 +789,527 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
       }
     ]
   },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpAlteraCabecalhoRequisicao",
+    documentation: {
+      kind: 'markdown',
+      value: 'Altera os valores de cabeçalhos HTTP que serão enviados junto com a requisição. São válidos para todas os verbos (GET, POST, PUT, PATCH e DELETE) e também para o download.\n'
+        + '\n'
+        + '**Exemplo:**\n'
+        + '``` lsp\n'
+        + '\n'
+        + '  Definir Alfa oHTTP;\n'
+        + '  Definir Alfa aHTML;\n'
+        + '  Definir Alfa aDados; \n'
+        + '\n'
+        + '  HttpObjeto(oHTTP);\n'
+        + '\n'
+        + '  HttpAlteraCabecalhoRequisicao(oHTTP, "Accept", "text/plain");\n'
+        + '\n'
+        + '  HttpAlteraCabecalhoRequisicao(oHTTP, "Content-Type", "application/json")\n'
+        + '\n'
+        + '  aDados = " {\\"NomeParametro1\\": \\"valor1\\", \\"NomeParametro2\\": \\"valor2\\"} ";\n'
+        + '  HttpPost(oHTTP, "http://exemplo.com/api/cadastro", aDados, aHTML);\n'
+        + '  Mensagem(Retorna, vHTML);\n'
+        + '\n'
+        + '```\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/http-altera-cabecalho-requisicao.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP que terá o cabeçalho alterado'
+        },
+        isReturnValue: true
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Nome",
+        documentation: {
+          kind: 'markdown',
+          value: 'O nome do cabeçalho a ser alterado. **Não pode ser vazio** ("").'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Valor",
+        documentation: {
+          kind: 'markdown',
+          value: 'O novo valor para o cabeçalho. Nenhuma verificação quando a semântica do valor é realizada. O valor vazio faz com que o cabeçalho não seja enviado.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpGet",
+    documentation: {
+      kind: 'markdown',
+      value: 'Executa uma requisição HTTP (*inclusive HTTPS*) de acordo com a URL passada como parâmetro e salva a resposta da requisição, por exemplo, uma página HTML, no parâmetro de retorno HTML.\n'
+        + '\n'
+        + '**Exemplo:**\n'
+        + '``` lsp\n'
+        + '\n'
+        + '  Definir Alfa oHTTP;\n'
+        + '  Definir Alfa aHTML;\n'
+        + '\n'
+        + '  HttpObjeto(oHTTP);\n'
+        + '\n'
+        + '  HttpGet(oHTTP, "http://exemplo.com/api/cadastro", aHTML);\n'
+        + '  Mensagem(Retorna, vHTML);\n'
+        + '\n'
+        + '```\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/httpget.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP inicializado.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "URL",
+        documentation: {
+          kind: 'markdown',
+          value: 'URL da requisição.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "HTML",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável que irá receber o conteúdo retornado pela **URL**.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpObjeto",
+    documentation: {
+      kind: 'markdown',
+      value: 'Esta função retorna um objeto HTTP inicializado com as configurações definidas na tela de Configurações de Internet da Central de Configurações. '
+        + 'A referência deve ser armazenada em uma variável do tipo Alfa para poder ser usada nas demais funções HTTP.\n'
+        + '\n'
+        + '**Exemplo:**\n'
+        + '``` lsp\n'
+        + '  Definir Alfa oHTTP;\n'
+        + '  HttpObjeto(oHTTP);\n'
+        + '```\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/httpobjeto.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP inicializado'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpPost",
+    documentation: {
+      kind: 'markdown',
+      value: 'Executa uma requisição HTTP usando o método POST. O método de requisição POST, somente no formato texto e sem suporte para envio de arquivos, é utilizado quando houver a necessidade do envio de dados para o servidor como parte da solicitação, como enviar um formulário preenchido.\n'
+        + '\n'
+        + '\n'
+        + '---\n'
+        + '**Exemplo *FORMDATA*:**\n'
+        + '``` lsp\n'
+        + '\n'
+        + '  Definir Alfa oHTTP;\n'
+        + '  Definir Alfa aHTML;\n'
+        + '  Definir Alfa aDados; \n'
+        + '\n'
+        + '  HttpObjeto(oHTTP);\n'
+        + '\n'
+        + '  aDados = "NomeUsuario=SENIOR&EmailUsuario=senior@senior.com.br&Texto=SENIOR+SA";\n'
+        + '  HttpPost(oHTTP, "http://www.senior.com.br/cadastro.html", aDados, aHTML);\n'
+        + '  Mensagem(Retorna, vHTML);\n'
+        + '\n'
+        + '```\n'
+        + '\n'
+        + '\n'
+        + '---\n'
+        + '\n'
+        + '\n'
+        + '**Exemplo *JSON*:**\n'
+        + '``` lsp\n'
+        + '\n'
+        + '  Definir Alfa oHTTP;\n'
+        + '  Definir Alfa aHTML;\n'
+        + '  Definir Alfa aDados; \n'
+        + '\n'
+        + '  HttpObjeto(oHTTP);\n'
+        + '\n'
+        + '  HttpAlteraCabecalhoRequisicao(oHTTP, "Accept", "text/plain");\n'
+        + '\n'
+        + '  HttpAlteraCabecalhoRequisicao(oHTTP, "Content-Type", "application/json")\n'
+        + '\n'
+        + '  aDados = " {\\"NomeParametro1\\": \\"valor1\\", \\"NomeParametro2\\": \\"valor2\\"} ";\n'
+        + '  HttpPost(oHTTP, "http://exemplo.com/api/cadastro", aDados, aHTML);\n'
+        + '  Mensagem(Retorna, vHTML);\n'
+        + '\n'
+        + '```\n'
+        + '\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/httppost.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP inicializado pela função *HttpObjeto*.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "URL",
+        documentation: {
+          kind: 'markdown',
+          value: 'URL da API.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Dados",
+        documentation: {
+          kind: 'markdown',
+          value: 'Dados a serem enviados via **POST** para a **API**. Podem estar no padrão **FormData** ou **JSON**.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "HTML",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável que irá receber o conteúdo retornado pela **API**.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpPut",
+    documentation: {
+      kind: 'markdown',
+      value: 'Executa uma requisição HTTP usando o método PUT. O método de requisição PUT, somente no formato texto e sem suporte para envio de arquivos, é usado quando é necessário enviar dados ao servidor para alterar informações de uma URL já conhecida.\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/http-put.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP inicializado pela função *HttpObjeto*.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "URL",
+        documentation: {
+          kind: 'markdown',
+          value: 'URL da API.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Dados",
+        documentation: {
+          kind: 'markdown',
+          value: 'Dados a serem enviados via **POST** para a **API**. Podem estar no padrão **FormData** ou **JSON**.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "HTML",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável que irá receber o conteúdo retornado pela **API**.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpPatch",
+    documentation: {
+      kind: 'markdown',
+      value: 'Executa uma requisição HTTP usando o método PATCH. O método de requisição PATCH, somente no formato texto e sem suporte para envio de arquivos, é usado para aplicar modificações parciais em um recurso.\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/http-patch.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP no qual a chamada deve ser realizada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "URL",
+        documentation: {
+          kind: 'markdown',
+          value: 'Indica a URL que será chamada usando o verbo PATCH.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Dados",
+        documentation: {
+          kind: 'markdown',
+          value: 'Os dados no formato alfanumérico, que serão enviados no corpo da mensagem HTTP.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Retorno",
+        documentation: {
+          kind: 'markdown',
+          value: 'Variável que irá receber a resposta do servidor à requisição enviada.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpNormalizaRetorno",
+    documentation: {
+      kind: 'markdown',
+      value: 'Aplica a normalização Unicode C (composição canônica) na resposta HTTP para caracteres acentuados que podem ser representados por dois code points (letra + caractere de combinação).\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/httpnormalizaretorno.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP no qual a configuração será aplicada.'
+        },
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpDelete",
+    documentation: {
+      kind: 'markdown',
+      value: 'Executa uma requisição HTTP usando o método DELETE. O método de requisição DELETE é utilizado quando houver a necessidade de exclusão de um recurso no servidor.\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/lsp/funcoes/requisicoes-http/httpdelete.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP no qual a chamada deve ser realizada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "URL",
+        documentation: {
+          kind: 'markdown',
+          value: 'URL da *API*.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Retorno",
+        documentation: {
+          kind: 'markdown',
+          value: 'Conteúdo retornado pela *API*.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpDeleteBody",
+    documentation: {
+      kind: 'markdown',
+      value: 'Executa uma requisição HTTP usando o método DELETE, porém permite enviar o parâmetro Body na requisição. O método de requisição DELETE é utilizado quando houver a necessidade de exclusão de um recurso no servidor.\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/lsp/funcoes/requisicoes-http/httpdeletebody.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP no qual a chamada deve ser realizada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "URL",
+        documentation: {
+          kind: 'markdown',
+          value: 'URL da *API*.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Dados",
+        documentation: {
+          kind: 'markdown',
+          value: 'Os dados no formato alfanumérico, que serão enviados no corpo da mensagem HTTP.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Retorno",
+        documentation: {
+          kind: 'markdown',
+          value: 'Conteúdo retornado pela *API*.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpDownload",
+    documentation: {
+      kind: 'markdown',
+      value: 'Funciona da mesma maneira que a função HttpGet, porém o retorno não é na memória, mas sim em um arquivo salvo diretamente em disco. O arquivo de destino é definido no parâmetro Arquivo.\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/lsp/funcoes/requisicoes-http/httpdownload.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP no qual a chamada deve ser realizada.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "URL",
+        documentation: {
+          kind: 'markdown',
+          value: 'URL que fornecerá o download.'
+        },
+        isReturnValue: false
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "Retorno",
+        documentation: {
+          kind: 'markdown',
+          value: 'Arquivo baixado.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpNormalizaRetorno",
+    documentation: {
+      kind: 'markdown',
+      value: 'Aplica a normalização Unicode C (composição canônica) na resposta HTTP para caracteres acentuados que podem ser representados por dois code points (letra + caractere de combinação).\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/httpnormalizaretorno.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP no qual a configuração será aplicada.'
+        },
+        isReturnValue: true
+      },
+    ]
+  },
+  {
+    system: LSPSeniorSystems.SENIOR,
+    label: "HttpSetAttachment",
+    documentation: {
+      kind: 'markdown',
+      value: 'Permite o envio de arquivos locais no corpo de uma requisição HTTP, disponível nos métodos **POST**, **PUT** e **PATCH**.\n'
+    },
+    type: LSPTypeObject.Method,
+    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/httpsetattachment.htm',
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: "Objeto",
+        documentation: {
+          kind: 'markdown',
+          value: 'Objeto HTTP no qual a configuração será aplicada.'
+        },
+        isReturnValue: true
+      },
+      {
+        type: EParameterType.Alfa,
+        name: "CaminhoArquivo",
+        documentation: {
+          kind: 'markdown',
+          value: 'Caminho (*path*) do arquivo que será anexado ao corpo da requisição.'
+        },
+        isReturnValue: false
+      },
+    ]
+  },
 ];
 
 export const templatesInternosHCM: LSPTemplateClass[] = [

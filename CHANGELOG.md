@@ -2,12 +2,23 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.9] - 01/09/2023
-### Corrigir
-- Corrigir "TypeError: Cannot read properties of null (reading 'range')" [Issues #8](https://github.com/llutti/vscode-language-lsp/issues/8)
-
+## [1.2.10] - 01/11/2023
 ### Adicionado
 - Documentação das funções:
+  - `HttpAlteraCabecalhoRequisicao`
+  - `HttpDelete`
+  - `HttpDeleteBody`
+  - `HttpDownload`
+  - `HttpGet`
+  - `HttpNormalizaRetorno`
+  - `HttpObjeto`
+  - `HttpPatch`
+  - `HttpPost`
+  - `HttpPut`
+  - `HttpSetAttachment`
+
+### Adicionado
+- Documentação da função:
   - `GravaImagemBanco`
 
 ## [1.2.8] - 05/07/2023
