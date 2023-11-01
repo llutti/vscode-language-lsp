@@ -1261,27 +1261,6 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
   },
   {
     system: LSPSeniorSystems.SENIOR,
-    label: "HttpNormalizaRetorno",
-    documentation: {
-      kind: 'markdown',
-      value: 'Aplica a normalização Unicode C (composição canônica) na resposta HTTP para caracteres acentuados que podem ser representados por dois code points (letra + caractere de combinação).\n'
-    },
-    type: LSPTypeObject.Method,
-    link: 'https://documentacao.senior.com.br/tecnologia/5.10.3/index.htm#lsp/funcoes/requisicoes-http/httpnormalizaretorno.htm',
-    parameters: [
-      {
-        type: EParameterType.Alfa,
-        name: "Objeto",
-        documentation: {
-          kind: 'markdown',
-          value: 'Objeto HTTP no qual a configuração será aplicada.'
-        },
-        isReturnValue: true
-      },
-    ]
-  },
-  {
-    system: LSPSeniorSystems.SENIOR,
     label: "HttpSetAttachment",
     documentation: {
       kind: 'markdown',
