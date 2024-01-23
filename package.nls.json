@@ -4,5 +4,6 @@
 	"lsp.configuration.seniorSystem.description":"Senior's system that will be used to compile the rules. (SENIOR or HCM or ERP)",
 	"lsp.configuration.seniorSystem.emun.SENIOR":"All systems features",
 	"lsp.configuration.seniorSystem.emun.HCM":"Only HCM features and those common to all systems",
+	"lsp.configuration.seniorSystem.emun.ACESSO":"Only RONDA SENIOR features and those common to all systems",
 	"lsp.configuration.seniorSystem.emun.ERP":"Only ERP features and those common to all systems"
 }

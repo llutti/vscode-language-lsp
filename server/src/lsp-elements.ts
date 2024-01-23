@@ -30,6 +30,7 @@ export enum LSPSeniorSystems
 {
   'HCM' = 'HCM',
   'ERP' = 'ERP',
+  'ACESSO' = 'ACESSO',
   'SENIOR' = 'SENIOR',
   'CUSTOMIZADO' = 'CUSTOMIZADO'
 }

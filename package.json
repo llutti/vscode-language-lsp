@@ -2,7 +2,7 @@
     "name": "lsp",
     "displayName": "LSP - Linguagem Senior de Programação",
     "description": "Suporte para a Linguagem Senior de Programação",
-    "version": "1.2.10",
+    "version": "1.2.11",
     "publisher": "llutti",
     "icon": "images/icon.png",
     "license": "LICENSE.md",
@@ -39,11 +39,13 @@
                     "enum": [
                         "SENIOR",
                         "HCM",
+                        "ACESSO",
                         "ERP"
                     ],
                     "enumDescriptions": [
                         "%lsp.configuration.seniorSystem.emun.SENIOR%",
                         "%lsp.configuration.seniorSystem.emun.HCM%",
+                        "%lsp.configuration.seniorSystem.emun.ACESSO%",
                         "%lsp.configuration.seniorSystem.emun.ERP%"
                     ],
                     "default": "HCM",

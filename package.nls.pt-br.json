@@ -4,5 +4,6 @@
 	"lsp.configuration.seniorSystem.description":"Sistema da Senior que será utilizado para compilar as regras. (SENIOR ou HCM ou ERP)",
 	"lsp.configuration.seniorSystem.emun.SENIOR":"Recursos de Todos os sistemas",
 	"lsp.configuration.seniorSystem.emun.HCM":"Apenas os recursos do HCM e os comuns a todos os sistemas",
+	"lsp.configuration.seniorSystem.emun.ACESSO":"Apenas os recursos do RONDA SENIOR e os comuns a todos os sistemas",
 	"lsp.configuration.seniorSystem.emun.ERP":"Apenas os recursos do ERP e os comuns a todos os sistemas"
 }

@@ -1,22 +1,22 @@
 import
-{
-  createConnection,
-  TextDocuments,
-  ProposedFeatures,
-  InitializeParams,
-  DidChangeConfigurationNotification,
-  CompletionItem,
-  TextDocumentPositionParams,
-  TextDocumentSyncKind,
-  InitializeResult
-} from 'vscode-languageserver/node';
+  {
+    CompletionItem,
+    DidChangeConfigurationNotification,
+    InitializeParams,
+    InitializeResult,
+    ProposedFeatures,
+    TextDocumentPositionParams,
+    TextDocumentSyncKind,
+    TextDocuments,
+    createConnection
+  } from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { LSPContext } from './lsp-context';
+import { LSPSeniorSystems } from './lsp-elements';
 import { templatesInternosERP, templatesInternosHCM, templatesInternosSENIOR } from './lsp-internal-templates';
 import { LSPParser } from './lsp-parser';
 import { checkSintaxe, parserContent } from './lsp-parser-utils';
-import { LSPSeniorSystems } from './lsp-elements';
 
 interface ILSPSettings
 {
@@ -37,7 +37,7 @@ const documentSettings: Map<string, Thenable<ILSPSettings>> = new Map();
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
-let hasDiagnosticRelatedInformationCapability = false;
+// let hasDiagnosticRelatedInformationCapability = false;
 
 let globalSettings: ILSPSettings = defaultSettings;
 
@@ -47,15 +47,16 @@ connection.onInitialize((params: InitializeParams) =>
 
   LSPContext.loadInternalTemplates(templatesInternosSENIOR);
   LSPContext.loadInternalTemplates(templatesInternosHCM);
+  // LSPContext.loadInternalTemplates(templatesInternosACESSO);
   LSPContext.loadInternalTemplates(templatesInternosERP);
 
   hasConfigurationCapability = !!(capabilities.workspace && !!capabilities.workspace.configuration);
   hasWorkspaceFolderCapability = !!(capabilities.workspace && !!capabilities.workspace.workspaceFolders);
-  hasDiagnosticRelatedInformationCapability = !!(
-    capabilities.textDocument &&
-    capabilities.textDocument.publishDiagnostics &&
-    capabilities.textDocument.publishDiagnostics.relatedInformation
-  );
+  // hasDiagnosticRelatedInformationCapability = !!(
+  //   capabilities.textDocument &&
+  //   capabilities.textDocument.publishDiagnostics &&
+  //   capabilities.textDocument.publishDiagnostics.relatedInformation
+  // );
 
   const result: InitializeResult = {
     capabilities: {
@@ -88,7 +89,7 @@ connection.onInitialized(() =>
 
   if (hasWorkspaceFolderCapability)
   {
-    connection.workspace.onDidChangeWorkspaceFolders(_event =>
+    connection.workspace.onDidChangeWorkspaceFolders(() =>
     {
       connection.console.log('Workspace folder change event received.');
     });
