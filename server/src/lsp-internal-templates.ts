@@ -8848,6 +8848,20 @@ export const templatesInternosERP: LSPTemplateClass[] = [
   },
   {
     system: LSPSeniorSystems.ERP,
+    label: 'LimpaEspacos',
+    documentation: 'Limpar os espaços em branco a direta e a esquerda de uma variável alfanumérica.',
+    type: LSPTypeObject.Method,
+    parameters: [
+      {
+        type: EParameterType.Alfa,
+        name: 'Texto',
+        documentation: 'Variável que recebe o campo a ser limpo e retorna o campo sem os espaços da dieita e da esquerda.',
+        isReturnValue: true
+      }
+    ]
+  },
+  {
+    system: LSPSeniorSystems.ERP,
     label: 'RetornarQtdDiasAno',
     documentation: 'Esta função tem por objetivo retornar a quantidade de dias do ano tomando como base o ano da data passada. Dependendo do parâmetro **TipoAno**, pode retornar a quantidade de dias do ano considerando ano comercial ou ano civil.',
     type: LSPTypeObject.Method,

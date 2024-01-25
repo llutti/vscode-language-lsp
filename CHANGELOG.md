@@ -2,9 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.11] - 23/01/2023
+## [1.2.11] - 25/01/2023
 - Documentação da função:
   - `RetornaEscala (HCM)`
+  - `LimpaEspacos (ERP)`
 - Preparar para separar as funções do Ronda Senior (Acesso);
 
 ## [1.2.10] - 01/11/2023
