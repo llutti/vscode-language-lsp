@@ -1626,6 +1626,7 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 								oldToken = tokenActive;
 								tokenActive = nextToken();
 								if ((tokenActive?.value !== 'INICIO')
+									&& (tokenActive?.value !== '{')
 									&& (tokenActive?.value !== 'SE'))
 								{
 									const diagnostic: Diagnostic = {
