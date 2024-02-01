@@ -19,9 +19,9 @@ const Patterns = {
 
 export class LSPParser
 {
-  private static isReady: PromiseLike<any> = Promise.resolve();
+  private static isReady: PromiseLike<void> = Promise.resolve();
 
-  public static initialise(): PromiseLike<any>
+  public static initialise(): PromiseLike<void>
   {
     return this.isReady;
   }  // Placeholder in case we need to initialise onigasm here
@@ -130,26 +130,26 @@ export function splitAndSanitize(rawCode: string): string[]
             case SanitizationState.BASE:
               charSwitch: switch (char)
               {
-                case `'`:
-                case `"`:
+                case '\'':
+                case '"':
                   state = SanitizationState.STRING;
                   stringDelineator = char;
                   break charSwitch;
-                case `/`:
-                  if (nextChar === `/`)
+                case '/':
+                  if (nextChar === '/')
                   {
-                    sanitizedLine += `//`;
+                    sanitizedLine += '//';
                     break charLoop;
                   }
-                  if (nextChar === `*`)
+                  if (nextChar === '*')
                   {
-                    sanitizedLine += `/*`;
+                    sanitizedLine += '/*';
                     i++;
                     state = SanitizationState.BLOCK_COMMENT;
                     break stateSwitch;
                   }
                   break charSwitch;
-                case `@`:
+                case '@':
                   state = SanitizationState.LINE_COMMENT;
                   break stateSwitch;
               }
@@ -159,8 +159,8 @@ export function splitAndSanitize(rawCode: string): string[]
             case SanitizationState.STRING:
               charSwitch: switch (char)
               {
-                case `\\`:
-                  sanitizedLine += ` `;
+                case '\\':
+                  sanitizedLine += ' ';
                   i++;
                   break charSwitch;
                 case stringDelineator:
@@ -168,13 +168,13 @@ export function splitAndSanitize(rawCode: string): string[]
                   state = SanitizationState.BASE;
                   break stateSwitch;
               }
-              sanitizedLine += ` `;
+              sanitizedLine += ' ';
               break stateSwitch;
 
             case SanitizationState.BLOCK_COMMENT:
-              if (char === `*` && nextChar === `/`)
+              if (char === '*' && nextChar === '/')
               {
-                sanitizedLine += `*/`;
+                sanitizedLine += '*/';
                 i++;
                 state = SanitizationState.BASE;
               }
@@ -184,9 +184,9 @@ export function splitAndSanitize(rawCode: string): string[]
               }
               break stateSwitch;
             case SanitizationState.LINE_COMMENT:
-              if (char === `@`)
+              if (char === '@')
               {
-                sanitizedLine += `@`;
+                sanitizedLine += '@';
                 state = SanitizationState.BASE;
               }
           }
