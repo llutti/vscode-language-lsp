@@ -15,7 +15,7 @@ interface LSPToken
 	valid: boolean;
 }
 
-type LSPTipoBloco = 'Chave' | 'Se' | 'Inicio' | 'Para' | 'Enquanto' | 'Parenteses';
+type LSPTipoBloco = 'Chave' | 'Se' | 'Inicio' | 'Para' | 'Enquanto' | 'Parenteses' | 'Colchetes';
 interface Bloco
 {
 	tipo: LSPTipoBloco;
@@ -45,9 +45,15 @@ const LSPVariaveisReservada: string[] = templatesInternosHCM
 	.filter(t => t.type === LSPTypeObject.Constant)
 	.map(t => t.label.toUpperCase()).sort();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const log = (texto: string) =>
+{
+	// process.stdout.write(`${texto}\n`);
+};
+
 const parserContent = (text: string): LSPToken[] =>
 {
-	const delimiters = '><,.;=()[]{}\\/+-*@"';
+	const delimiters = '><,.;=()[]{}\\/+-*@":';
 	const numbersValids = '0123456789';
 	const decimalDelimiterChar = '.';
 	const tokens: LSPToken[] = [];
@@ -584,6 +590,19 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 		} while (token?.type === 'ComentarioBloco');
 
+		if (token?.type === 'Identificador')
+		{
+			if (/^([a-zA-Z_]+[\w]*$)/.test(token.value) === false)
+			{
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: token?.range,
+					message: 'Identificador inválido.'
+				};
+
+				diagnostics.push(diagnostic);
+			}
+		}
 		return token;
 	};
 
@@ -699,8 +718,22 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 		return validarPontoVirgula();
 	};
 
-	const checkSintaxeExpressao = (): boolean =>
+	const checkSintaxeExpressao = (verificarPontoVirgula = false): boolean =>
 	{
+		log(`checkSintaxeExpressao Inicio: ${tokenActive?.type}|${tokenActive?.value}`);
+
+		if (!tokenActive?.type)
+		{
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Error,
+				range: oldToken?.range,
+				message: 'Expressão desconhecida.'
+			};
+			diagnostics.push(diagnostic);
+
+			return false;
+		}
+
 		if ((tokenActive?.type !== 'Numero')
 			&& (tokenActive?.type !== 'Identificador')
 			&& (tokenActive?.type !== 'Texto')
@@ -721,51 +754,267 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 			oldToken = tokenActive;
 			tokenActive = nextToken();
 
+			log(`checkSintaxeExpressao Texto-01: ${tokenActive?.type}|${tokenActive?.value}`);
+
 			while (position <= innerTokens.length)
 			{
-				if ((tokenActive?.type !== 'Simbolo')
-					|| (tokenActive?.value !== '+'))
+				log(`checkSintaxeExpressao Inicio while: ${tokenActive?.type}|${tokenActive?.value}`);
+
+				if (tokenActive?.type === 'Simbolo')
 				{
+					if (['+'].includes(tokenActive?.value) === true)
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						continue;
+					}
+
+					if (tokenActive?.value === '(')
+					{
+						adicionarBloco('Parenteses', tokenActive.range);
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						continue;
+					}
+
+					if (tokenActive?.value === ')')
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (removerBloco('Parenteses') === false)
+						{
+							return false;
+						}
+
+						continue;
+					}
+
+					if (['.'].includes(tokenActive?.value) === true)
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (tokenActive?.type === 'Identificador')
+						{
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+
+							continue;
+						}
+
+						const diagnostic: Diagnostic = {
+							severity: DiagnosticSeverity.Error,
+							range: tokenActive?.range,
+							message: 'Era esperado um "identificador".'
+						};
+						diagnostics.push(diagnostic);
+
+						return false;
+					}
+
+					if (verificarPontoVirgula === true)
+					{
+						log(`checkSintaxeExpressao verificarPontoVirgula(1): ${tokenActive?.type}|${tokenActive?.value}`);
+						if ((verificarPontoVirgula === true)
+							&& (validarPontoVirgula() === true))
+						{
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							return true;
+						}
+					}
+					else
+					{
+						if ([','].includes(tokenActive?.value) === true)
+						{
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							return true;
+						}
+					}
+
 					const diagnostic: Diagnostic = {
 						severity: DiagnosticSeverity.Error,
 						range: tokenActive?.range,
-						message: 'Era esperado um "+".'
+						message: 'Era esperado um Operador "+" ou uma Vírgula.'
 					};
 					diagnostics.push(diagnostic);
 
 					return false;
 				}
 
-				oldToken = tokenActive;
-				tokenActive = nextToken();
-
-				if ((tokenActive?.type !== 'Texto')
-					&& (tokenActive?.type !== 'Identificador'))
-				{
-					const diagnostic: Diagnostic = {
-						severity: DiagnosticSeverity.Error,
-						range: tokenActive?.range,
-						message: 'Era esperado um "Texto" ou uma "Variável".'
-					};
-					diagnostics.push(diagnostic);
-
-					return false;
-				}
-
-				oldToken = tokenActive;
-				tokenActive = nextToken();
-
-				if ((tokenActive?.type === 'Simbolo')
-					&& (tokenActive?.value === ')'))
+				if ((tokenActive?.type === 'Texto')
+					|| (tokenActive?.type === 'Identificador'))
 				{
 					oldToken = tokenActive;
 					tokenActive = nextToken();
 
-					return removerBloco('Parenteses');
+					continue;
+				}
+
+				log(`checkSintaxeExpressao Texto-01: ${tokenActive?.type}|${tokenActive?.value}`);
+
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: tokenActive?.range,
+					message: 'Era esperado um "Texto" ou uma "Variável"'
+				};
+				diagnostics.push(diagnostic);
+
+				return false;
+			}
+
+			if (verificarPontoVirgula === true)
+			{
+				log(`checkSintaxeExpressao verificarPontoVirgula(2): ${tokenActive?.type}|${tokenActive?.value}`);
+				if ((verificarPontoVirgula === true)
+					&& (validarPontoVirgula() === true))
+				{
+					oldToken = tokenActive;
+					tokenActive = nextToken();
+					return true;
 				}
 			}
+
 			return false;
 		}
+
+		if (tokenActive?.type === 'Numero')
+		{
+			oldToken = tokenActive;
+			tokenActive = nextToken();
+
+			while (position <= innerTokens.length)
+			{
+				log(`checkSintaxeExpressao Inicio while: ${tokenActive?.type}|${tokenActive?.value}`);
+
+				if (tokenActive?.type === 'Simbolo')
+				{
+					if (['+', '-', '*', '/'].includes(tokenActive?.value) === true)
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						continue;
+					}
+
+					if (tokenActive?.value === '(')
+					{
+						adicionarBloco('Parenteses', tokenActive.range);
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						continue;
+					}
+
+					if (tokenActive?.value === ')')
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (removerBloco('Parenteses') === false)
+						{
+							return false;
+						}
+
+						continue;
+					}
+
+					if (tokenActive?.value === '[')
+					{
+						adicionarBloco('Colchetes', tokenActive.range);
+
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						continue;
+					}
+
+					if (tokenActive?.value === ']')
+					{
+						oldToken = tokenActive;
+						tokenActive = nextToken();
+
+						if (removerBloco('Colchetes') === false)
+						{
+							return false;
+						}
+
+						continue;
+					}
+
+					if (verificarPontoVirgula === true)
+					{
+						log(`checkSintaxeExpressao Numero verificarPontoVirgula(1): ${tokenActive?.type}|${tokenActive?.value}`);
+
+						if (validarPontoVirgula() === true)
+						{
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							return true;
+						}
+					}
+					else
+					{
+						if ([','].includes(tokenActive?.value) === true)
+						{
+							oldToken = tokenActive;
+							tokenActive = nextToken();
+							return true;
+						}
+					}
+
+					const diagnostic: Diagnostic = {
+						severity: DiagnosticSeverity.Error,
+						range: tokenActive?.range,
+						message: 'Era esperado um Operador Matemático ou uma Vírgula.'
+					};
+					diagnostics.push(diagnostic);
+
+					return false;
+				}
+
+				if ((tokenActive?.type === 'Numero')
+					|| (tokenActive?.type === 'Identificador'))
+				{
+					oldToken = tokenActive;
+					tokenActive = nextToken();
+
+					continue;
+				}
+
+				log(`checkSintaxeExpressao Numero-03: ${tokenActive?.type}|${tokenActive?.value}`);
+
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Error,
+					range: tokenActive?.range,
+					message: 'Sintaxe da expressão inválida.'
+				};
+				diagnostics.push(diagnostic);
+
+				return false;
+			}
+
+			if (verificarPontoVirgula === true)
+			{
+				log(`checkSintaxeExpressao Numero verificarPontoVirgula(2): ${tokenActive?.type}|${tokenActive?.value}`);
+				if (validarPontoVirgula() === true)
+				{
+					oldToken = tokenActive;
+					tokenActive = nextToken();
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		log(`checkSintaxeExpressao Final Funcao: ${tokenActive?.type}|${tokenActive?.value}`);
 
 		return true;
 	};
@@ -1712,6 +1961,18 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 				{
 					switch (tokenActive?.value)
 					{
+						case '=':
+							{
+								oldToken = tokenActive;
+								tokenActive = nextToken();
+
+								if (checkSintaxeExpressao(true) === true)
+								{
+									continue;
+								}
+
+								break;
+							}
 						case '(':
 							{
 								adicionarBloco('Parenteses', tokenActive?.range);
@@ -1800,6 +2061,17 @@ const checkSintaxe = (maxNumberOfProblems: number, tokens: LSPToken[] = []): Dia
 
 					break;
 				}
+			// case 'Numero':
+			// 	{
+			// 		const diagnostic: Diagnostic = {
+			// 			severity: DiagnosticSeverity.Error,
+			// 			range: tokenActive?.range,
+			// 			message: 'Nome de variável inválido.'
+			// 		};
+			// 		diagnostics.push(diagnostic);
+
+			// 		break;
+			// 	}
 			case 'PalavraReservada':
 				{
 					oldToken = tokenActive;
