@@ -2,6 +2,8 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.13] - 08/02/2023
+
 ## [1.2.12] - 02/02/2023
 ### Corrigir
   - Diagnóstico de "senao sem inicio/fim"; ([#12](https://github.com/llutti/vscode-language-lsp/issues/12))
