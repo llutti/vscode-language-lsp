@@ -25,6 +25,7 @@ Aqui estão alguns dos recursos que o **LSP** oferece:
 * Colorização
 * Autocomplete
 * Apresentação de parâmetros das funções (nativas e customizadas)
+* "*Ir para Definição*" das funções customizadas
 * Snippets (trechos de códigos previamente configurados)
 * Validação de Sintaxe (*em desenvolvimento*)
 
@@ -65,6 +66,11 @@ Durante a digitação são mostrados todos os parâmetros necessários e destaca
 Posicionando o cursor em um parâmetro e prescionando `CTRL+SHIFT+Space` são apresentadas informações detalhadas sobre o parâmetro correspondente.
 
 ![parametros-funcao-detalhes](https://github.com/llutti/vscode-language-lsp/raw/main/screenshots/parametros-funcao-detalhes.png)
+
+
+## "***Ir para Definição***" das funções customizadas
+
+Ao clicar sobre o nome de uma *função customizada* com o CTRL prescionado ou prescionar F12 quando posicionado sobre uma *função customizada* o editor irá para o arquivo e a posição onde a função foi definida.
 
 
 ## Snippets

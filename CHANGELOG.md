@@ -2,7 +2,9 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.13] - 08/02/2023
+## [1.2.13] - 03/04/2023
+### Adicionado
+  - Implementado o recurso de "ir para definição" para funções customizadas (definidas no LSP)
 
 ## [1.2.12] - 02/02/2023
 ### Corrigir
@@ -30,7 +32,6 @@ Alterações realizadas na extensão.
   - `HttpPut`
   - `HttpSetAttachment`
 
-### Adicionado
 - Documentação da função:
   - `GravaImagemBanco`
 

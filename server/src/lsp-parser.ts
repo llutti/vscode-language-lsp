@@ -52,6 +52,14 @@ export class LSPParser
           classe.type = LSPTypeObject.Method;
           classe.parameters = LSPParser.getParameterArrayFromString(result[5]);
           classe.fileUri = fileUri;
+
+          // TODO Criar uma forma de permitir documentar as funcoes customizadas
+          // classe.documentation = ,
+
+          classe.position = {
+            line: i,
+            character: line.indexOf(result[3]),
+          },
           classes.push(classe);
           line = '';
         }

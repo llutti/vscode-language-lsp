@@ -1,15 +1,15 @@
 import
-  {
-    CompletionItem,
-    DidChangeConfigurationNotification,
-    InitializeParams,
-    InitializeResult,
-    ProposedFeatures,
-    TextDocumentPositionParams,
-    TextDocumentSyncKind,
-    TextDocuments,
-    createConnection
-  } from 'vscode-languageserver/node';
+{
+  CompletionItem,
+  DidChangeConfigurationNotification,
+  InitializeParams,
+  InitializeResult,
+  ProposedFeatures,
+  TextDocumentPositionParams,
+  TextDocumentSyncKind,
+  TextDocuments,
+  createConnection
+} from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { LSPContext } from './lsp-context';
@@ -61,7 +61,7 @@ connection.onInitialize((params: InitializeParams) =>
   const result: InitializeResult = {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,
-
+      definitionProvider: true,
       completionProvider: { resolveProvider: true, triggerCharacters: ['.'] },
       signatureHelpProvider: { triggerCharacters: ['(', ','] },
       hoverProvider: {}
@@ -246,6 +246,13 @@ connection.onSignatureHelp(
   {
     const settings = await getDocumentSettings(docPos.textDocument.uri);
     return await LSPContext.getSignatureHelp(docPos, token, documents.get(docPos.textDocument.uri), settings.seniorSystem);
+  }
+);
+
+connection.onDefinition(
+  async (params) =>
+  {
+    return await LSPContext.getDefinitionPosition(params, documents.get(params.textDocument.uri));
   }
 );
 

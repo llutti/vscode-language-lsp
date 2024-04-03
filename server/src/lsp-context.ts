@@ -1,5 +1,5 @@
-import { CancellationToken, CompletionItem, CompletionItemKind, CompletionParams, Hover, ParameterInformation, SignatureHelp, SignatureInformation, TextDocumentPositionParams, Position } from 'vscode-languageserver/node';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
+import { CancellationToken, CompletionItem, CompletionItemKind, CompletionParams, Definition, Hover, ParameterInformation, Position, SignatureHelp, SignatureInformation, TextDocumentPositionParams } from 'vscode-languageserver/node';
 import { LSPClass, LSPSeniorSystems, LSPTemplateClass, LSPTypeObject } from './lsp-elements';
 
 // const tokenSplitter = /([\w\$]+)/g;                     // Captures symbol names
@@ -301,6 +301,76 @@ export class LSPContext
       activeSignature: 0,
       activeParameter: paramIndex
     };
+  }
+
+  public static async getDefinitionPosition(textDocumentPosition: TextDocumentPositionParams, document?: TextDocument): Promise<Definition | null>
+  {
+    if (!document)
+    {
+      return null;
+    }
+
+    const position = textDocumentPosition.position;
+    const lineIndex = position.line;
+    const charIndex = position.character;
+    const start = {
+      line: lineIndex,
+      character: 0,
+    };
+    const end = {
+      line: lineIndex + 1,
+      character: 0,
+    };
+
+    const fullLine = document.getText({ start, end });
+    if (!fullLine.charAt(charIndex).match(symbolMatcher))
+    {
+      return null;
+    }
+
+    const index = document.offsetAt(position) - document.offsetAt(start);
+    const identificador = LSPContext.getWordAtText(fullLine, index);
+
+    const line = fullLine.substring(0, charIndex + 1).trim();
+
+    if (this.positionInsideStringLiteral(line))
+    {
+      return null;
+    }
+
+    const funcao = this._classLookup[identificador.word];
+
+    if (!funcao)
+    {
+      return null;
+    }
+
+    if ((funcao.system !== LSPSeniorSystems.CUSTOMIZADO)
+      || (funcao.type !== LSPTypeObject.Method))
+    {
+      return null;
+    }
+
+    if (!funcao?.position)
+    {
+      return null;
+    }
+
+    const result = {
+      uri: funcao.fileUri,
+      range: {
+        start: {
+          line: funcao.position.line,
+          character: funcao.position.character
+        },
+        end: {
+          line: funcao.position.line,
+          character: funcao.position.character
+        },
+      },
+    } satisfies Definition;
+
+    return result;
   }
 
   public static async getHoverInfo(position: Position, document?: TextDocument, seniorSystemDefault?: LSPSeniorSystems): Promise<Hover | null>

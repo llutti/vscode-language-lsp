@@ -1,4 +1,4 @@
-import { MarkupContent } from 'vscode-languageserver/node';
+import { MarkupContent, Position } from 'vscode-languageserver/node';
 
 export enum EParameterType
 {
@@ -56,6 +56,7 @@ export class LSPClass
   public type?: LSPTypeObject;
   public parameters?: LSPParameter[];
   public insertText?: string;
+  public position?: Position;
   public readonly system: LSPSeniorSystems;
 
   constructor(system: LSPSeniorSystems, name: string)
