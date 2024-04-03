@@ -13,10 +13,10 @@
 
   <p align="center" style="display:flex;gap:7px;justify-content:center;align-items:center;">
     <img alt="Visual Studio Marketplace Version" src="https://img.shields.io/visual-studio-marketplace/v/llutti.lsp">
-    <!-- <img alt="Visual Studio Marketplace Rating (Stars)" src="https://img.shields.io/visual-studio-marketplace/stars/llutti.lsp"> -->
-    <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/llutti.lsp">
+    <img alt="Visual Studio Marketplace Downloads" src="https://img.shields.io/visual-studio-marketplace/d/llutti.lsp">
     <img alt="Visual Studio Marketplace Installs" src="https://img.shields.io/visual-studio-marketplace/i/llutti.lsp">
-    <!-- <img alt="Visual Studio Marketplace Downloads" src="https://img.shields.io/visual-studio-marketplace/d/llutti.lsp"> -->
+    <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/llutti.lsp">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/llutti/vscode-language-lsp">
   </p>
 </p>
 
