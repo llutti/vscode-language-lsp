@@ -2,7 +2,7 @@
     "name": "lsp",
     "displayName": "LSP - Linguagem Senior de Programação",
     "description": "Suporte para a Linguagem Senior de Programação",
-    "version": "1.2.13",
+    "version": "1.2.14",
     "publisher": "llutti",
     "icon": "images/icon.png",
     "license": "LICENSE.md",
@@ -86,13 +86,13 @@
         "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
     },
     "devDependencies": {
-        "@types/node": "^20.12.3",
-        "@typescript-eslint/eslint-plugin": "^7.5.0",
-        "@typescript-eslint/parser": "^7.5.0",
+        "@types/node": "^20.14.8",
+        "@typescript-eslint/eslint-plugin": "^7.14.1",
+        "@typescript-eslint/parser": "^7.14.1",
         "eslint": "^8.57.0",
         "ts-loader": "^9.5.1",
-        "typescript": "^5.4.3",
-        "webpack": "^5.91.0",
+        "typescript": "^5.5.2",
+        "webpack": "^5.92.1",
         "webpack-cli": "^5.1.4"
     }
 }
