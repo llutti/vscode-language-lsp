@@ -1,6 +1,6 @@
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
-import { CancellationToken, DocumentSemanticTokensProvider, ExtensionContext, languages, ProviderResult, SemanticTokens, SemanticTokensBuilder, SemanticTokensLegend, TextDocument, workspace } from 'vscode';
 import * as path from 'path';
+import { DocumentSemanticTokensProvider, ExtensionContext, languages, SemanticTokens, SemanticTokensBuilder, SemanticTokensLegend, TextDocument, workspace } from 'vscode';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
 
@@ -95,7 +95,7 @@ class LSPDocumentSemanticTokensProvider implements DocumentSemanticTokensProvide
     this.client = client;
   }
 
-  async provideDocumentSemanticTokens(textDocument: TextDocument, token: CancellationToken): Promise<SemanticTokens>
+  async provideDocumentSemanticTokens(textDocument: TextDocument): Promise<SemanticTokens>
   {
     const parsedTokens: UnencodedSemanticToken[] = await this.client.sendRequest(
       'getSemanticTokens',
