@@ -230,7 +230,7 @@ export const templatesInternosSENIOR: LSPTemplateClass[] = [
   },
   {
     system: LSPSeniorSystems.SENIOR,
-    label: 'Sintaxe:FinalizaBarraProgresso',
+    label: 'FinalizaBarraProgresso',
     documentation: {
       kind: 'markdown',
       value: 'Finaliza a tela de barra de progresso.'
