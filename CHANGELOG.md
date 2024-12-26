@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.14] - 26/12/2023
+### Atualizar
+  - Atualizar os parâmetros das funções `BusCadChefe` e `BusCadChefeLocal`
+
 ## [1.2.13] - 03/04/2023
 ### Adicionado
   - Implementado o recurso de "ir para definição" para funções customizadas (definidas no LSP)

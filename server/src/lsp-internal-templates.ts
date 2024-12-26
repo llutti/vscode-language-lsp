@@ -3324,7 +3324,16 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
         type: EParameterType.Numero,
         name: 'LocCol',
         isReturnValue: false
-      }
+      },
+      {
+        type: EParameterType.Alfa,
+        name: 'ConSub',
+        documentation: {
+          kind: 'markdown',
+          value: 'Define se o substituto definido no cadastro da chefia deve ser considerado. Os valores válidos são: **S** ou **N** '
+        },
+        isReturnValue: false
+      },
     ]
   },
   {
@@ -5636,15 +5645,14 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
         isReturnValue: true
       },
       {
-        type: EParameterType.Numero,
-        name: 'LocChe',
+        type: EParameterType.Alfa,
+        name: 'ConSub',
+        documentation: {
+          kind: 'markdown',
+          value: 'Define se o substituto definido no cadastro da chefia deve ser considerado. Os valores válidos são: **S** ou **N** '
+        },
         isReturnValue: false
       },
-      {
-        type: EParameterType.Numero,
-        name: 'LocCol',
-        isReturnValue: false
-      }
     ]
   },
   {
