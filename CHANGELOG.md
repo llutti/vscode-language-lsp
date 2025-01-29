@@ -2,20 +2,21 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.14] - 26/12/2023
+## [1.2.14] - 29/01/2025
 ### Atualizar
   - Atualizar os parâmetros das funções `BusCadChefe` e `BusCadChefeLocal`
+  - Atualizar dependências do projeto
 
-## [1.2.13] - 03/04/2023
+## [1.2.13] - 03/04/2024
 ### Adicionado
   - Implementado o recurso de "ir para definição" para funções customizadas (definidas no LSP)
 
-## [1.2.12] - 02/02/2023
+## [1.2.12] - 02/02/2024
 ### Corrigir
   - Diagnóstico de "senao sem inicio/fim"; ([#12](https://github.com/llutti/vscode-language-lsp/issues/12))
   - Diagnóstico atribuição de valores; ([#12](https://github.com/llutti/vscode-language-lsp/issues/12))
 
-## [1.2.11] - 25/01/2023
+## [1.2.11] - 25/01/2024
 - Documentação da função:
   - `RetornaEscala (HCM)`
   - `LimpaEspacos (ERP)`
