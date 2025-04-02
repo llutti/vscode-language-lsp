@@ -2,7 +2,7 @@
     "name": "lsp",
     "displayName": "LSP - Linguagem Senior de Programação",
     "description": "Suporte para a Linguagem Senior de Programação",
-    "version": "1.2.14",
+    "version": "1.2.15",
     "publisher": "llutti",
     "icon": "images/icon.png",
     "license": "LICENSE.md",
