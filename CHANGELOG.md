@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.15] - 13/06/2025
+### Atualizar
+  - Atualizar dependências do projeto
+
 ## [1.2.14] - 29/01/2025
 ### Atualizar
   - Atualizar os parâmetros das funções `BusCadChefe` e `BusCadChefeLocal`
