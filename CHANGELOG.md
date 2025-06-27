@@ -2,9 +2,10 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.15] - 13/06/2025
+## [1.2.15] - 27/06/2025
 ### Atualizar
   - Atualizar dependências do projeto
+  - Melhorar o snippet "cor"
 
 ## [1.2.14] - 29/01/2025
 ### Atualizar
