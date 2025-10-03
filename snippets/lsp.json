@@ -93,8 +93,11 @@
     "prefix": "cor",
     "body": [
       "Definir alfa aCor;",
+      "Definir alfa aSecao;",
       "",
-      "ProximaPagina(\"${1}\", nProximaPagina);",
+      "aSecao = \"${1}\";",
+      "",
+      "ProximaPagina(aSecao, nProximaPagina);",
       "",
       "Se ((nCor = 0)",
       "ou  (nProximaPagina = 1))",
@@ -107,7 +110,7 @@
       "\tnCor = 0;",
       "\taCor = \"Branco\";",
       "Fim;",
-      "AlteraControle(\"${1}\", \"Cor\", aCor);"
+      "AlteraControle(aSecao, \"Cor\", aCor);"
     ],
     "description": "Regra para alternar a cor de uma Seção de Relatório"
   },

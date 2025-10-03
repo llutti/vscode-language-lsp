@@ -2138,7 +2138,7 @@ export const templatesInternosHCM: LSPTemplateClass[] = [
       {
         type: EParameterType.Alfa,
         name: 'TextoInicial',
-        documentation: 'Texto original',
+        documentation: 'Variável ou Texto que contém o texto original onde será feita a busca e substituição',
         isReturnValue: false
       },
       {

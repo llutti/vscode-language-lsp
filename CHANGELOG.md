@@ -2,6 +2,12 @@
 
 Alterações realizadas na extensão.
 
+## [1.2.16] - 02/10/2025
+### Atualizar
+  - Atualizar dependências do projeto
+  - Melhorar o snippet "cor"
+  - Melhorar documentação da função "TrocaString"
+
 ## [1.2.15] - 27/06/2025
 ### Atualizar
   - Atualizar dependências do projeto
