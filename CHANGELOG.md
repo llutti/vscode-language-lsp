@@ -2,9 +2,13 @@
 
 Alterações realizadas na extensão.
 
-## [1.2.17] - 21/11/2025
+## [1.2.17] - 21/01/2026
 ### Atualizar
   - Atualizar dependências do projeto
+  - Melhorar documentação das funções:
+    - `Concatena`
+    - `WCheckValImage`
+  - Ajustar link's de documentação, para a versão 6.10.4 do HCM
 
 ## [1.2.16] - 02/10/2025
 ### Atualizar
