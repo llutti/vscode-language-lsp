@@ -21,6 +21,7 @@
         "Programming Languages",
         "Snippets"
     ],
+    "activationEvents": [],
     "main": "./dist/extension",
     "contributes": {
         "configuration": {
