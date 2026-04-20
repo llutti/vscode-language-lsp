@@ -1,0 +1,27 @@
+{
+  "name": "@lsp/compiler",
+  "version": "2.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --config vitest.config.mts",
+    "test:update": "vitest run --config vitest.config.mts --update",
+    "lint": "npm run typecheck && node scripts/lint-consistency.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\"",
+    "hcm:report:6104": "node packages/compiler/scripts/hcm-sync-6104.mjs",
+    "hcm:sync:6104": "node packages/compiler/scripts/hcm-sync-6104.mjs --apply-docurl",
+    "hcm:validate:6104:addJSONInJSONArray": "node packages/compiler/scripts/hcm-sync-6104.mjs --validate-one addJSONInJSONArray",
+    "hcm:import-example:6104": "node packages/compiler/scripts/hcm-sync-6104.mjs --import-example"
+  },
+  "dependencies": {
+    "@types/vscode": "^1.116.0",
+    "fast-glob": "^3.3.2",
+    "sql-formatter": "^15.7.3"
+  }
+}

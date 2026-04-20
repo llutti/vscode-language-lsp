@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Onboarding preferences checkbox">
+  <rect width="1280" height="720" fill="#0b1220"/>
+  <rect x="260" y="170" width="760" height="380" rx="18" fill="#111827" stroke="#3b82f6"/>
+  <text x="320" y="250" fill="#f8fafc" font-family="Segoe UI, Arial, sans-serif" font-size="36">Tutorial V2 preferences</text>
+  <rect x="320" y="300" width="42" height="42" rx="6" fill="#1e293b" stroke="#93c5fd"/>
+  <path d="M330 320 L340 332 L356 308" fill="none" stroke="#86efac" stroke-width="5"/>
+  <text x="380" y="332" fill="#dbeafe" font-family="Segoe UI, Arial, sans-serif" font-size="30">Nao mostrar novamente automaticamente</text>
+  <text x="320" y="420" fill="#bfdbfe" font-family="Segoe UI, Arial, sans-serif" font-size="26">Use o comando de preferencias para marcar/desmarcar esta opcao.</text>
+</svg>

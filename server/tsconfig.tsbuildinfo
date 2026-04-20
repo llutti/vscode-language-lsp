@@ -1,1 +1,0 @@
-{"root":["./src/lsp-context.ts","./src/lsp-elements.ts","./src/lsp-internal-templates.ts","./src/lsp-parser-utils.ts","./src/lsp-parser.ts","./src/server.ts"],"version":"5.9.3"}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Diagnostics visual">
+  <rect width="1280" height="720" fill="#111827"/>
+  <rect x="90" y="90" width="1100" height="540" rx="16" fill="#1f2937" stroke="#374151"/>
+  <rect x="140" y="160" width="920" height="62" rx="10" fill="#7f1d1d"/>
+  <rect x="140" y="250" width="920" height="62" rx="10" fill="#064e3b"/>
+  <rect x="140" y="340" width="920" height="62" rx="10" fill="#064e3b"/>
+  <rect x="140" y="450" width="540" height="80" rx="12" fill="#1d4ed8"/>
+</svg>

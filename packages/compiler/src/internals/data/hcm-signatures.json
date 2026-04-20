@@ -1,0 +1,6533 @@
+[
+  {
+    "name": "__Inserir",
+    "params": [
+      {
+        "name": "Nome_Variavel",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AbrirArquivo",
+    "documentation": "Esta função abre o arquivo passado como parâmetro. Pode ser utilizada para testar se um arquivo existe em um determinado local. Se o arquivo for aberto corretamente, a função retornará 1. Se ocorrer algum problema e o arquivo não puder ser aberto, ela retornará 0.",
+    "params": [
+      {
+        "name": "Arquivo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do arquivo a ser aberto."
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá o resultado da função. Se o arquivo for aberto corretamente, ela receberá 1. Caso contrário, ela receberá 0."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_abrirarquivo.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "AbrirTelaSistema",
+    "documentation": "Esta função abre a tela do sistema passada como parâmetro. Se a tela for aberta corretamente, a função retornará 0. Se ocorrer algum problema e a tela não puder ser aberta, ela retornará 1.",
+    "params": [
+      {
+        "name": "NomeTela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "O nome da tela do sistema que deve ser aberta. Este nome pode ser obtido no campo \"Janela Ativa no Momento\", presente na tela que é aberta ao pressionar as teclas **Shift + F3** sobre a tela do sistema cujo nome deseja-se obter."
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá o resultado da função. Se a tela for aberta corretamente, ela receberá 0. Caso contrário, ela receberá 1."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/index.htm#customizacoes/funcoes/funcao_abrirtelasistema.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "addJSONInJSONArray",
+    "documentation": "Esta função adiciona um novo JSON a um JSONArray (lista de múltiplos JSON) passado por parâmetro.",
+    "params": [
+      {
+        "name": "JSON_Array",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON, contendo uma lista (array) de elementos JSON, onde será adicionado um novo elemento."
+      },
+      {
+        "name": "JSON_Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto JSON que será adicionado ao JSONArray."
+      },
+      {
+        "name": "JSON_Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor no formato JSONArray contendo o JSON adicionado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/addjsoninjsonarray.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "addKeyAndDecimalValueInJSON",
+    "documentation": "Esta função adiciona um elemento com valor numérico decimal no JSON passado por parâmetro.",
+    "params": [
+      {
+        "name": "JSON_Original",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros."
+      },
+      {
+        "name": "Chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser adicionada no JSON."
+      },
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valor numérico decimal correspondente à chave adicionada."
+      },
+      {
+        "name": "JSON_Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor no formato JSON com o elemento adicionado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/addkeyanddecimalvalueinjson.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "addKeyAndIntegerValueInJSON",
+    "documentation": "Esta função adiciona um elemento com valor numérico inteiro no JSON passado por parâmetro.",
+    "params": [
+      {
+        "name": "JSON_Original",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros."
+      },
+      {
+        "name": "Chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser adicionada no JSON."
+      },
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valor numérico inteiro correspondente à chave adicionada."
+      },
+      {
+        "name": "JSON_Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor no formato JSON com o elemento adicionado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/addkeyandintegervalueinjson.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "addKeyAndStringValueInJSON",
+    "documentation": "Esta função adiciona um elemento com valor Alfa no JSON passado por parâmetro.",
+    "params": [
+      {
+        "name": "JSON_Original",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros."
+      },
+      {
+        "name": "Chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser adicionada no JSON."
+      },
+      {
+        "name": "Valor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Valor Alfa correspondente à chave adicionada."
+      },
+      {
+        "name": "JSON_Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor no formato JSON com o elemento adicionado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/addkeyandstringvalueinjson.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "addKeyAndTDateTimeValueInJSON",
+    "documentation": "Adiciona um elemento com valor do tipo data no JSON passado por parâmetro. A data será formatada no padrão ISO 8601.",
+    "params": [
+      {
+        "name": "JSON_Original",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros."
+      },
+      {
+        "name": "Chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser adicionada no JSON."
+      },
+      {
+        "name": "Valor",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data correspondente à chave adicionada. Pode também ser informado um valor decimal corresponde a dias e horas, contando a partir de 31/12/1900."
+      },
+      {
+        "name": "JSON_Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor no formato JSON com o elemento adicionado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/addkeyandtdatetimevalueinjson.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "addKeyAndTDateTimeValueMaskInJSON",
+    "documentation": "Adiciona um elemento com valor do tipo data no JSON passado por parâmetro. A data será formatada conforme máscara passada por parâmetro.",
+    "params": [
+      {
+        "name": "JSON_Original",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON onde será adicionado um elemento, conforme chave e valor passados por parâmetros."
+      },
+      {
+        "name": "Chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser adicionada no JSON."
+      },
+      {
+        "name": "Valor",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data correspondente à chave adicionada. Pode também ser informado um valor decimal corresponde a dias e horas, contando a partir de 31/12/1900."
+      },
+      {
+        "name": "Mascara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Máscara usada para formatar a data passada por parâmetro.\n| Máscara | Descrição |\n| ------- | --------- |\n| dd | Identificação do dia |\n| MM | Identificação do mês |\n| yy | Identificação do ano com dois dígitos |\n| yyyy | Identificação do ano com quatro dígitos |\n| / | Separador de data |\n| - | Separador de data |\n| . | Separador de data |\n| T | Separador entre data e hora |\n| HH | Identificação da hora |\n| mm | Identificação de minutos |\n| ss | Identificação de segundos |\n| : | Separador de hora |\n"
+      },
+      {
+        "name": "JSON_Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor no formato JSON com o elemento adicionado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/addkeyandtdatetimevaluemaskinjson.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "AdicionarCampo",
+    "params": [
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Tipo_Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Tamanho",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AlfaParaData",
+    "documentation": "Converte um texto armazenado em um campo tipo alfa para uma data.",
+    "params": [
+      {
+        "name": "TextoOrigem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Data no formato texto a ser convertida"
+      },
+      {
+        "name": "Mascara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Máscara da data a ser convertida"
+      },
+      {
+        "name": "Retorno",
+        "type": "Data",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá a data convertida"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/alfaparadata.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "AlteraValorFormula",
+    "params": [
+      {
+        "name": "NomeFormula",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ArqExiste",
+    "params": [
+      {
+        "name": "aNomeArq",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ArredondarValor",
+    "documentation": "Esta função arredonda determinado valor, conforme a quantidade de casa decimais informada",
+    "params": [
+      {
+        "name": "ValorVariavel",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "Precisao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_arredondarvalor.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "AssociaUsuColab",
+    "type": "Numero",
+    "isReturnValue": true,
+    "documentation": "Associar um usuário a um colaborador. Se a associação for efetuada com sucesso, retornará 1. Caso contrário, retornará 0.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código da empresa."
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código do tipo de colaborador"
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Cadastro do colaborador"
+      },
+      {
+        "name": "CriUsu",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código da opção para abrangência do usuário associado ao colaborador (Conforme lista R034USU.CriUsu)."
+      },
+      {
+        "name": "CodUsu",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código do usuário que deverá ser associado ao colaborador."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_associausucolab.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Base64Decode",
+    "documentation": "Decodifica um valor base64 passado.",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Contém o texto original que necessita ser decodificado"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Contém o texto decodificado"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "Base64Encode",
+    "documentation": "Codifica para base64 o conteúdo passado.",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Contém o texto original que necessita ser codificado"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Contém o texto codificado"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "BusCadChefe",
+    "documentation": "Esta função retorna o Tipo e Cadastro do Chefe (nas variáveis TipChe e CadChe, respectivamente) do funcionário informado nos parâmetros NumEmp, TipCol, NumCad, na data constante no parâmetro DatBas.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número da empresa do funcionário"
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Tipo do funcionário"
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número de cadastro do funcionário"
+      },
+      {
+        "name": "DatBas",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data de referência para buscar a informação"
+      },
+      {
+        "name": "Nivel",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ExcecaoChefia",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nível do local do chefe"
+      },
+      {
+        "name": "EmpChe",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Empresa do chefe"
+      },
+      {
+        "name": "TipChe",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Tipo do chefe"
+      },
+      {
+        "name": "CadChe",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Cadastro do chefe"
+      },
+      {
+        "name": "LocChe",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número que identifica a localização da chefia. 1 = Somente no nível do colaborador (padrão), 2 = Em níveis anteriores ao nível do colaborador"
+      },
+      {
+        "name": "LocCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número que identifica a localização do colaborador. 1 = Local atual do colaborador (padrão), 2 = Local do colaborador conforme data de referência."
+      },
+      {
+        "name": "ConSub",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Define se o substituto definido no cadastro da chefia deve ser considerado. Os valores válidos são: **S** ou **N** "
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_buscadchefe.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BusCadChefeLocal",
+    "documentation": "Busca o chefe de um local especificado.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodLoc",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Turno",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Nivel",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatBas",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "EmpChe",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "TipChe",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "CadChe",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "ConSub",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Define se o substituto definido no cadastro da chefia deve ser considerado. Os valores válidos são: **S** ou **N** "
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_buscadchefelocal.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BuscaDiaSit",
+    "documentation": "Esta função retorna a quantidade de dias de uma situação em um período informado. Esta função não apresenta as seguintes situações: 15 (ronda) e 16 (todos os módulos)",
+    "params": [
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nCodSit",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nQtdDia",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/buscadiasit.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BusCraTit",
+    "params": [
+      {
+        "name": "nNumEmpFun",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipColFun",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCadFun",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatAccFun",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCraFun",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_buscratit.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BusEmailFunc",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "EmailParticular",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "EmailComercial",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_busemailfunc.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BusHorBase",
+    "documentation": "Retorna o horário base do colaborador em uma determinada data.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatHor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/bushorbase.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BusQtdDiasMes",
+    "documentation": "Esta função retorna o horário base do funcionário.",
+    "params": [
+      {
+        "name": "Mes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Mês que se deseja saber o número de dias."
+      },
+      {
+        "name": "Ano",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Ano que se deseja saber o número de dias."
+      },
+      {
+        "name": "Dias",
+        "type": "Numero",
+        "documentation": "Quantidade de dias que se deseja saber.",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/index.htm#customizacoes/funcoes/busqtddiasmes.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BusSalClaNiv",
+    "documentation": "Esta função retorna o valor do salário da estrutura/classe/nível passados como parâmetro, e se desejar (informando tipo 2), o número de meses de complemento do nível salarial.",
+    "params": [
+      {
+        "name": "EstruturaSalario",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Classe",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Nivel",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Tipo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatSal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NivelMercado",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ValorSalario",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "NroMeses",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_bussalclaniv.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalculaQtdDep",
+    "documentation": "Calcula a quantidade de dependentes.",
+    "params": [
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatPag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/calculaqtddep.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalculaQtdMinutos",
+    "documentation": "Calcula a quantidade de minutos existente entre uma Data/Hora Inicial e uma Data/Hora Final",
+    "params": [
+      {
+        "name": "DatIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Hora HorIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Hora Horfim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Qtd_Minutos",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_calculaqtdminutos.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalcularVtr",
+    "documentation": "Esta função calcula o valor e a quantidade de passes de vale transporte",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Tipcol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "RecCal",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SolIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SolFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/calcularvtr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalculaTotCol",
+    "documentation": "Esta função calcula o totalizador do evento, valor ou referência, de acordo com o cálculo, totalizador e o colaborador enviados por parâmetro.",
+    "params": [
+      {
+        "name": "xCodCal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodTot",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorna",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/calculatotcol.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalIdaEmp",
+    "documentation": "cula a idade do colaborador na Data de Referência",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatRef",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/calidaemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalSalEmp",
+    "documentation": "Retorna o salário do funcionário em relação ao tipo.",
+    "params": [
+      {
+        "name": "nTipCal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatSal",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_calsalemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalSalEmpCS",
+    "documentation": "Esta função retorna o salário do funcionário em relação ao tipo",
+    "params": [
+      {
+        "name": "TipSal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataBase",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_calsalempcs.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalTotFolha",
+    "documentation": "Utilizada para carregar as variáveis de sistema",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodRat",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/caltotfolha.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CarregaAbrUsu",
+    "params": [
+      {
+        "name": "aNomCam",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aCond",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aSobrepoeAbr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aValorAbr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_carregaabrusu.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CarregaDistribuicaoEPI",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumLoc",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "EstCar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodCar",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatRef",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "AbrEpi",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ColBom",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipOpe",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipPes",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipOrd",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_carregadistribuicaoepi.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CarregaImgControle",
+    "documentation": "Carregar uma imagem do banco ou arquivo para um controle imagem do modelo",
+    "params": [
+      {
+        "name": "NomeDoControleImagem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Opcao[0-Arquivo;1-Banco;2-Variavel]",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CaminhoCampoNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ClausulaWhereSQL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SqlSenior2",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "Chave",
+    "params": [
+      {
+        "name": "Nome_Campo [;Nome_Campo[;Nome_Campo]...]",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "Concatena",
+    "documentation": "Concatena até 3 campos/variáveis **tipo alfa**, formando uma só variável.",
+    "params": [
+      {
+        "name": "Texto1",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Texto2",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Texto3",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Destino",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/concatena.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ConverteCodificacaoString",
+    "documentation": "Esta função altera a codificação de um texto contido em uma variável, onde este texto com a codificação alterada pode ser utilizado para comunicação com web services. Se o sistema não suportar a codificação informada, será emitida a seguinte mensagem: \"A codificação X não é suportada. Verifique a documentação\".",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Contém o texto original que necessita ter sua codificação alterada"
+      },
+      {
+        "name": "Codificacao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da codificação que ser utilizada, suporta as codificações: \"UTF-8\" ou \"WINDOWS-1252\""
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Contém o texto com a codificação alterada"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ConverteDataBanco",
+    "params": [
+      {
+        "name": "DataOrigem",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataDestino",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/convertedatabanco.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ConverteDataHoraDateTime",
+    "documentation": "A função serve para montar uma data e uma hora passados como parâmetro em uma string no formato datetime do banco.",
+    "params": [
+      {
+        "name": "dData",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nHora",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aDataHoraBanco",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_convertedatahoratime.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ConverteMinutosHoras",
+    "params": [
+      {
+        "name": "QuantidadeMinutos",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "RetornoHoras",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_converteminutoshoras.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ConverteParaMaiusculo",
+    "documentation": "Converte o conteúdo de uma variável do tipo Alfa para maiúsculo.",
+    "params": [
+      {
+        "name": "TextoConverter",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Variável de entrada com o conteúdo que será convertido para maiúsculo."
+      },
+      {
+        "name": "TextoConvertido",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável de saída que receberá o conteúdo convertido."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ConverteParaMinusculo",
+    "documentation": "Converte o conteúdo de uma variável do tipo Alfa para minúsculo.",
+    "params": [
+      {
+        "name": "TextoConverter",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Variável de entrada com o conteúdo que será convertido para minúsculo."
+      },
+      {
+        "name": "TextoConvertido",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável de saída que receberá o conteúdo convertido."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ConvStrPNum",
+    "documentation": "Converte um valor tipo string para numérico.",
+    "params": [
+      {
+        "name": "ValorEntrada",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ValorRetorno",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_convstrpnum.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CopiarAlfa",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "PosicaoInicial",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "QuantidadeCaracteres",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "DataHoje",
+    "params": [
+      {
+        "name": "Retorno",
+        "type": "Data",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "DeletarAlfa",
+    "documentation": "",
+    "params": [
+      {
+        "name": "Variavel",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Posicao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Quantidade",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "DescItemLista",
+    "documentation": "",
+    "params": [
+      {
+        "name": "NomLis",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "IteLis",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DesLis",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_descitemlista.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Desencriptar",
+    "documentation": "",
+    "params": [
+      {
+        "name": "aValor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aChave",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aResultado",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "DesmontaData",
+    "documentation": "",
+    "params": [
+      {
+        "name": "DataOrigem",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Dia",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Mes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Ano",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/desmontadata.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Divide",
+    "documentation": "Divide um número retornando a parte inteira, o resto ou normal",
+    "params": [
+      {
+        "name": "Divisor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número a ser dividido"
+      },
+      {
+        "name": "Dividendo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número pelo qual será dividido"
+      },
+      {
+        "name": "TipoDivisao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o que deve ser retornado. Pode ser:\n\n -**1**: Normal\n -**2**: Resto inteiro da divisão\n -**3**: Parte inteira da divisão"
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá o resultado da divisão."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_divide.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Encriptar",
+    "params": [
+      {
+        "name": "aValor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aChave",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aResultado",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "EnviaEMail",
+    "documentation": "Função que permite enviar e-mails. (CodErroEnviaEmail e MsgErroEnviaEmail)",
+    "params": [
+      {
+        "name": "Rememetente",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Remetente do e-mail."
+      },
+      {
+        "name": "Destinatario",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "CopiaPara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "CopiaOcultaPara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "Assunto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Assunto do e-mail."
+      },
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto do e-mail."
+      },
+      {
+        "name": "Anexos",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "PapelCarta",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_enviaemail.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "EnviaEMailHTML",
+    "documentation": "Função que permite enviar e-mails em formato HTML e com imagens no corpo do E-mail. (CodErroEnviaEmail e MsgErroEnviaEmail)",
+    "params": [
+      {
+        "name": "Rememetente",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Remetente do e-mail."
+      },
+      {
+        "name": "Destinatario",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Destinatário do e-mail. Parâmetro obrigatório. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "CopiaPara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Destinatário da cópia do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "CopiaOcultaPara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço Eletrônico do Destinatário da cópia oculta do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "Assunto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Assunto do e-mail."
+      },
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto do e-mail."
+      },
+      {
+        "name": "Anexos",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Caminho completo dos arquivos anexos do e-mail. Se houver mais de um, devem ser separados por ponto e vírgula (;)."
+      },
+      {
+        "name": "TratarAnexo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indicar o código de qual tratamento deve ser dado às imagens do email, podendo ser:  - **HimEmbeded**: Os links apontam para figuras que seguem anexas à mensagem e são exibidas em seu corpo. **Atenção**: esta opção possui uma limitação: não podem existir duas imagens com o mesmo nome de arquivo, pois a imagem vai em anexo implicitamente. Portanto, se existirem duas imagens com o mesmo nome de arquivo, a exibição poderá apresentar problemas.  - **HimLink**: Os links indicam imagens externas à mensagem, não recebendo nenhum tipo de tratamento. *Exemplo*: <IMG SRC=\"http://www.senior.com.br/figuras/senior.gif\">  - **HimAttach**: Os links apontam para figuras que seguem anexas à mensagem, mas não são exibidas no corpo da mensagem e sim na lista de arquivos anexos."
+      },
+      {
+        "name": "PapelCarta",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica se será utilizado o texto de papel de carta. Valores: 0 (Não) e 1 (Sim)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/enviaemailhtml.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "EscondeCampoTelaEntrada",
+    "documentation": "Permite ao usuário esconder determinados campos da tela de entrada do modelo",
+    "params": [
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_escondecampotelaentrada.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExcLanBhr",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodBhr",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatLan",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodSit",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_exclanbhr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExecutaRelatorio",
+    "documentation": "Permite que sejam executados relatórios através das regras.",
+    "params": [
+      {
+        "name": "NomeModelo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ExibirTelaEntrada",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_executarelatorio.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExecutaTelaSGI",
+    "documentation": "Esta função executa a tela do SGI passada como parâmetro. Se a tela for executada com sucesso, a função retornará 1. Caso contrário, retornará 0.",
+    "params": [
+      {
+        "name": "xNomeTela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_executatelasgi.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExtensoMes",
+    "documentation": "Esta função retorna o nome por extenso do mês passado como parâmetro",
+    "params": [
+      {
+        "name": "DataBase",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Extenso",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_extensomes.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExtensoNumero",
+    "documentation": "Retorna o valor por extenso do número passado como parâmetro.",
+    "params": [
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ExtensoDoValor",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/extensonumero.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExtensoSemana",
+    "documentation": "Esta função monta o extenso do dia da semana de uma determinada data.",
+    "params": [
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável tipo Alfa que receberá o extenso do dia da semana."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_extensosemana.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExtrasIntervalo",
+    "documentation": "Busca a quantidade de horas extras efetuadas dentro de um intervalo.",
+    "params": [
+      {
+        "name": "horaInicial",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Hora Inicial."
+      },
+      {
+        "name": "horaFinal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Hora Final."
+      },
+      {
+        "name": "diaExt",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina qual DIA será pesquisada a Hora Extra realizada:\n- **0**: Retornar Extras Efetuadas no **Dia Atual**\n- **1**: Retornar Extras Efetuadas no **Dia Seguinte**\n- **2**: Retornar Extras Efetuadas no **Dia Anterior**\n"
+      },
+      {
+        "name": "qtdDiurna",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável para retorno das horas extras diurnas neste período."
+      },
+      {
+        "name": "qtdNoturna",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável para retorno das horas extras noturnas neste período."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_extrasintervalo.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Fechar",
+    "documentation": "Fecha um arquivo previamente aberto.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "FinalVtr",
+    "documentation": "Libera as estruturas alocadas anteriormente pela função CalculaVtr",
+    "params": [],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "GeraHash",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Algoritmo [MD5 | SHA1 | SHA256 | SHA512]",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Hash",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "getItemJSONArrayDateTime",
+    "documentation": "Esta função retorna uma data na posição especificada do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde será extraído um valor Data na posição indicada."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "mask",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Máscara do formato de data identificada no JSON.\n| Máscara | Descrição |\n| ------- | --------- |\n| dd | Identificação do dia |\n| MM | Identificação do mês |\n| yy | Identificação do ano com dois dígitos |\n| yyyy | Identificação do ano com quatro dígitos |\n| / | Separador de data |\n| - | Separador de data |\n| . | Separador de data |\n| T | Separador entre data e hora |\n| HH | Identificação da hora |\n| mm | Identificação de minutos |\n| ss | Identificação de segundos |\n| : | Separador de hora |\n"
+      },
+      {
+        "name": "retorno",
+        "type": "Data",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarraydatetime.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getItemJSONArrayDateTimeByTag",
+    "documentation": "Esta função retorna uma data na posição e chave especificadas do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde será extraído um valor Data associado à chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSONArray."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "mask",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Máscara do formato de data identificada no JSON.\n| Máscara | Descrição |\n| ------- | --------- |\n| dd | Identificação do dia |\n| MM | Identificação do mês |\n| yy | Identificação do ano com dois dígitos |\n| yyyy | Identificação do ano com quatro dígitos |\n| / | Separador de data |\n| - | Separador de data |\n| . | Separador de data |\n| T | Separador entre data e hora |\n| HH | Identificação da hora |\n| mm | Identificação de minutos |\n| ss | Identificação de segundos |\n| : | Separador de hora |\n"
+      },
+      {
+        "name": "retorno",
+        "type": "Data",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarraydatetimebytag.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getItemJSONArrayDecimal",
+    "documentation": "Esta função retorna um valor numérico decimal na posição especificada do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde será extraído um valor numérico na posição indicada."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarraydecimal.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getItemJSONArrayDecimalByTag",
+    "documentation": "Esta função retorna um valor numérico decimal na posição e chave especificadas do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde será extraído um valor numérico associado a chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSONArray."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarraydecimalbytag.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getItemJSONArrayInteger",
+    "documentation": "Esta função retorna um valor numérico inteiro na posição especificada do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde será extraído um valor numérico na posição indicada."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarrayinteger.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getItemJSONArrayIntegerByTag",
+    "documentation": "Esta função retorna um valor numérico inteiro na posição e chave especificadas do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde o valor numérico será extraído."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSONArray."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarrayintegerbytag.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getItemJSONArrayString",
+    "documentation": "Esta função retorna um valor Alfa na posição especificada do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde será extraído um valor Alfa na posição indicada."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarraystring.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getItemJSONArrayStringByTag",
+    "documentation": "Esta função retorna um valor Alfa na posição e chave especificadas do JSONArray.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, de onde será extraído um valor Alfa associado à chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSONArray."
+      },
+      {
+        "name": "index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do JSONArray, sendo a primeira posição de valor 0 (zero)."
+      },
+      {
+        "name": "retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima na posição requisitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getitemjsonarraystringbytag.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getJSONArrayLength",
+    "documentation": "Esta função retorna o tamanho do JSONArray passado por parâmetro.",
+    "params": [
+      {
+        "name": "jSonArray",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSONArray, que terá seu tamanho medido."
+      },
+      {
+        "name": "retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorno com o tamanho (quantidade de elementos) do JSONArray."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getjsonarraylength.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getJSONArrayObj",
+    "documentation": "Esta função retorna um objeto do tipo JSONArray (matriz contida no JSON) associado a uma chave do JSON.",
+    "params": [
+      {
+        "name": "jSon",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON, de onde será extraído o JSONArray associado à chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSON."
+      },
+      {
+        "name": "retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor no formato JSONArray identificado pela chave acima."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getjsonarrayobj.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getJSONDateTime",
+    "documentation": "Esta função retorna uma data associada a uma chave.",
+    "params": [
+      {
+        "name": "jSon",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON de onde será extraído o valor de um elemento associado à chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSON."
+      },
+      {
+        "name": "mask",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Máscara do formato de data identificada no JSON.\n| Máscara | Descrição |\n| ------- | --------- |\n| dd | Identificação do dia |\n| MM | Identificação do mês |\n| yy | Identificação do ano com dois dígitos |\n| yyyy | Identificação do ano com quatro dígitos |\n| / | Separador de data |\n| - | Separador de data |\n| . | Separador de data |\n| T | Separador entre data e hora |\n| HH | Identificação da hora |\n| mm | Identificação de minutos |\n| ss | Identificação de segundos |\n| : | Separador de hora |\n"
+      },
+      {
+        "name": "retorno",
+        "type": "Data",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getjsondatetime.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getJSONDecimal",
+    "documentation": "Esta função retorna um valor numérico decimal associado a uma chave.",
+    "params": [
+      {
+        "name": "jSon",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON de onde será extraído o valor de um elemento associado a chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSON."
+      },
+      {
+        "name": "retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getjsondecimal.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getJSONInteger",
+    "documentation": "Esta função retorna um valor numérico inteiro associado a uma chave do JSON.",
+    "params": [
+      {
+        "name": "jSon",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON de onde será extraído o valor de um elemento associado à chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSON."
+      },
+      {
+        "name": "retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getjsoninteger.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getJSONObj",
+    "documentation": "Esta função retorna um JSON contido em outro JSON e associado a uma chave.",
+    "params": [
+      {
+        "name": "jSon",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON, de onde será extraído outro JSON contido."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSON contido."
+      },
+      {
+        "name": "retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno no formato JSON identificado pela chave acima."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getjsonobj.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "getJSONString",
+    "documentation": "Esta função retorna um valor Alfa associado a uma chave do JSON.",
+    "params": [
+      {
+        "name": "jSon",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Conteúdo no formato JSON de onde será extraído o valor de um elemento associado a chave."
+      },
+      {
+        "name": "chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Chave a ser identificada no JSON."
+      },
+      {
+        "name": "retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorno do valor identificado pela chave acima."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/getjsonstring.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "GlbAdiVarNumDat",
+    "documentation": "Adiciona uma variável global numérica/data em memória",
+    "params": [
+      {
+        "name": "aVarNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/glbadivarnumdat.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "GlbAdiVarStr",
+    "documentation": "Adiciona uma variável global alfa numérica em memória.",
+    "params": [
+      {
+        "name": "VarNome",
+        "type": "Alfa"
+      },
+      {
+        "name": "VarValor",
+        "type": "Alfa"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/glbadivarstr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "GlbRetVarNumDat",
+    "documentation": "Retorna o conteúdo de uma variável global numérica, armazenada pela função GlbAdiVarNumDat. Exemplo: x := GlbRetVarNumDat(vNomVar);",
+    "params": [
+      {
+        "name": "VarNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/glbretvarnumdat.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "GlbRetVarStr",
+    "documentation": "Retorna o conteúdo de uma variável global armazenada pela função GlbAdiVarStr.",
+    "params": [
+      {
+        "name": "VarNome",
+        "type": "Alfa"
+      },
+      {
+        "name": "VarValor",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/glbretvarstr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "GravaFotoCandidatoEmDisco",
+    "documentation": "Grava a foto do candidato em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados,  no formato JPEG (*.JPG).",
+    "params": [
+      {
+        "name": "nNumCan",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aDirArq",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomArq",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nRetorno",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "aMsgErro);",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_gravafotocandidatoemdisco.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "GravaFotoColaboradorEmDisco",
+    "documentation": "Grava a foto do colaborador em disco. Esta foto será salva no mesmo tamanho em que foi gravada no Banco de Dados, sempre no formato JPEG (*.JPG).",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero"
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero"
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero"
+      },
+      {
+        "name": "DirArq",
+        "type": "Alfa"
+      },
+      {
+        "name": "NomArq",
+        "type": "Alfa"
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "MsgErr",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_gravafotocolaboradoremdisco.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "GravaImagemBanco",
+    "documentation": "É uma função genérica que permite gravar imagens em qualquer tabela do sistema, sendo que o parâmetro imagem pode ser uma referência passada pelo retorno da função **WCheckValImage**.\n\n**OBSERVAÇÃO**:\n\nAo gravar a imagem na base, independentemente da extensão, ela será automaticamente convertida para o formato JPG. Por conta disso, é possível que a imagem perca um pouco da qualidade.",
+    "params": [
+      {
+        "name": "NomeTabela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da tabela no banco de dados que armazenará a imagem."
+      },
+      {
+        "name": "CamposChave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome e valores dos campos chave que serão utilizados no SQL separados por \";\".\n**Exemplo**: \"NumEmp=1;TipCol=1;NumCad=1\"\n\n**ATENÇÃO**: nNão deverá existir **nenhum espaço em branco**."
+      },
+      {
+        "name": "OutrosCampos",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome e valores dos campos restantes (**exceto a chave e o campo imagem**) que serão utilizados no SQL de inclusão separados por \";\".\nDeve-se informar somente campos que sejam obrigatórios ou se desejar os campos opcionais."
+      },
+      {
+        "name": "NomeCampoImagem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo no banco de dados que armazenará a imagem"
+      },
+      {
+        "name": "Origem",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Informa a **Origem** da imagem:\n- 1: Arquivo\n- 2: Upload"
+      },
+      {
+        "name": "Arquivo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Quando a **Origem** for:\n- **Arquivo** [1]: deve-se indicar o caminho completo do arquivo.\n- **Upload** [2]: deve-se indicar a variável **de Retorno** da função **WCheckValImage**."
+      },
+      {
+        "name": "MensagemErro",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Mensagem de erro, sendo que o valor padrão quando não ocorrer erros será em branco."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_gravaimagembanco.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Gravar",
+    "documentation": "Escreve determinado número de bytes para um arquivo binário e retorna o número de bytes gravados no arquivo.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "Dados",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo."
+      },
+      {
+        "name": "NumeroDeBytes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o número de bytes que devem ser lidos do arquivo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "GravarNL",
+    "documentation": "Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "ValorLinha",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "GravarNLEOL",
+    "documentation": "Grava uma linha em um arquivo texto com a opção de incluir a quebra de linha ao final.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "ValorLinha",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto."
+      },
+      {
+        "name": "UseEOL [0:Não | 1:Sim]",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina se deve ou não ser adicionada a quebra de linha ao final."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "GravarVtr",
+    "documentation": "Grava os passes na tabela R028PVT, calculada anteriormente pela função CalculaVtr",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Tipcol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "IncLanBhr",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodBhr",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatLan",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodSit",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "QtdHor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatCmp",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_inclanbhr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "InicioVtr",
+    "documentation": "Função para preparar os recursos de máquina (alocar memória) para o cálculo de Vale Transporte",
+    "params": [],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "InserirAlfa",
+    "documentation": "Insere um ou mais caracteres em uma Variável/Campo, a partir da posição indicada. Havendo informação no campo alfa, no qual deseja-se inserir o texto, as que estiverem a partir da posicão indicada serão deslocadas para a direita e o que passar do tamanho definido do campo/variável será truncado.",
+    "params": [
+      {
+        "name": "Texto_Origem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Variável_Destino",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "Posicao_Inicial",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/inseriralfa.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "InsSQLWhereSimples",
+    "documentation": "Permite Inserir uma cláusula WHERE dentro de um SQL durante a execução da regra de pré-seleção. As tabelas referenciadas no SQL não são incluídas na cláusula FROM do comando SQL.",
+    "params": [
+      {
+        "name": "NomeSecao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ClausulaWhere",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "Ler",
+    "documentation": "Lê determinado números de bytes do arquivo binário indicado. Esta função retorna o **número de bytes** que foram **lidos** do arquivo. Se a leitura atingiu o final do arquivo, o retorno será o **número de bytes lidos** até o final do arquivo.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica a variável de onde os dados serão obtidos para leitura."
+      },
+      {
+        "name": "NumeroDeBytes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o número de bytes que devem ser lidos do arquivo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "LerNL",
+    "documentation": "Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n\n**Observação:** A função LerNL considera apenas como quebra de linha *“CRLF”* ou *“#13#10”*, padrão do sistema operacional Windows.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica a variável de onde os dados serão obtidos para leitura."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "LerNovaLinha",
+    "documentation": "Esta função funciona em conjunto com a função 'AbrirArquivo'. Após abrir o arquivo é possível ler linha a linha do arquivo.",
+    "params": [
+      {
+        "name": "Linha",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Variável que receberá o conteúdo de cada linha do arquivo."
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Se conseguiu ler a linha normalmente vai retornar 1. Caso contrário se chegou no final do arquivo o retorno será 0(zero)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/lernovalinha.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "LerPassesVtr",
+    "documentation": "Verifica se houve digitação de Passes de Vale Transporte",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TemDig",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/lerpassesvtr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "LiquidoFerias",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NatEve",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Liquido",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "PerPag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatPag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/liquidoferias.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "LiquidoFolha",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NatEve",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ConSol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Liquido",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "PerPag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatPag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/liquidofolha.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "LiquidoRescisao",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipRcs",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NatEve",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Liquido",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "PerPag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatPag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/liquidorescisao.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "MensagemLog",
+    "documentation": "Esta função cancela o processamento em execução e mostra a mensagem de erro passada como parâmetro",
+    "params": [
+      {
+        "name": "Mensagem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/mensagemlog.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Minusculo",
+    "documentation": "Converte um valor alfanumérico de maiúsculo para minúsculo",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto Original."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que recebe o texto modificado."
+      },
+      {
+        "name": "PrimeiraMaiuscula",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Primeira letra deve ser maiúscula. Os valores válidos são: **S** ou **N**"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_minusculo.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "MontaAbrangencia",
+    "params": [
+      {
+        "name": "pCpoTab",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "pAbgInf",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "pAbrRetorno",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/montaabrangencia.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "MontaCriteriosAperfeicoamento",
+    "params": [
+      {
+        "name": "xHisCua",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xValCua",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xRevCua",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xCerApr",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xCerPar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xSitAnd",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xSitCom",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xSitDes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xSitSus",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xSitMed",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xSitFre",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xSitTrf",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xAbrCua",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_montacriteriosaperfeicoamento.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "MontarSQLHistorico",
+    "documentation": "Retorna um SQL com base em uma data para uso com os históricos do sistema",
+    "params": [
+      {
+        "name": "Tabela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataReferencia",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SQL",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "MontarSQLHistoricoSeq",
+    "documentation": "Esta função retorna um SQL com base em uma data e seqüência para uso com os históricos do sistema",
+    "params": [
+      {
+        "name": "Tabela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataReferencia",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SQL",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "NumeroParaAlfa",
+    "documentation": "Converte um número para formato alfanumérico, mantendo as casas decimais e sem arredondar.",
+    "params": [
+      {
+        "name": "nOrigem",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aDestino",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_numeroparaalfa.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "Para",
+    "params": [
+      {
+        "name": "valor inicial",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "condição",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "contador",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "PertenceGrupo",
+    "documentation": "Identifica se o usuário ativo pertence ao grupo de usuários passado como parâmetro. Se pertencer retornará 1, caso contrário retornará 0",
+    "params": [
+      {
+        "name": "NomGru",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_pertencegrupo.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "PosicaoAlfa",
+    "params": [
+      {
+        "name": "TextoPesquisar",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ValorPesquisado",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Posicao",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ProximaPagina",
+    "documentation": "Permite verificar se uma determinada seção será impressa na próxima página.",
+    "params": [
+      {
+        "name": "Secao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RestoDivisao",
+    "params": [
+      {
+        "name": "Dividendo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Divisor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Resto",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetAdiEmp",
+    "documentation": "Esta função retorna o Adicional do funcionário em uma determinada data",
+    "params": [
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatAdi",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retadiemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetApuPon",
+    "documentation": "Esta função retorna o tipo de apuração do colaborador, conforme o histórico de apuração.",
+    "params": [
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatApu",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nApuPon",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retapupon.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetBHRDat",
+    "documentation": "Esta função retorna o saldo do banco de horas conforme a data especificada para verificação. O valor que será retornado corresponderá ao saldo inicial da data. Não são considerados os lançamentos efetuados no dia.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodBhr",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatBas",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "BhrDat",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retbhrdat.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetCampoAlfa",
+    "documentation": "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
+    "params": [
+      {
+        "name": "Indice",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Campos",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetCampoNumero",
+    "documentation": "Para buscar algum campo retornado das funções SelectData e SelectMaskedData",
+    "params": [
+      {
+        "name": "Indice",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Campos",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetCarEmp",
+    "documentation": "Retorna o Cargo do funcionário em uma determinada data.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatCar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retcaremp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetCodNomLocNiv",
+    "documentation": "Retorna o nome e o código do local, no nível informado",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumLoc",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NroNiv",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatLoc",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NomLoc",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "CodNivLoc",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetCodUsuPorColab",
+    "documentation": "Esta função retornará o código do usuário associadr. Caso não houver retornará zero.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retcodusuporcolab.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetColabPorCodUsu",
+    "params": [
+      {
+        "name": "CodUsu",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retcolabporcodusu.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetDatCmp",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatLan",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodBhr",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodSit",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatCmp",
+        "type": "Data",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retdatcmp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetDiaHor",
+    "documentation": "Função que concatena os dias da semana que contenham o mesmo horário de curso.",
+    "params": [
+      {
+        "name": "nCodHCu",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomDia1",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomDia2",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomDia3",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomDia4",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomDia5",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomDia6",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomDia7",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aStrHor1",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aStrHor2",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aStrHor3",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aStrHor4",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aStrHor5",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aStrHor6",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aStrHor7",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retdiahor.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetDifDat",
+    "documentation": "Esta função retorna a diferença em dias, meses ou anos entre duas datas.",
+    "params": [
+      {
+        "name": "UnidadeRetorno",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Tipo de retorno desejado, podendo ser:\n- 1: Quantidade de dias\n- 2: Quantidade de meses\n- 3: Quantidade de anos\n- 4: Quantidade de meses com ajuste\n- 5: Quantidade de anos com ajuste\n- 6: Quantidade de meses com ajuste pelas datas início e fim"
+      },
+      {
+        "name": "DataIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data Inicial"
+      },
+      {
+        "name": "DataFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data Final"
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber o valor calculado"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retdifdat.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetEscEmp",
+    "documentation": "Retorna a escala do funcionário em uma determinada data",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatEsc",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retescemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetEstCarEmp",
+    "documentation": "Função que retorna a estrutura de cargos utilizada pela empresa na data informada.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatRef",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetEtbEmp",
+    "documentation": "Retorna a estabilidade do funcionário em uma determinada data.",
+    "params": [
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatEtb",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retetbemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetExtMoeda",
+    "documentation": "Gera o extenso de um valor (moeda). Obs: não completa o espaço restante com o caracter “*”.",
+    "params": [
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ExtensoDoValor",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retextmoeda.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetFilEmp",
+    "documentation": "Retorna a filial do funcionário em uma determinada data.",
+    "params": [
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatRef",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retfilemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetHorPrvTrb",
+    "documentation": "",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Empresa do Colaborador"
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Tipo do Colaborador"
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Cadastro do Colaborador"
+      },
+      {
+        "name": "DatIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data inicial do intervalo"
+      },
+      {
+        "name": "HorIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Hora inicial do intervalo"
+      },
+      {
+        "name": "DatFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data final do intervalo"
+      },
+      {
+        "name": "HorFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Hora final do intervalo"
+      },
+      {
+        "name": "DatVer",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data de Verificação das horas previstas de trabalho. Se informar 0, considera todo o período informado. Caso informar uma data, calcula apenas nesta data e dentro do período informado."
+      },
+      {
+        "name": "HorPrv",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorna as horas previstas de trabalho"
+      },
+      {
+        "name": "DiaInt",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Retorna 1 se horas previstas de trabalho no período corresponderem à jornada do dia inteiro. Utiliza-se apenas se informar uma data na variável DatVer. Se DatVer for igual a 0, xdiaint retornará sempre 0."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_rethorprvtrb.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetHorTrab",
+    "documentation": "Retorna a quantidade de horas trabalhadas num determinado período.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "AbrTip",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "AbrLoc",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "FilSit",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "AbrSit",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "QtdHor",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/rethortrab.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetHtmlFicReg",
+    "params": [
+      {
+        "name": "Pasta",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "vHtml",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "Alt",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetLocEmp",
+    "documentation": "Retorna o local do funcionário em uma determinada data.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatLoc",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retlocemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetLocNiv",
+    "params": [
+      {
+        "name": "nNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nNroNiv",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodLoc",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retlocniv.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetMinRefHTr",
+    "params": [
+      {
+        "name": "QtdeMinutos",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retminrefhth.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetNivLoc",
+    "documentation": "Função que retorna a quantidade de níveis do local informado",
+    "params": [
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodLoc",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatLoc",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Nivloc",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retnivloc.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetNomCodNiv",
+    "documentation": "Retorna o Nome e o código do Local do Empregado em um determinado nível.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatRef",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NivIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NivFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NomeLoc",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "CodNivLoc",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retnomcodniv.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetNumLocNiv",
+    "documentation": "Retorna o código do local no nível passado como parâmetro.",
+    "params": [
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumLoc",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataRef",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Nivel",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumLocNiv",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retnumlocniv.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaAbrUsu",
+    "params": [
+      {
+        "name": "aCodMod",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aTipoAbr",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aCodUsu",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aIDPerfil",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aCond",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aValAbr",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornaabrusu.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaAnoData",
+    "params": [
+      {
+        "name": "DataBase",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Ano",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornaanodata.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaAscII",
+    "documentation": "Esta função retorna o caractere ASCII de um número.",
+    "params": [
+      {
+        "name": "CodigoASCII",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Variável tipo Número da qual se quer o retorno em ASCII"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Caracter ASCII correspondente ao Número do primeiro parâmetro"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornaascii.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaBatidaHorario",
+    "params": [
+      {
+        "name": "CodHor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SeqMar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "UsoMar",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "HorMar",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "TolAnt",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "TolApo",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "FaiMov",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornabatidahorario.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaCodLoc",
+    "documentation": "Retorna o Código do Local (*codLoc*) baseando-se no **NumLoc** informado.",
+    "params": [
+      {
+        "name": "NumLoc",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número do Local."
+      },
+      {
+        "name": "CodLoc",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará o Código do Local (*codLoc*)"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retornacodloc.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaDiaData",
+    "params": [
+      {
+        "name": "DataBase",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Dia",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornadiadata.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaDiaSemana",
+    "params": [
+      {
+        "name": "DataBase",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornadiasemana.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaDistribuicaoEPI",
+    "documentation": "Retorna item a item dos resultados encontrados em CarregaDistribuicaoEPI. Os itens podem ser navegados através dos parâmetro TipOpe, que retorna o item escolhido na lista, como, primeiro, ultimo, próximo e anterior. A função CarregaDistribuicaoEPI deve sempre ser chamada antes da RetornaDistribuicaoEPI para que os dados sejam carregados anteriormente.",
+    "params": [
+      {
+        "name": "TipOpe",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodEpi",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "MedEpi",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "DesMot",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "DatEnt",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "DatRev",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "DatVal",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "RecIns",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "DatAju",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "CodMtv",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "DatDev",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornadistribuicaoepi.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaEscala",
+    "documentation": "Retorna a escala do colaborador em determinada data, considerando as programações de troca de escala e histórico do colaborador",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Empresa do Colaborador"
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Tipo do Colaborador"
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Cadastro do Colaborador"
+      },
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data na qual deseja-se buscar a escala do colaborador"
+      },
+      {
+        "name": "CodEsc",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Código da escala"
+      },
+      {
+        "name": "CodTma",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Código da turma da escala"
+      },
+      {
+        "name": "TurInt",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Código da turma de intervalo da escala"
+      },
+      {
+        "name": "CodEqp",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Código da equipe da escala de geração automática"
+      },
+      {
+        "name": "CodCat",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Código da categoria da escala de geração automática"
+      },
+      {
+        "name": "Mensagem",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorna uma mensagem caso ocorra um dos erros abaixo::\n- 1: Cadastro do colaborador não encontrado\n- 2: Data procurada é menor que a data de admissão\n- 3: Não possui histórico de escala na data\n- 4: Problemas com a base de dadosn"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornaescala.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaHorario",
+    "documentation": "A função Retornahorario calcula o horário na hora em que é chamada, considerando as programações de troca de horário, escala e ponte. Na escala de Busca Automática retorna o horário base e não o horário apurado.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ConsiderarFeriado",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se é para retornar se é feriado ou não. Valores possíveis \"S\" | \"N\""
+      },
+      {
+        "name": "CodHor",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retornahorario.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaHorarioApurado",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodHor",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "Mensagem",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornahorarioapurado.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaMesData",
+    "params": [
+      {
+        "name": "DataBase",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Mes",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retornamesdata.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaNivelLocal",
+    "documentation": "Retorna uma fração do código do local do nível inicial até o nível final informados",
+    "params": [
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodLoc",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NivIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NivFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NivLoc",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornanivellocal.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaNomeUsuario",
+    "documentation": "É uma função que permite utilizar os nomes disponíveis no cadastro de propriedades do usuário no SGU - Senior Gerenciador de usuários.",
+    "params": [
+      {
+        "name": "aCodUsu",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNomUsu",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornanomeusuario.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaNumLoc",
+    "documentation": "Converte o código do local para o número do local. Considera a data setada em DatRef",
+    "params": [
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "pCodLoc",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retornanumloc.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetPrxClaNiv",
+    "params": [
+      {
+        "name": "Opcao(1-Classe | 2-Nível)",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Estrutura",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatBas",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Classe",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Nivel",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ProximaClasse",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "ProximoNivel",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retprxclaniv.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetQtdDiasUtil",
+    "documentation": "Retorna a quantidade de dias úteis dentro de um determinado período, levando-se em consideração os dias de segunda a sexta-feira, desde que não estejam cadastrados como feriado na Tabela de Feriados passada como parâmetro na função.",
+    "params": [
+      {
+        "name": "dDatIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTabFer",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nQtdDiasUtil",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retqtddiasutil.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetQtdVagLoc",
+    "documentation": "A função RetQtdVagLoc tem como objetivo retornar a quantidade de vagas disponíveis em um determinado local, cargo e data passados como parâmetros, ou seja, é a diferença entre a quantidade de vagas do quadro previsto e a quantidade de vagas do quadro efetivo.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumLoc",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "EstCar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodCar",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Turno",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatAlt",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "QtdVaga",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "TipVag",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Quando a empresa utiliza o tipo de vaga deve informar qual o tipo de vaga que deseja consultar, senão deve informar um parâmetro default igual a 1."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retqtdvagloc.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetSalDat",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Saldo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ValSaldo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retsaldat.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetSalEmp",
+    "documentation": "Esta função retorna o salário do funcionário em uma determinada data.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatSal",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retsalemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetSalEst",
+    "documentation": "Retorna o salário (sem nenhuma conversão) de uma Estrutura/Classe/Nível específica em uma determinada data.",
+    "params": [
+      {
+        "name": "nEstSal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aClaSal",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNivSal",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dDatRef",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retsalest.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetSinEmp",
+    "documentation": "Esta função retorna o código do sindicato de um colaborador em uma determinada data na variável de sistema CodSinEmp",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataRef",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retsinemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetSitEmp",
+    "documentation": "Retorna a Situação do Colaborador em uma determinda Data (Retorna na variável SitEmp)",
+    "params": [
+      {
+        "name": "xNumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xNumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "xDatSit",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retsitemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetTabOrgEmp",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataRef",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TabOrg",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/rettaborgemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetTurCol",
+    "params": [
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Turno",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retturcol.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetVinEmp",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataRef",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retvinemp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "SelectData",
+    "documentation": "Função na qual é possível executar qualquer SELECT",
+    "params": [
+      {
+        "name": "SQL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CamposRet",
+        "type": "Alfa",
+        "isReturnValue": true
+      },
+      {
+        "name": "TemDados",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SetaAlfaTelaEntrada",
+    "documentation": "Permite ao usuário alterar os valores alfanuméricos da tela de entrada do modelo.",
+    "params": [
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Valor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_setaalfatelaentrada.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "SetaDataTelaEntrada",
+    "documentation": "Permite ao usuário alterar os valores do tipo data da tela de entrada do modelo.",
+    "params": [
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_setadatatelaentrada.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "SetaNumeroTelaEntrada",
+    "documentation": "Permite ao usuário alterar os valores numéricos da tela de entrada do modelo.",
+    "params": [
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_setanumerotelaentrada.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "SetaValorFormula",
+    "params": [
+      {
+        "name": "aNomeControle",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValorControle",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_AbrirCursor",
+    "documentation": "Função que abre o cursor depois de informado o SQL a ser utilizado.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_BOF",
+    "documentation": "Função que retorna se o cursor está na posição inicial (antes do primeiro registro). Se o cursor está na posição BOF, o valor retornado é 1 (um), caso contrário é 0 (zero).",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_Criar",
+    "documentation": "Função que cria um cursor, ou um objeto para execução de SQL, e retorna no parâmetro \"Objeto\".",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Informe o cursor."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_DefinirAlfa",
+    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo alfanumérico.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aValor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_DefinirBlob",
+    "documentation": "Função que seta define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo blob.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aValor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_DefinirBoleano",
+    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo boleano.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_DefinirComando",
+    "documentation": "Função que aplica o comando SQL para o cursor passado como parâmetro.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aSQL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_DefinirData",
+    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo data.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dValor",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_DefinirFlutuante",
+    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo numérico com ponto flutuante.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_DefinirInteiro",
+    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo inteiro.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_Destruir",
+    "documentation": "Função que destrói um cursor depois de sua utilização, o mesmo deve ser chamado quando o cursor não for mais utilizado.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Informe o cursor."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_EOF",
+    "documentation": "Função que retorna se o cursor está na posição final (depois do último registro). Se o cursor está na posição EOF, o valor retornado é 1 (um), caso contrário é 0 (zero)",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_FecharCursor",
+    "documentation": "Função que fecha a pesquisa sendo feita pelo cursor.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_Proximo",
+    "documentation": "Função que posiciona o cursor no próximo registro.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_RetornarAlfa",
+    "documentation": "Função que retorna um valor do tipo alfa (string) de um campo do registro do cursor.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aValor",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_RetornarBlob",
+    "documentation": "Função que retorna um Blob de um campo do registro do cursor.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aValor",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_RetornarBoleano",
+    "documentation": "Função que retorna um valor boleano de um campo do registro do cursor.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_RetornarData",
+    "documentation": "Função que retorna uma data de um campo do registro do cursor.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "dValor",
+        "type": "Data",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_RetornarFlutuante",
+    "documentation": "Função que retorna um valor flutuante de um campo do registro do cursor.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_RetornarInteiro",
+    "documentation": "Função que retorna um valor inteiro de um campo do registro do cursor.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_RetornarSeNulo",
+    "documentation": "Função que retorna um valor booleano, que significa se o campo é nulo ou não.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "aCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_UsarAbrangencia",
+    "documentation": "Função que informa ao cursor se é para utilizar abrangência de usuários.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "nUsar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SQL_UsarSQLSenior2",
+    "documentation": "Informa se o comando a ser definido para o cursor utiliza a sintaxe de linguagem Senior ou a sintaxe nativa (linguagem originada da base de dados utilizada, por exemplo Oracle e SQL Server).\n\nPara utilização de comandos nativos é **necessário desabilitar** as rotina de abrangência através da função **SQL_UsarAbrangencia** e, em seguida, informar que não será utilizado a linguagem Senior.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Informe o cursor."
+      },
+      {
+        "name": "nUsar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 para definir que não será utilizada sintaxe SQL Senior 2 ou um valor diferente de zero para definir que será utilizada a sintaxe SQL Senior 2."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "TamanhoAlfa",
+    "params": [
+      {
+        "name": "Origem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Tamanho",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/cadastrarbiometria.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "TempoTrabFun",
+    "documentation": "Esta função retorna o tempo de trabalho em meses, de um funcionário em um determinado período",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DataFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ConAfa",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NrMeses",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/tempotrabfun.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "TiraAcentos",
+    "documentation": "Retira os caracteres especiais, retornando o texto em maíusculo.",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/tiraacentos.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "TiraEspacos",
+    "params": [
+      {
+        "name": "ValorInicial",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/tiraespacos.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "TrocaCadastro",
+    "documentation": "Esta função tem a funcionalidade de efetuar a troca de cadastro de colaboradores.",
+    "params": [
+      {
+        "name": "nCadNov",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nCadAnt",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_trocacadastro.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "TrocaString",
+    "documentation": "Procura por um trecho específico dentro de um texto e o substitui, retornando um novo texto.",
+    "params": [
+      {
+        "name": "TextoInicial",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Variável ou Texto que contém o texto original onde será feita a busca e substituição"
+      },
+      {
+        "name": "TextoPesquisar",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Trecho específico que deve ser buscado no texto original"
+      },
+      {
+        "name": "NovoTexto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto que irá substituir o trecho específico buscado"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber o novo texto retornado pela função"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "TruncarValor",
+    "params": [
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_truncarvalor.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ValidaPISCPF",
+    "documentation": "Função para Validar um número de CPF ou PIS.",
+    "params": [
+      {
+        "name": "nTipo [1-PIS | 2-CPF]",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aPISCPF",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nValido [0-OK | 10-Inválido]",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "VerAbrBHR",
+    "documentation": "Esta função verifica se o colaborador está incluído na abrangência de um determinado banco de horas",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodBhr",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "DatBus",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ColBhr",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_verabrbhr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "VerDatFer",
+    "documentation": "Procura se a data específica é um feriado para o colaborador. Para isto, verifica pela filial e pela escala. Se a data for feriado,  retornará 1. Caso contrário, retornará 0.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/verdatfer.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "VerFaltasVtr",
+    "documentation": "Verificar se o colaborador teve faltas no período para perda de vale transporte",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "PerFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SolIni",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SolFim",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "IniFal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "FimFal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TemFal",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/verfaltasvtr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "VerNumAbr",
+    "params": [
+      {
+        "name": "nNumero",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aAbrangencia",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nRetorno (0-Não está|1-Está)",
+        "type": "Numero",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_vernumabr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "WPersonalizaMenuWeb",
+    "params": [
+      {
+        "name": "nPosicao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aMenuPai",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aTitulo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aLink",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aTipo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "nTarget",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_wpersonalizamenuweb.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "WSetarCalculo",
+    "documentation": "Função utilizada para setar o código de cálculo para processos automáticos, via regra (Somente RubiWeb)",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CodCal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/wsetarcalculo.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaHorMinSeg",
+    "documentation": "Retorna a hora, minuto e segundo atuais, de acordo com a hora do servidor de banco de dados.",
+    "params": [
+      {
+        "name": "Hora",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá a hora."
+      },
+      {
+        "name": "Minuto",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá os minutos."
+      },
+      {
+        "name": "Segundo",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá os segundos."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_retornahorminseg.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "ExecSP",
+    "documentation": "A função ExecSP é utilizada para executar uma Stored Procedure contida no banco de dados definida no TBS.",
+    "params": [
+      {
+        "name": "Nome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Representa o nome da **Stored Procedure** a ser executada."
+      },
+      {
+        "name": "ParametrosEntrada",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Representa os valores que devem ser passados para a **Stored Procedure**. Os parâmetros devem ser passados seguindo a definição dos parâmetros de entrada da Procedure no CBDS."
+      },
+      {
+        "name": "ParametroSaida",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "É um parâmetro de saída que traz os valores que foram informados para o procedimento e os valores que retornaram da mesma."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.3/lsp/funcoes/execucao-de-stored-procedures-nas-regras/execsp.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "BuscaTotalizadoresSituacoes",
+    "documentation": "Esta função retorna a quantidade de horas realizadas nas situações cadastradas em um determinado totalizador.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código da empresa do colaborador cujo totalizador deseja-se buscar."
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Tipo do colaborador cujo totalizador deseja-se buscar."
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Cadastro do colaborador cujo totalizador deseja-se buscar."
+      },
+      {
+        "name": "DatIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data inicial."
+      },
+      {
+        "name": "DatFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data final."
+      },
+      {
+        "name": "TotSit",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código do totalizador que deseja-se buscar."
+      },
+      {
+        "name": "QtdHor",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará a quantidade de horas do totalizador no período estipulado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_buscatotalizadoressituacoes.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "WCheckValImage",
+    "documentation": "Lê o conteúdo de um parâmetro do **tipo BLOB** enviado ao sistema WEB e retorna uma string com o nome da imagem.\nSe o campo não for válido (extensão diferente da permitida, tamanho do arquivo superior ao tamanho permitido, etc.) retorna 0 e adiciona o erro na lista de erros.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo passado pelo HTML."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do campo que será utilizado na mensagem apresentada em caso de erro."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável ALFA que contém o valor informado."
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se o campo é opcional (**S** ou **N**)."
+      },
+      {
+        "name": "Extensao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a extensão que será aceita (jpg, gif, png, etc.). Para qualquer tipo de foto utilizar: vazio (\" \")."
+      },
+      {
+        "name": "TamanhoMaximo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o tamanho máximo para o arquivo em KB (kilobytes)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_wcheckvalimage.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CriptografaStr",
+    "documentation": "Esta função tem o objetivo de criptografar a String passada como parâmetro.\n\nO método utilizado por esta função de criptografia é **proprietário da Senior** e não pode ser repassado.",
+    "params": [
+      {
+        "name": "Operacao",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Valores válidos:\n -**C**: Criptografa\n -**D**: Descriptografa"
+      },
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável com o texto a ser criptografado ou descriptografado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/index.htm#customizacoes/funcoes/funcao_criptografastr.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "EstaNulo",
+    "documentation": "Verifica se um campo tipo alfa está nulo ou não.",
+    "params": [
+      {
+        "name": "ValorVerificar",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Valores que será verificado"
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará **1** caso a variável esteja nula e **0** caso não esteja nula."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/estanulo.htm",
+    "docVersion": "6.10.4"
+  }
+]

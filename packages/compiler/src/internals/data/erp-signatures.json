@@ -1,0 +1,390 @@
+[
+  {
+    "name": "AbrirTelaSistema",
+    "documentation": "Esta função serve para abrir uma tela do sistema utilizando parâmetros.",
+    "params": [
+      {
+        "name": "NomeTela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da tela do sistema. Formatos: \"F999XXX\" ou \"F999XXX_ABCD\""
+      },
+      {
+        "name": "Parametros",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Parametros da tela."
+      },
+      {
+        "name": "Resultado",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Resultado da chamada:\n- 0: Tela foi aberta com sucesso\n- -1: Tela não encontrada. Com o parâmetro global **AbrTelEsp** ativo, qualquer erro de abertura de tela resultará em -1 em vez de apresentar uma mensagemn"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AdicionaComponenteModelo",
+    "documentation": "Essa função adiciona um novo componente no modelo de produção.",
+    "params": [
+      {
+        "name": "CodMod",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodEtg",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "SeqMod",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodCmp",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "TipRdm",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "VlrRdm",
+        "type": "Numero",
+        "isReturnValue": false
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AdicionaConsumoComponente",
+    "documentation": "Essa função adiciona um consumo para uma derivação do modelo no componente.",
+    "params": [
+      {
+        "name": "CodMod",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodEtg",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "SeqMod",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodDer",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodCmp",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "DerCmp",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "QtdUti",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "PerPrd",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "QtdFrq",
+        "type": "Numero",
+        "isReturnValue": false
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AdicionaEstagioRoteiro",
+    "documentation": "Essa função adiciona um consumo para uma derivação do modelo no componente.",
+    "params": [
+      {
+        "name": "CodRot",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodEtg",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "SfxEtr",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "TmpFix",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodSer",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodFor",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "FilPro",
+        "type": "Numero",
+        "isReturnValue": false
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AdicionaOperacaoManualRoteiro",
+    "documentation": "Essa função cria uma nova sequência de operação no estágio do roteiro.",
+    "params": [
+      {
+        "name": "pParam",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AdicionaOperacaoRoteiro",
+    "documentation": "Essa função cria uma nova sequência de operação no estágio do roteiro. Não é necessário informar fornecedor e serviço. Todas as operações adicionadas serão do tipo automática.",
+    "params": [
+      {
+        "name": "CodRot",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodEtg",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "SfxEtr",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "SeqRot",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "SfxSeq",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodOpr",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodSer",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "CodSer",
+        "type": "Numero",
+        "isReturnValue": false
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ConverteParaMaiusculo",
+    "documentation": "Converte o conteúdo de uma variável do tipo Alfa para maiúsculo.",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que será convertido para maiúsculo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ConverteParaMinusculo",
+    "documentation": "Converte o conteúdo de uma variável do tipo Alfa para minúsculo.",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que será convertido para minúsculo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "CNPJValido",
+    "documentation": "Esta função verifica se um CNPJ informado é realmente válido.nn",
+    "params": [
+      {
+        "name": "NumCNPJ",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Número do CNPJ (com 14 digitos)"
+      },
+      {
+        "name": "Resultado",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorna se o CNPJ é válido ou não:\n- S: Válido\n- N: Inválidon"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "CPFValido",
+    "documentation": "Esta função verifica se um CPF informado é realmente válido.nn",
+    "params": [
+      {
+        "name": "NumCPF",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Número do CPF (com 14 digitos)"
+      },
+      {
+        "name": "Resultado",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorna se o CPF é válido ou não:\n- S: Válido\n- N: Inválidon"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "LimpaEspacos",
+    "documentation": "Limpar os espaços em branco a direta e a esquerda de uma variável alfanumérica.",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que recebe o campo a ser limpo e retorna o campo sem os espaços da dieita e da esquerda."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetDiaSemana",
+    "documentation": "Essa função retorna o dia da semana em forma de número da data de entrada.",
+    "params": [
+      {
+        "name": "Data",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Data que deverá ter o dia da semana identificado."
+      },
+      {
+        "name": "Dia",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Número que representa do dia da semana:\n- 0: Domingo\n- 1: Segunda-feira\n- 2: Terça-feira\n- 3: Quarta-feira\n- 4: Quinta-feira\n- 5: Sexta-feira\n- 6: Sábado"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "RetornarQtdDiasAno",
+    "documentation": "Esta função tem por objetivo retornar a quantidade de dias do ano tomando como base o ano da data passada. Dependendo do parâmetro **TipoAno**, pode retornar a quantidade de dias do ano considerando ano comercial ou ano civil.",
+    "params": [
+      {
+        "name": "Data",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Data base a ser verificada."
+      },
+      {
+        "name": "TipoAno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Indica o tipo de ano que se deseja verificar:\n- 0: *Ano Útil* - Verifica a quantidade de dias com referência no ano útil, atualmente é considerado 252\n- 1: *Ano Comercial* - Verifica a quantidade de dias com referência no ano comercial, atualmente é considerado 360\n- 2: *Ano Civil* - Verifica a quantidade de dias com referência no ano civil, considerando ano bissexto, trará 365 ou 366n"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "EstaNulo",
+    "documentation": "Verifica se um campo tipo alfa está nulo ou não.",
+    "params": [
+      {
+        "name": "ValorVerificar",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Valores que será verificado"
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará **1** caso a variável esteja nula e **0** caso não esteja nula."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestaoempresarialerp/5.10.4/regra_funcoes/estanulo.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "RetornaAscII",
+    "documentation": "Esta função retorna o caractere ASCII de um número.",
+    "params": [
+      {
+        "name": "CodigoASCII",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Variável tipo Número da qual se quer o retorno em ASCII"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Caracter ASCII correspondente ao Número do primeiro parâmetro"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestaoempresarialerp/5.10.4/regra_funcoes/retorna-ascii.htm",
+    "docVersion": "5.10.4"
+  }
+]

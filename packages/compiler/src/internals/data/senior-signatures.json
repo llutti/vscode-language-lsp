@@ -1,0 +1,2303 @@
+[
+  {
+    "name": "Abrir",
+    "documentation": "Abre arquivos no disco local ou na rede. Se a função for bem sucedida, o valor de retorno será o manipulador de arquivo. Este valor não poderá ser alterado, caso contrário a regra não terá condições de operar com o arquivo. Se a função falhar, um erro acontece e a regra é cancelada.",
+    "params": [
+      {
+        "name": "NomeArquivo",
+        "type": "Alfa",
+        "isReturnValue": false
+      },
+      {
+        "name": "ModoAbertura [Ler|Gravar|LerNL|GravarNL]",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o modo de abertura do arquivo:n  - **Ler**: Leitura binárian  - **Gravar**: Escrita binárian  - **LerNL**: Leitura em modo texton  - **GravarNL**: Escrita em modo texton"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/index.htm#lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADAdicionaAtributoEntidade",
+    "documentation": "Adiciona atributo em uma entidade no servidor **LDAP** ou **AD**.",
+    "params": [
+      {
+        "name": "EntObj",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto da entidade a ser alterada."
+      },
+      {
+        "name": "Attr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Atributo que deseja-se adicionar. Mesmo que o atributo já exista, será adicionado, caso o servidor não permitir mais de um valor no atributo informado, uma exceção do servidor será lançada."
+      },
+      {
+        "name": "NewValue",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Novo valor para o atributo."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que a entidade foi alterado. **Não é permitido passar \"\"**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adadicionaatributoentidade.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADAlteraEntidade",
+    "documentation": "Altera entidade no servidor **LDAP** ou **AD**.",
+    "params": [
+      {
+        "name": "EntObj",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto da entidade a ser alterada."
+      },
+      {
+        "name": "Attr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Atributo que deseja-se alterar. Se o atributo não existir, ele será criado."
+      },
+      {
+        "name": "NewValue",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Novo valor para o atributo."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que a entidade foi alterado. **Não é permitido passar \"\"**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adalteraentidade.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADAlteraEntidadeDN",
+    "documentation": "Alterar o **BaseDN** da entidade.",
+    "params": [
+      {
+        "name": "BaseDN",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "**BaseDN**, com o nome da entidade."
+      },
+      {
+        "name": "NewBaseDN",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nova **baseDN**, com o nome da entidade."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que a entidade foi alterado. **Não é permitido passar \"\"**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adalteraentidadedn.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADAlteraEntidadePorAtributos",
+    "documentation": "Altera entidade no servidor **LDAP** ou **AD** por atributos.",
+    "params": [
+      {
+        "name": "Filter",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Filtro de busca da entidade a ser alterado. Se mais de uma ou nenhuma entidade for encontrada, **uma exceção será lançada**."
+      },
+      {
+        "name": "Attr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Atributo que deseja-se alterar. Se o atributo não existir, ele será criado."
+      },
+      {
+        "name": "NewValue",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Novo valor para o atributo."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que a entidade foi alterado. **Não é permitido passar \"\"**."
+      },
+      {
+        "name": "EndObjReturn",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Variável de retorno do objeto da entidade alterada. O conteúdo desta variável pode ser passado para outras funções relacionadas."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adalteraentidadeporatributos.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADAtribuiSenha",
+    "documentation": "Muda a senha de usuário. Para executar esta função é necessário uma conexão segura (**SSL**).",
+    "params": [
+      {
+        "name": "UserObj",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto do usuário a ser alterado."
+      },
+      {
+        "name": "Pwd",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nova senha para o usuário."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que o usuário foi alterado.  **Não é permitido passar \"\"**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adatribuisenha.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADBuscaEntidade",
+    "documentation": "Busca uma entidade no servidor **LDAP** ou **AD**. Se nenhuma entidade for encontrada, a função retornará **0** (zero). Se apenas uma entidade for encontrada, a função retornará **1** e a entidade será retornada na variável EndObjReturn. Se mais de uma entidade for encontrada, a função irá lançar um erro.",
+    "params": [
+      {
+        "name": "Filter",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Filtro de busca para encontrar a entidade desejada."
+      },
+      {
+        "name": "EndObjReturn",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável de retorno do objeto da entidade encontrada. Se mais de uma ou nenhuma entidade for encontrada, nada será retornado neste parâmetro."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adbuscaentidade.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADBuscaEntidadeEx",
+    "documentation": "Busca uma entidade no servidor **LDAP** ou **AD**, retornando a quantidade de entidades encontradas.",
+    "params": [
+      {
+        "name": "Filter",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Filtro de busca para encontrar a entidade desejada."
+      },
+      {
+        "name": "EndObjReturn",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável de retorno do objeto da entidade encontrada. Se mais de uma ou nenhuma entidade for encontrada, nada será retornado neste parâmetro."
+      },
+      {
+        "name": "EndMsgErro",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável de retorno da mensagem de erro, se houver. Quando mais de uma entidade for encontrada, esta variável conterá o valor \"Mais de uma entidade foi encontrada.\"."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adbuscaentidadeex.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADCriaUsuario",
+    "documentation": "Cria usuário no servidor **LDAP** ou **AD**. Alguns atributos são pré-definidos na **Central de configurações** > **Opções de segurança** > **LDAP e NTLM**, guia **Integração**.",
+    "params": [
+      {
+        "name": "UserName",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do usuário que será criado. Caso o usuário já existir no servidor, uma exceção do servidor será lançada."
+      },
+      {
+        "name": "OU",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Unidade organizacional que o usuário será criado."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que o usuário foi alterado.  **Não é permitido passar \"\"**."
+      },
+      {
+        "name": "UserObjReturn",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável de retorno do objeto do usuário criado. O conteúdo desta variável pode ser passado para outras funções relacionadas."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adcriausuario.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADDeletaEntidade",
+    "documentation": "Exclui uma entidade do servidor **LDAP** ou **AD**.",
+    "params": [
+      {
+        "name": "Filter",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Filtro de busca da entidade a ser alterado. Se mais de uma ou nenhuma entidade for encontrada, uma exceção será lançada."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que a entidade foi excluída. **Não é permitido passar \"\"**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/addeletaentidade.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADDeletaValorAtributo",
+    "documentation": "Exclui o valor de um atributo de uma entidade, removendo também o atributo correspondente. Existem atributos com vários valores, neste caso, esta função pode ser bastante útil, removendo apenas o valor desejado.",
+    "params": [
+      {
+        "name": "EntObj",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto da entidade a ser alterada."
+      },
+      {
+        "name": "Attr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Atributo que deseja-se deletar. Se o atributo não existir, nada será feito."
+      },
+      {
+        "name": "Value",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Valor do atributo que deseja-se deletar. Se o valor não existir, nada será feito. Se for passado **\"\"**, todos os valores do atributo serão excluídos. Quando o campo é obrigatório, o servidor retorna uma mensagem."
+      },
+      {
+        "name": "Motive",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Motivo que a entidade foi alterado. **Não é permitido passar \"\"**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/addeletavaloratributo.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADFinalizaAlteracao",
+    "documentation": "Libera conexão com o servidor **LDAP** ou **AD**. Quando a função **ADIniciaAlteracao** é chamada, obrigatoriamente este deverá ser chamada no final da execução da regra.",
+    "params": [],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adfinalizaalteracao.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADIniciaAlteracao",
+    "documentation": "Cria conexão com o servidor **LDAP** ou **AD**, assim otimizando as próximas ações no servidor. Sem a chamada desta função, cada função chamada para efetuar integração **LDAP** ou **AD** irá criar a conexão e finalizar.",
+    "params": [],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adiniciaalteracao.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ADPegaValorAtributoEntidade",
+    "documentation": "Busca o valor de um atributo de entidade no servidor **LDAP** ou **AD**. Se o atributo não for encontrado, a função retornará **0 (zero)**.",
+    "params": [
+      {
+        "name": "EntObj",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto da entidade a ser alterada."
+      },
+      {
+        "name": "Attr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Atributo que deseja-se ler o valor. Se o atributo não for encontrado, a função retornará **0 (zero)**."
+      },
+      {
+        "name": "Index",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Índice do valor, como é possível que uma entidade tenha vários valores para um atributo, é necessário informar este parâmetro. Se for passado um índice inexistente, o parâmetro **ValueReturn** terá o conteúdo **\"\"**."
+      },
+      {
+        "name": "ValueReturn",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Valor do atributo lido."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/integracao-servidor-ad/adpegavaloratributoentidade.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "AlfaParaInt",
+    "documentation": "Converte um número armazenado como **Alfa** e o retorna como um tipo **Numero**. No caso de impossibilidade de conversão, o resultado será **0** (zero)",
+    "params": [
+      {
+        "name": "Origem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Valor a ser convertido"
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que contém o resultado da Conversão"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/alfaparaint.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "AtualizaBarraProgresso",
+    "documentation": "Atualiza as mensagens apresentadas na tela da barra de progresso.",
+    "params": [
+      {
+        "name": "Texto1",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "O valor que será mostrado na **primeira linha** da barra de progresso."
+      },
+      {
+        "name": "Texto2",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "O valor que será mostrado na **segunda linha** da barra de progresso."
+      },
+      {
+        "name": "Incrementa",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se incrementa ou não a barra de progresso, deve ser utilizado SIM ou NÃO.\n\n**ATENÇÃO**: O *valor* deverá ser escrito em Maiúsculo."
+      },
+      {
+        "name": "Incrementa",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o tipo de atualização dos parâmetros acima.\n- 1: Atualiza apenas o campo Texto1\n- 2: Atualiza apenas o campo Texto2\n- 3: Atualiza todos os campos\n- 4: Não atualiza o texto dos campos\n"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ConverteMascara",
+    "documentation": "Esta função converte um valor de entrada (*numérico*, *data*, *hora* ou *cadeia de caracteres*), para o tipo de dado cadeia de caracteres.",
+    "params": [
+      {
+        "name": "TipoDado",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código que determina o tipo do **ValorOriginal**:\n- 1: Número\n- 2: Dinheiro (valor)\n- 3: Data\n- 4: Hora\n- 5: Alfa\n"
+      },
+      {
+        "name": "ValorOriginal",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valor a ser convertido"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá o resultado da conversão"
+      },
+      {
+        "name": "Mascara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Especificar o formato com que o resultado da conversão deverá ser apresentado.\nPara pesquisar os valores válidos, acessar a documentação [clicando aqui](https://documentacao.senior.com.br/tecnologia/5.10.4/cbds/mascara.htm)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/convertemascara.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "Cancel",
+    "documentation": "Utilizado para cancelar a execução da regra. Possui diferentes ações de acordo com o recurso que executou a regra. Ao usar a função **Cancel(n)** em regras que são executadas por eventos de tela, a única ação tomada será o cancelamento da execução da regra, independentemente do valor passado como parâmetro.",
+    "params": [
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valores esperados: **1** ou **2** ou **3**"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "Formatar",
+    "documentation": "Formata números de acordo com os parâmetros definidos. O formato é o mesmo usado no **Borland Delphi 2.0**.",
+    "type": "Alfa",
+    "isReturnValue": true,
+    "params": [
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valores a ser formatado"
+      },
+      {
+        "name": "Formato",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Formato de conversão. Por exemplo, **%3.0f** para converter o valor **354** e **%3.2f** para converter o valor **345,43**"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm#Formatar",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "FormatarN",
+    "documentation": "Formata números com casas decimais de acordo com os parâmetros definidos. O formato é o mesmo usado no **Borland Delphi 2.0**.",
+    "params": [
+      {
+        "name": "Valor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valores a ser formatado"
+      },
+      {
+        "name": "Formato",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Formato de conversão. Por exemplo, **%3.0f** para converter o valor **354** e **%3.2f** para converter o valor **345,43**"
+      },
+      {
+        "name": "SeparadorDecimal",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Qual será o separador de casas decimais"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá o resultado da formatação"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ExecProg",
+    "documentation": "Permite a execução de aplicativos durante a execução de regras.",
+    "params": [
+      {
+        "name": "nomePrograma",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Caminho do diretório e nome do programa a ser executado com sua extensão."
+      },
+      {
+        "name": "parametroComando",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Parâmetros que podem ser incluídos na execução do programa."
+      },
+      {
+        "name": "Esperar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o comportamento da execução da regra:n- **0** : Executa o programa e ao mesmo tempo continua a execução da regra;\n- **1** : Aguarda a execução do programa para prosseguir com a execução da regra"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/execprog.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ExecSQLEx",
+    "documentation": "Executa um comando SQL no banco. Nessa função podem ser usadas para as operações Insert, Update, Delete.\n\n**Observação**: Poderão ser utilizados comandos nativos do Banco de Dados e é permitido acessar objetos que não constam no TBS. **Para isso é necessário desativar a opção *Usar SQL Senior 2* da regra. **",
+    "params": [
+      {
+        "name": "ComandoSQL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Sucesso",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Os valores possíveis são: 0: Sucesso | 1: Erro."
+      },
+      {
+        "name": "MensagemErro",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Texto com a Mensagem de erro gerado pela execução do Comando SQL."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "FinalizaBarraProgresso",
+    "documentation": "Finaliza a tela de barra de progresso.",
+    "params": [],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "DesfazerTransacao",
+    "documentation": "Desfaz uma transação iniciada anteriormente pela função IniciarTransacao.",
+    "params": [],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "IniciarTransacao",
+    "documentation": "Inicia a transação no banco de dados.",
+    "params": [],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "FinalizarTransacao",
+    "documentation": "Finaliza a transação no banco de dados que foi inicializada pela função IniciarTransacao.",
+    "params": [],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "GeraSenha",
+    "documentation": "Retorna uma sequência de caracteres alfanuméricos aleatoriamente.",
+    "params": [
+      {
+        "name": "TamanhoSenha",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Quantidade de caracteres que a senha possuirá."
+      },
+      {
+        "name": "SenhaGerada",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Sequência de caracteres alfanuméricos aleatórios, a senha em si."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/gerasenha.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAlteraConfiguracaoSSL",
+    "documentation": "Faz o inverso da função **HttpLeConfiguracaoSSL**, ou seja, altera o valor ao invés de ler.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SSL",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Os valores podem ser:\n -**0**: Automático\n -**1**: Nunca\n -**2**: Sempre"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpalteraconfiguracaossl.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeConfiguracaoSSL",
+    "documentation": "Faz a leitura da propriedade Utilizar SSL do objeto HTTP e retorna o valor em SSL.\nOs valores podem ser:\n -**0**: Automático\n -**1**: Nunca\n -**2**: Sempre",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SSL",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpleconfiguracaossl.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAlteraCabecalhoRequisicao",
+    "documentation": "Altera os valores de cabeçalhos HTTP que serão enviados junto com a requisição. São válidos para todas os verbos (GET, POST, PUT, PATCH e DELETE) e também para o download.\n\n**Exemplo:**n``` lsp\n\n  Definir Alfa oHTTP;\n  Definir Alfa aHTML;\n  Definir Alfa aDados; \n\n  HttpObjeto(oHTTP);\n\n  HttpAlteraCabecalhoRequisicao(oHTTP, \"Accept\", \"text/plain\");\n\n  HttpAlteraCabecalhoRequisicao(oHTTP, \"Content-Type\", \"application/json\")\n\n  aDados = \" {\\\"NomeParametro1\\\": \\\"valor1\\\", \\\"NomeParametro2\\\": \\\"valor2\\\"} \";\n  HttpPost(oHTTP, \"http://exemplo.com/api/cadastro\", aDados, aHTML);\n  Mensagem(Retorna, vHTML);\n\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Objeto HTTP que terá o cabeçalho alterado"
+      },
+      {
+        "name": "Nome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "O nome do cabeçalho a ser alterado. **Não pode ser vazio** (\"\")."
+      },
+      {
+        "name": "Valor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "O novo valor para o cabeçalho. Nenhuma verificação quando a semântica do valor é realizada. O valor vazio faz com que o cabeçalho não seja enviado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-altera-cabecalho-requisicao.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpDelete",
+    "documentation": "Executa uma requisição HTTP usando o método DELETE. O método de requisição DELETE é utilizado quando houver a necessidade de exclusão de um recurso no servidor.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP no qual a chamada deve ser realizada."
+      },
+      {
+        "name": "URL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "URL da *API*."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Conteúdo retornado pela *API*."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpdelete.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpDeleteBody",
+    "documentation": "Executa uma requisição HTTP usando o método DELETE, porém permite enviar o parâmetro Body na requisição. O método de requisição DELETE é utilizado quando houver a necessidade de exclusão de um recurso no servidor.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP no qual a chamada deve ser realizada."
+      },
+      {
+        "name": "URL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "URL da *API*."
+      },
+      {
+        "name": "Dados",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Os dados no formato alfanumérico, que serão enviados no corpo da mensagem HTTP."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Conteúdo retornado pela *API*."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpdeletebody.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpDownload",
+    "documentation": "Funciona da mesma maneira que a função HttpGet, porém o retorno não é na memória, mas sim em um arquivo salvo diretamente em disco. O arquivo de destino é definido no parâmetro Arquivo.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP no qual a chamada deve ser realizada."
+      },
+      {
+        "name": "URL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "URL que fornecerá o download."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Arquivo baixado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpdownload.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpGet",
+    "documentation": "Executa uma requisição HTTP (*inclusive HTTPS*) de acordo com a URL passada como parâmetro e salva a resposta da requisição, por exemplo, uma página HTML, no parâmetro de retorno HTML.\n\n**Exemplo:**\n``` lsp\n\n  Definir Alfa oHTTP;\n  Definir Alfa aHTML;\n\n  HttpObjeto(oHTTP);\n\n  HttpGet(oHTTP, \"http://exemplo.com/api/cadastro\", aHTML);\n  Mensagem(Retorna, vHTML);\n\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP inicializado."
+      },
+      {
+        "name": "URL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "URL da requisição."
+      },
+      {
+        "name": "HTML",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber o conteúdo retornado pela **URL**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpget.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpNormalizaRetorno",
+    "documentation": "Aplica a normalização Unicode C (composição canônica) na resposta HTTP para caracteres acentuados que podem ser representados por dois code points (letra + caractere de combinação).",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Objeto HTTP no qual a configuração será aplicada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpnormalizaretorno.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpObjeto",
+    "documentation": "Esta função retorna um objeto HTTP inicializado com as configurações definidas na tela de Configurações de Internet da Central de Configurações. A referência deve ser armazenada em uma variável do tipo Alfa para poder ser usada nas demais funções HTTP.\n\n**Exemplo:**\n``` lsp\n  Definir Alfa oHTTP;\n  HttpObjeto(oHTTP);\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Objeto HTTP inicializado"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpobjeto.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpPatch",
+    "documentation": "Executa uma requisição HTTP usando o método PATCH. O método de requisição PATCH, somente no formato texto e sem suporte para envio de arquivos, é usado para aplicar modificações parciais em um recurso.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP no qual a chamada deve ser realizada."
+      },
+      {
+        "name": "URL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a URL que será chamada usando o verbo PATCH."
+      },
+      {
+        "name": "Dados",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Os dados no formato alfanumérico, que serão enviados no corpo da mensagem HTTP."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber a resposta do servidor à requisição enviada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-patch.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpPost",
+    "documentation": "Executa uma requisição HTTP usando o método POST. O método de requisição POST, somente no formato texto e sem suporte para envio de arquivos, é utilizado quando houver a necessidade do envio de dados para o servidor como parte da solicitação, como enviar um formulário preenchido.\n\n\n---\n**Exemplo *FORMDATA*:**\n``` lsp\n\n  Definir Alfa oHTTP;\n  Definir Alfa aHTML;\n  Definir Alfa aDados;\n\n  HttpObjeto(oHTTP);\n\n  aDados = \"NomeUsuario=SENIOR&EmailUsuario=senior@senior.com.br&Texto=SENIOR+SA\";\n  HttpPost(oHTTP, \"http://www.senior.com.br/cadastro.html\", aDados, aHTML);\n  Mensagem(Retorna, vHTML);\n\n```\n\n\n---\n\n\n**Exemplo *JSON*:**\n``` lsp\n\n  Definir Alfa oHTTP;\n  Definir Alfa aHTML;\n  Definir Alfa aDados;\n\n  HttpObjeto(oHTTP);\n\n  HttpAlteraCabecalhoRequisicao(oHTTP, \"Accept\", \"text/plain\");\n\n  HttpAlteraCabecalhoRequisicao(oHTTP, \"Content-Type\", \"application/json\")\n\n  aDados = \" {\\\"NomeParametro1\\\": \\\"valor1\\\", \\\"NomeParametro2\\\": \\\"valor2\\\"} \";\n  HttpPost(oHTTP, \"http://exemplo.com/api/cadastro\", aDados, aHTML);\n  Mensagem(Retorna, vHTML);\n\n```\n\n",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP inicializado pela função *HttpObjeto*."
+      },
+      {
+        "name": "URL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "URL da API."
+      },
+      {
+        "name": "Dados",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Dados a serem enviados via **POST** para a **API**. Podem estar no padrão **FormData** ou **JSON**."
+      },
+      {
+        "name": "HTML",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber o conteúdo retornado pela **API**."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "HttpPut",
+    "documentation": "Executa uma requisição HTTP usando o método PUT. O método de requisição PUT, somente no formato texto e sem suporte para envio de arquivos, é usado quando é necessário enviar dados ao servidor para alterar informações de uma URL já conhecida.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP inicializado pela função *HttpObjeto*."
+      },
+      {
+        "name": "URL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "URL da API."
+      },
+      {
+        "name": "Dados",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Dados a serem enviados via **POST** para a **API**. Podem estar no padrão **FormData** ou **JSON**."
+      },
+      {
+        "name": "HTML",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber o conteúdo retornado pela **API**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-put.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpSetAttachment",
+    "documentation": "Permite o envio de arquivos locais no corpo de uma requisição HTTP, disponível nos métodos **POST**, **PUT** e **PATCH**.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Objeto HTTP no qual a configuração será aplicada."
+      },
+      {
+        "name": "CaminhoArquivo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Caminho (*path*) do arquivo que será anexado ao corpo da requisição."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpsetattachment.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "IniciaBarraProgresso",
+    "documentation": "Inicia a barra de progresso utilizada para mostrar ao usuário o andamento de um processo mais extenso.",
+    "params": [
+      {
+        "name": "VlrMax",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Variável numérica que recebe o valor máximo da barra de progresso."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "IntParaAlfa",
+    "documentation": "Converte um número para formato alfanumérico.\n\n**ATENÇÃO**: O *valor numérico* está limitado a até **15 caracteres**.",
+    "params": [
+      {
+        "name": "Origem",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valor que será convertido."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá o valor convertido."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/intparaalfa.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "MontaData",
+    "params": [
+      {
+        "name": "Dia",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Mes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Ano",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Retorno",
+        "type": "Data",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "OcultaBarraProgressoRelatorio",
+    "documentation": "Responsável por ocultar a barra de progresso padrão durante a execução de relatórios. Em conjunto com as funções IniciaBarraProgresso, AtualizaBarraProgresso, FinalizaBarraProgresso, permite ao usuário criar e controlar uma barra de progresso.",
+    "params": [
+      {
+        "name": "Ocultar",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Ocultar a barra de progresso durante a execução de relatórios.n- SIM: Ocultar a barran- Qualquer valor diferente de \"SIM\", a barra de progresso padrão será exibida normalmente.n**ATENÇÃO**: O *valor* deverá ser escrito em Maiúsculo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "UltimoDia",
+    "documentation": "Esta função verifica qual é o último dia do mês/ano da data informada, retornando esta nova data dia/mês/ano na própria variável indicada",
+    "params": [
+      {
+        "name": "Mes",
+        "type": "Data",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "ListaSecao",
+    "documentation": "Esta função lista uma seção adicional do modelo a partir de um evento ou regra.",
+    "params": [
+      {
+        "name": "SectionName",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da seção"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerador-de-relatorios/listasecao.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "Mensagem",
+    "documentation": "Apresenta a mensagem em tela de acordo com a parametrização do tipo de retorno e da mensagem que será visualizada.",
+    "params": [
+      {
+        "name": "Tipo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Tipo da mensagem a ser apresentada.\n\nOs valores válidos são:\n - **Retorna**: Mostra uma mensagem de aviso, com os botões especificados entre colchetes. O símbolo & indica tecla de aceleração (atalho).\n - **Erro**: Gera uma exceção, mostrando uma mensagem de erro e abortando a execução da regra.\n - **Refaz**: Gera uma exceção, mostrando uma mensagem de erro e abortando a execução da regra."
+      },
+      {
+        "name": "TextoMensagem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto com a mensagem a ser exibida."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/mensagem.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "Regra",
+    "documentation": "Chama uma outra regra identificada pelo número da regra.",
+    "params": [
+      {
+        "name": "NumeroRegra",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número da regra a ser executada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SaltarPagina",
+    "documentation": "Esta função salta de página manualmente.",
+    "params": [],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerador-de-relatorios/saltarpagina.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegEntAdicGrp",
+    "documentation": "Adiciona uma permissão de acesso ao grupo para o usuário e o retorna com a nova permissão.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário a ser adicionado a nova permissão de acesso a grupos."
+      },
+      {
+        "name": "nCodGrp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código de um grupo de usuários."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegEntCodigo",
+    "documentation": "Retorna o código do usuário/grupo.",
+    "type": "Numero",
+    "isReturnValue": true,
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto no qual o respectivo código é retornado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segentcodigo.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegEntEhUsuario",
+    "documentation": "Indica se o Usuário/Grupo passado em aObjeto é um usuário. Se sim o resultado direto da função é 1 senão será 0.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário/grupo a ser verificado se é um usuário."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegEntExistePorNome",
+    "documentation": "Essa função verifica pelo nome se o usuário/grupo existe.",
+    "params": [
+      {
+        "name": "aNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegEntGrava",
+    "documentation": "Após todas as funções de criação e manipulação de opções de usuários/grupos esta função deve ser chamada para efetivar a criação do usuário/grupo.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Entidade a ser gravada."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegEntLe",
+    "documentation": "Lê uma entidade (ou seja, um usuário ou grupo) a partir de seu código.",
+    "params": [
+      {
+        "name": "Codigo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código da entidade (usuário ou grupo) que será lido."
+      },
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber a Entidade correspondente ao código."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segentle.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegEntLeCodigo",
+    "documentation": "Retorna o código de uma entidade a partir de seu nome. É útil para obter o código de entidades conhecidas, como o **grupo Todos**.",
+    "isReturnValue": true,
+    "type": "Numero",
+    "params": [
+      {
+        "name": "Codigo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Código da entidade (usuário ou grupo) que será lido."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segentlecodigo.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegUsuDesbloqueia",
+    "documentation": "Esta função desbloqueia um usuário que foi bloqueado através da política de bloqueio de senha.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Código do Usuário a ser setada a opção."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segusudesbloqueia.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegUsuSetaNaoExp",
+    "documentation": "Esta função retira a data de expiração de determinado usuário.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Código do Usuário ao qual será retirada a data de expiração."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segususetanaoexp.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegUsuSetaDatExp",
+    "documentation": "Esta função seta a data de expiração para a conta do usuário e o retorna com a data de expiração definida.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Código do Usuário no qual será setado a data da expiração de sua conta."
+      },
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data de expiração da conta do usuário."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segususetadatexp.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegGrpAdicMem",
+    "documentation": "Esta função adiciona um usuário em um grupo e retorna o grupo.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Código do Grupo onde será adicionado o membro."
+      },
+      {
+        "name": "CodigoMembro",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Código do novo membro a ser adicionado no grupo passado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/seggrpadicmem.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegGrpRemvMem",
+    "documentation": "Esta função **remove** um usuário de um grupo e retorna o grupo.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Grupo que será removido o membro passado."
+      },
+      {
+        "name": "CodigoMembro",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código do membro a ser removido."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/seggrpremvmem.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegEntLePorNome",
+    "documentation": "Lê uma entidade (ou seja, um usuário ou grupo) a partir de seu nome.",
+    "params": [
+      {
+        "name": "aNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do usuário ou grupo a ser lido."
+      },
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Entidade correspondente ao código."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segentlepornome.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegEntNome",
+    "documentation": "Retorna o nome do usuário/grupo.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto que deseja retornar o nome."
+      },
+      {
+        "name": "aNome",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Nome que foi retornado do respectivo objeto."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegEntQtdGrp",
+    "documentation": "Retorna diretamente a quantidade de grupos do Usuário/Grupo passado em aObjeto.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário/grupo no qual será retornado a data de criação do mesmo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegEntSetaDesc",
+    "documentation": "Seta a descrição do usuário/grupo e o retorna com a descrição definida.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário ou grupo no qual será descrito."
+      },
+      {
+        "name": "aDescricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do usuário ou grupo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegEntSetaNome",
+    "documentation": "Após criar o usuário/grupo, esta função seta o nome deste usuário/grupo e o retorna com o nome definido.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário/grupo que será setado o **novo nome**."
+      },
+      {
+        "name": "aNovoNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Novo nome a ser setado."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuAtivado",
+    "documentation": "Indica se o acesso ao usuário passado em aObjeto está desativado. Se sim o resultado direto da função é 1 senão será 0.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário no qual será indicado se seu acesso está desativado."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuCria",
+    "documentation": "Cria um novo Usuário, retornando o Usuário com todas as suas especificações.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Usuário novo a ser criado e retornado."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuDatExp",
+    "documentation": "Retorna a data de expiração da conta do usuário.",
+    "type": "Data",
+    "isReturnValue": true,
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário no qual será retornada a data da expiração de sua conta."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuNomeComp",
+    "documentation": "Retorna em o nome completo do usuário/grupo.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário/grupo no qual receberá seu nome completo."
+      },
+      {
+        "name": "aNome",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorna o nome completo do usuário/grupo."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuSetaAtivado",
+    "documentation": "Seta a opção **Conta Desabilitada** do usuário e o retorna com a opção definida.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Usuário a ser setada a opção."
+      },
+      {
+        "name": "nOpcao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Define se a conta do usuário estará habilitada:\n- 0: Desabilitar\n- 1: Habilitar"
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuSetaGrpAcs",
+    "documentation": "Seta um grupo de acesso do usuário e o retorna o usuário com o grupo de acesso definido.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário com o novo grupo setado."
+      },
+      {
+        "name": "nValor",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código de um grupo de usuários."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuSetaNomeComp",
+    "documentation": "Seta o Nome Completo do Usuário e o retorna com o nome completo definido.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário que será setado o nome."
+      },
+      {
+        "name": "aNome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome a ser setado."
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "SegUsuSetaSenha",
+    "documentation": "Seta a senha do usuário e o retorna com a senha definida.",
+    "params": [
+      {
+        "name": "aObjeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Usuário que será setada a senha."
+      },
+      {
+        "name": "aNovaSenha",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nova senha a ser setada para o usuário."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segususetasenha.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegEntDesc",
+    "documentation": "Esta função retorna a descrição do usuário/grupo.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário ou grupo na qual será exibido a descrição."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Descrição do usuário ou grupo."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segentdesc.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WAdicionaListaErros",
+    "documentation": "Adiciona um erro na Lista de Erros.",
+    "params": [
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo que está sendo adicionado à lista de erros."
+      },
+      {
+        "name": "MsgErro",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Mensagem de erro a ser adicionada à lista de erros."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wadicionalistaerros.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WAdicionanoHTML",
+    "documentation": "Adiciona uma string no HTML através de um identificador.",
+    "params": [
+      {
+        "name": "Valor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto a ser inserido no HTML"
+      },
+      {
+        "name": "HTML",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que contém o arquivo HTML a ser alterado"
+      },
+      {
+        "name": "Marcador",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Marcador que será substituído pelo parâmetro Valor"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wadicionanohtml.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WAlteraValorCampo",
+    "params": [
+      {
+        "name": "aNomeValor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "aValorCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "WCheckValCheckBox",
+    "documentation": "Retorna um campo do tipo CheckBox passado pelo HTML. Se o campo não for válido, retorna 0 (zero) e adiciona o erro na lista de erros.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo passado pelo HTML."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do campo. Será utilizado na mensagem apresentada em caso de erro."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável no qual o campo será retornado"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wcheckvalcheckbox.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WCheckValData",
+    "documentation": "Retorna um campo Data passado pelo HTML. Se o campo não for válido, retorna 0 (zero) e adiciona o erro na lista de erros.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo passado pelo HTML."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do campo. Será utilizado na mensagem apresentada em caso de erro."
+      },
+      {
+        "name": "Retorno",
+        "type": "Data",
+        "isReturnValue": true,
+        "documentation": "Variável no qual o campo será retornado"
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se o campo é opcional (**S** ou **N**)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wcheckvaldata.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WCheckValDouble",
+    "documentation": "Retorna um campo ponto flutuante passado pelo HTML. Se o campo não for válido, retorna 0 (zero) e adiciona o erro na lista de erros.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo passado pelo HTML."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do campo. Será utilizado na mensagem apresentada em caso de erro."
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável no qual o campo será retornado"
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se o campo é opcional (**S** ou **N**)."
+      },
+      {
+        "name": "TamMax",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o valor máximo permitidos no campo. Se informado 0 (zero) não haverá limitação."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wcheckvaldouble.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WCheckValHora",
+    "documentation": "Retorna um campo Hora passado pelo HTML. Se o campo não for válido, retorna 0 (zero) e adiciona o erro na lista de erros.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo passado pelo HTML."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do campo. Será utilizado na mensagem apresentada em caso de erro."
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável no qual o campo será retornado."
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se o campo é opcional (**S** ou **N**)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wcheckvalhora.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WCheckValInteger",
+    "documentation": "Retorna um campo inteiro passado pelo HTML. Se o campo não for válido, retorna 0 e adiciona o erro na lista de erros.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo passado pelo HTML."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do campo. Será utilizado na mensagem apresentada em caso de erro."
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável no qual o campo será retornado"
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se o campo é opcional (**S** ou **N**)."
+      },
+      {
+        "name": "TamMax",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o valor máximo permitidos no campo. Se informado 0 (zero) não haverá limitação."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wcheckvalinteger.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WCheckValString",
+    "documentation": "Retorna um campo caracter passado pelo HTML. Se o campo não for válido ou for maior do que o tamanho máximo especificado, retorna 0 (zero) e adiciona o erro na lista de erros.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo passado pelo HTML."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Descrição do campo. Será utilizado na mensagem apresentada em caso de erro."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável no qual o campo será retornado"
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se o campo é opcional (**S** ou **N**)."
+      },
+      {
+        "name": "TamMax",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina a quantidade máxima de caracteres permitidos no campo. Se informado 0 (zero) não haverá limitação de tamanho para o campo."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wcheckvalstring.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WCountFields",
+    "documentation": "Retorna a quantidade de campos passados pela ação do HTML",
+    "params": [
+      {
+        "name": "QtdCampos",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wcountfields.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WebCodificaUrl",
+    "documentation": "Esta função faz a codificação dos caracteres de forma a concatenar em URLs de forma segura.",
+    "params": [
+      {
+        "name": "Texto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Contém o texto original que necessita ser codificado"
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Contém o texto codificado"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/webcodificaurl.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WInsSelecaodoBanco",
+    "params": [
+      {
+        "name": "HTML",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": ""
+      },
+      {
+        "name": "Marcador",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SQL",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CampoValor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "CampoDescricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "ItemSelecionado",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "TipoSQL",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "WLerHTML",
+    "documentation": "Retorna o arquivo HMTL especificado do diretório dos HTMLs para a variável",
+    "params": [
+      {
+        "name": "NomeArquivo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do HTML a ser lido"
+      },
+      {
+        "name": "HTML",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá o HTML"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wlerhtml.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WLimpaListaErros",
+    "documentation": "Limpa a lista de validação de telas/campos WEB",
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wlimpalistaerros.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WRemoteAddr",
+    "documentation": "Retorna o endereço IP da estação que está acessando o sistema. Utilizada apenas nos sistemas Web.",
+    "params": [
+      {
+        "name": "aIp",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wremoteaddr.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WReturnFieldsName",
+    "params": [
+      {
+        "name": "Indice",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "WQtdnaListaErros",
+    "documentation": "Retorna a quantidade de erros existentes na Lista de Erros.",
+    "params": [],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wqtdnalistaerros.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WErrodaListaErros",
+    "documentation": "Retorna um erro da Lista de Erros.",
+    "params": [
+      {
+        "name": "Numero",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número do erro a ser retornado."
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber a **descrição do erro**."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/werrodalistaerros.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WSQLSenior2paraSQLNativo",
+    "documentation": "Retorna a Sintaxe de um comando SQL Senior2 para o SQL Nativo, correspondente ao banco que estiver sendo utilizado",
+    "params": [
+      {
+        "name": "SqlSenior2",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "SqlNativo",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "WStrtoJavaScript",
+    "documentation": "Formata uma String para o padrão JavaScript. O código JavaScript **não pode conter Strings com Enter**. O Enter, por exemplo, é representado em Strings por /n. Desta forma, esta função faz esta formatação automaticamente.",
+    "params": [
+      {
+        "name": "Origem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto que será passado para o formato JavaScript."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber o texto no formato JavaScript."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wstrtojavascript.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WTextoParaFormatoHTML",
+    "documentation": "Retorna a expressão alfanumérica passada como parâmetro convertida para HTML",
+    "params": [
+      {
+        "name": "TextoInicial",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Expressão alfanumérica a ser convertida."
+      },
+      {
+        "name": "TextoFinal",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que irá receber o texto convertido para o formato HTML"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/wtextoparaformatohtml.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WWriteCookie",
+    "documentation": "Grava um campo no Cookie ativo",
+    "params": [
+      {
+        "name": "Nome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      },
+      {
+        "name": "Valor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  },
+  {
+    "name": "AlteraControle",
+    "documentation": "Permite alterar o conteúdo de algumas **propriedades dos controles**",
+    "params": [
+      {
+        "name": "NomeControle",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do controle que será modificado"
+      },
+      {
+        "name": "Propriedade",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da propriedade do controle que será modificada.\n\nAs propriedades disponíveis para alteração são:\n- Alinhamento\n- Conf. Gráfico\n- Cor\n- Desenho\n- Descrição\n- Edição Campo\n- Fonte\n- Imprimir\n- Imprimir Seção Vazia\n- Justificado\n- Salto Página\n- Tam.Automático\n- Transparenten"
+      },
+      {
+        "name": "NovoValor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Novo valor da propriedade indicada"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerador-de-relatorios/alteracontrole.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "InsClauSQLWhere",
+    "documentation": "Esta função inclui uma cláusula WHERE no código SQL, montado pelo gerador, na seção detalhe escolhida. As tabelas referenciadas no SQL são incluídas na cláusula FROM do comando SQL.",
+    "params": [
+      {
+        "name": "NomeSecao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da **seção Detalhe**, pela qual se deseja incluir a cláusula **WHERE**."
+      },
+      {
+        "name": "ClausulaWhere",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "**Código SQL**, para inclusão da cláusula **WHERE** no código SQL montado pela seção detalhe determinada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerador-de-relatorios/insclausqlwhere.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "SegEntEhMembro",
+    "documentation": "Esta função indica se o usuário/grupo é membro de um determinado grupo. Caso seja, o retorno da função será 1, senão o retorno será 0 (zero).",
+    "isReturnValue": true,
+    "type": "Numero",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Usuário/grupo que será verificado;"
+      },
+      {
+        "name": "CodGrp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código do grupo que vai ser verificado se determinado usuário pertence a ele."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-usuarios-e-grupos/segentehmembro.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "CarregaAbrUsuTabela",
+    "documentation": "A idéia desta função é fornecer um recurso para que seja possível aplicar, através dos parâmetros passados a ela, abrangências de usuário que serão utilizadas em tabelas do sistema, inclusive para tabelas de usuário.",
+    "params": [
+      {
+        "name": "Tabela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Tabela à qual deve ser carregada a abrangência."
+      },
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo ao qual a abrangência deve ser aplicada. Pode ser qualquer campo de qualquer tabela, inclusive campos de usuário. A única restrição é que os campos aqui informados deverão ser do tipo Inteiro ou alfa. Não será aplicada abrangência para campos do tipo data, imagem e com valores decimais."
+      },
+      {
+        "name": "Condicao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica em qual condição a abrangência informada deverá ser aplicada."
+      },
+      {
+        "name": "SobrepoeAbr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se a abrangência informada deverá sobrepor a abrangência que já pode estar carregada em memória. Isto é útil quando for necessário restringir somente um tipo de abrangência, descartando-se a abrangência que está atualmente cadastrada para os usuários."
+      },
+      {
+        "name": "ValorAbr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "O valor que deverá ser aplicado na abrangência. Os valores informados deverão estas dispostos da mesma maneira como são cadastrados na tela de \"Cadastro de Abrangências\". Caso seja passado um valor ou abrangência inválida, uma mensagem de erro será retornada e a regra será cancelada. Esta função retorna 1 quando a abrangência foi carregada com sucesso para a memória e zero quando não houve a carga."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_carregaabrusutabela.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ListaQuantidade",
+    "documentation": "Retorna a quantidade de itens de uma lista de valores concatenados por um caracter separador em um texto",
+    "params": [
+      {
+        "name": "Lista",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto que contém a lista com os valores concatenados por um caracter separador."
+      },
+      {
+        "name": "Separador",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Caracter separador dos itens da lista."
+      },
+      {
+        "name": "Quantidade",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que receberá a quantidade de itens da lista."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/listaquantidade.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "ListaItem",
+    "documentation": "Retorna o valor de um item de uma lista de valores concatenados por um caracter separador. O índice do primeiro item da lista é 1 e do último item é igual a quantidade de itens da lista.",
+    "params": [
+      {
+        "name": "Lista",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Texto que contém a lista com os valores concatenados por um caracter separador."
+      },
+      {
+        "name": "Separador",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Caracter separador dos itens da lista."
+      },
+      {
+        "name": "Indice",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indice do item da lista que ser quer obter o valor."
+      },
+      {
+        "name": "Valor",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorna o valor do item da lista referente ao indice informado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/listaitem.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "RetornaValorCFG",
+    "documentation": "Responsável por retornar para a regra o valor de uma determinada chave da Central de Configuração Senior que está sendo utilizada pelo sistema. Esta função recebe um parâmetro do tipo alfanumérico referente ao nome da chave e retorna o valor da chave também em alfanumérico. A função pode ser chamada em qualquer regra de qualquer identificador de regra. Caso o valor da chave esteja em branco, o valor retornado é \"( NULO )\".",
+    "params": [
+      {
+        "name": "Chave",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da chave de configuração. Que pode conter: o nome completo, a parte final de uma chave ou então de uma das opções abaixo para retornar o diretório desses recursos:\n\n - **LOGS**\n - **TBS** : Além do diretório, traz o nome do arquivo.\n - **IMAGENS**\n - **ARQUIVOS**\n - **GRAFICOS**\n - **IMPEXP**\n - **CONSULTAS**\n - **REGRAS**\n - **CUBOS**\n - **MODELOS**\n - **TBS_TRANSLATION_FILTER_FILE**\n\nCaso seja informada apenas a parte final do nome da chave, será retornado o valor da primeira chave localizada que contenha a parte final informada."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Retorna o valor da chave."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/retornavalorcfg.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "WInsSelecaodaLista",
+    "documentation": "Insere em um HTML a seleção dos dados de uma Lista do Sistema. Esta seleção será inserida junto a um marcador no HTML. Esta seleção deve ser utilizada em conjunto com um **ComboBox** ou **ListBox**.",
+    "params": [
+      {
+        "name": "HTML",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que conterá o HTML"
+      },
+      {
+        "name": "Marcador",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Identifica o marcador a ser substituído"
+      },
+      {
+        "name": "NomeLista",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da lista"
+      },
+      {
+        "name": "Opcional",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Se o campo para que a lista está sendo gerada aceitar valores opcionais, este parâmetro deve receber **S**, caso contrário deve receber **N**"
+      },
+      {
+        "name": "ItemSelecionado",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Define o valor da lista a ser selecionada ao carregar a página"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/winsselecaodalista.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "LerPosicaoAlfa",
+    "documentation": "Identifica qual caracter está em determinada posição do campo/variável de origem.",
+    "params": [
+      {
+        "name": "Origem",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Campo/Variável que se deseja verificar"
+      },
+      {
+        "name": "Destino",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável numérica que receberá o caracter lido no **formato ASCII**."
+      },
+      {
+        "name": "Posicao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Posição do Campo/Variável de Origem que se deseja identificar o caracter"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/lerposicaoalfa.htm",
+    "docVersion": "5.10.4"
+  }
+]

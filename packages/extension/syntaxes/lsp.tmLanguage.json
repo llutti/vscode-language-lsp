@@ -1,0 +1,397 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "lsp",
+  "patterns": [
+    {
+      "include": "#embedded-sql"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#mensagem-mode"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#numbers"
+    }
+  ],
+  "repository": {
+    "embedded-sql": {
+      "patterns": [
+        {
+          "name": "meta.embedded.inline.sql.lsp",
+          "begin": "(?i:\\b(ExecSql)\\b)(\\s*)(\")",
+          "end": "(?<!\\\\)(\")",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.lsp"
+            },
+            "3": {
+              "name": "punctuation.definition.string.begin.lsp"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.string.end.lsp"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#embedded-sql-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.embedded.inline.sql.lsp",
+          "begin": "(?i:\\b(ExecSQLEx)\\b)(\\s*)(\\()(\\s*)(\")",
+          "end": "(?<!\\\\)(\")",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.lsp"
+            },
+            "3": {
+              "name": "punctuation.definition.parameters.begin.lsp"
+            },
+            "5": {
+              "name": "punctuation.definition.string.begin.lsp"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.string.end.lsp"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#embedded-sql-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.embedded.inline.sql.lsp",
+          "begin": "(?i:\\b(SQL_DefinirComando)\\b)(\\s*)(\\()([^,\\n]+)(,)(\\s*)(\")",
+          "end": "(?<!\\\\)(\")",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.lsp"
+            },
+            "3": {
+              "name": "punctuation.definition.parameters.begin.lsp"
+            },
+            "5": {
+              "name": "punctuation.separator.parameters.lsp"
+            },
+            "7": {
+              "name": "punctuation.definition.string.begin.lsp"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.string.end.lsp"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#embedded-sql-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.embedded.inline.sql.lsp",
+          "begin": "(\\.)(?i:(SQL))(\\s*)(\")",
+          "end": "(?<!\\\\)(\")",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.accessor.lsp"
+            },
+            "2": {
+              "name": "keyword.method.lsp"
+            },
+            "4": {
+              "name": "punctuation.definition.string.begin.lsp"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.string.end.lsp"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#embedded-sql-content"
+            }
+          ]
+        }
+      ]
+    },
+    "embedded-sql-content": {
+      "patterns": [
+        {
+          "name": "variable.other.bind.sql.lsp",
+          "match": ":[_[:alpha:]][_[:alnum:]]*"
+        },
+        {
+          "include": "source.sql"
+        },
+        {
+          "name": "constant.character.escape.lsp",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "mensagem-mode": {
+      "patterns": [
+        {
+          "match": "(?i:\\b(mensagem)\\b)(\\s*\\()(\\s*)(retorna|erro|refaz)\\b",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.lsp"
+            },
+            "2": {
+              "name": "punctuation.definition.parameters.begin.lsp"
+            },
+            "4": {
+              "name": "storage.type.message-mode.lsp"
+            }
+          }
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.other.lsp",
+          "match": "\\b(?i:(end|fim|inicio|regra|tabela|vaparacampo|vaparapagina|definir|funcao|retorna|erro|iniciartransacao|desfazertransacao|finalizartransacao))\\b"
+        },
+        {
+          "name": "keyword.control.lsp",
+          "match": "\\b(?i:(continue|enquanto|para|se|senao|pare|vapara))\\b"
+        },
+        {
+          "name": "keyword.operator.lsp",
+          "match": "\\b(?i:(e|ou))\\b"
+        },
+        {
+          "match": "\\b(?i:(definir))\\b\\s\\b(?i:(alfa|cursor|data|lista|numero|tabela))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
+          "captures": {
+            "1": {
+              "name": "storage.type.prototype.lsp"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#type"
+                }
+              ]
+            },
+            "3": {
+              "name": "variable.other.readwrite.lsp"
+            }
+          }
+        },
+        {
+          "match": "\\b(?i:(definir))\\b\\s\\b(?i:(funcao))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
+          "captures": {
+            "1": {
+              "name": "storage.type.prototype.lsp"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#type"
+                }
+              ]
+            },
+            "3": {
+              "name": "entity.name.function.lsp"
+            }
+          }
+        },
+        {
+          "captures": {
+            "1": {
+              "name": "punctuation.separator.parameters.lsp"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#type"
+                }
+              ]
+            },
+            "3": {
+              "name": "keyword.other.lsp"
+            },
+            "4": {
+              "name": "variable.parameter.lsp"
+            }
+          },
+          "match": "([,(])\\s*\\b(?i:(alfa|numero|data))\\b\\s+(?:(?i:(end))\\b\\s+)?\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b"
+        },
+        {
+          "match": "\\b(?i:(funcao))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
+          "captures": {
+            "1": {
+              "name": "storage.type.function.lsp"
+            },
+            "2": {
+              "name": "entity.name.function.lsp"
+            }
+          }
+        },
+        {
+          "match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?i:(end))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
+          "captures": {
+            "1": {
+              "patterns": [
+                {
+                  "include": "#type"
+                }
+              ]
+            },
+            "2": {
+              "name": "keyword.other.lsp"
+            },
+            "3": {
+              "name": "variable.other.readwrite.lsp"
+            }
+          }
+        },
+        {
+          "match": "\\b(?i:(alfa|numero|data))\\b\\s\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
+          "captures": {
+            "1": {
+              "patterns": [
+                {
+                  "include": "#type"
+                }
+              ]
+            },
+            "2": {
+              "name": "variable.other.readwrite.lsp"
+            }
+          }
+        },
+        {
+          "match": "\\.\\b(?i:(abrircursor|achou|fecharcursor|naoachou|proximo|sql|usaabrangencia|adicionar|adicionarcampo|anterior|cancelar|chave|definircampos|editar|editarchave|efetivarcampos|excluir|fda|gravar|ida|inserir|limpar|numreg|primeiro|proximo|qtdregistros|setanumreg|setarchave|ultimo|vaiparachave))\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.method.lsp"
+            }
+          }
+        },
+        {
+          "name": "support.type.primitive.lsp",
+          "match": "\\b(?i:(alfa|cursor|data|funcao|lista|numero|tabela))\\b"
+        },
+        {
+          "name": "constant.language.boolean.true.lsp",
+          "match": "\\b(?i:(cverdadeiro))\\b"
+        },
+        {
+          "name": "constant.language.boolean.false.lsp",
+          "match": "\\b(?i:(cfalso))\\b"
+        },
+        {
+          "match": "\\b(?i:(chamarfuncao))\\b\\s+\\b(?<identifier>[_[:alpha:]][_[:alnum:]]*)\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.other.lsp"
+            },
+            "2": {
+              "name": "entity.name.function.lsp"
+            }
+          }
+        },
+        {
+          "match": "\\b(?i:(?!alfa\\b|cursor\\b|data\\b|funcao\\b|lista\\b|numero\\b|tabela\\b|definir\\b|inicio\\b|fim\\b|se\\b|senao\\b|enquanto\\b|para\\b|continue\\b|pare\\b|retorna\\b|erro\\b|end\\b|mensagem\\b|vaparacampo\\b|vaparapagina\\b|vapara\\b|iniciartransacao\\b|desfazertransacao\\b|finalizartransacao\\b|chamarfuncao\\b)([_[:alpha:]][_[:alnum:]]*))\\b(?=\\s*\\()",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.lsp"
+            }
+          }
+        },
+        {
+          "match": "\\b(?i:(?!alfa\\b|cursor\\b|data\\b|funcao\\b|lista\\b|numero\\b|tabela\\b|definir\\b|inicio\\b|fim\\b|se\\b|senao\\b|enquanto\\b|para\\b|continue\\b|pare\\b|retorna\\b|erro\\b|end\\b|mensagem\\b|vaparacampo\\b|vaparapagina\\b|vapara\\b|iniciartransacao\\b|desfazertransacao\\b|finalizartransacao\\b|chamarfuncao\\b)([_[:alpha:]][_[:alnum:]]*))\\b(?!\\s*\\()",
+          "captures": {
+            "1": {
+              "name": "variable.other.readwrite.lsp"
+            }
+          }
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.lsp",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.lsp",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.lsp",
+          "match": "\\b(\\d+)|(\\d*\\.\\d+([eE][\\-+]?\\d+)?)\\b"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "meta.annotation.sql-pragma.lsp",
+          "match": "^\\s*@(lsp-sql-(consulta|fragmento))@\\s*$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.directive.sql-pragma.lsp"
+            },
+            "2": {
+              "name": "entity.name.type.sql-pragma.lsp"
+            }
+          }
+        },
+        {
+          "name": "comment.line.lsp",
+          "begin": "@",
+          "end": "\n|@"
+        },
+        {
+          "name": "comment.block.lsp",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "type": {
+      "patterns": [
+        {
+          "name": "meta.type.lsp",
+          "patterns": [
+            {
+              "include": "#type-builtin"
+            }
+          ]
+        }
+      ]
+    },
+    "type-builtin": {
+      "match": "\\b(?i:(alfa|cursor|data|funcao|lista|numero|tabela))\\b",
+      "captures": {
+        "1": {
+          "name": "support.type.primitive.lsp"
+        }
+      }
+    }
+  },
+  "scopeName": "source.lsp"
+}
