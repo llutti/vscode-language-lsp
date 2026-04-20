@@ -11,12 +11,6 @@ import { clearIgnoredCodes, listEffectiveIgnoredCodes } from './server/diagnosti
 import { applyQuickFixWithPrompt } from './server/language/quickfix-command-flow';
 import { formatStatusBarText, normalizeFallbackSystem, resolveEffectiveFallbackSystem, type FallbackSystem } from './server/fallback/fallback-utils';
 import {
-  computeOnboardingDecision,
-  ONBOARDING_GLOBAL_LAST_SEEN_KEY,
-  ONBOARDING_GLOBAL_NEVER_SHOW_KEY
-} from './onboarding/onboarding';
-import { openOnboardingWebview } from './onboarding/onboarding-webview';
-import {
   type ContextConfigAccessor,
   getEffectiveContexts,
   readContextsConfig,
@@ -60,15 +54,6 @@ type RefactorEditPlanPayload = {
 };
 
 export function activate(context: vscode.ExtensionContext) {
-  const openOnboarding = async () => {
-    openOnboardingWebview({
-      context,
-      onOpenSettings: async () => {
-        await vscode.commands.executeCommand('workbench.action.openSettings', `@ext:${context.extension.id}`);
-      }
-    });
-  };
-  const currentVersion = context.extension.packageJSON.version as string;
 
   const serverModule = context.asAbsolutePath(path.join('dist', 'server.js'));
   const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
@@ -101,7 +86,6 @@ export function activate(context: vscode.ExtensionContext) {
       void client?.stop();
     }
   });
-
 
   const output = vscode.window.createOutputChannel('LSP');
   context.subscriptions.push(output);
@@ -607,38 +591,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('lsp.onboarding.open', async () => {
-      await openOnboarding();
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('lsp.onboarding.neverShowAgain', async () => {
-      const config = vscode.workspace.getConfiguration('lsp');
-      await config.update('onboarding.neverShowAgain', true, vscode.ConfigurationTarget.Global);
-      await context.globalState.update(ONBOARDING_GLOBAL_NEVER_SHOW_KEY, true);
-      void vscode.window.showInformationMessage('LSP: onboarding desativado para futuras execuções automáticas.');
-    })
-  );
-
-  void (async () => {
-    const config = vscode.workspace.getConfiguration('lsp');
-    const neverShowSetting = config.get<boolean>('onboarding.neverShowAgain', false);
-    const showOnUpdate = config.get<boolean>('onboarding.showOnUpdate', true);
-    const neverShowGlobal = context.globalState.get<boolean>(ONBOARDING_GLOBAL_NEVER_SHOW_KEY, false);
-    const decision = computeOnboardingDecision({
-      currentVersion,
-      lastSeenVersion: context.globalState.get<string>(ONBOARDING_GLOBAL_LAST_SEEN_KEY),
-      neverShow: Boolean(neverShowSetting || neverShowGlobal),
-      showOnUpdate
-    });
-    if (decision.shouldOpen) {
-      await openOnboarding();
-    }
-    await context.globalState.update(ONBOARDING_GLOBAL_LAST_SEEN_KEY, decision.nextLastSeenVersion);
-  })();
-
-  context.subscriptions.push(
     vscode.commands.registerCommand('lsp.fallback.selectSystem', async () => {
       const activeEditor = vscode.window.activeTextEditor;
       const contextInfo = await getContextInfo(activeEditor);
@@ -850,7 +802,6 @@ export function activate(context: vscode.ExtensionContext) {
       void vscode.window.showInformationMessage('LSP: IDs ignorados do usuário foram limpos.');
     })
   );
-
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((event) => {

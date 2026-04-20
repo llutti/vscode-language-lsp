@@ -9,7 +9,6 @@ Alterações realizadas na extensão.
 - Hover e autocomplete aprimorados (internas, keywords, tipos, snippets)
 - Syntax highlighting aprimorado
 - Formatador de código
-- Walkthrough de onboarding V2 com comando manual e controle de reexibição
 - Diagnósticos em fluxo **pull-only** (`textDocument/diagnostic`) com refresh debounced
 - Quick fix LSP1406 removido do catálogo até existir plano aplicável
 - Semantic token scopes expandidos para `parameter` e `property`

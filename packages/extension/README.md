@@ -1,14 +1,14 @@
 <br />
 <p align="center">
   <a href="https://github.com/llutti/vscode-language-lsp">
-    <img src="https://github.com/llutti/vscode-language-lsp/raw/v2/images/logo-lsp" alt="Logo" width="80" height="80">
+    <img src="https://github.com/llutti/vscode-language-lsp/raw/main/images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
   <h2 align="center">LSP para Visual Studio Code</h2>
 
   <p align="center">
     Suporte à <b>Linguagem Senior de Programação</b> no Visual Studio Code com compilador dedicado,
-    validação por contexto, destaque semântico, formatação de código, correções rápidas e tutorial guiado.
+    validação por contexto, destaque semântico, formatação de código e correções rápidas.
   </p>
 
   <p align="center" style="display:flex;gap:7px;justify-content:center;align-items:center;">
@@ -32,7 +32,6 @@ A extensão reúne, no fluxo normal do editor:
 - correções rápidas e controle de diagnósticos por ID
 - formatação de código com `Format Document`
 - suporte opcional a SQL embutido com formatação e highlight dedicados
-- tutorial guiado para configuração inicial
 
 ---
 
@@ -144,18 +143,6 @@ Ou usar o comando:
 ---
 
 ## Recursos principais
-
-### Tutorial guiado
-
-Ao instalar a extensão, o VS Code exibe um tutorial com os pontos principais:
-
-- configuração de contextos
-- uso de `SingleFile`
-- controle de diagnósticos
-- correções rápidas
-- formatação
-
-Também é possível reabrir manualmente pesquisando por `Abrir Tutorial` na Paleta de Comandos.
 
 ### Destaque semântico
 
@@ -332,8 +319,6 @@ Diversos snippets continuam disponíveis para acelerar comandos comuns da lingua
 | `lsp.semantic.embeddedSqlHighlight.enabled` | `false` | Habilita highlight dedicado para SQL embutido |
 | `lsp.refactor.defaultBlockStyle` | `"inicioFim"` | Define o estilo padrão dos refactors de bloco |
 | `lsp.diagnostics.ignoreIds` | `[]` | Ignora diagnósticos por ID no escopo configurado |
-| `lsp.onboarding.showOnUpdate` | `true` | Controla a reabertura do tutorial |
-| `lsp.onboarding.neverShowAgain` | `false` | Impede a reabertura automática do tutorial |
 
 ---
 

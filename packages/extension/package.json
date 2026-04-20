@@ -225,18 +225,6 @@
           "type": "string",
           "default": "",
           "description": "%lsp.configuration.debug.path.description%"
-        },
-        "lsp.onboarding.showOnUpdate": {
-          "scope": "window",
-          "type": "boolean",
-          "default": true,
-          "description": "%lsp.configuration.onboarding.showOnUpdate.description%"
-        },
-        "lsp.onboarding.neverShowAgain": {
-          "scope": "window",
-          "type": "boolean",
-          "default": false,
-          "description": "%lsp.configuration.onboarding.neverShowAgain.description%"
         }
       }
     },
@@ -305,96 +293,9 @@
         "command": "lsp.fallback.selectSystem",
         "title": "%lsp.command.fallback.selectSystem.title%",
         "category": "LSP"
-      },
-      {
-        "command": "lsp.onboarding.open",
-        "title": "%lsp.command.onboarding.open.title%",
-        "category": "LSP"
-      },
-      {
-        "command": "lsp.onboarding.neverShowAgain",
-        "title": "%lsp.command.onboarding.neverShowAgain.title%",
-        "category": "LSP"
       }
     ],
-    "menus": {
-      "commandPalette": [
-        {
-          "command": "lsp.onboarding.open",
-          "when": "true"
-        }
-      ]
-    },
-    "walkthroughs": [
-      {
-        "id": "lsp-v2.onboarding",
-        "title": "%lsp.walkthrough.v2.title%",
-        "description": "%lsp.walkthrough.v2.description%",
-        "steps": [
-          {
-            "id": "intro",
-            "title": "%lsp.walkthrough.v2.step.intro.title%",
-            "description": "%lsp.walkthrough.v2.step.intro.description%",
-            "media": {
-              "image": "images/walkthrough/intro.svg",
-              "altText": "%lsp.walkthrough.v2.step.intro.altText%"
-            }
-          },
-          {
-            "id": "configure-contexts",
-            "title": "%lsp.walkthrough.v2.step.contexts.title%",
-            "description": "%lsp.walkthrough.v2.step.contexts.description%",
-            "media": {
-              "image": "images/walkthrough/contexts.svg",
-              "altText": "%lsp.walkthrough.v2.step.contexts.altText%"
-            },
-            "completionEvents": [
-              "onCommand:lsp.contexts.openSettings"
-            ]
-          },
-          {
-            "id": "singlefile-context",
-            "title": "%lsp.walkthrough.v2.step.singleFile.title%",
-            "description": "%lsp.walkthrough.v2.step.singleFile.description%",
-            "media": {
-              "image": "images/walkthrough/singlefile.svg",
-              "altText": "%lsp.walkthrough.v2.step.singleFile.altText%"
-            }
-          },
-          {
-            "id": "diagnostics-ignore",
-            "title": "%lsp.walkthrough.v2.step.diagnostics.title%",
-            "description": "%lsp.walkthrough.v2.step.diagnostics.description%",
-            "media": {
-              "image": "images/walkthrough/diagnostics.svg",
-              "altText": "%lsp.walkthrough.v2.step.diagnostics.altText%"
-            },
-            "completionEvents": [
-              "onCommand:lsp.diagnostics.ignoreId",
-              "onCommand:lsp.diagnostics.listIgnoredIds"
-            ]
-          },
-          {
-            "id": "quick-fixes",
-            "title": "%lsp.walkthrough.v2.step.quickfix.title%",
-            "description": "%lsp.walkthrough.v2.step.quickfix.description%",
-            "media": {
-              "image": "images/walkthrough/quickfix.svg",
-              "altText": "%lsp.walkthrough.v2.step.quickfix.altText%"
-            }
-          },
-          {
-            "id": "formatter",
-            "title": "%lsp.walkthrough.v2.step.formatter.title%",
-            "description": "%lsp.walkthrough.v2.step.formatter.description%",
-            "media": {
-              "image": "images/walkthrough/formatter.svg",
-              "altText": "%lsp.walkthrough.v2.step.formatter.altText%"
-            }
-          }
-        ]
-      }
-    ],
+    "menus": {},
     "languages": [
       {
         "id": "lsp",
