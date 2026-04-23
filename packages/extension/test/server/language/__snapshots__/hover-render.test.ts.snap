@@ -1,0 +1,27 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`hover render > keeps markdown contract stable (snapshot) 1`] = `
+{
+  "customFn": "\`\`\`lsp
+[CUSTOMIZADO] MinhaFuncao(Alfa p1)
+\`\`\`",
+  "customVar": "\`\`\`lsp
+[CUSTOMIZADO] Definir Alfa aNome;
+\`\`\`",
+  "internalFn": "\`\`\`lsp
+[Senior] Mensagem(Alfa Tipo, Alfa End Texto): Alfa
+\`\`\`
+
+---
+Linha 1
+  Linha 2
+
+[Documentação oficial (6.10.4)](https://example.invalid/mensagem)",
+  "internalVar": "\`\`\`lsp
+[HCM] Definir Alfa WEB_HTML;
+\`\`\`
+
+---
+Conteúdo HTML de saída.",
+}
+`;

@@ -12,3 +12,21 @@ vsc-extension-quickstart.md
 old
 *.lspt
 lixo.*
+exemplos
+reports
+V1
+*.zip
+*.7z
+.lsp-debug/
+
+# Test artifacts accidentally generated inside source/test trees
+**/*.d.ts
+**/*.d.ts.map
+**/*.js.map
+
+# Optional: ignore compiled JS only in test/source areas
+packages/**/src/**/*.js
+packages/**/test/**/*.js
+
+# Optional: TypeScript incremental/cache
+*.tsbuildinfo

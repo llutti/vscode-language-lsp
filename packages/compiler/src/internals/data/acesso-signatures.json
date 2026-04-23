@@ -1,0 +1,76 @@
+[
+  {
+    "name": "BusQtdDiasMes",
+    "documentation": "Esta função retorna o horário base do funcionário.",
+    "params": [
+      {
+        "name": "Mes",
+        "type": "Numero",
+        "documentation": "Mês que se deseja saber o número de dias.",
+        "isReturnValue": false
+      },
+      {
+        "name": "Ano",
+        "type": "Numero",
+        "documentation": "Ano que se deseja saber o número de dias.",
+        "isReturnValue": false
+      },
+      {
+        "name": "Dias",
+        "type": "Numero",
+        "documentation": "Quantidade de dias que se deseja saber.",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/ronda-senior/6.10.4/index.htm#ferramentas-de-customizacoes/funcoes-para-regras-gerador-de-relatorios/busqtddiasmes.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetornaEscala",
+    "documentation": "Retorna a escala do colaborador em determinada data, considerando as programações de troca de escala e histórico do colaborador.",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false
+      },
+      {
+        "name": "Data",
+        "type": "Data",
+        "isReturnValue": false
+      },
+      {
+        "name": "Escala",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "Turma",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "Intervalo",
+        "type": "Numero",
+        "isReturnValue": true
+      },
+      {
+        "name": "Mensagem",
+        "type": "Alfa",
+        "isReturnValue": true
+      }
+    ],
+    "docUrl": "",
+    "docVersion": ""
+  }
+]

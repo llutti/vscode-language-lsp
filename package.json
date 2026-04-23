@@ -1,101 +1,29 @@
 {
-    "name": "lsp",
-    "displayName": "LSP - Linguagem Senior de Programação",
-    "description": "Suporte para a Linguagem Senior de Programação",
-    "version": "1.2.17",
-    "publisher": "llutti",
-    "icon": "images/icon.png",
-    "license": "LICENSE.md",
-    "homepage": "https://github.com/llutti/vscode-language-lsp/blob/main/README.md",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/llutti/vscode-language-lsp.git"
-    },
-    "bugs": {
-        "url": "https://github.com/llutti/vscode-language-lsp/issues"
-    },
-    "engines": {
-        "vscode": "^1.83.0"
-    },
-    "categories": [
-        "Programming Languages",
-        "Snippets"
-    ],
-    "activationEvents": [],
-    "main": "./dist/extension",
-    "contributes": {
-        "configuration": {
-            "type": "object",
-            "title": "%lsp.configuration.tittle%",
-            "properties": {
-                "lsp.maxNumberOfProblems": {
-                    "scope": "resource",
-                    "type": "number",
-                    "default": 100,
-                    "description": "%lsp.configuration.maxNumberOfProblems.description%"
-                },
-                "lsp.seniorSystem": {
-                    "scope": "resource",
-                    "type": "string",
-                    "enum": [
-                        "SENIOR",
-                        "HCM",
-                        "ACESSO",
-                        "ERP"
-                    ],
-                    "enumDescriptions": [
-                        "%lsp.configuration.seniorSystem.emun.SENIOR%",
-                        "%lsp.configuration.seniorSystem.emun.HCM%",
-                        "%lsp.configuration.seniorSystem.emun.ACESSO%",
-                        "%lsp.configuration.seniorSystem.emun.ERP%"
-                    ],
-                    "default": "HCM",
-                    "description": "%lsp.configuration.seniorSystem.description%"
-                }
-            }
-        },
-        "languages": [
-            {
-                "id": "lsp",
-                "aliases": [
-                    "LSP"
-                ],
-                "extensions": [
-                    ".lspt"
-                ],
-                "configuration": "./lsp-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "lsp",
-                "scopeName": "source.lsp",
-                "path": "./syntaxes/lsp.tmLanguage.json"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "lsp",
-                "path": "./snippets/lsp.json"
-            }
-        ]
-    },
-    "scripts": {
-        "vscode:prepublish": "tsc -b && webpack --mode production",
-        "build": "tsc -b && webpack --mode production",
-        "dev": "tsc -b -w && webpack --mode development --watch",
-        "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
-    },
-    "devDependencies": {
-        "@eslint/eslintrc": "^3.3.3",
-        "@eslint/js": "^9.39.2",
-        "@types/node": "^25.0.9",
-        "@typescript-eslint/eslint-plugin": "^8.53.1",
-        "@typescript-eslint/parser": "^8.53.1",
-        "eslint": "^9.39.2",
-        "ts-loader": "^9.5.4",
-        "typescript": "^5.9.3",
-        "webpack": "^5.104.1",
-        "webpack-cli": "^6.0.1"
-    }
+  "name": "lsp-workspace",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run --workspaces build",
+    "test": "npm run --workspaces test",
+    "lint": "npm run lint:eslint && npm -w @lsp/compiler run lint",
+    "lint:eslint": "eslint \"packages/**/*.{ts,mts,cts}\" \"scripts/**/*.{ts,mts,cts,mjs}\"",
+    "clean": "npm run --workspaces clean",
+    "typecheck": "npm run --workspaces typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "globals": "^17.5.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.0",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "@types/vscode": "^1.116.0",
+    "esbuild": "^0.28.0"
+  }
 }

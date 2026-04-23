@@ -1,0 +1,497 @@
+{
+  "name": "lsp",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
+  "version": "2.0.0",
+  "publisher": "llutti",
+  "icon": "images/icon.png",
+  "license": "LICENSE.md",
+  "homepage": "https://github.com/llutti/vscode-language-lsp/blob/main/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/llutti/vscode-language-lsp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/llutti/vscode-language-lsp/issues"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "private": true,
+  "main": "dist/extension.js",
+  "activationEvents": [],
+  "files": [
+    "dist",
+    "syntaxes",
+    "images",
+    "snippets.json",
+    "lsp-configuration.json",
+    "CHANGELOG.md",
+    "LICENSE.md",
+    "README.md",
+    "package.json",
+    "package.nls.json",
+    "package.nls.pt-br.json",
+    "package.nls.es.json"
+  ],
+  "engines": {
+    "vscode": "^1.116.0"
+  },
+  "scripts": {
+    "build": "node ./esbuild.mjs --production",
+    "build:prerelease": "node ./esbuild.mjs",
+    "watch": "node ./esbuild.mjs --watch",
+    "test": "npm -w @lsp/compiler run build && npm run typecheck && npm run test:unit",
+    "test:update": "vitest run --config vitest.config.mts --update",
+    "test:unit": "vitest run --config vitest.config.mts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\"",
+    "check:vsix": "node ./scripts/check-vsix.mjs"
+  },
+  "dependencies": {
+    "@lsp/compiler": "file:../compiler"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "@types/vscode": "^1.116.0",
+    "esbuild": "^0.28.0",
+    "fast-glob": "^3.3.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5",
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "%lsp.configuration.title%",
+      "properties": {
+        "lsp.contexts": {
+          "type": "array",
+          "default": [],
+          "description": "%lsp.configuration.contexts.description%",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "rootDir",
+              "filePattern",
+              "includeSubdirectories",
+              "system"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "%lsp.configuration.contexts.item.name.description%"
+              },
+              "rootDir": {
+                "type": "string",
+                "description": "%lsp.configuration.contexts.item.rootDir.description%"
+              },
+              "filePattern": {
+                "type": "string",
+                "description": "%lsp.configuration.contexts.item.filePattern.description%"
+              },
+              "includeSubdirectories": {
+                "type": "boolean",
+                "description": "%lsp.configuration.contexts.item.includeSubdirectories.description%"
+              },
+              "system": {
+                "type": "string",
+                "enum": [
+                  "HCM",
+                  "ACESSO",
+                  "ERP"
+                ],
+                "description": "%lsp.configuration.contexts.item.system.description%",
+                "enumDescriptions": [
+                  "%lsp.configuration.contexts.item.system.enum.HCM%",
+                  "%lsp.configuration.contexts.item.system.enum.ACESSO%",
+                  "%lsp.configuration.contexts.item.system.enum.ERP%"
+                ]
+              },
+              "diagnostics": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "ignoreIds": {
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "%lsp.configuration.contexts.item.diagnostics.ignoreIds.description%"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "lsp.diagnostics.ignoreIds": {
+          "scope": "resource",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "%lsp.configuration.diagnostics.ignoreIds.description%"
+        },
+        "lsp.format.enabled": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": true,
+          "description": "%lsp.configuration.format.enabled.description%"
+        },
+        "lsp.format.indentSize": {
+          "scope": "resource",
+          "type": "number",
+          "default": 2,
+          "description": "%lsp.configuration.format.indentSize.description%"
+        },
+        "lsp.format.useTabs": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": false,
+          "description": "%lsp.configuration.format.useTabs.description%"
+        },
+        "lsp.format.maxParamsPerLine": {
+          "scope": "resource",
+          "type": "number",
+          "default": 4,
+          "description": "%lsp.configuration.format.maxParamsPerLine.description%"
+        },
+        "lsp.format.embeddedSql.enabled": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": false,
+          "description": "%lsp.configuration.format.embeddedSql.enabled.description%"
+        },
+        "lsp.format.embeddedSql.dialect": {
+          "scope": "resource",
+          "type": "string",
+          "enum": [
+            "sql",
+            "oracle",
+            "sqlserver"
+          ],
+          "default": "sql",
+          "description": "%lsp.configuration.format.embeddedSql.dialect.description%"
+        },
+        "lsp.semantic.embeddedSqlHighlight.enabled": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": false,
+          "description": "%lsp.configuration.semantic.embeddedSqlHighlight.enabled.description%"
+        },
+        "lsp.refactor.defaultBlockStyle": {
+          "scope": "resource",
+          "type": "string",
+          "enum": [
+            "inicioFim",
+            "braces"
+          ],
+          "default": "inicioFim",
+          "description": "%lsp.configuration.refactor.defaultBlockStyle.description%",
+          "enumDescriptions": [
+            "%lsp.configuration.refactor.defaultBlockStyle.enum.inicioFim%",
+            "%lsp.configuration.refactor.defaultBlockStyle.enum.braces%"
+          ]
+        },
+        "lsp.fallback.defaultSystem": {
+          "scope": "resource",
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "HCM",
+            "ACESSO",
+            "ERP"
+          ],
+          "default": null,
+          "description": "%lsp.configuration.fallback.defaultSystem.description%"
+        },
+        "lsp.debug.enabled": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": false,
+          "description": "%lsp.configuration.debug.enabled.description%"
+        },
+        "lsp.debug.path": {
+          "scope": "resource",
+          "type": "string",
+          "default": "",
+          "description": "%lsp.configuration.debug.path.description%"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "lsp.contexts.create",
+        "title": "%lsp.command.contexts.create.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.contexts.edit",
+        "title": "%lsp.command.contexts.edit.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.contexts.delete",
+        "title": "%lsp.command.contexts.delete.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.contexts.validate",
+        "title": "%lsp.command.contexts.validate.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.contexts.openSettings",
+        "title": "%lsp.command.contexts.openSettings.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.diagnostics.ignoreId",
+        "title": "%lsp.command.diagnostics.ignoreId.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.diagnostics.unignoreId",
+        "title": "%lsp.command.diagnostics.unignoreId.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.diagnostics.listIgnoredIds",
+        "title": "%lsp.command.diagnostics.listIgnoredIds.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.diagnostics.clearIgnoredIdsWorkspace",
+        "title": "%lsp.command.diagnostics.clearIgnoredIdsWorkspace.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.diagnostics.clearIgnoredIdsUser",
+        "title": "%lsp.command.diagnostics.clearIgnoredIdsUser.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.quickfix.applyWithNamePrompt",
+        "title": "%lsp.command.quickfix.applyWithNamePrompt.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.quickfix.applyEditPlan",
+        "title": "%lsp.command.quickfix.applyEditPlan.title%",
+        "category": "LSP"
+      },
+      {
+        "command": "lsp.fallback.selectSystem",
+        "title": "%lsp.command.fallback.selectSystem.title%",
+        "category": "LSP"
+      }
+    ],
+    "menus": {},
+    "languages": [
+      {
+        "id": "lsp",
+        "aliases": [
+          "LSP"
+        ],
+        "extensions": [
+          ".lspt"
+        ],
+        "configuration": "./lsp-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "lsp",
+        "scopeName": "source.lsp",
+        "path": "./syntaxes/lsp.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.inline.sql.lsp": "sql",
+          "meta.embedded.block.sql.lsp": "sql",
+          "source.sql.embedded.lsp": "sql"
+        }
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "lsp",
+        "scopes": {
+          "function": [
+            "entity.name.function.lsp"
+          ],
+          "function.declaration": [
+            "entity.name.function.lsp"
+          ],
+          "function.definition": [
+            "entity.name.function.lsp"
+          ],
+          "method.defaultLibrary": [
+            "support.function.method.lsp",
+            "entity.name.function.method.lsp",
+            "variable.other.property.lsp"
+          ],
+          "method.userDefined": [
+            "entity.name.function.method.lsp"
+          ],
+          "parameter": [
+            "variable.parameter.lsp"
+          ],
+          "variable.defaultLibrary": [
+            "support.variable.lsp"
+          ],
+          "variable.defaultLibrary.readonly": [
+            "variable.other.bind.sql.lsp",
+            "variable.other.sql.lsp",
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "variable.readonly.defaultLibrary": [
+            "variable.other.bind.sql.lsp",
+            "variable.other.sql.lsp",
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "variable.userDefined": [
+            "variable.other.readwrite.lsp"
+          ],
+          "property": [
+            "variable.other.property.lsp"
+          ],
+          "string.defaultLibrary": [
+            "string.quoted.single.sql",
+            "string.quoted.sql",
+            "string",
+            "source.sql.embedded.lsp",
+            "meta.embedded.inline.sql.lsp",
+            "string.quoted.double.sql.lsp",
+            "string.quoted.double.lsp"
+          ],
+          "keyword.defaultLibrary": [
+            "keyword.other.sql",
+            "keyword.control.sql.lsp",
+            "keyword.other.sql.lsp",
+            "keyword.control.lsp"
+          ],
+          "string.defaultLibrary.readonly": [
+            "string.quoted.single.sql",
+            "string.quoted.sql",
+            "string",
+            "meta.embedded.block.sql.lsp",
+            "source.sql.embedded.lsp",
+            "meta.embedded.inline.sql.lsp",
+            "markup.raw.sql.lsp",
+            "string.quoted.double.sql.lsp",
+            "string.quoted.double.lsp"
+          ],
+          "variable.defaultLibrary.internal": [
+            "entity.name.type",
+            "support.type",
+            "variable.language.lsp",
+            "variable.language"
+          ],
+          "variable.internal.defaultLibrary": [
+            "entity.name.type",
+            "support.type",
+            "variable.language.lsp",
+            "variable.language"
+          ],
+          "variable.defaultLibrary.internal.readonly": [
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "variable.defaultLibrary.readonly.internal": [
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "variable.readonly.defaultLibrary.internal": [
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "variable.readonly.internal.defaultLibrary": [
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "variable.internal.defaultLibrary.readonly": [
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "variable.internal.readonly.defaultLibrary": [
+            "variable.other.constant",
+            "variable.other.constant.lsp"
+          ],
+          "parameter.defaultLibrary": [
+            "variable.parameter.sql",
+            "variable.parameter",
+            "support.variable.parameter.lsp",
+            "support.variable.lsp",
+            "variable.parameter.lsp"
+          ],
+          "parameter.defaultLibrary.declaration": [
+            "variable.parameter.sql",
+            "variable.parameter",
+            "support.variable.parameter.lsp",
+            "support.variable.lsp",
+            "variable.parameter.lsp"
+          ],
+          "variable.static": [
+            "support.variable.global.lsp",
+            "support.variable.lsp",
+            "entity.name.type.lsp",
+            "entity.name.type"
+          ],
+          "variable.declaration.static": [
+            "support.variable.global.lsp",
+            "support.variable.lsp",
+            "entity.name.type.lsp",
+            "entity.name.type"
+          ],
+          "function.defaultLibrary": [
+            "support.function.sql.lsp",
+            "entity.name.function.sql.lsp",
+            "support.function.lsp",
+            "entity.name.function.lsp"
+          ],
+          "parameter.readonly.defaultLibrary": [
+            "variable.parameter.sql",
+            "variable.parameter",
+            "support.variable.parameter.lsp",
+            "support.variable.lsp",
+            "variable.parameter.lsp"
+          ],
+          "parameter.defaultLibrary.readonly": [
+            "variable.parameter.sql",
+            "variable.parameter",
+            "support.variable.parameter.lsp",
+            "support.variable.lsp",
+            "variable.parameter.lsp"
+          ],
+          "string.readonly.defaultLibrary": [
+            "string.quoted.single.sql",
+            "string.quoted.sql",
+            "string",
+            "meta.embedded.block.sql.lsp",
+            "source.sql.embedded.lsp",
+            "meta.embedded.inline.sql.lsp",
+            "markup.raw.sql.lsp",
+            "string.quoted.double.sql.lsp",
+            "string.quoted.double.lsp"
+          ]
+        }
+      }
+    ],
+    "snippets": [
+      {
+        "language": "lsp",
+        "path": "./snippets.json"
+      }
+    ]
+  }
+}
