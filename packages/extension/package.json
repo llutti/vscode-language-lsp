@@ -2,7 +2,7 @@
   "name": "lsp",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "publisher": "llutti",
   "icon": "images/icon.png",
   "license": "LICENSE.md",
