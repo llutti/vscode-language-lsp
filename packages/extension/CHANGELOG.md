@@ -2,17 +2,19 @@
 
 Alterações realizadas na extensão.
 
-## [2.0.0] - 16/02/2026
+## [2.0.0] - 23/04/2026
 ### Novidades
-- Novo compilador com análise semântica, diagnostics por contexto e suporte multi-sistema (ERP, HCM, Ronda Acesso)
+- Novo compilador com análise semântica, dignósticos aprimorados
 - Maior suporte a funções internas da Senior (Tecnologia, ERP, HCM, Ronda Acesso)
 - Hover e autocomplete aprimorados (internas, keywords, tipos, snippets)
 - Syntax highlighting aprimorado
 - Formatador de código
-- Diagnósticos em fluxo **pull-only** (`textDocument/diagnostic`) com refresh debounced
-- Quick fix LSP1406 removido do catálogo até existir plano aplicável
-- Semantic token scopes expandidos para `parameter` e `property`
-- Formatter com assinatura de funções em 3 parâmetros por linha e concatenação multiline canônica por `+`
+- Correções rápidas para diversos dignósticos
+- Diversas opções de refatoração
+- Outras melhorias:
+  - Renomear variável [F2]
+  - Ir para definição [F12] (funções customizadas)
+  - Ir para implementação [CTRL+F12] (funções customizadas)
 
 ## [1.2.17] - 21/01/2026
 ### Atualizar

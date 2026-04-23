@@ -239,6 +239,15 @@ A extensão permite:
 
 ![Quick Fix](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/quickfix.gif)
 
+### Refactors nativos
+
+A extensão também expõe refactors via `CodeActionKind.Refactor`, incluindo:
+
+- envolver seleção com bloco
+- envolver seleção com `Se`, `Enquanto` ou `Para`
+- alternar bloco `Inicio/Fim` ↔ `{ }`
+- converter texto multilinha com `\` em concatenação com `+`, inclusive em cadeias mistas com variáveis entre literais
+
 ### Formatação de código
 
 O uso recomendado é pelo comando padrão do VS Code:
