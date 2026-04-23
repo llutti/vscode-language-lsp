@@ -7,21 +7,10 @@
   "scripts": {
     "build": "npm run --workspaces build",
     "test": "npm run --workspaces test",
-    "test:highlight:update": "npm -w @lsp/compiler run test:update && npm -w lsp run test:update",
-    "test:highlight:gate": "npm -w lsp run test:unit -- test/highlight-payload-golden-hr.test.ts test/semantic-warm-cache.test.ts test/semantic-warm-reopen.integration.test.ts",
     "lint": "npm run lint:eslint && npm -w @lsp/compiler run lint",
     "lint:eslint": "eslint \"packages/**/*.{ts,mts,cts}\" \"scripts/**/*.{ts,mts,cts,mjs}\"",
     "clean": "npm run --workspaces clean",
-    "typecheck": "npm run --workspaces typecheck",
-    "bench:compiler:hr": "npm -w @lsp/compiler run build && node scripts/bench-hr.mjs --rootDir exemplos/HR --filePattern HR*.txt --includeSubdirectories false --includeSemantics false --json-out reports/compiler-bench-current.json",
-    "perf:gate:compiler": "node scripts/compiler-perf-gate.mjs --baseline reports/compiler-bench-baseline.json --current reports/compiler-bench-current.json --max-regression-pct 10 --max-warm-total-ms 400",
-    "docs:validate": "node scripts/docs-validate.mjs",
-    "docs:diff": "node scripts/docs-diff.mjs",
-    "docs:sync": "node scripts/docs-sync.mjs",
-    "hcm:internals:sync": "node scripts/hcm-internals-sync.mjs --in packages/compiler/src/internals/data/hcm-internals.json --out packages/compiler/src/internals/data/hcm-internals.json --docVersion 6.10.4",
-    "pull:report": "node scripts/pull-metrics-report.mjs",
-    "pull:gate": "node scripts/pull-observability-gate.mjs",
-    "smoke:prepare": "node scripts/smoke-vscode-clean-profile.mjs"
+    "typecheck": "npm run --workspaces typecheck"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
@@ -30,8 +19,8 @@
     "eslint-plugin-promise": "^7.2.1",
     "globals": "^17.5.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.58.2",
-    "vitest": "^4.1.4"
+    "typescript-eslint": "^8.59.0",
+    "vitest": "^4.1.5"
   },
   "dependencies": {
     "@types/vscode": "^1.116.0",

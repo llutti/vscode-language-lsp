@@ -2,7 +2,7 @@
   "name": "lsp",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "2.0.0-pre.6",
+  "version": "2.0.0",
   "publisher": "llutti",
   "icon": "images/icon.png",
   "license": "LICENSE.md",
@@ -59,7 +59,7 @@
     "esbuild": "^0.28.0",
     "fast-glob": "^3.3.2",
     "typescript": "^6.0.3",
-    "vitest": "^4.0.18",
+    "vitest": "^4.1.5",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11"
