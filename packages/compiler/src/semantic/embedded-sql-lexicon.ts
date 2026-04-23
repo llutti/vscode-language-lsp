@@ -18,7 +18,7 @@ const COMMON_LEXICON: EmbeddedSqlDialectLexicon = {
     'SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'ORDER', 'BY', 'GROUP', 'HAVING', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET',
     'DELETE', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 'FULL', 'ON', 'UNION', 'ALL', 'DISTINCT', 'AS', 'WHEN', 'CASE',
     'THEN', 'ELSE', 'END', 'IN', 'IS', 'NULL', 'NOT', 'EXISTS', 'LIKE', 'BETWEEN', 'TOP', 'WITH', 'OVER', 'PARTITION',
-    'ROW_NUMBER', 'FETCH', 'NEXT', 'ROWS', 'ONLY', 'OFFSET'
+    'ROW_NUMBER', 'FETCH', 'NEXT', 'ROWS', 'ONLY', 'OFFSET', 'DESC', 'ASC'
   ],
   compoundKeywords: ['IS NULL'],
   operators: ['<>', '>=', '<=', '!=', '||', '=', '+', '-', '*', '/', ',']
