@@ -1,7 +1,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/llutti/vscode-language-lsp">
-    <img src="https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/icon.png" alt="Logo" width="220" height="120">
+    <img src="https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/icon.png" alt="Logo" width="220" height="120">
   </a>
 
   <h2 align="center">LSP para Visual Studio Code</h2>
@@ -155,7 +155,7 @@ O destaque semântico cobre:
 - campos dinâmicos de `Lista` criados via `.AdicionarCampo(...)`
 - SQL embutido elegível, quando o highlight correspondente estiver habilitado
 
-![Colorização](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/colorizacao.png)
+![Colorização](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/colorizacao.png)
 
 ### Autocompletar
 
@@ -169,7 +169,7 @@ Durante a digitação, a extensão apresenta sugestões para:
 - campos dinâmicos adicionados semanticamente por `.AdicionarCampo(...)`
 - snippets da linguagem
 
-![Autocomplete](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/autocomplete.png)
+![Autocomplete](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/autocomplete.png)
 
 ### Hover e ajuda de assinatura
 
@@ -184,19 +184,19 @@ Também:
 
 **Funções internas**
 
-![Parâmetros função nativa](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/parametros-funcao-nativa.png)
+![Parâmetros função nativa](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-nativa.png)
 
 **Funções customizadas**
 
-![Parâmetros função customizada](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/parametros-funcao-customizada.png)
+![Parâmetros função customizada](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-customizada.png)
 
 **Ajuda durante a digitação**
 
-![Parâmetros durante digitação](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/parametros-funcao-digitacao.png)
+![Parâmetros durante digitação](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-digitacao.png)
 
 **Detalhes do parâmetro atual**
 
-![Detalhes do parâmetro](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/parametros-funcao-detalhes.png)
+![Detalhes do parâmetro](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-detalhes.png)
 
 ### Ir para definição
 
@@ -214,7 +214,7 @@ Isso inclui:
 - regras específicas de `Cursor`, `Lista`, `ExecSql` e variáveis internas
 - controle de variáveis não utilizadas e conflitos de escopo
 
-![Validação](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/validacao-sintaxe.png)
+![Validação](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/validacao-sintaxe.png)
 
 ### Diagnósticos por ID e correções rápidas
 
@@ -237,7 +237,7 @@ A extensão permite:
 
 **Fluxo ilustrado**
 
-![Quick Fix](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/quickfix.gif)
+![Quick Fix](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/quickfix.gif)
 
 ### Refactors nativos
 
@@ -309,7 +309,7 @@ Dialetos disponíveis:
 
 Diversos snippets continuam disponíveis para acelerar comandos comuns da linguagem.
 
-![Snippets](https://raw.githubusercontent.com/llutti/vscode-language-lsp/refs/heads/v2/packages/extension/images/screenshots/snippets.png)
+![Snippets](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/snippets.png)
 
 ---
 
