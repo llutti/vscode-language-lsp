@@ -12,7 +12,7 @@ export type EmbeddedSqlDialectLexicon = {
 const COMMON_LEXICON: EmbeddedSqlDialectLexicon = {
   functions: [
     'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'UPPER', 'LOWER', 'SUBSTR', 'SUBSTRING', 'TRIM', 'LTRIM', 'RTRIM', 'COALESCE',
-    'ROUND', 'ABS'
+    'ROUND', 'ABS', 'REPLACE'
   ],
   keywords: [
     'SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'ORDER', 'BY', 'GROUP', 'HAVING', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET',

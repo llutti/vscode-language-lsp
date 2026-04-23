@@ -102,6 +102,7 @@ Implicações práticas:
 - [x] Refactor `Envolver com Enquanto (...)`
 - [x] Refactor `Envolver com Para (...)`
 - [x] Refactor `Alternar bloco: Inicio/Fim ↔ { }`
+- [x] Refactor `Converter texto multilinha em concatenação`
 - [x] Cobertura automatizada da transformação central
 - [x] Documentação viva sincronizada
 
@@ -312,7 +313,6 @@ O trabalho desta trilha continua ativo, mas agora subordinado à convergência d
 - [x] Ordenação determinística por `basename` quando `includeSubdirectories = true`
 - [x] Métodos de `Cursor` unificados em fonte única de verdade
 - [x] Reforço de UTF-8 em mensagens e leitura de fonte
-- [x] Tutorial M4.2 implementado como walkthrough + comando + persistência de estado
 - [x] `activationEvents` mantido vazio
 - [x] System `SENIOR` sempre carregado e não selecionável em contexto
 - [x] Diagnostics operando em pull-only
@@ -472,12 +472,6 @@ O trabalho desta trilha continua ativo, mas agora subordinado à convergência d
 - [x] Performance multi-arquivo com debounce + incremental
 - [x] Testes de integração do servidor
 
-### M4.2 – Tutorial / onboarding
-- [x] Conteúdo do tutorial
-- [x] Detecção primeira instalação vs atualização
-- [x] Exibição após instalação/atualização
-- [x] Persistência de “não mostrar novamente”
-- [x] Testes manuais do fluxo
 
 ### M4.3 – Revisão e otimizações da extensão
 - [x] Revisão de uso de memória e tempos de resposta

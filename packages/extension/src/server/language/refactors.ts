@@ -9,7 +9,7 @@ export type RefactorEdit = {
 };
 
 export type RefactorPlan = {
-  kind: 'wrapBlock' | 'wrapIf' | 'wrapWhile' | 'wrapFor' | 'toggleBlockStyle';
+  kind: 'wrapBlock' | 'wrapIf' | 'wrapWhile' | 'wrapFor' | 'toggleBlockStyle' | 'convertMultilineStringToConcatenation';
   title: string;
   edits: RefactorEdit[];
   selection?: Range;
@@ -21,6 +21,7 @@ type LocalizedRefactorStrings = {
   wrapWhile: string;
   wrapFor: string;
   toggleBlockStyle: string;
+  convertMultilineStringToConcatenation: string;
 };
 
 type BlockCandidate = {
@@ -35,7 +36,8 @@ const DEFAULT_STRINGS: LocalizedRefactorStrings = {
   wrapIf: 'Envolver com Se (...)',
   wrapWhile: 'Envolver com Enquanto (...)',
   wrapFor: 'Envolver com Para (...)',
-  toggleBlockStyle: 'Alternar bloco: Inicio/Fim ↔ { }'
+  toggleBlockStyle: 'Alternar bloco: Inicio/Fim ↔ { }',
+  convertMultilineStringToConcatenation: 'Converter texto multilinha em concatenação'
 };
 
 const ES_STRINGS: LocalizedRefactorStrings = {
@@ -43,7 +45,8 @@ const ES_STRINGS: LocalizedRefactorStrings = {
   wrapIf: 'Envolver con Se (...)',
   wrapWhile: 'Envolver con Enquanto (...)',
   wrapFor: 'Envolver con Para (...)',
-  toggleBlockStyle: 'Alternar bloque: Inicio/Fim ↔ { }'
+  toggleBlockStyle: 'Alternar bloque: Inicio/Fim ↔ { }',
+  convertMultilineStringToConcatenation: 'Convertir texto multilínea en concatenación'
 };
 
 const EN_STRINGS: LocalizedRefactorStrings = {
@@ -51,7 +54,8 @@ const EN_STRINGS: LocalizedRefactorStrings = {
   wrapIf: 'Wrap with Se (...)',
   wrapWhile: 'Wrap with Enquanto (...)',
   wrapFor: 'Wrap with Para (...)',
-  toggleBlockStyle: 'Toggle block: Inicio/Fim ↔ { }'
+  toggleBlockStyle: 'Toggle block: Inicio/Fim ↔ { }',
+  convertMultilineStringToConcatenation: 'Convert multiline text to concatenation'
 };
 
 export function getRefactorStrings(locale?: string): LocalizedRefactorStrings {
@@ -82,6 +86,17 @@ function positionToOffset(text: string, position: Position): number {
   const starts = lineStartOffsets(text);
   const lineStart = starts[Math.max(0, Math.min(position.line, starts.length - 1))] ?? 0;
   return lineStart + Math.max(0, position.character);
+}
+
+function offsetToPosition(text: string, offset: number): Position {
+  const starts = lineStartOffsets(text);
+  const safeOffset = Math.max(0, Math.min(offset, text.length));
+  let line = 0;
+  while (line + 1 < starts.length && starts[line + 1] <= safeOffset) line += 1;
+  return {
+    line,
+    character: safeOffset - (starts[line] ?? 0)
+  };
 }
 
 function indentOf(line: string | undefined): string {
@@ -172,6 +187,141 @@ function getProtectedStringSpans(text: string): Array<{ start: number; end: numb
     i += 1;
   }
   return spans;
+}
+
+type StringSpan = { start: number; end: number };
+type StatementSpan = { start: number; end: number };
+
+function findUnprotectedCharInRange(
+  text: string,
+  protectedSpans: Array<{ start: number; end: number }>,
+  startOffset: number,
+  endOffset: number,
+  target: string
+): number {
+  let protectedIndex = protectedSpans.findIndex((span) => span.end > startOffset);
+  if (protectedIndex < 0) protectedIndex = protectedSpans.length;
+  let offset = startOffset;
+
+  while (offset < endOffset) {
+    const span = protectedSpans[protectedIndex];
+    if (span && offset >= span.start) {
+      offset = span.end;
+      protectedIndex += 1;
+      continue;
+    }
+    if (text[offset] === target) return offset;
+    offset += 1;
+  }
+
+  return -1;
+}
+
+function lineOffsetRange(text: string, lineIndex: number): { start: number; end: number } {
+  const starts = lineStartOffsets(text);
+  const safeLine = Math.max(0, Math.min(lineIndex, starts.length - 1));
+  const start = starts[safeLine] ?? 0;
+  let end = safeLine + 1 < starts.length ? (starts[safeLine + 1] ?? text.length) : text.length;
+  if (end > start && text[end - 1] === '\n') end -= 1;
+  if (end > start && text[end - 1] === '\r') end -= 1;
+  return { start, end };
+}
+
+function isVariableAssignmentPrefix(value: string): boolean {
+  if (value.includes('(')) return false;
+  return /^\s*[A-Za-z_][\w]*(?:\s*\[[^\]\r\n]+\])?(?:\s*\.\s*[A-Za-z_][\w]*(?:\s*\[[^\]\r\n]+\])?)*\s*$/i.test(value);
+}
+
+function findEligibleAssignmentStatement(text: string, selection: Range): StatementSpan | null {
+  const lines = toLines(text);
+  const protectedSpans = getProtectedStringSpans(text);
+  const emptySelection = selection.start.line === selection.end.line && selection.start.character === selection.end.character;
+  const anchorStartLine = emptySelection ? selection.start.line : Math.min(selection.start.line, selection.end.line);
+  const anchorEndLine = emptySelection ? selection.start.line : Math.max(selection.start.line, selection.end.line);
+
+  let statementStartLine = -1;
+  for (let lineIndex = anchorStartLine; lineIndex >= 0; lineIndex -= 1) {
+    const offsets = lineOffsetRange(text, lineIndex);
+    const equalOffset = findUnprotectedCharInRange(text, protectedSpans, offsets.start, offsets.end, '=');
+    if (equalOffset >= 0) {
+      const beforeEqual = text.slice(offsets.start, equalOffset);
+      if (isVariableAssignmentPrefix(beforeEqual)) {
+        statementStartLine = lineIndex;
+        break;
+      }
+    }
+    if (findUnprotectedCharInRange(text, protectedSpans, offsets.start, offsets.end, ';') >= 0) break;
+  }
+
+  if (statementStartLine < 0) return null;
+
+  let statementEndLine = -1;
+  for (let lineIndex = statementStartLine; lineIndex < lines.length; lineIndex += 1) {
+    const offsets = lineOffsetRange(text, lineIndex);
+    if (findUnprotectedCharInRange(text, protectedSpans, offsets.start, offsets.end, ';') >= 0) {
+      statementEndLine = lineIndex;
+      break;
+    }
+  }
+
+  if (statementEndLine < 0 || anchorEndLine > statementEndLine) {
+    if (statementEndLine < anchorEndLine) return null;
+  }
+
+  const startOffsets = lineOffsetRange(text, statementStartLine);
+  const endOffsets = lineOffsetRange(text, statementEndLine);
+  return { start: startOffsets.start, end: endOffsets.end };
+}
+
+function getStringSpansForEligibleAssignment(text: string, selection: Range): StringSpan[] {
+  const protectedSpans = getProtectedStringSpans(text);
+  const statement = findEligibleAssignmentStatement(text, selection);
+  if (!statement) return [];
+  return protectedSpans.filter((span) => span.start >= statement.start && span.end <= statement.end);
+}
+
+function stripPrefix(value: string, prefix: string): string {
+  return prefix.length > 0 && value.startsWith(prefix) ? value.slice(prefix.length) : value;
+}
+
+function buildMultilineStringConcatenation(input: {
+  rawLiteral: string;
+  literalColumn: number;
+  eol: string;
+  allowSingleSegment?: boolean;
+}): string | null {
+  const { rawLiteral, literalColumn, eol, allowSingleSegment = false } = input;
+  if (rawLiteral.length < 2 || rawLiteral[0] !== '"' || rawLiteral[rawLiteral.length - 1] !== '"') return null;
+
+  const content = rawLiteral.slice(1, -1);
+  if (!content.includes(`\\${eol}`)) return null;
+
+  const segments = content.split(`\\${eol}`);
+  if (segments.length < 2) return null;
+
+  const continuationSegments = segments.slice(1);
+  const commonIndent = minCommonIndent(continuationSegments);
+  const removableIndent = commonIndent.length > 0 ? commonIndent.slice(0, -1) : '';
+  const normalizedSegments = [
+    segments[0] ?? '',
+    ...continuationSegments.map((segment) => stripPrefix(segment, removableIndent))
+  ];
+
+  while (normalizedSegments.length > 1 && (normalizedSegments[normalizedSegments.length - 1]?.trim().length ?? 0) === 0) {
+    normalizedSegments.pop();
+  }
+
+  if (normalizedSegments.length === 1) {
+    return allowSingleSegment ? `"${normalizedSegments[0]}"` : null;
+  }
+
+  const continuationIndent = ' '.repeat(Math.max(0, literalColumn - 2));
+  const rendered = normalizedSegments.map((segment, index) => {
+    const prefix = index === 0 ? '' : `${continuationIndent}+ `;
+    return `${prefix}"${segment}"`;
+  });
+
+  return rendered.join(eol);
 }
 
 function isInsideProtectedString(text: string, position: Position): boolean {
@@ -361,6 +511,50 @@ function buildTogglePlan(input: {
   };
 }
 
+function buildConvertMultilineStringPlan(input: {
+  title: string;
+  text: string;
+  selection: Range;
+}): RefactorPlan | null {
+  const spans = getStringSpansForEligibleAssignment(input.text, input.selection);
+  if (spans.length === 0) return null;
+
+  const eol = detectEol(input.text);
+  const edits: RefactorEdit[] = [];
+  for (const span of spans) {
+    const rawLiteral = input.text.slice(span.start, span.end);
+    const startPosition = offsetToPosition(input.text, span.start);
+    const replacement = buildMultilineStringConcatenation({
+      rawLiteral,
+      literalColumn: startPosition.character,
+      eol,
+      allowSingleSegment: spans.length > 1
+    });
+    if (!replacement) continue;
+    edits.push({
+      type: 'replace',
+      range: {
+        start: startPosition,
+        end: offsetToPosition(input.text, span.end)
+      },
+      text: replacement
+    });
+  }
+
+  if (edits.length === 0) return null;
+
+  edits.sort((left, right) => {
+    if (left.range.start.line !== right.range.start.line) return right.range.start.line - left.range.start.line;
+    return right.range.start.character - left.range.start.character;
+  });
+
+  return {
+    kind: 'convertMultilineStringToConcatenation',
+    title: input.title,
+    edits
+  };
+}
+
 export function buildRefactorPlans(input: {
   docText: string;
   selection: Range;
@@ -418,6 +612,13 @@ export function buildRefactorPlans(input: {
     selection: input.selection
   });
   if (toggle) plans.push(toggle);
+
+  const convertMultilineString = buildConvertMultilineStringPlan({
+    title: strings.convertMultilineStringToConcatenation,
+    text: input.docText,
+    selection: input.selection
+  });
+  if (convertMultilineString) plans.push(convertMultilineString);
 
   return plans;
 }

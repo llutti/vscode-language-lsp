@@ -464,4 +464,5 @@ O acesso `Tabela[idx].Coluna` agora também valida:
   - funções SQL reconhecidas;
   - propriedades qualificadas (`Tabela.Campo`);
   - parâmetros bind (`:pValor`).
+- Em variáveis consumidas por wrappers autorizados, fragmentos estruturais seguros também podem receber highlight SQL quando a cadeia continuar semanticamente reconhecível, incluindo continuações como `AND`, `OR`, `WHERE`, `FROM`, `GROUP BY`, `HAVING`, `ORDER BY`, `JOIN`, `UNION`, `INTO`, `VALUES` e `SET`.
 - Casos dinâmicos/ambíguos continuam restritos ao highlight leve/global já existente.

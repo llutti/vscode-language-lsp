@@ -289,14 +289,6 @@ Esse processo deve ser tratado como uma atividade dedicada da V2.
 
 ---
 
-## 13. Experiência de Atualização da Extensão
-
-- Deve existir um **tutorial curto / instruções** para configuração dos novos recursos
-- O tutorial deve ser apresentado quando:
-  - A extensão for instalada
-  - A extensão for atualizada para a V2
-
----
 
 ## 14. Formatação de Código (Formatter)
 
@@ -425,6 +417,7 @@ Vantagens:
   - `Envolver com Enquanto (...)`
   - `Envolver com Para (...)`
   - `Alternar bloco: Inicio/Fim ↔ { }`
+  - `Converter texto multilinha em concatenação`
 - Os refactors que criam bloco devem respeitar `lsp.refactor.defaultBlockStyle`:
   - `inicioFim` (default)
   - `braces`
@@ -433,9 +426,14 @@ Vantagens:
   - seleção não vazia expandida para linhas completas, ou
   - bloco claramente reconhecido sob o cursor no caso de alternância.
 - Não oferecer refactor dentro de string literal.
+- Exceção formal: o refactor `Converter texto multilinha em concatenação` pode ser oferecido com o cursor dentro de string literal elegível ou em cadeia de concatenação mista da mesma linha/statement, desde que a ação atue apenas sobre os literais elegíveis da expressão sem alterar partes dinâmicas.
 - Comentários podem fazer parte da seleção do refactor e devem ser preservados como conteúdo atômico dentro da transformação.
 - Quando o estilo gerado for `Inicio/Fim`, o fechamento deve ser sempre `Fim;`.
 - O resultado deve sair textual e estruturalmente compatível com o formatter canônico, sem depender dele para correções básicas de moldura.
+- Para o refactor de conversão de texto multilinha:
+  - reconhecer string literal com continuações explícitas por `\` + quebra de linha;
+  - substituir apenas o literal por uma cadeia concatenada com `+`, preservando o restante do statement hospedeiro;
+  - manter o conteúdo textual de cada segmento, normalizando apenas a indentação comum das linhas continuadas para gerar forma editável previsível.
 
 ## Changelog
 
@@ -447,7 +445,6 @@ Vantagens:
 - **Ordenação com subdiretórios**: trata-se de uma **regra da linguagem LSP**. Quando `includeSubdirectories = true`, a ordem de compilação deve ser determinística por **nome do arquivo (`basename`)**, com comparação case-insensitive, **ignorando subdiretórios no critério de ordenação**.
 - **Cursor methods**: validação semântica e autocomplete devem ser alinhados por uma fonte única de verdade (tabela central de métodos/arity).
 - **Encoding**: todo o projeto deve ser **UTF-8** (mensagens e leitura de fonte). Mensagens com encoding inválido (ex.: `parÃ¢metros`) são proibidas e devem ser corrigidas.
-- **M4.2 Tutorial**: concluído como walkthrough (Getting Started) com reabertura controlada em update para V2.
 - **Diagnósticos**: publicar somente após a compilação do contexto ser finalizada.
 - **Diagnósticos (modo)**: operar em **pull-only** (`textDocument/diagnostic`) e remover configurações de modo (`lsp.diagnostics.mode`).
 - **System em contexto**: não permitir troca do system para arquivos que pertencem a um contexto (apenas modo `SingleFile`).
@@ -503,12 +500,6 @@ Vantagens:
 
 - **Tabela única de métodos**: métodos sugeridos pelo autocomplete do server e métodos validados na semântica devem vir de uma fonte única (ex.: `cursorMethods.ts`) contendo aridade/assinaturas.
 
-## M4.2 Tutorial
-
-- Implementar onboarding como **Walkthrough** (`contributes.walkthroughs`) + comando “Abrir Tutorial (V2)”.
-- Reabrir automaticamente em update para V2 usando `globalState.lastSeenVersion` e settings:
-  - `lsp.onboarding.showOnUpdate` (default `true`)
-  - `lsp.onboarding.neverShowAgain` (default `false`)
 
 ## Empacotamento
 
@@ -647,6 +638,7 @@ Critérios mínimos para marcar Pull-only como concluído:
 - Para compatibilidade com temas, o mapeamento de semantic tokens deve cobrir também `function.declaration` e `function.definition`.
 - Para “campos dinâmicos”, aplicar highlight apenas quando a referência ao campo for via string literal.
 - Embedded SQL highlight evolui do modo leve por faixa para um modo interno controlado em candidatos semanticamente seguros, emitindo tokens para palavras-chave SQL, funções SQL reconhecidas, identificadores SQL bare e qualificados como `property`, parâmetros bind como `parameter.defaultLibrary.readonly` e literais SQL internos como `string.defaultLibrary`, sem se tornar um parser SQL completo.
+- Em variáveis consumidas por wrappers suportados, o highlight também pode manter o tratamento SQL em fragmentos estruturais seguros de continuação (por exemplo `AND`, `OR`, `WHERE`, `FROM`, `GROUP BY`, `HAVING`, `ORDER BY`, `JOIN`, `UNION`, `INTO`, `VALUES`, `SET`) e em cadeias incrementais como `aFiltro = aFiltro + " and (...)"`, desde que a sequência continue semanticamente reconhecível como SQL.
 
 ### Lista: completion de campos dinâmicos
 

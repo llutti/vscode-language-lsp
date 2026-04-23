@@ -52,6 +52,7 @@ type EmbeddedSqlTemplateSlot = {
 
 type VariableSqlClassification = {
   status: 'not_sql' | 'sql_unknown' | 'sql_direct_literal' | 'sql_concat_literals' | 'sql_mixed_dynamic' | 'sql_fragment';
+  hasTrustedSqlRoot?: boolean;
   sourceKind: EmbeddedSqlSourceKind;
   reason: EmbeddedSqlAttemptReason;
   literalRanges: Range[];
@@ -65,6 +66,26 @@ type VariableSqlClassification = {
   eligibleByPragma?: boolean;
   pragmaKind?: SqlPragmaKind;
 };
+
+const SQL_FRAGMENT_LEAD_KEYWORDS = [
+  'and',
+  'or',
+  'from',
+  'where',
+  'group by',
+  'having',
+  'order by',
+  'union',
+  'join',
+  'inner join',
+  'left join',
+  'right join',
+  'full join',
+  'cross join',
+  'into',
+  'values',
+  'set'
+] as const;
 
 export type EmbeddedSqlRewriteTarget = {
   range: Range;
@@ -336,6 +357,7 @@ function summarizeTerms(terms: ConcatTerm[]): {
   hasFragment: boolean;
   hasAnySqlLike: boolean;
   dynamicBeforeSql: boolean;
+  hasTrustedSqlRoot: boolean;
   templateSlots: EmbeddedSqlTemplateSlot[];
 }
 {
@@ -347,6 +369,7 @@ function summarizeTerms(terms: ConcatTerm[]): {
   let hasFragment = false;
   let hasAnySqlLike = false;
   let dynamicBeforeSql = false;
+  let hasTrustedSqlRoot = false;
   const templateSlots: EmbeddedSqlTemplateSlot[] = [];
 
   for (const term of terms)
@@ -357,6 +380,7 @@ function summarizeTerms(terms: ConcatTerm[]): {
     if (term.kind === 'literal' || term.kind === 'sql') {
       combinedStaticText += term.text ?? '';
       hasAnySqlLike ||= true;
+      hasTrustedSqlRoot ||= term.kind === 'sql';
     } else if (term.kind === 'fragment') {
       if (!hasAnySqlLike) dynamicBeforeSql = true;
       const marker = `/*__LSP_SQL_SLOT_${templateSlots.length}__*/`;
@@ -382,6 +406,7 @@ function summarizeTerms(terms: ConcatTerm[]): {
     hasFragment,
     hasAnySqlLike,
     dynamicBeforeSql,
+    hasTrustedSqlRoot,
     templateSlots
   };
 }
@@ -400,6 +425,7 @@ function buildClassification(input: {
   standaloneEligible?: boolean;
   eligibleByPragma?: boolean;
   pragmaKind?: SqlPragmaKind;
+  hasTrustedSqlRoot?: boolean;
 }): VariableSqlClassification
 {
   return {
@@ -415,7 +441,8 @@ function buildClassification(input: {
     ...(input.replaceExpression !== undefined ? { replaceExpression: input.replaceExpression } : {}),
     ...(input.templateSlots !== undefined ? { templateSlots: input.templateSlots } : {}),
     ...(input.eligibleByPragma !== undefined ? { eligibleByPragma: input.eligibleByPragma } : {}),
-    ...(input.pragmaKind !== undefined ? { pragmaKind: input.pragmaKind } : {})
+    ...(input.pragmaKind !== undefined ? { pragmaKind: input.pragmaKind } : {}),
+    ...(input.hasTrustedSqlRoot !== undefined ? { hasTrustedSqlRoot: input.hasTrustedSqlRoot } : {})
   };
 }
 
@@ -472,7 +499,8 @@ function classifyVariableSqlExpression(
       prefersContinuationLayout: extracted.prefersContinuationLayout,
       continuationIndent: extracted.continuationIndent,
       eligible: true,
-      standaloneEligible: true
+      standaloneEligible: true,
+      hasTrustedSqlRoot: true
     }), pragmaKind);
   }
 
@@ -516,6 +544,7 @@ function classifyVariableSqlExpression(
         eligible: true,
         standaloneEligible: true,
         eligibleByPragma: true,
+        hasTrustedSqlRoot: true,
         pragmaKind
       });
     }
@@ -532,6 +561,7 @@ function classifyVariableSqlExpression(
         templateSlots: summary.templateSlots,
         eligible: true,
         standaloneEligible: false,
+        hasTrustedSqlRoot: summary.hasTrustedSqlRoot,
         eligibleByPragma: true,
         pragmaKind
       });
@@ -548,7 +578,8 @@ function classifyVariableSqlExpression(
         replaceExpression: current,
         templateSlots: summary.templateSlots,
         eligible: true,
-        standaloneEligible: true
+        standaloneEligible: true,
+        hasTrustedSqlRoot: true
       }), pragmaKind);
     }
     if (!summary.dynamicBeforeSql && isEligibleEmbeddedSqlFragmentText(summary.combinedStaticText)) {
@@ -563,7 +594,8 @@ function classifyVariableSqlExpression(
         replaceExpression: current,
         templateSlots: summary.templateSlots,
         eligible: true,
-        standaloneEligible: false
+        standaloneEligible: false,
+        hasTrustedSqlRoot: summary.hasTrustedSqlRoot
       }), pragmaKind);
     }
   }
@@ -742,10 +774,10 @@ function analyzeVariableSqlExpression(
   }
   if (classification.status === 'sql_fragment') {
     return {
-      range: identifier.range,
+      range: classification.replaceExpression?.range ?? identifier.range,
       wrapperKind,
       sourceKind: classification.sourceKind,
-      eligible: false,
+      eligible: true,
       reason: classification.reason,
       literalRanges: classification.literalRanges,
       prefersContinuationLayout: classification.prefersContinuationLayout,
@@ -1346,10 +1378,8 @@ function isEligibleEmbeddedSqlFragmentText(raw: string): boolean
 {
   const trimmed = stripTemplateSlots(raw).trim();
   if (!trimmed) return false;
-  const keywordMatch = /^([A-Za-z_]+)/.exec(trimmed);
-  if (!keywordMatch?.[1]) return false;
-  const keyword = casefold(keywordMatch[1]);
-  return keyword === 'and' || keyword === 'or';
+  const normalized = casefold(trimmed).replace(/\s+/g, ' ');
+  return SQL_FRAGMENT_LEAD_KEYWORDS.some((keyword) => normalized.startsWith(keyword));
 }
 
 export function collectEmbeddedSqlDebugReport(_file: FileNode): EmbeddedSqlDebugReport

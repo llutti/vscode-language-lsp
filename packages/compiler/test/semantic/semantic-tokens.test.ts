@@ -588,4 +588,67 @@ describe('semantic tokens', () => {
     ).toBe(true);
   });
 
+  it('collects semantic occurrences for direct-consumed structural fragment variable without separate trusted root', () => {
+    const programText = [
+      'Definir Alfa aFiltro;',
+      'Definir Alfa aCriterioISeSol;',
+      'Definir Alfa aCriterioNumDoc;',
+      'Definir Alfa aCriterioNomVis;',
+      'aFiltro = "";',
+      'aFiltro = aFiltro + " and (" +',
+      '        aCriterioISeSol +',
+      '        " or " + aCriterioNumDoc +',
+      '        " or " + aCriterioNomVis +',
+      '        ")";',
+      'SQL_DefinirComando(cPesquisa, aFiltro);'
+    ].join('\n');
+
+    const occurrences = collectEmbeddedSqlSemanticOccurrences({
+      sourcePath: '/tmp/embedded-sql-direct-fragment-variable-highlight.lsp',
+      text: programText
+    });
+
+    expect(
+      hasOccurrence(occurrences, findRange(programText, '" and ("'), 'string', ['defaultLibrary', 'readonly'])
+    ).toBe(true);
+  });
+
+  it('collects semantic occurrences for direct-consumed fragment variable with order by continuation after trusted root', () => {
+    const programText = [
+      'Definir Alfa aFiltro;',
+      'aFiltro = " Where 1 = 1 ";',
+      'aFiltro = aFiltro + " Order By NumCad";',
+      'SQL_DefinirComando(cPesquisa, aFiltro);'
+    ].join('\n');
+
+    const occurrences = collectEmbeddedSqlSemanticOccurrences({
+      sourcePath: '/tmp/embedded-sql-fragment-order-by-highlight.lsp',
+      text: programText
+    });
+
+    expect(
+      hasOccurrence(occurrences, findRange(programText, '" Where 1 = 1 "'), 'string', ['defaultLibrary', 'readonly'])
+    ).toBe(true);
+    expect(
+      hasOccurrence(occurrences, findRange(programText, '" Order By NumCad"'), 'string', ['defaultLibrary', 'readonly'])
+    ).toBe(true);
+  });
+
+  it('does not collect semantic occurrences for direct-consumed common text variable', () => {
+    const programText = [
+      'Definir Alfa aFiltro;',
+      'aFiltro = "texto comum";',
+      'SQL_DefinirComando(cPesquisa, aFiltro);'
+    ].join('\n');
+
+    const occurrences = collectEmbeddedSqlSemanticOccurrences({
+      sourcePath: '/tmp/embedded-sql-direct-common-text-highlight.lsp',
+      text: programText
+    });
+
+    expect(
+      hasOccurrence(occurrences, findRange(programText, '"texto comum"'), 'string', ['defaultLibrary', 'readonly'])
+    ).toBe(false);
+  });
+
 });
