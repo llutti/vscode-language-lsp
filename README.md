@@ -1,14 +1,14 @@
 <br />
 <p align="center">
   <a href="https://github.com/llutti/vscode-language-lsp">
-    <img src="packages/extension/images/icon.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/icon.png" alt="Logo" width="220" height="120">
   </a>
 
   <h2 align="center">LSP para Visual Studio Code</h2>
 
   <p align="center">
     Suporte à <b>Linguagem Senior de Programação</b> no Visual Studio Code com compilador dedicado,
-    validação por contexto, destaque semântico, formatação de código, correções rápidas e tutorial guiado.
+    validação por contexto, destaque semântico, formatação de código e correções rápidas.
   </p>
 
   <p align="center" style="display:flex;gap:7px;justify-content:center;align-items:center;">
@@ -32,7 +32,6 @@ A extensão reúne, no fluxo normal do editor:
 - correções rápidas e controle de diagnósticos por ID
 - formatação de código com `Format Document`
 - suporte opcional a SQL embutido com formatação e highlight dedicados
-- tutorial guiado para configuração inicial
 
 ---
 
@@ -145,18 +144,6 @@ Ou usar o comando:
 
 ## Recursos principais
 
-### Tutorial guiado
-
-Ao instalar a extensão, o VS Code exibe um tutorial com os pontos principais:
-
-- configuração de contextos
-- uso de `SingleFile`
-- controle de diagnósticos
-- correções rápidas
-- formatação
-
-Também é possível reabrir manualmente pesquisando por `Abrir Tutorial` na Paleta de Comandos.
-
 ### Destaque semântico
 
 O destaque semântico cobre:
@@ -168,7 +155,7 @@ O destaque semântico cobre:
 - campos dinâmicos de `Lista` criados via `.AdicionarCampo(...)`
 - SQL embutido elegível, quando o highlight correspondente estiver habilitado
 
-![Colorização](packages/extension/screenshots/colorizacao.png)
+![Colorização](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/colorizacao.png)
 
 ### Autocompletar
 
@@ -182,7 +169,7 @@ Durante a digitação, a extensão apresenta sugestões para:
 - campos dinâmicos adicionados semanticamente por `.AdicionarCampo(...)`
 - snippets da linguagem
 
-![Autocomplete](packages/extension/screenshots/autocomplete.png)
+![Autocomplete](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/autocomplete.png)
 
 ### Hover e ajuda de assinatura
 
@@ -197,19 +184,19 @@ Também:
 
 **Funções internas**
 
-![Parâmetros função nativa](packages/extension/screenshots/parametros-funcao-nativa.png)
+![Parâmetros função nativa](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-nativa.png)
 
 **Funções customizadas**
 
-![Parâmetros função customizada](packages/extension/screenshots/parametros-funcao-customizada.png)
+![Parâmetros função customizada](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-customizada.png)
 
 **Ajuda durante a digitação**
 
-![Parâmetros durante digitação](packages/extension/screenshots/parametros-funcao-digitacao.png)
+![Parâmetros durante digitação](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-digitacao.png)
 
 **Detalhes do parâmetro atual**
 
-![Detalhes do parâmetro](packages/extension/screenshots/parametros-funcao-detalhes.png)
+![Detalhes do parâmetro](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/parametros-funcao-detalhes.png)
 
 ### Ir para definição
 
@@ -227,7 +214,7 @@ Isso inclui:
 - regras específicas de `Cursor`, `Lista`, `ExecSql` e variáveis internas
 - controle de variáveis não utilizadas e conflitos de escopo
 
-![Validação](packages/extension/screenshots/validacao-sintaxe.png)
+![Validação](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/validacao-sintaxe.png)
 
 ### Diagnósticos por ID e correções rápidas
 
@@ -250,7 +237,16 @@ A extensão permite:
 
 **Fluxo ilustrado**
 
-![Quick Fix](packages/extension/screenshots/quickfix.gif)
+![Quick Fix](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/quickfix.gif)
+
+### Refactors nativos
+
+A extensão também expõe refactors via `CodeActionKind.Refactor`, incluindo:
+
+- envolver seleção com bloco
+- envolver seleção com `Se`, `Enquanto` ou `Para`
+- alternar bloco `Inicio/Fim` ↔ `{ }`
+- converter texto multilinha com `\` em concatenação com `+`, inclusive em cadeias mistas com variáveis entre literais
 
 ### Formatação de código
 
@@ -313,7 +309,7 @@ Dialetos disponíveis:
 
 Diversos snippets continuam disponíveis para acelerar comandos comuns da linguagem.
 
-![Snippets](packages/extension/screenshots/snippets.png)
+![Snippets](https://github.com/llutti/vscode-language-lsp/raw/main/packages/extension/images/screenshots/snippets.png)
 
 ---
 
@@ -332,8 +328,6 @@ Diversos snippets continuam disponíveis para acelerar comandos comuns da lingua
 | `lsp.semantic.embeddedSqlHighlight.enabled` | `false` | Habilita highlight dedicado para SQL embutido |
 | `lsp.refactor.defaultBlockStyle` | `"inicioFim"` | Define o estilo padrão dos refactors de bloco |
 | `lsp.diagnostics.ignoreIds` | `[]` | Ignora diagnósticos por ID no escopo configurado |
-| `lsp.onboarding.showOnUpdate` | `true` | Controla a reabertura do tutorial |
-| `lsp.onboarding.neverShowAgain` | `false` | Impede a reabertura automática do tutorial |
 
 ---
 
