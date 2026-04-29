@@ -3706,7 +3706,9 @@
   },
   {
     "name": "RetCodUsuPorColab",
-    "documentation": "Esta função retornará o código do usuário associadr. Caso não houver retornará zero.",
+    "documentation": "Esta função retornará o código do usuário associado. Caso não houver retornará zero.",
+    "isReturnValue": true,
+    "type": "Numero",
     "params": [
       {
         "name": "NumEmp",

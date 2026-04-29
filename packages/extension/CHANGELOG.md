@@ -2,6 +2,12 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.1] - 23/04/2026
+### Atualizar
+  - Melhorar documentação das funções:
+    - `RetCodUsuPorColab`
+  - Ampliar palavras chave para sintaxe highlight do SQL.
+
 ## [2.0.0] - 23/04/2026
 ### Novidades
 - Novo compilador com análise semântica, dignósticos aprimorados
