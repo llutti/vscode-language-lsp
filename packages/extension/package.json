@@ -36,7 +36,7 @@
     "package.nls.es.json"
   ],
   "engines": {
-    "vscode": "^1.116.0"
+    "vscode": "^1.118.0"
   },
   "scripts": {
     "build": "node ./esbuild.mjs --production",
@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.3.5",
-    "@types/vscode": "^1.116.0",
+    "@types/vscode": "^1.118.0",
     "esbuild": "^0.28.0",
     "fast-glob": "^3.3.2",
     "typescript": "^6.0.3",

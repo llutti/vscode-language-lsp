@@ -20,7 +20,7 @@
     "hcm:import-example:6104": "node packages/compiler/scripts/hcm-sync-6104.mjs --import-example"
   },
   "dependencies": {
-    "@types/vscode": "^1.116.0",
+    "@types/vscode": "^1.118.0",
     "fast-glob": "^3.3.2",
     "sql-formatter": "^15.7.3"
   }
