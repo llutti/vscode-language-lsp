@@ -6531,5 +6531,33 @@
     ],
     "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/estanulo.htm",
     "docVersion": "6.10.4"
+  },
+  {
+    "name": "NomeComputador",
+    "documentation": "Retorna o nome do computador/estação",
+    "params": [
+      {
+        "name": "Nome",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará o nome do computador/estação."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_nomecomputador.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "NomeUsuarioWindows",
+    "documentation": "Retorna o nome do usuário logado no Windows",
+    "params": [
+      {
+        "name": "Nome",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará o nome do usuário logado no Windows."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_nomeusuariowindows.htm",
+    "docVersion": "6.10.4"
   }
 ]

@@ -72,5 +72,19 @@
     ],
     "docUrl": "",
     "docVersion": ""
+  },
+  {
+    "name": "NomeComputador",
+    "documentation": "Retorna o nome do computador/estação",
+    "params": [
+      {
+        "name": "Nome",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará o nome do computador/estação."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/ronda-senior/6.10.4/ferramentas-de-customizacoes/funcoes-para-regras-gerador-de-relatorios/nomecomputador.htm",
+    "docVersion": "6.10.4"
   }
 ]
