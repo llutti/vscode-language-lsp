@@ -18,6 +18,7 @@ V1
 *.zip
 *.7z
 .lsp-debug/
+*.snap
 
 # Test artifacts accidentally generated inside source/test trees
 **/*.d.ts
