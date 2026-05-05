@@ -114,6 +114,7 @@ Contrato TS-like/LSP-like (M8):
   - Warning se nunca atribuído (`LSP1202`).
   - Se o `END` é passado como argumento em chamadas (atribuição indireta), gera **Info** sugerindo variável intermediária (`LSP1204`).
 - Parâmetro não utilizado → **Warning** (`LSP1201`).
+  - Parâmetros referenciados como bind SQL (`:nome`) em `Cursor.SQL`, `ExecSQL`, `ExecSQLEx` ou `SQL_DefinirComando` contam como utilizados.
 
 ---
 

@@ -688,6 +688,18 @@ function markIdentifierUsed(scope: Scope, nameNormalized: string): void {
   }
 }
 
+function markSqlBindIdentifiersUsed(ctx: AnalyzerContext, scope: Scope, literal: ExpressionNode | null): void {
+  if (!literal || literal.kind !== 'StringLiteral') return;
+  const raw = literal.value.slice(1, -1);
+  const binds = extractSqlBindNames(raw);
+  for (const bind of binds) {
+    markIdentifierUsed(scope, bind);
+    const usedList = ctx.usedIdentifiersByName.get(bind) ?? [];
+    usedList.push({ orderKey: literal.orderKey });
+    ctx.usedIdentifiersByName.set(bind, usedList);
+  }
+}
+
 function resolveSymbol(ctx: AnalyzerContext, scope: Scope, id: IdentifierNode, isAssignmentTarget: boolean): LspSymbol {
   atribuirEscopo(id, scope);
   const implicitAssign = ctx.implicitNumeroAssignmentsByName.get(id.nameNormalized);
@@ -969,17 +981,12 @@ function typeCheckCall(ctx: AnalyzerContext, scope: Scope, node: ExpressionNode)
 
   if (casefold(calleeName) === 'sql_definircomando') {
     const sqlArg = node.args[1];
-    if (sqlArg && sqlArg.kind === 'StringLiteral') {
-      const raw = sqlArg.value.slice(1, -1);
-      const binds = extractSqlBindNames(raw);
-      for (const bind of binds) {
-        markIdentifierUsed(scope, bind);
-      }
-    }
+    markSqlBindIdentifiersUsed(ctx, scope, sqlArg ?? null);
   }
 
   const authorizedSqlLiteral = getAuthorizedCallSqlLiteral(node);
   if (authorizedSqlLiteral) {
+    markSqlBindIdentifiersUsed(ctx, scope, authorizedSqlLiteral.literal);
     recordEmbeddedSqlLiteralOccurrence(
       ctx,
       authorizedSqlLiteral.literal,
@@ -1411,14 +1418,7 @@ function inferExprType(ctx: AnalyzerContext, scope: Scope, node: ExpressionNode)
     case 'NumberLiteral':
       return 'Numero';
     case 'StringLiteral': {
-      const raw = node.value.slice(1, -1);
-      const binds = extractSqlBindNames(raw);
-      for (const bind of binds) {
-        markIdentifierUsed(scope, bind);
-        const usedList = ctx.usedIdentifiersByName.get(bind) ?? [];
-        usedList.push({ orderKey: node.orderKey });
-        ctx.usedIdentifiersByName.set(bind, usedList);
-      }
+      markSqlBindIdentifiersUsed(ctx, scope, node);
       return 'Alfa';
     }
     case 'ApostropheLiteral':
@@ -2059,6 +2059,7 @@ function analyzeMemberAssignment(
       return;
     }
     if (value) {
+      markSqlBindIdentifiersUsed(ctx, scope, value);
       checkCursorSql(ctx, objSymbol, value, target.property);
       recordEmbeddedSqlLiteralOccurrence(ctx, value, {
         wrapperKind: 'cursor_sql',
@@ -2505,6 +2506,7 @@ function analyzeStatement(
       // Semantic: highlight only the ExecSql keyword like any other function.
       // Keep the SQL literal free for TextMate/string highlighting.
       recordOccurrence(ctx, stmt.sourcePath, stmt.keywordRange, 'function', []);
+      markSqlBindIdentifiersUsed(ctx, scope, stmt.sql);
       recordEmbeddedSqlLiteralOccurrence(ctx, stmt.sql, {
         wrapperKind: 'execsql',
         sourceKind: 'direct_literal'

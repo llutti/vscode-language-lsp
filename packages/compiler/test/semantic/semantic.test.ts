@@ -64,6 +64,43 @@ describe('semantic', () => {
     expect(hasCursorError).toBe(false);
   });
 
+  it('treats parameters used as Cursor.SQL bind variables as used', async () => {
+    const result = await analyze(
+      'Funcao f(Numero cNumEmp, Numero cTipCol, Numero cNumCad);\n'
+      + '{\n'
+      + '  Definir Cursor C_Del;\n'
+      + '  Definir Data xHoje;\n'
+      + '  C_Del.SQL "SELECT * FROM USU_TR080GPD WHERE USU_EMPSUB=:cnumemp AND USU_TIPSUB=:ctipcol AND USU_CADSUB=:cnumcad AND USU_DATISU<=:xhoje";\n'
+      + '}\n'
+    );
+    const unusedParams = result.diagnostics.filter((d) => d.id === 'LSP1201');
+    expect(unusedParams).toHaveLength(0);
+  });
+
+  it('treats parameters used as ExecSQL bind variables as used', async () => {
+    const result = await analyze(
+      'Funcao f(Numero cNumEmp, Numero cTipCol, Numero cNumCad);\n'
+      + '{\n'
+      + '  ExecSQL "UPDATE USU_TR064CMP SET USU_DATINT=:dDatSis WHERE USU_NUMEMP=:cNumEmp AND USU_TIPCOL=:cTipCol AND USU_NUMCAD=:cNumCad";\n'
+      + '}\n'
+    );
+    const unusedParams = result.diagnostics.filter((d) => d.id === 'LSP1201');
+    expect(unusedParams).toHaveLength(0);
+  });
+
+  it('treats parameters used as ExecSQLEx bind variables as used', async () => {
+    const result = await analyze(
+      'Funcao f(Numero cNumEmp, Numero cTipCol, Numero cNumCad);\n'
+      + '{\n'
+      + '  Definir Numero nRet;\n'
+      + '  Definir Alfa aMsg;\n'
+      + '  ExecSQLEx("UPDATE USU_TR064CMP SET USU_DATINT=:dDatSis WHERE USU_NUMEMP=:cNumEmp AND USU_TIPCOL=:cTipCol AND USU_NUMCAD=:cNumCad", nRet, aMsg);\n'
+      + '}\n'
+    );
+    const unusedParams = result.diagnostics.filter((d) => d.id === 'LSP1201');
+    expect(unusedParams).toHaveLength(0);
+  });
+
   it('errors on writing to readonly cursor fields', async () => {
     const result = await analyze(
       'Definir Cursor cur;\n' +
