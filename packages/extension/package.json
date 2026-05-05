@@ -47,8 +47,7 @@
     "test:unit": "vitest run --config vitest.config.mts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
-    "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\"",
-    "check:vsix": "node ./scripts/check-vsix.mjs"
+    "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\""
   },
   "dependencies": {
     "@lsp/compiler": "file:../compiler"
