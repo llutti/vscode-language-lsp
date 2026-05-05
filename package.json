@@ -1,6 +1,6 @@
 {
   "name": "lsp-workspace",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -11,7 +11,9 @@
     "lint": "npm run lint:eslint && npm -w @lsp/compiler run lint",
     "lint:eslint": "eslint \"packages/**/*.{ts,mts,cts}\"",
     "clean": "npm run --workspaces clean",
-    "typecheck": "npm run --workspaces typecheck"
+    "typecheck": "npm run --workspaces typecheck",
+    "version:sync": "node scripts/sync-version.mjs",
+    "version:check": "node scripts/check-version.mjs"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
