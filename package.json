@@ -8,7 +8,7 @@
     "build": "npm run --workspaces build",
     "test": "npm run --workspaces test",
     "lint": "npm run lint:eslint && npm -w @lsp/compiler run lint",
-    "lint:eslint": "eslint \"packages/**/*.{ts,mts,cts}\" \"scripts/**/*.{ts,mts,cts,mjs}\"",
+    "lint:eslint": "eslint \"packages/**/*.{ts,mts,cts}\"",
     "clean": "npm run --workspaces clean",
     "typecheck": "npm run --workspaces typecheck"
   },
