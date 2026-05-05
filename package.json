@@ -1,5 +1,6 @@
 {
   "name": "lsp-workspace",
+  "version": "2.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
