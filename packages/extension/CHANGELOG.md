@@ -2,9 +2,13 @@
 
 Alterações realizadas na extensão.
 
-## [2.0.1] - 23/04/2026
+## [2.0.1] - 05/05/2026
 ### Atualizar
   - Melhorar documentação das funções:
+    - `HoraServidor`
+    - `MontaComandoLike`
+    - `NomeComputador`
+    - `NomeUsuarioWindows`
     - `RetCodUsuPorColab`
   - Ampliar palavras chave para sintaxe highlight do SQL.
 
