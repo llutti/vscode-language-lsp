@@ -1672,7 +1672,9 @@
   },
   {
     "name": "EnviaEMail",
-    "documentation": "Função que permite enviar e-mails. (CodErroEnviaEmail e MsgErroEnviaEmail)",
+    "documentation": "Função que permite enviar e-mails. É possível verificar erros através das variáveis CodErroEnviaEmail e MsgErroEnviaEmail.\nQuando a mesma  possuir destinatários inválidos, a função retornará 1, caso contrário retornará 0.",
+    "type": "Numero",
+    "isReturnValue": true,
     "params": [
       {
         "name": "Rememetente",
@@ -1729,6 +1731,8 @@
   {
     "name": "EnviaEMailHTML",
     "documentation": "Função que permite enviar e-mails em formato HTML e com imagens no corpo do E-mail. (CodErroEnviaEmail e MsgErroEnviaEmail)",
+    "type": "Numero",
+    "isReturnValue": true,
     "params": [
       {
         "name": "Rememetente",
@@ -6558,6 +6562,84 @@
       }
     ],
     "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_nomeusuariowindows.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "HoraServidor",
+    "documentation": "Esta função retorna a data e hora atual do servidor em uma variável tipo alfa.\nNa execução dessa função em instâncias client ou web services, ela retornará a data e hora formatadas no estilo \"10/12/2020 10:33\". No entanto, durante execuções de regras para web ou processos automáticos, a função retornará o valor de data e hora em formato de milissegundos para uso em ambiente web.\nPara utilizar datas formatadas em ambientes web ou processos automáticos, recomenda-se o uso das funções DataHora e FormatarData em conjunto.",
+    "params": [
+      {
+        "name": "Hora",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará a hora do servidor."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/horaservidor.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "MontaComandoLike",
+    "documentation": "Esta função pode ser utilizada para montar uma cláusula SQL com LIKE. Na função serão passados o campo e a expressão na qual quer se montar o comando LIKE.",
+    "params": [
+      {
+        "name": "Campo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Campo de uma tabela. Preferencialmente deve ser utilizado o formato \"Tabela.Campo\"."
+      },
+      {
+        "name": "Expressao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Expressão (palavra) que será utilizada no comando Like."
+      },
+      {
+        "name": "ClausulaComLike",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Cláusula SQL que a função retorna. Sempre retornará a cláusula SQL no seguinte formato: \" xCampo LIKE '%xExpressao%'\"."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_montacomandolike.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "RetCodHor",
+    "documentation": "Retorna o código do horário do colaborador em uma data",
+    "params": [
+      {
+        "name": "NumEmp",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Código da Empresa."
+      },
+      {
+        "name": "TipCol",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Tipo do Colaborador."
+      },
+      {
+        "name": "NumCad",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número do Cadastro do Colaborador."
+      },
+      {
+        "name": "DatHor",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data de referência."
+      },
+      {
+        "name": "CodHor",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará o código do horário."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retcodhor.htm",
     "docVersion": "6.10.4"
   }
 ]

@@ -2299,5 +2299,19 @@
     ],
     "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/lerposicaoalfa.htm",
     "docVersion": "5.10.4"
+  },
+  {
+    "name": "DataHora",
+    "documentation": "Retorna um número fracionário (onde a parte inteira é a data e a fração são as horas). A parte inteira é a quantidade de dias e a parte fracionada representa as horas do dia.",
+    "params": [
+      {
+        "name": "DataHora",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável que retornará a data e hora corrente."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/gerais/datahora.htm",
+    "docVersion": "5.10.4"
   }
 ]

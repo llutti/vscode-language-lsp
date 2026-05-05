@@ -8994,7 +8994,7 @@
     "label": "SitEmp",
     "kind": "variable",
     "isConst": true,
-    "dataType": "Alfa",
+    "dataType": "Numero",
     "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/variaveis/sitemp.htm",
     "docVersion": "6.10.4",
     "documentation": "Código da Situação do colaborador."
