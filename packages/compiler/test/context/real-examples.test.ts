@@ -15,9 +15,10 @@ describe('real examples', () => {
   it('validates one file per context without errors', async () => {
     const ctxs: Array<{ name: string; rootDir: string; filePattern: string; includeSubdirectories: boolean }> = [];
 
-    const hrFile = pickFile(path.join(process.cwd(), 'exemplos/HR'), /^HR.*\.txt$/i);
+    const hrRoot = path.join(__dirname, '..', 'fixtures', 'hr-examples');
+    const hrFile = pickFile(hrRoot, /^context-.*\.txt$/i);
     if (hrFile) {
-      ctxs.push({ name: 'Ponto', rootDir: 'exemplos/HR', filePattern: hrFile, includeSubdirectories: false });
+      ctxs.push({ name: 'Ponto', rootDir: hrRoot, filePattern: hrFile, includeSubdirectories: false });
     }
 
     const rsFile = pickFile(path.join(process.cwd(), 'exemplos/RS'), /^RS.*\.txt$/i);

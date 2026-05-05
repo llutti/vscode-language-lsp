@@ -1,0 +1,494 @@
+/************************************************************************
+*                                                                       *
+*    PY - Funcoes Globais para Apuracao, Integracao do Ponto e AEM      *
+*    Regra: 510  : Apuração | Funções Globais                           *
+*                                                                       *
+************************************************************************/
+
+@-- Verificar se existe aprovação cadastrada para utilização de horas de atv Gremial sit 544 --@
+Definir Funcao f510AtividadeGremial(Numero pAGNumEmp, Numero pAGTipCol, Numero pAGNumCad, Numero pAGDatPro);
+
+@-- Verificar qtos registros da Sit 533 existem no Ano Corrente podendo existir somente 2 registros por ANO --@
+Definir Funcao f510GestaoDocumentacao(Numero pGDNumEmp, Numero pGDTipCol, Numero pGDNumCad, Numero pGDDatPro);
+
+@-- Verificar Total de Horas da Sit 586 no MES esta nao podera utrapassar 24 hrs --@
+Definir Funcao f510AtividadeDocente(Numero pADNumEmp, Numero pADTipCol, Numero pADNumCad, Numero pADDatPro);
+
+Definir Funcao f510EhChefe(Numero pEhCNumEmp, Numero pEhCTipCol, Numero pEhCNumCad, Numero pEhCDatBas, Numero End pEhCRetorno);
+Definir Funcao f510EhSubstituto(Numero pEhSIdeSis, Numero pEhSNumEmp, Numero pEhSTipCol, Numero pEhSNumCad,
+                                Numero pEhSDatBas, Numero pEhSHorBas, Numero End pEhSTipSub);
+
+
+@-- Objetivo: Calcular a quantidade de horas previstas de trabalho para o empregado dentro do período indicado --@
+@-- Parametros: --@
+@-- . pRHPTNumEmp -> Empresa do Empregado --@
+@-- . pRHPTTipCol -> Tipo do Colaborador --@
+@-- . pRHPTNumCad -> Matrícula do Empregado --@
+@-- . pRHPTDatIni -> Data de Início do Período --@
+@-- . pRHPTDatFim -> Data Final do Período --@
+@-- . pRHPTHorPrv -> Variável que irá receber o Total de Horas Previstas no período indicado --@
+@-- #### FUNCAO REPLICADA em: #### --@
+@--      Regras: HR510 --@
+@--      Relatórios: HRCL532.GER, HRCL537.GER --@
+@--      Webservices: HR.py.itaipu.empleado.marcacoes --@
+Definir Funcao f510RetHorPrvTrb(Numero pRHPTNumEmp, Numero pRHPTTipCol, Numero pRHPTNumCad,
+                                Numero pRHPTDatIni, Numero pRHPTDatFim, Numero End pRHPTHorPrv);
+
+
+@-- *************************************** --@
+@--   Início da implementação das funções   --@
+@-- *************************************** --@
+
+
+@-- INICIO - tratamento de Atividade Gremial --@
+Funcao f510AtividadeGremial(Numero pAGNumEmp, Numero pAGTipCol, Numero pAGNumCad, Numero pAGDatPro);
+Inicio
+  Definir Alfa cAGPesquisa;
+  Definir Alfa aAGErro;
+  Definir Data dAGDatPro;
+
+  dAGDatPro = pAGDatPro;
+
+  Se (HorSit[544] > 0)
+  Inicio
+    @-- USU_SitSol - 0 = Solicitado  --@
+    @--              1 = Aprovado    --@
+    @--              2 = Reprovado   --@
+    @--              3 = Aprovado Manual  --@
+    @--              4 = Cancelado --@
+
+    SQL_Criar(cAGPesquisa);
+    SQL_UsarSQLSenior2(cAGPesquisa, 0);
+    SQL_UsarAbrangencia(cAGPesquisa, 0);
+    SQL_DefinirComando(cAGPesquisa, "Select USU_SeqSol, USU_HorSol \
+                                   From   USU_TAEMAGC \
+                                   Where  USU_NumEmp = :nNumEmp \
+                                   And    USU_TipCol = :nTipCol \
+                                   And    USU_NumCad = :nNumCad \
+                                   And    USU_DatSol = :dDatPro \
+                                   And    USU_SitSol in (1,3) \
+                                  ");
+
+    SQL_DefinirInteiro(cAGPesquisa, "nNumEmp", pAGNumEmp);
+    SQL_DefinirInteiro(cAGPesquisa, "nTipCol", pAGTipCol);
+    SQL_DefinirInteiro(cAGPesquisa, "nNumCad", pAGNumCad);
+    SQL_DefinirData(cAGPesquisa, "dDatPro", dAGDatPro);
+
+    HorSit[607] = HorSit[544];
+    HorSit[544] = 0;
+
+    SQL_AbrirCursor(cAGPesquisa);
+    Enquanto (SQL_EOF(cAGPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cAGPesquisa, "USU_HorSol", nAGHorSol);
+      SQL_RetornarInteiro(cAGPesquisa, "USU_SeqSol", nAGSeqSol);
+
+      Se (nAGHorSol > HorSit[607])
+      Inicio
+        nAGHorSol = HorSit[607];
+        HorSit[607] = 0;
+      Fim;
+
+      HorSit[544] = HorSit[544] + nAGHorSol;
+      HorSit[607] = HorSit[607] - nAGHorSol;
+
+      ExecSqlEX("Update USU_TAEMAGC \
+                 set    USU_HorRea = :nAGHorSol \
+                 Where  USU_NumEmp = :pAGNumEmp \
+                 And    USU_TipCol = :pAGTipCol \
+                 And    USU_NumCad = :pAGNumCad \
+                 And    USU_DatSol = :dAGDatPro \
+                 And    USU_SeqSol = :nAGSeqSol \
+                 ", nAGErro, aAGErro);
+      Se (nAGErro > 0)
+      Inicio
+        aAGErro = "Atualizar Atv. Gremial - " + aAGErro;
+        MensagemLog(aAGErro);
+      Fim;
+      SQL_Proximo(cAGPesquisa);
+    Fim;
+    SQL_FecharCursor(cAGPesquisa);
+    SQL_Destruir(cAGPesquisa);
+
+  Fim;
+Fim;
+@-- FIM - tratamento de Atividade Gremial --@
+
+@-- INICIO - tratamento Gestao Documentação --@
+Funcao f510GestaoDocumentacao(Numero pGDNumEmp, Numero pGDTipCol, Numero pGDNumCad, Numero pGDDatPro);
+Inicio
+  Definir Alfa cGDPesquisa;
+
+  Se (HorSit[533] > 0)
+  Inicio
+    @-- Verificar se pode utilizar a 533 somente podera utilizar duas vezes ao ano --@
+    DesmontaData(pGDDatPro, nGDDia, nGDMes, nGDAno);
+    MontaData(01, 01, nGDAno, dGDDatIni);
+    MontaData(31, 12, nGDAno, dGDDatFim);
+    nGDQtdReg = 0;
+    nGDQtdMax = 0;
+
+    SQL_Criar(cGDPesquisa);
+    SQL_UsarSQLSenior2(cGDPesquisa, 1);
+    SQL_UsarAbrangencia(cGDPesquisa, 0);
+    SQL_DefinirComando(cGDPesquisa, "Select count(CodSit) QtdReg \
+                                   From R066SIT \
+                                   Where NumEmp = :nNumEmp \
+                                   And   TipCol = :nTipCol \
+                                   And   NumCad = :nNumCad \
+                                   And   CodSit = 533 \
+                                   And   CodRat = 0 \
+                                   And   DatApu between :dDatIni and :dDatFim \
+                                   And   DatApu <> :dDatPro \
+                                  ");
+    SQL_DefinirInteiro(cGDPesquisa, "nNumEmp", pGDNumEmp);
+    SQL_DefinirInteiro(cGDPesquisa, "nTipCol", pGDTipCol);
+    SQL_DefinirInteiro(cGDPesquisa, "nNumCad", pGDNumCad);
+    SQL_DefinirData(cGDPesquisa, "dDatIni", dGDDatIni);
+    SQL_DefinirData(cGDPesquisa, "dDatFim", dGDDatFim);
+    SQL_DefinirData(cGDPesquisa, "dDatPro", pGDDatPro);
+
+    SQL_AbrirCursor(cGDPesquisa);
+    Se (SQL_EOF(cGDPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cGDPesquisa, "QtdReg", nGDQtdReg);
+    Fim;
+    SQL_FecharCursor(cGDPesquisa);
+    SQL_Destruir(cGDPesquisa);
+
+    @-- Consulta Definicoes do AEM para identificar o Maximo Permitido no Ano --@
+    SQL_Criar(cGDPesquisa);
+    SQL_UsarSQLSenior2(cGDPesquisa, 1);
+    SQL_UsarAbrangencia(cGDPesquisa, 0);
+    SQL_DefinirComando(cGDPesquisa, "Select USU_QtDcAn \
+                                   From USU_TAEMDEF \
+                                   Where USU_CmpDef = (Select MAX(A.USU_CmpDef) \
+                                                       from   USU_TAEMDEF A \
+                                                       where  A.USU_CmpDef <= :dDatPro) \
+                                  ");
+    SQL_DefinirData(cGDPesquisa, "dDatPro", pGDDatPro);
+
+    SQL_AbrirCursor(cGDPesquisa);
+    Se (SQL_EOF(cGDPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cGDPesquisa, "USU_QtDcAn", nGDQtdMax);
+    Fim;
+    SQL_FecharCursor(cGDPesquisa);
+    SQL_Destruir(cGDPesquisa);
+
+    Se (nGDQtdReg >= nGDQtdMax)
+    Inicio
+      Mensagem(Erro, "Empleado ya utilizou 2 días en el Ano");
+      Cancel(1);
+    Fim;
+  Fim;
+Fim;
+@-- FIM - tratamento Gestao Documentação --@
+
+@-- INICIO - tratamento Atividade Docente --@
+Funcao f510AtividadeDocente(Numero pADNumEmp, Numero pADTipCol, Numero pADNumCad, Numero pADDatPro);
+Inicio
+  Definir Alfa cADPesquisa;
+
+  Se (HorSit[586] > 0)
+  Inicio
+    @-- Verificar se pode utilizar a 586 somente podera utilizar 24 Horas por MES --@
+
+    Definir Data dADDatPro;
+    Definir Data dADDatIni;
+    Definir Data dADDatFim;
+
+    dADDatPro = pADDatPro;
+    DesmontaData(dADDatPro, nADDia, nADMes, nADAno);
+    MontaData(01, nADMes, nADAno, dADDatIni);
+    dADDatFim = dADDatIni;
+    UltimoDia(dADDatFim);
+    nADTotHor = 0;
+
+    SQL_Criar(cADPesquisa);
+    SQL_UsarSQLSenior2(cADPesquisa, 1);
+    SQL_UsarAbrangencia(cADPesquisa, 0);
+    SQL_DefinirComando(cADPesquisa, "Select Sum(QtdHor) TotHor \
+                                   From R066SIT \
+                                   Where NumEmp = :nNumEmp \
+                                   And   TipCol = :nTipCol \
+                                   And   NumCad = :nNumCad \
+                                   And   CodSit = 586 \
+                                   And   CodRat = 0 \
+                                   And   DatApu between :dDatIni and :dDatFim \
+                                   And   DatApu <> :dDatPro \
+                                  ");
+    SQL_DefinirInteiro(cADPesquisa, "nNumEmp", pADNumEmp);
+    SQL_DefinirInteiro(cADPesquisa, "nTipCol", pADTipCol);
+    SQL_DefinirInteiro(cADPesquisa, "nNumCad", pADNumCad);
+    SQL_DefinirData(cADPesquisa, "dDatIni", dADDatIni);
+    SQL_DefinirData(cADPesquisa, "dDatFim", dADDatFim);
+    SQL_DefinirData(cADPesquisa, "dDatPro", dADDatPro);
+
+    SQL_AbrirCursor(cADPesquisa);
+    Se (SQL_EOF(cADPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cADPesquisa, "TotHor", nADTotHor);
+    Fim;
+    SQL_FecharCursor(cADPesquisa);
+    SQL_Destruir(cADPesquisa);
+
+    Se ((nADTotHor + HorSit[586]) >= 1440)
+    Inicio
+      nADDif = (1440 - nADTotHor);
+      HorSit[518] = HorSit[518] + HorSit[586] - nADDif;
+      HorSit[586] = nADDif;
+    Fim;
+  Fim;
+Fim;
+@-- FIM - tratamento Atividade Docente --@
+
+Funcao f510EhChefe(Numero pEhCNumEmp, Numero pEhCTipCol, Numero pEhCNumCad, Numero pEhCDatBas, Numero End pEhCRetorno);
+Inicio
+  Definir Alfa cEhCPesquisa;
+  Definir Data dEhCDatBas;
+
+  @-- Inicializar as variáveis --@
+  dEhCDatBas = pEhCDatBas;
+  pEhCRetorno = cFalso;
+
+  @-- Pesquisar no cadastro de Chefes --@
+  SQL_Criar(cEhCPesquisa);
+  SQL_UsarSQLSenior2(cEhCPesquisa, 0);
+  SQL_UsarAbrangencia(cEhCPesquisa, 0);
+  SQL_DefinirComando(cEhCPesquisa, "Select NumEmp \
+                                    From R080Sub \
+                                    Where NumEmp in (1, 501) \
+                                    And   EmpChe = :nNumEmp \
+                                    And   TipChe = :nTipCol \
+                                    And   CadChe = :nNumCad \
+                                    And   DatAlt <= :dDatHoj \
+                                    And   (DatFim >= :dDatHoj or DatFim = :dDatZer) \
+                                    And   TabOrg = (Select Max(x.TabOrg) \
+                                                    From R030ORG x \
+                                                    Where x.NumEmp = R080Sub.NumEmp \
+                                                    And   x.DatAlt = (Select Max(a.DatAlt) \
+                                                                      From R030ORG a \
+                                                                      Where a.NumEmp = x.NumEmp \
+                                                                      And   a.DatAlt <= :dDatHoj)) \
+                                ");
+
+  SQL_DefinirInteiro(cEhCPesquisa, "nNumEmp", pEhCNumEmp);
+  SQL_DefinirInteiro(cEhCPesquisa, "nTipCol", pEhCTipCol);
+  SQL_DefinirInteiro(cEhCPesquisa, "nNumCad", pEhCNumCad);
+  SQL_DefinirData(cEhCPesquisa, "dDatZer", dDatZer);
+  SQL_DefinirData(cEhCPesquisa, "dDatHoj", dEhCDatBas);
+
+  SQL_AbrirCursor(cEhCPesquisa);
+  Se (SQL_EOF(cEhCPesquisa) = cFalso)
+  Inicio
+    pEhCRetorno = cVerdadeiro;
+  Fim;
+  SQL_FecharCursor(cEhCPesquisa);
+  SQL_Destruir(cEhCPesquisa);
+Fim;
+
+Funcao f510EhSubstituto(Numero pEhSIdeSis, Numero pEhSNumEmp, Numero pEhSTipCol, Numero pEhSNumCad,
+                        Numero pEhSDatBas, Numero pEhSHorBas, Numero End pEhSTipSub);
+Inicio
+  Definir Alfa cEhSPesquisa;
+  Definir Alfa aEhSSubVMP;
+  Definir Data dEhSDatBas;
+
+  @-- Inicializar as variáveis --@
+  dEhSDatBas = pEhSDatBas;
+  pEhSTipSub = 0; @-- Nao eh Substituto --@
+
+  @-- Pesquisar no cadastro de Substituicoes --@
+  SQL_Criar(cEhSPesquisa);
+  SQL_UsarSQLSenior2(cEhSPesquisa, 0);
+  SQL_UsarAbrangencia(cEhSPesquisa, 0);
+  SQL_DefinirComando(cEhSPesquisa, "Select a.USU_EmpApv, a.USU_SubVMP \
+                                    From USU_TWkfSub a \
+                                    Where a.USU_EmpSub = :nNumEmp \
+                                    And   a.USU_TpCSub = :nTipCol \
+                                    And   a.USU_CadSub = :nNumCad \
+                                    And   (a.USU_DInSub < :dDatHoj \
+                                    or     (a.USU_DInSub = :dDatHoj and (a.USU_HInSub = 0 or a.USU_HInSub <= :nHorAgo))) \
+                                    And   (a.USU_DTeSub > :dDatHoj \
+                                    or     (a.USU_DTeSub = :dDatHoj and (a.USU_HTeSub = 0 or a.USU_HTeSub >= :nHorAgo)) \
+                                    or      a.USU_DTeSub = :dDatZer) \
+                                    And  (Exists(Select x.USU_EmpApv \
+                                                 From USU_TWkfSLb x, USU_TWkfCad z \
+                                                 Where x.USU_CodWkf = z.USU_CodWkf \
+                                                 And   z.USU_IdeSis = :nIdeSis \
+                                                 And   a.USU_EmpApv = x.USU_EmpApv \
+                                                 And   a.USU_TpCApv = x.USU_TpCApv \
+                                                 And   a.USU_CadApv = x.USU_CadApv \
+                                                 And   a.USU_DInSub = x.USU_DInSub \
+                                                 And   a.USU_HInSub = x.USU_HInSub \
+                                                 And   a.USU_SeqSub = x.USU_SeqSub \
+                                                 And   (x.USU_DInLib < :dDatHoj \
+                                                 or     (x.USU_DInLib = :dDatHoj and (x.USU_HInLib = 0 or x.USU_HInLib <= :nHorAgo))) \
+                                                 And   (x.USU_DTeLib > :dDatHoj \
+                                                 or     (x.USU_DTeLib = :dDatHoj and (x.USU_HTeLib = 0 or x.USU_HTeLib >= :nHorAgo)) \
+                                                 or      x.USU_DTeLib = :dDatZer))) \
+                                   ");
+
+  SQL_DefinirInteiro(cEhSPesquisa, "nNumEmp", pEhSNumEmp);
+  SQL_DefinirInteiro(cEhSPesquisa, "nTipCol", pEhSTipCol);
+  SQL_DefinirInteiro(cEhSPesquisa, "nNumCad", pEhSNumCad);
+  SQL_DefinirInteiro(cEhSPesquisa, "nIdeSis", pEhSIdeSis);
+  SQL_DefinirData(cEhSPesquisa, "dDatZer", dDatZer);
+  SQL_DefinirData(cEhSPesquisa, "dDatHoj", dEhSDatBas);
+  SQL_DefinirInteiro(cEhSPesquisa, "nHorAgo", pEhSHorBas);
+
+  SQL_AbrirCursor(cEhSPesquisa);
+
+  Se (SQL_EOF(cEhSPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarAlfa(cEhSPesquisa, "USU_SubVMP", aEhSSubVMP);
+
+    pEhSTipSub = 1; @-- Eh Substituto via Delegacao --@
+    Se (aEhSSubVMP = "S")
+    Inicio
+      pEhSTipSub = 2; @-- Eh Substituto via MP --@
+    Fim;
+  Fim;
+  SQL_FecharCursor(cEhSPesquisa);
+  SQL_Destruir(cEhSPesquisa);
+Fim;
+
+
+Funcao f510RetHorPrvTrb(Numero pRHPTNumEmp, Numero pRHPTTipCol, Numero pRHPTNumCad,
+                        Numero pRHPTDatIni, Numero pRHPTDatFim, Numero End pRHPTHorPrv);
+Inicio
+  Definir Alfa cRHPTPesquisa;
+  Definir Data dRHPTDatTra;
+  Definir Data dRHPTDatIni;
+  Definir Data dRHPTDatFim;
+  Definir Alfa aRHPTAux;
+
+  @-- Inicializar as Variáveis --@
+  dRHPTDatIni = pRHPTDatIni;
+  dRHPTDatFim = pRHPTDatFim;
+  nRHPTTotHorPrv = 0;
+
+  Para (dRHPTDatTra=dRHPTDatIni; dRHPTDatTra<=dRHPTDatFim; dRHPTDatTra++)
+  Inicio
+    RetornaHorario(pRHPTNumEmp, pRHPTTipCol, pRHPTNumCad, dRHPTDatTra, "S", nRHPTCodHor);
+
+    Se (nRHPTCodHor = 9997)
+    Inicio
+      nRHPTBHClaEsc = 0;
+
+      @-- Buscar a escala do empregado na data --@
+      RetornaEscala(pRHPTNumEmp, pRHPTTipCol, pRHPTNumCad, dRHPTDatTra, nRHPTCodEsc, nRHPTCodTma, nRHPTIntEsc, nRHPTCodEqp, nRHPTCodCat, aRHPTAux);
+
+      @-- Buscar a classe da escala do empregado --@
+      SQL_Criar(cRHPTPesquisa);
+      SQL_UsarSQLSenior2(cRHPTPesquisa, 0);
+      SQL_UsarAbrangencia(cRHPTPesquisa, 0);
+      SQL_DefinirComando(cRHPTPesquisa, "Select ClaEsc \
+                                         From R006ESC \
+                                         Where CodEsc = :nCodEsc \
+                                        ");
+
+      SQL_DefinirInteiro(cRHPTPesquisa, "nCodEsc", nRHPTCodEsc);
+
+      SQL_AbrirCursor(cRHPTPesquisa);
+      Se (SQL_EOF(cRHPTPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarInteiro(cRHPTPesquisa, "ClaEsc", nRHPTBHClaEsc);
+      Fim;
+      SQL_FecharCursor(cRHPTPesquisa);
+      SQL_Destruir(cRHPTPesquisa);
+
+      Se ((nRHPTBHClaEsc <> 51)  @-- 51:Comercial --@
+      e   (nRHPTBHClaEsc <> 56)) @-- 56:Especial --@
+      Inicio
+        RetornaHorario(pRHPTNumEmp, pRHPTTipCol, pRHPTNumCad, dRHPTDatTra, "N", nRHPTCodHor);
+      Fim;
+    Fim;
+
+    @-- Identificar os horários de marcações Previstas --@
+    nRHPTHorPrv = 0;
+    nRHPTHorIni = -1;
+    nRHPTHorFim = -1;
+
+    Se (nRHPTCodHor < 9996)
+    Inicio
+      SQL_Criar(cRHPTPesquisa);
+      SQL_UsarSQLSenior2(cRHPTPesquisa, 0);
+      SQL_UsarAbrangencia(cRHPTPesquisa, 0);
+      SQL_DefinirComando(cRHPTPesquisa, "Select HorBat \
+                                         From R004MHr \
+                                         Where CodHor = :nCodHor \
+                                         Order By CodHor, SeqMar \
+                                        ");
+
+      SQL_DefinirInteiro(cRHPTPesquisa, "nCodHor", nRHPTCodHor);
+
+      SQL_AbrirCursor(cRHPTPesquisa);
+      Enquanto (SQL_EOF(cRHPTPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarInteiro(cRHPTPesquisa, "HorBat", nRHPTHorBat);
+
+        Se (nRHPTHorIni = -1)
+        Inicio
+          nRHPTHorIni = nRHPTHorBat;
+        Fim;
+        Senao
+        Se (nRHPTHorFim = -1)
+        Inicio
+          nRHPTHorFim = nRHPTHorBat;
+
+          Se (nRHPTHorFim > nRHPTHorIni)
+          Inicio
+            nRHPTHorPrv = nRHPTHorPrv + nRHPTHorFim - nRHPTHorIni;
+          Fim;
+          Senao
+          Inicio
+            nRHPTHorPrv = nRHPTHorPrv + (nRHPTHorFim + 1440) - nRHPTHorIni;
+          Fim;
+
+          nRHPTHorIni = -1;
+          nRHPTHorFim = -1;
+        Fim;
+
+        SQL_Proximo(cRHPTPesquisa);
+      Fim;
+      SQL_FecharCursor(cRHPTPesquisa);
+      SQL_Destruir(cRHPTPesquisa);
+
+      nRHPTTotHorPrv = nRHPTTotHorPrv + nRHPTHorPrv;
+
+      SQL_Criar(cRHPTPesquisa);
+      SQL_UsarSQLSenior2(cRHPTPesquisa, 0);
+      SQL_UsarAbrangencia(cRHPTPesquisa, 0);
+      SQL_DefinirComando(cRHPTPesquisa, "Select Sum(QtdHor) QtdHor \
+                                         From R064CMP \
+                                         Where NumEmp = :nNumEmp \
+                                         And   TipCol = :nTipCol \
+                                         And   NumCad = :nNumCad \
+                                         And   DatIni <= :dDatTra \
+                                         And   TipCmp = 1 \
+                                         And   PerCmp in (6, 7) \
+                                         And   (DatFim >= :dDatTra or DatFim = :dDatZer) \
+                                        ");
+
+      SQL_DefinirInteiro(cRHPTPesquisa, "nNumEmp", pRHPTNumEmp);
+      SQL_DefinirInteiro(cRHPTPesquisa, "nTipCol", pRHPTTipCol);
+      SQL_DefinirInteiro(cRHPTPesquisa, "nNumCad", pRHPTNumCad);
+      SQL_DefinirData(cRHPTPesquisa, "dDatTra", dRHPTDatTra);
+      SQL_DefinirData(cRHPTPesquisa, "dDatZer", dDatZer);
+
+      SQL_AbrirCursor(cRHPTPesquisa);
+      Se (SQL_EOF(cRHPTPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarInteiro(cRHPTPesquisa, "QtdHor", nRHPTQtdIni);
+
+        nRHPTTotHorPrv = nRHPTTotHorPrv + nRHPTQtdIni;
+      Fim;
+      SQL_FecharCursor(cRHPTPesquisa);
+      SQL_Destruir(cRHPTPesquisa);
+    Fim;
+  Fim;
+
+  pRHPTHorPrv = nRHPTTotHorPrv;
+Fim;

@@ -1,0 +1,82 @@
+/* Regla 511  : Trata situacion 606 comisionado sin Justificar
+
+Ultima Modificacion:
+
+Desarrollo           11-03-2009 Por: Pablo Molina (G.i.i.)
+20-04-2009 Modificado Sit 606 de TipSti = 15 a TipSit = 17
+
+*/
+/*
+ApuDiu[09];   @ Falta entrada 1 parte  @
+ApuDiu[10];   @ Falta entrada 2 parte  @
+ApuDiu[11];   @ Falta salida 1 parte   @
+ApuDiu[12];   @ Falta salida 2 parte   @
+ApuDiu[13];   @ Salida Inter 1 parte   @
+ApuDiu[14];   @ Salida inter 2 parte   @
+
+HorSit[551]   @ Llegada tardia         @
+HorSit[553]   @ Salida anticipada      @
+MinPvD[1]     @ prevision de horario diurno 1era parte @
+MinPvD[2]     @ prevision de horario diurno 2da  parte @
+vPrimeira     @ primer registro realizado  @
+vSegunda      @ segundo registro realizado @
+vUltima       @ ULTIMO registro realizado (puede ser igual a vPrimeira o vSegunda) @
+*/
+
+Se ((TemAfs > 0) e (CodAfs = 606))             @ si tiene afastamento Y es el 606 entonces se procesa... @
+Inicio
+  vCuantoTrabajoComisionado = vUltima - vPrimeira;
+
+  Se ((ClaEsc = 51) e (QtdMar >= 2) e (vCuantoTrabajoComisionado > 60))
+  Inicio
+    HorSit[514] = HorSit[606];
+    HorSit[606] = 0;
+  Fim;
+  Senao
+  Se (nApuPon = 1)        @-- 1 = Nao eh Dispensado do Ponto --@
+  Inicio
+    HorSit[551] = ApuDiu[09] + ApuDiu[10];   @ Falta entrada 1 y 2 parte  @
+    HorSit[553] = ApuDiu[11] + ApuDiu[12];   @ Falta salida 1 y 2 parte   @
+    HorSit[503] = ApuDiu[13] + ApuDiu[14];   @ Salida Inter 1 y 2 parte   @
+    HorSit[503] = HorSit[503] + HorSit[606];
+    HorSit[606] = 1;
+    Se (ApuDiu[09] = MinPvD[1])           @ Falta entrada 1 parte   @
+    Inicio
+      HorSit[601] = ApuDiu[09];
+      Se (HorSit[551] > MinPvD[1])    @ Si tiene mas llegadas tardias que lo que tiene que trabajar @
+        HorSit[551] = HorSit[551] - MinPvD[1];
+      Senao
+        HorSit[551] = 0;
+    Fim;
+    Se (ApuDiu[10] = MinPvD[2])           @ Falta entrada 2 parte   @
+    Inicio
+      HorSit[601] = ApuDiu[10];
+      Se (HorSit[551] > MinPvD[2])    @ Si tiene mas llegadas tardias que lo que tiene que trabajar @
+        HorSit[551] = HorSit[551] - MinPvD[2];
+      Senao
+        HorSit[551] = 0;
+    Fim;
+    Se (ApuDiu[11] = MinPvD[1])           @ Falta salida 1 parte   @
+    Inicio
+      HorSit[601] = ApuDiu[11];
+      Se (HorSit[553] > MinPvD[1])    @ Si tiene mas salidas anticipadas que lo que tiene que trabajar @
+        HorSit[553] = HorSit[553] - MinPvD[1];
+      Senao
+        HorSit[553] = 0;
+    Fim;
+    Se (ApuDiu[12] = MinPvD[2])           @ Falta salida 2 parte   @
+    Inicio
+      HorSit[601] = ApuDiu[12];
+      Se (HorSit[553] > MinPvD[2])    @ Si tiene mas salidas anticipadas que lo que tiene que trabajar @
+        HorSit[553] = HorSit[553] - MinPvD[2];
+      Senao
+        HorSit[553] = 0;
+    Fim;
+    Se (HorSit[503] = PrvTrD)             @ Si tiene 1 marcacion @
+    Inicio
+      HorSit[574] = HorSit[503];
+      HorSit[578] = HorSit[574];
+      HorSit[503] = 0;
+    Fim;
+  Fim;     @ ((ClaEsc = 51) e (QtdMar >= 2) e (vCuantoTrabajoComisionado > 60))     @
+Fim;        @ ((TemAfs > 0) e (CodAfs = 606)) @

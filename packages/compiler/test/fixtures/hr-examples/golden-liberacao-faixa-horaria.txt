@@ -1,0 +1,213 @@
+/**********************************************************************
+*                                                                     *
+*    PORTAL RH - AEM - Ajuste Eletronico da Marcacoes                 *
+*    Regra: 879 - AEM - Liberação Faixa Horaria Turno                 *
+*                                                                     *
+*    OBJETIVO: .Efetuar a liberação de Marcação de Ponto em dias      *
+*               de feriado para colaboradores que tem escala de       *
+*               revezamento e irão trabalhar no dia                   *
+*                                                                     *
+*    PROCESSO AUTOMÁTICO:                                             *
+*       - Módulo: HR                                                  *
+*       - Tipo: Regra                                                 *
+*       - Código: 879                                                 *
+*       - Descricao: PY - Liberação Faixa Horaria Turno               *
+*       - Periodiciadade: a Cada 6 horas iniciando as 23:30           *
+*                                                                     *
+**********************************************************************/
+
+Definir Numero nIdeSis; nIdeSis = 2; @-- AEM --@
+
+Definir Alfa cPesquisa;
+Definir Alfa cAuxiliar;
+Definir Alfa cFeriado;
+Definir Data dR879DatLib;
+Definir Data dR879DatTra;
+
+nCodUsu = CodUsu;
+
+@-- Carregar as Definicoes Globais --@
+f850CarregarDefinicoes(nIdeSis);
+
+@-- Iniciar Geracao do Log --@
+f850GerarLog(0, 0);
+aTxtLog = "Inicio - Executando a Regra HR879 - AEM - Liberação Faixa Horaria Turno";
+f850GerarLog(1, 0);
+
+Para (i=0;i<=1;i++)
+Inicio
+  dR879DatLib = dDatHoj + i;
+
+  @-- Geracao do Log --@
+  ConverteMascara(3, dR879DatLib, aTxtLog, "DD/MM/YYYY");
+  aTxtLog = "dR879DatLib: " + aTxtLog ;
+  f850GerarLog(1, 1);
+
+  @-- Colaboradores classe diferente de Comercial --@
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select A.NumEmp, A.TipCol, A.NumCad \
+                                 From R034FUN A, R006ESC B \
+                                 Where A.NumEmp in (501,800,807) \
+                                 And   A.TipCol = 1 \
+                                 And   A.SitAfa <> 550 \
+                                 And   B.CodEsc = A.CodEsc \
+                                 And   (B.ClaEsc <> 51 \
+                                 or     Exists (Select x.NumEmp \
+                                               From R064THR x \
+                                               Where x.NumEmp = a.NumEmp \
+                                               And   x.TipCol = a.TipCol \
+                                               And   x.NumCad = a.NumCad \
+                                               And   x.DatIni = :dDatTra \
+                                               And   x.CodHor < 9996)) \
+                                ");
+
+  SQL_DefinirData(cPesquisa, "dDatTra", dR879DatLib);
+
+  SQL_AbrirCursor(cPesquisa);
+  Enquanto (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "NumEmp", nR879NumEmp);
+    SQL_RetornarInteiro(cPesquisa, "TipCol", nR879TipCol);
+    SQL_RetornarInteiro(cPesquisa, "NumCad", nR879NumCad);
+
+    @-- Geracao do Log --@
+    IntParaAlfa(nR879NumEmp, aTxtLog);
+    aTxtLog = "nR879NumEmp: " + aTxtLog;
+    f850GerarLog(1, 2);
+    IntParaAlfa(nR879NumCad, aTxtLog);
+    aTxtLog = "nR879NumCad: " + aTxtLog;
+    f850GerarLog(1, 2);
+
+    RetornaHorario(nR879NumEmp, nR879TipCol, nR879NumCad, dR879DatLib, "N", nR879CodHor);
+
+    @-- Geracao do Log --@
+    IntParaAlfa(nR879CodHor, aTxtLog);
+    aTxtLog = "nR879CodHor: " + aTxtLog;
+    f850GerarLog(1, 4);
+
+    Se (nR879CodHor < 9996) @-- Nao é Folga --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Nao eh folga ";
+      f850GerarLog(1, 4);
+
+      SQL_Criar(cAuxiliar);
+      SQL_UsarSQLSenior2(cAuxiliar, 0);
+      SQL_UsarAbrangencia(cAuxiliar, 0);
+      SQL_DefinirComando(cAuxiliar, "Select IniPto, FimPto \
+                                     From R004FHR \
+                                     Where CodHor = :nR879CodHor");
+      SQL_DefinirInteiro(cAuxiliar, "nR879CodHor", nR879CodHor);
+      SQL_AbrirCursor(cAuxiliar);
+      Enquanto (SQL_EOF(cAuxiliar) = cFalso)
+      Inicio
+        SQL_RetornarInteiro(cAuxiliar, "IniPto", nR879HorIni);
+        SQL_RetornarInteiro(cAuxiliar, "FimPto", nR879HorFim);
+
+        @-- Geracao do Log --@
+        ConverteMascara(4, nR879HorIni, aTxtLog, "hh:mm");
+        aTxtLog = "nR879HorIni: " + aTxtLog ;
+        f850GerarLog(1, 5);
+        ConverteMascara(4, nR879HorFim, aTxtLog, "hh:mm");
+        aTxtLog = "nR879HorFim: " + aTxtLog ;
+        f850GerarLog(1, 5);
+
+        @-- Se horario inicio maior que final termina no dia posterior --@
+        nMaxDia = 0;
+        Se (nR879HorIni > nR879HorFim)
+        Inicio
+          nMaxDia = 1;
+        Fim;
+
+        @-- Geracao do Log --@
+        IntParaAlfa(nMaxDia, aTxtLog);
+        aTxtLog = "nMaxDia: " + aTxtLog ;
+        f850GerarLog(1, 5);
+
+        Para (dia=0;dia<=nMaxDia;dia++)
+        Inicio
+          nEhFer = cFalso;
+
+          dR879DatTra = dR879DatLib + dia;
+
+          @-- Geracao do Log --@
+          ConverteMascara(3, dR879DatTra, aTxtLog, "DD/MM/YYYY");
+          aTxtLog = "dR879DatTra: " + aTxtLog ;
+          f850GerarLog(1, 6);
+
+          @-- Verifica se Proximo dia é Feriado e faz a liberacao de marcação --@
+          SQL_Criar(cFeriado);
+          SQL_UsarSQLSenior2(cFeriado, 0);
+          SQL_UsarAbrangencia(cFeriado, 0);
+          SQL_DefinirComando(cFeriado, "Select C.DatFer \
+                                        From R034FUN A, R030FIL B, R002FEC C \
+                                        Where B.NumEmp = A.NumEmp \
+                                        And   B.CodFil = A.CodFil \
+                                        And   C.CodFer = B.TabFeD \
+                                        And   A.NumEmp = :nNumEmp \
+                                        And   A.TipCol = :nTipCol \
+                                        And   A.NumCad = :nNumCad \
+                                        And   C.DatFer = :dDatTra \
+                                       ");
+
+          SQL_DefinirInteiro(cFeriado, "nNumEmp", nR879NumEmp);
+          SQL_DefinirInteiro(cFeriado, "nTipCol", nR879TipCol);
+          SQL_DefinirInteiro(cFeriado, "nNumCad", nR879NumCad);
+          SQL_DefinirData(cFeriado, "dDatTra", dR879DatTra);
+          SQL_AbrirCursor(cFeriado);
+          Se (SQL_EOF(cFeriado) = cFalso)
+          Inicio
+            nEhFer = cVerdadeiro;
+          Fim;
+          SQL_FecharCursor(cFeriado);
+          SQL_Destruir(cFeriado);
+
+          @-- Geracao do Log --@
+          IntParaAlfa(nEhFer, aTxtLog);
+          aTxtLog = "Eh Feriado(0=Nao | 1=Sim): " + aTxtLog;
+          f850GerarLog(1, 7);
+
+          Se (nEhFer = cVerdadeiro) @-- Liberar Feriado --@
+          Inicio
+            @-- Geracao do Log --@
+            aTxtLog = "Liberar Feriado";
+            f850GerarLog(1, 3);
+
+            f853LiberarFaixaHoraria(nR879NumEmp, nR879TipCol, nR879NumCad, dR879DatLib, dR879DatLib, nR879HorIni, nR879HorFim, nSucesso);
+            Se (nSucesso = cFalso)
+            Inicio
+              @-- Geracao do Log --@
+              aTxtLog = "Erro ";
+              f850GerarLog(1, 5);
+            Fim;
+            Senao
+            Inicio
+              @-- Geracao do Log --@
+              aTxtLog = "Sucesso ";
+              f850GerarLog(1, 5);
+            Fim;
+          Fim;@-- Eh Feriado --@
+
+        Fim;
+
+        SQL_Proximo(cAuxiliar);
+      Fim;
+      SQL_FecharCursor(cAuxiliar);
+      SQL_Destruir(cAuxiliar);
+
+    Fim;@-- Nao Eh Folga --@
+
+    SQL_Proximo(cPesquisa);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+Fim;
+
+@-- Geracao do Log --@
+aTxtLog = "Executando a Regra HR879 :: Termino";
+f850GerarLog(1, 0);
+
+@-- Fechar arquivo do Log --@
+f850GerarLog(2, 0);

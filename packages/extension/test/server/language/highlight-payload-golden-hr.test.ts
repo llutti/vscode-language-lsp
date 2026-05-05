@@ -17,19 +17,33 @@ type GoldenFile = {
   system: 'HCM' | 'ACESSO' | 'ERP';
 };
 
+const HR_FIXTURES_ROOT = path.join(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  '..',
+  '..',
+  'packages',
+  'compiler',
+  'test',
+  'fixtures',
+  'hr-examples'
+);
+
 const GOLDEN_SET_QUICK: GoldenFile[] = [
-  'HR511 - PY - Trata comisionado sin justificar.txt',
-  'HR879 - AEM - Liberacao Faixa Horaria Turno.txt',
-  'HR512 - PY - Apuracao - Consistencia Acerto.txt',
-  'HR884 - AEM - Estatisticas.txt',
-  'HR881 - AEM - Pesquisa Utilizacao Ativ Gremial.txt',
-  'HR874 - ESA - Consulta Programacao Sobreaviso.txt',
-  'HR864 - AEM - Domicilio Marcacao.txt',
-  'HR897 - AEM - Criar Executar Pendencias Coletivas.txt',
-  'HR873 - ESA - Areas Autorizadas.txt',
-  'HR866 - ESA - Consulta Sobreaviso Realizado.txt'
+  'golden-trata-comissionado.txt',
+  'golden-liberacao-faixa-horaria.txt',
+  'golden-consistencia-acerto.txt',
+  'golden-estatisticas.txt',
+  'golden-atividade-gremial.txt',
+  'golden-programacao-sobreaviso.txt',
+  'golden-domicilio-marcacao.txt',
+  'golden-pendencias-coletivas.txt',
+  'golden-areas-autorizadas.txt',
+  'golden-consulta-sobreaviso.txt'
 ].map((name) => ({
-  filePath: path.join(__dirname, '..', '..', '..', '..', '..', 'exemplos/HR', name),
+  filePath: path.join(HR_FIXTURES_ROOT, name),
   system: 'HCM' as const
 }));
 

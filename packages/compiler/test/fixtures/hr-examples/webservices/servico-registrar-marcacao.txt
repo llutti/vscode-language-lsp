@@ -1,0 +1,2394 @@
+@-- Identificador do WebService --@
+Definir Numero nIdeWSv; nIdeWSv = 19; @-- Registrar Marcação --@
+Definir Numero nToleranciaMarcacaoOnline; nToleranciaMarcacaoOnline = 1;
+
+@-- Situações possíveis para o Processamento do Registro da Marcação (USU_TAEMCPT.USU_SitPro) --@
+@-- ----------------------------------------------------------------------------------------- --@
+@-- 00 - Processada com Erro --@
+@-- 01 - Processada com Sucesso --@
+@-- 02 - Sem autorização para utilizar APP Marcaciones --@
+@-- 03 - Fora da Faixa Horária --@
+@-- 04 - Situação de afastamento bloqueia Acesso --@
+@-- 05 - Fora da Perímetro autorizado pelo local de marcação --@
+@-- 06 - Não foi localizado a lat/log do Domicilio --@
+@-- 07 - Data em cálculo já Finalizado --@
+@-- 08 - Marcação ONLINE fora da tolerância (deveria ter vindo como offline) --@
+@-- 09 - Não é permitido realizar HE Remota --@
+@-- 10 - Marcacao pelo APP Bloqueada --@
+
+
+@-- Relação dos código de erros registrado no APP Marcaciones --@
+@-- --------------------------------------------------------- --@
+@-- AEM_001 - Login no Informado --@
+@-- AEM_002 - Identificador del Sistema no Informado --@
+@-- AEM_003 - Fecha no Informada --@
+@-- AEM_004 - Fecha inválida --@
+@-- AEM_005 - Horário inválido --@
+@-- AEM_006 - Hora inválida --@
+@-- AEM_007 - Minuto inválido --@
+@-- AEM_008 - Login no Localizado --@
+@-- AEM_009 - Login no Vinculado a un empleado --@
+@-- AEM_010 - Carnet no localizado --@
+@-- AEM_011 - Erro al Incluir Marcación --@
+@-- AEM_012 - Erro al Registro Marcación --@
+@-- AEM_013 - Sede inválida --@
+@-- AEM_014 - Justificativa no Informada --@
+@-- AEM_015 - Erro al Registrar Domicilio --@
+@-- AEM_016 - Fecha inválida (Cálculo ya cerrado) --@
+@-- AEM_017 - Marcación ONLINE fuera de tolerancia --@
+@-- AEM_023 - Já existe uma solicitação pendente de aprovação --@
+@-- AEM_024 - Acesso Negado pela Situação --@
+@-- AEM_025 - Não é permitido realizar HE Remota --@
+@-- AEM_045 - Marcacao pelo APP Bloqueada --@
+@-- AEM_046 - Acesso Negado pela Faixa Horária --@
+@-- AEM_047 - Acesso Negado pelo Local não Permitido --@
+@-- AEM_048 - Fora do limite para marcação --@
+@-- AEM_049 - Não foi localizada a lat/long do Domicilio --@
+
+
+Definir Funcao fGravarLogExecucao(Numero pTipOpe);
+
+Definir Alfa CR; RetornaASCII(13, CR);
+Definir Alfa LF; RetornaASCII(10, LF);
+Definir Alfa CRLF; CRLF = CR + LF;
+
+Definir Alfa aGerLog; aGerLog = "S";
+Definir Alfa aTxtLog; aTxtLog = "";
+Definir Alfa aMsgErro;
+Definir Funcao fGerarLog(Numero pGLOpcao, Numero pGLNivel); @-- Funcao para gravar um arquivo de Log --@
+
+Definir Alfa aErroConversao;
+Definir Alfa aDataConverter;
+Definir Data dDataConvertida;
+Definir Funcao fAlfaParaData();
+
+Definir Alfa aNumeroConverter;
+Definir Numero nNumeroConvertido;
+Definir Funcao fAlfaParaNumero();
+
+Definir Alfa aDataHoraConverter; @-- Formato: DD/MM/YYYY HH:MM --@
+Definir Funcao fAlfaParaDataHora(Numero End pData, Numero End pHora);
+
+Definir Alfa aSQL;
+Definir Alfa aAux;
+Definir Alfa cPesquisa;
+Definir Alfa aErro;
+
+Definir Numero nHorAgo; nHorAgo = HorSis;
+Definir Data dDatHoj;   dDatHoj = DatSis;
+Definir Data dDatZer;   dDatZer = 0;
+
+Definir Numero nNumEmp;
+Definir Numero nTipCol;
+Definir Numero nNumCad;
+Definir Numero nCodFil;
+Definir Alfa aResult;
+Definir Alfa aAppLog;
+
+Definir Alfa aDatHor;
+Definir Data dDatAcc;
+Definir Alfa aSitCal;
+Definir Alfa aAppDat;
+Definir Alfa aAppHor;
+Definir Alfa aHora;
+Definir Alfa aMinuto;
+Definir Alfa aAppHor;
+Definir Alfa aAppLat;
+Definir Alfa aAppLon;
+Definir Alfa aAppOnl; @-- Identifica se a marcação foi realizada Online (S) ou Offline (N) --@
+Definir Alfa aLatDoM;
+Definir Alfa aLonDoM;
+Definir Alfa aPMaFLS;
+
+@-- Iniciar Geracao do Log --@
+fGerarLog(0, 0);
+aTxtLog = "WebService :: HR :: py.itaipu.app.RegistrarMarcacion";
+fGerarLog(1, 0);
+
+RegistrarMarcacion.distancia = 0;
+RegistrarMarcacion.ErroExecucao = "";
+aErro = "";
+
+aAppLog = RegistrarMarcacion.Login;
+nIdeSUW = RegistrarMarcacion.IdeSUW;
+aAppDat = RegistrarMarcacion.Fecha;
+aAppHor = RegistrarMarcacion.Horario;
+aAppLat = RegistrarMarcacion.Latitude;
+aAppLon = RegistrarMarcacion.Longitude;
+nAppIde = RegistrarMarcacion.AppIde;
+nNumEmp = RegistrarMarcacion.NumEmp;
+nTipCol = 1;
+nNumCad = RegistrarMarcacion.NumCad;
+aAppOnl = RegistrarMarcacion.Online;
+
+aResult = "";
+nStatus = 0; @-- 0 = Sucesso, 1 = Erro na Execucao --@
+nNumCra = 0;
+nNumFis = 0;
+nSitPro = 0; @-- Processado com Erro --@
+aPMaFLS = "N";
+nCodUsu = 0;
+
+@-- Grava no Banco Log de Execucao 1 = INICIO --@
+fGravarLogExecucao(1);
+
+TiraEspacos(aAppLog, aAppLog);
+TiraEspacos(aAppOnl, aAppOnl);
+ConverteParaMaiusculo(aAppOnl, aAppOnl);
+
+@-- Geracao do Log --@
+aTxtLog = "aAppLog: ||" + aAppLog + "||";
+fGerarLog(1, 1);
+IntParaAlfa(nIdeSUW, aTxtLog);
+aTxtLog = "nIdeSUW: " + aTxtLog;
+fGerarLog(1, 1);
+IntParaAlfa(nNumEmp, aTxtLog);
+aTxtLog = "nNumEmp: " + aTxtLog;
+fGerarLog(1, 1);
+IntParaAlfa(nNumCad, aTxtLog);
+aTxtLog = "nNumCad: " + aTxtLog;
+fGerarLog(1, 1);
+aTxtLog = "aAppLat: " + aAppLat;
+fGerarLog(1, 1);
+aTxtLog = "aAppLon: " + aAppLon;
+fGerarLog(1, 1);
+aTxtLog = "aAppDat: " + aAppDat;
+fGerarLog(1, 1);
+aTxtLog = "aAppHor: " + aAppHor;
+fGerarLog(1, 1);
+aTxtLog = "aAppOnl: " + aAppOnl;
+fGerarLog(1, 1);
+
+Se (aAppLog = "")
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E001] Login no Informado.";
+  aErro = "AEM_001";
+  VaPara Saida;
+Fim;
+
+Se (nIdeSUW = 0)
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E002] Identificador del Sistema no Informado.";
+  aErro = "AEM_002";
+  VaPara Saida;
+Fim;
+
+Se (aAppDat = "")
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E003] Fecha no Informada.";
+  aErro = "AEM_003";
+  VaPara Saida;
+Fim;
+
+Se (aAppOnl = "")
+Inicio
+  aAppOnl = "S";
+
+  @-- Geracao do Log --@
+  aTxtLog = "aAppOnl(2): " + aAppOnl;
+  fGerarLog(1, 2);
+Fim;
+Senao
+Se ((aAppOnl <> "S")
+e   (aAppOnl <> "N"))
+Inicio
+  aAux = aAppOnl;
+  CopiarAlfa(aAux, 1, 1);
+
+  Se ((aAux <> "S")
+  e   (aAux <> "N"))
+  Inicio
+    aResult = "ERROR";
+    RegistrarMarcacion.ErroExecucao = "[E014] El parámetro 'Online' [" + aAppOnl + "] no es 'S' ni 'N'.";
+    aErro = "AEM_014";
+    VaPara Saida;
+  Fim;
+  Senao
+  Inicio
+    aAppOnl = aAux;
+
+    @-- Geracao do Log --@
+    aTxtLog = "aAppOnl(3): " + aAppOnl;
+    fGerarLog(1, 2);
+  Fim;
+Fim;
+
+@-- Converter a Data Inicial de Alfa para Data --@
+aDataConverter = aAppDat;
+fAlfaParaData();
+dDatAcc = dDataConvertida;
+
+Se (aErroConversao <> "")
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E004] Fecha inválida.";
+  aErro = "AEM_004";
+  VaPara Saida;
+Fim;
+
+TamanhoAlfa(aAppHor, nTamHor);
+Se (nTamHor <> 5)
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E005] Horário inválido.";
+  aErro = "AEM_005";
+  VaPara Saida;
+Fim;
+
+aHora = aAppHor;
+CopiarAlfa(aHora, 1, 2);
+aMinuto = aAppHor;
+CopiarAlfa(aMinuto, 4, 2);
+
+aNumeroConverter = aHora;
+fAlfaParaNumero();
+nHora = nNumeroConvertido;
+
+Se (aErroConversao <> "")
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E006] Hora inválida.";
+  aErro = "AEM_006";
+  VaPara Saida;
+Fim;
+
+aNumeroConverter = aMinuto;
+fAlfaParaNumero();
+nMinuto = nNumeroConvertido;
+
+Se (aErroConversao <> "")
+Inicio
+  @-- Geracao do Log --@
+  IntParaAlfa(nNumEmp, aTxtLog);
+  aTxtLog = "aErroConversao nMinuto: " + aErroConversao;
+  fGerarLog(1, 1);
+
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E007] Minuto inválido.";
+  aErro = "AEM_007";
+  VaPara Saida;
+Fim;
+
+nHorAcc = (nHora * 60) + nMinuto;
+
+@-- Ajustar número da Empresa Aprendiz --@
+Se (nNumEmp = 700)
+Inicio
+  nNumEmp = 800;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nNumEmp, aTxtLog);
+  aTxtLog = "nNumEmp(2): " + aTxtLog;
+  fGerarLog(1, 1);
+Fim;
+
+Se ((nNumEmp = 0)
+ou  (nNumCad = 0))
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "Buscar Empresa/Matricula pelo Login";
+  fGerarLog(1, 1);
+
+  nNumEmp = 0;
+  nNumCad = 0;
+
+  ConverteParaMaiusculo(aAppLog, aAppLog);
+
+  @-- Buscar o código do usuário --@
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select CodEnt \
+                                 From R910ENT \
+                                 Where Upper(NomEnt) = :aNomEnt \
+                                ");
+
+  SQL_DefinirAlfa(cPesquisa, "aNomEnt", aAppLog);
+
+  SQL_AbrirCursor(cPesquisa);
+  Se (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "CodEnt", nCodUsu);
+  Fim;
+  SQL_Destruir(cPesquisa);
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nCodUsu, aTxtLog);
+  aTxtLog = "nCodUsu:" + aTxtLog;
+  fGerarLog(1, 2);
+
+  Se (nCodUsu = 0)
+  Inicio
+    aResult = "ERROR";
+    RegistrarMarcacion.ErroExecucao = "[E008] Login no Localizado.";
+    aErro = "AEM_008";
+  Fim;
+
+  RetColabPorCodUsu(nCodUsu, nNumEmp, nTipCol, nNumCad);
+
+  Se (nNumCad = 0)
+  Inicio
+    aResult = "ERROR";
+    RegistrarMarcacion.ErroExecucao = "[E009] Login no Vinculado a un empleado.";
+    aErro = "AEM_009";
+  Fim;
+
+  Se (RegistrarMarcacion.ErroExecucao <> "")
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Buscar pelo E-mail";
+    fGerarLog(1, 2);
+
+    aSQL = "Select NumEmp, TipCol, NumCad " +
+           "From R034Cpl " +
+           "Where NumEmp in (1, 51, 71, 81, 91, 501, 800, 807) " +
+           "And   TipCol = 1 " +
+           "And   (Upper(EmaCom) = Upper('" + aAppLog + "@itaipu.gov.py') " +
+           "or     Upper(EmaCom) = Upper('" + aAppLog + "@itaipu.gov.br')) ";
+
+    @-- Geracao do Log --@
+    aTxtLog = "aSQL: " + aSQL;
+    fGerarLog(1, 3);
+
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, aSQL);
+
+    SQL_AbrirCursor(cPesquisa);
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cPesquisa, "NumEmp", nNumEmp);
+      SQL_RetornarInteiro(cPesquisa, "TipCol", nTipCol);
+      SQL_RetornarInteiro(cPesquisa, "NumCad", nNumCad);
+
+      RegistrarMarcacion.ErroExecucao = "";
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+
+    Se (nNumCad = 0)
+    Inicio
+      VaPara Saida;
+    Fim;
+  Fim;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nNumEmp, aTxtLog);
+  aTxtLog = "nNumEmp(1):" + aTxtLog;
+  fGerarLog(1, 2);
+  IntParaAlfa(nTipCol, aTxtLog);
+  aTxtLog = "nTipCol(1):" + aTxtLog;
+  fGerarLog(1, 2);
+  IntParaAlfa(nNumCad, aTxtLog);
+  aTxtLog = "nNumCad(1):" + aTxtLog;
+  fGerarLog(1, 2);
+Fim;
+
+@-- Geracao do Log --@
+aTxtLog = "Carregar a Filial";
+fGerarLog(1, 4);
+
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select NumEmp, TipCol, NumCad, CodFil \
+                               From R034Fun \
+                               Where NumEmp = :nNumEmp \
+                               And   TipCol = :nTipCol \
+                               And   NumCad = :nNumCad \
+                              ");
+
+SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+
+SQL_AbrirCursor(cPesquisa);
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarInteiro(cPesquisa, "CodFil", nCodFil);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+Se (nCodFil = 0)
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E013] Sede inválida.";
+  aErro = "AEM_013";
+  VaPara Saida;
+Fim;
+
+@-- Geracao do Log --@
+aTxtLog = "Buscar o número do Crachá";
+fGerarLog(1, 4);
+
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select a.NumCra, b.NumFis \
+                               From R038HCH a, R069fis b \
+                               Where a.NumCra = b.NumCra \
+                               And   b.TecCra = 1 \
+                               And   (b.DatAlt < :dDatAcc  \
+                               or     b.DatAlt = :dDatAcc And b.HorIni <= :nHorAcc) \
+                               And   (b.DatFim > :dDatAcc \
+                               or     b.DatFim = :dDatZer \
+                               or     b.DatFim = :dDatAcc And (b.HorFim = 0 or b.HorFim >= :nHorAcc)) \
+                               And   a.NumEmp = :nNumEmp \
+                               And   a.TipCol = :nTipCol \
+                               And   a.NumCad = :nNumCad \
+                               And   (a.DatIni < :dDatAcc \
+                               or     a.DatIni = :dDatAcc And a.HorIni <= :nHorAcc) \
+                               And   (a.DatFim > :dDatAcc \
+                               or     a.DatFim = :dDatZer \
+                               or     a.DatFim = :dDatAcc And (a.HorFim = 0 or a.HorFim >= :nHorAcc)) \
+                              ");
+
+SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+SQL_DefinirInteiro(cPesquisa, "nHorAcc", nHorAcc);
+
+SQL_AbrirCursor(cPesquisa);
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarFlutuante(cPesquisa, "NumCra", nNumCra);
+  SQL_RetornarFlutuante(cPesquisa, "NumFis", nNumFis);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+@-- Geracao do Log --@
+IntParaAlfa(nNumCra, aTxtLog);
+aTxtLog = "nNumCra: " + aTxtLog;
+fGerarLog(1, 4);
+IntParaAlfa(nNumFis, aTxtLog);
+aTxtLog = "nNumFis: " + aTxtLog;
+fGerarLog(1, 4);
+
+Se ((nNumCra = 0)
+ou  (nNumFis = 0))
+Inicio
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E010] Carnet no localizado.";
+  aErro = "AEM_010";
+
+  VaPara Saida;
+Fim;
+
+nTipAcc = 1; @-- Acesso permitido --@
+nSitPro = 1; @-- Processado com sucesso --@
+
+@-- Bloqueio realizado em 11/08/2021 :: JIRA AEM-566 :: Luciano --@
+Se (nNumEmp >= 501)
+Inicio
+  nTipAcc = 0;  @-- Não Regitrar na R070ACC --@
+  nSitPro = 10; @-- Marcacao pelo APP Bloqueada --@
+  aResult = "ERROR";
+  RegistrarMarcacion.ErroExecucao = "[E020] Marcação pelo APP Bloqueada.";
+  aErro = "AEM_045";
+Fim;
+
+Se ((aAppOnl = "S")
+e   (nSitPro = 1))
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "Verificar tolerância do horário";
+  fGerarLog(1, 8);
+  IntParaAlfa(nToleranciaMarcacaoOnline, aTxtLog);
+  aTxtLog = "nToleranciaMarcacaoOnline: " + aTxtLog;
+  fGerarLog(1, 8);
+
+  Se (nHorAcc < (nHorAgo - nToleranciaMarcacaoOnline))
+  Inicio
+    nTipAcc = 0;  @-- Não Regitrar na R070ACC --@
+    nSitPro = 8;  @-- Marcação ONLINE fora da tolerância --@
+
+    aResult = "ERROR";
+    RegistrarMarcacion.ErroExecucao = "[E017] Marcação ONLINE fora da tolerância.";
+    aErro = "AEM_017";
+
+    @-- Geracao do Log --@
+    ConverteMascara(4, nHorAgo, aTxtLog, "HH:MM");
+    aTxtLog = "nHorAgo: " + aTxtLog;
+    fGerarLog(1, 9);
+    ConverteMascara(4, nHorAcc, aTxtLog, "HH:MM");
+    aTxtLog = "nHorAcc (Empregado): " + aTxtLog;
+    fGerarLog(1, 9);
+    nAux = (nHorAgo - nToleranciaMarcacaoOnline);
+    ConverteMascara(4, nAux, aTxtLog, "HH:MM");
+    aTxtLog = "(nHorAgo - tolerância): " + aTxtLog;
+    fGerarLog(1, 9);
+  Fim;
+Fim;
+
+@-- Geracao do Log --@
+aTxtLog = "Ajustar o Fuso Horário da solicitação para o Fuso Horário CHI";
+fGerarLog(1, 6);
+
+nFusHor = 1; @-- Fuso Padrão é CHI --@
+
+@-- Geracao do Log --@
+aTxtLog = "Descobrir o Fuso horário do Empregado";
+fGerarLog(1, 7);
+
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select RetornaFusoHorario(:nNumEmp, :nTipCol, :nNumCad, :dDatBas) FusHor \
+                               From Dual \
+                              ");
+
+SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+SQL_DefinirData(cPesquisa, "dDatBas", dDatAcc);
+
+SQL_AbrirCursor(cPesquisa);
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarInteiro(cPesquisa, "FusHor", nFusHor);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+@-- Geracao do Log --@
+IntParaAlfa(nFusHor, aTxtLog);
+aTxtLog = "nFusHor: " + aTxtLog + " ( 1:CHI | 2:PY | 3:BR )";
+fGerarLog(1, 8);
+
+aDatHor = aAppDat + " " + aAppHor;
+
+@-- Geracao do Log --@
+aTxtLog = "Converte o Fuso horário CHI para o do Empregado";
+fGerarLog(1, 7);
+aTxtLog = "aDatHor (Fuso CHI): " + aDatHor;
+fGerarLog(1, 8);
+
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select To_Char(ConverteFusoHorario(To_Date(:aDatHor, 'dd/mm/yyyy HH24:MI'), 1, :nFusHor), 'dd/mm/yyyy HH24:MI') DatHor \
+                               From Dual \
+                              ");
+
+SQL_DefinirAlfa(cPesquisa, "aDatHor", aDatHor);
+SQL_DefinirInteiro(cPesquisa, "nFusHor", nFusHor);
+
+SQL_AbrirCursor(cPesquisa);
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarAlfa(cPesquisa, "DatHor", aDatHor);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+@-- Geracao do Log --@
+aTxtLog = "aDatHor (Fuso Empregado): " + aDatHor;
+fGerarLog(1, 8);
+
+@-- Converter de um texto para um campo data e outro hora --@
+aDataHoraConverter = aDatHor; @-- Formato: DD/MM/YYYY HH:MM --@
+fAlfaParaDataHora(nData, nHorAcc);
+dDatAcc = nData;
+
+@-- Geracao do Log --@
+ConverteMascara(3, dDatAcc, aTxtLog, "DD/MM/YYYY");
+aTxtLog = "dDatAcc (Empregado): " + aTxtLog;
+fGerarLog(1, 7);
+ConverteMascara(4, nHorAcc, aTxtLog, "HH:MM");
+aTxtLog = "nHorAcc (Empregado): " + aTxtLog;
+fGerarLog(1, 7);
+
+Se (nNumEmp >= 501)
+Inicio
+  @-- Definir o Disposivo basedo na Filial --@
+  Se (nCodFil = 1) @-- ASU --@
+  Inicio
+    nCodDsp = 845;
+    nCodRlg = 54;
+    nCodPlt = 511;
+  Fim;
+  Senao
+  Se (nCodFil = 5) @-- CHI-MD --@
+  Inicio
+    nCodDsp = 837;
+    nCodRlg = 64;
+    nCodPlt = 520;
+  Fim;
+  Senao
+  Se (nCodFil = 8) @-- CDE --@
+  Inicio
+    nCodDsp = 835;
+    nCodRlg = 17;
+    nCodPlt = 501;
+  Fim;
+  Senao
+  Se (nCodFil = 14) @-- ADE --@
+  Inicio
+    nCodDsp = 843;
+    nCodRlg = 32;
+    nCodPlt = 507;
+  Fim;
+  Senao
+  Se (nCodFil = 25) @-- CHI-AI --@
+  Inicio
+    nCodDsp = 839;
+    nCodRlg = 28;
+    nCodPlt = 521;
+  Fim;
+  Senao
+  Se (nCodFil = 26) @-- CHI-BR --@
+  Inicio
+    nCodDsp = 841;
+    nCodRlg = 7;
+    nCodPlt = 522;
+  Fim;
+
+  Se (nSitPro = 1) @-- Processar --@
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Validar se o cálculo encontra-se ativo";
+    fGerarLog(1, 4);
+
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, "Select NumEmp, CodCal, SitCal \
+                                   From R044CAL \
+                                   Where NumEmp = :nNumEmp \
+                                   And   TipCal = 11 \
+                                   And   :dDatAcc between IniApu and FimApu \
+                                  ");
+
+    SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+    SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+
+    SQL_AbrirCursor(cPesquisa);
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cPesquisa, "CodCal", nCodCal);
+      SQL_RetornarAlfa(cPesquisa, "SitCal", aSitCal);
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+
+    @-- Geracao do Log --@
+    IntParaAlfa(nCodCal, aTxtLog);
+    aTxtLog = "nCodCal: " + aTxtLog;
+    fGerarLog(1, 5);
+    aTxtLog = "aSitCal: " + aSitCal;
+    fGerarLog(1, 5);
+
+    Se ((aSitCal <> "I")
+    e   (aSitCal <> "P"))
+    Inicio
+      nTipAcc = 0;  @-- Não Regitrar na R070ACC --@
+      nSitPro = 7;  @-- Data inválida (Cálculo já Finalizado) --@
+
+      aResult = "ERROR";
+      RegistrarMarcacion.ErroExecucao = "[E016] Data inválida (Cálculo já Finalizado).";
+      aErro = "AEM_016";
+
+      @-- Geracao do Log --@
+      aTxtLog = "Data inválida (Cálculo já Finalizado)";
+      fGerarLog(1, 6);
+    Fim;
+  Fim;
+
+  Se (nSitPro = 1) @-- Processar --@
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Verificar Autorização";
+    fGerarLog(1, 3);
+
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, "Select a.USU_PMaFLS \
+                                   From USU_TAEMMLM a, USU_TAEMDML b \
+                                   Where a.USU_NumMLM = b.USU_NumMLM \
+                                   And   a.USU_NumEmp = :nNumEmp \
+                                   And   a.USU_TipCol = :nTipCol \
+                                   And   a.USU_NumCad = :nNumCad \
+                                   And   a.USU_SitMLM = 3 \
+                                   And   a.USU_MotMLM = 3 \
+                                   And   b.USU_IniMLM <= :dDatAcc \
+                                   And   b.USU_FimMLM >= :dDatAcc \
+                                  ");
+
+    SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+    SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+    SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+    SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+
+    SQL_AbrirCursor(cPesquisa);
+    nAchouAutorizacao = cFalso;
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      nAchouAutorizacao = cVerdadeiro;
+      SQL_RetornarAlfa(cPesquisa, "USU_PMaFLS", aPMaFLS);
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+
+    Se (nAchouAutorizacao = cFalso)
+    Inicio
+      nTipAcc = 47; @-- Acesso Negado pelo Local não Permitido --@
+      nSitPro = 2;  @-- Sem autorização para utilizar APP Marcaciones --@
+
+      aResult = "ERROR";
+      RegistrarMarcacion.ErroExecucao = "[E047] Acesso Negado pelo Local não Permitido.";
+      aErro = "AEM_047";
+
+      @-- Geracao do Log --@
+      aTxtLog = "Não Autorizado";
+      fGerarLog(1, 5);
+    Fim;
+  Fim;
+
+  Se (nSitPro = 1) @-- Processar --@
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Verificar se é Dispensado de Marcação";
+    fGerarLog(1, 4);
+
+    RetApuPon(nNumEmp, nTipCol, nNumCad, dDatAcc, nApuPon);
+
+    @-- Geracao do Log --@
+    IntParaAlfa(nApuPon, aTxtLog);
+    aTxtLog = "nApuPon: " + aTxtLog;
+    fGerarLog(1, 5);
+
+    Se (nApuPon <> 2) @-- Dispensado de Marcação --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "NÃO é Dispensado de Marcação";
+      fGerarLog(1, 5);
+
+      @-- Geracao do Log --@
+      aTxtLog = "Verificar se é Chefe";
+      fGerarLog(1, 5);
+
+      SQL_Criar(cPesquisa);
+      SQL_UsarSQLSenior2(cPesquisa, 0);
+      SQL_UsarAbrangencia(cPesquisa, 0);
+      SQL_DefinirComando(cPesquisa, "Select NumEmp \
+                                     From R080Sub \
+                                     Where NumEmp in (1, 501) \
+                                     And   EmpChe = :nNumEmp \
+                                     And   TipChe = :nTipCol \
+                                     And   CadChe = :nNumCad \
+                                     And   DatAlt <= :dDatAcc \
+                                     And   (DatFim >= :dDatAcc or DatFim = :dDatZer) \
+                                     And   TabOrg = (Select Max(x.TabOrg) \
+                                                     From R030ORG x \
+                                                     Where x.NumEmp = R080Sub.NumEmp \
+                                                     And   x.DatAlt = (Select Max(a.DatAlt) \
+                                                                       From R030ORG a \
+                                                                       Where a.NumEmp = x.NumEmp \
+                                                                       And   a.DatAlt <= :dDatAcc)) \
+                                    ");
+
+      SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+      SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+      SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+      SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+      SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+
+      SQL_AbrirCursor(cPesquisa);
+      nEhChefe = cFalso;
+      Se (SQL_EOF(cPesquisa) = cFalso)
+      Inicio
+        nEhChefe = cVerdadeiro;
+      Fim;
+      SQL_FecharCursor(cPesquisa);
+      SQL_Destruir(cPesquisa);
+
+      Se (nEhChefe = cFalso)
+      Inicio
+        @-- Geracao do Log --@
+        aTxtLog = "NÃO é Chefe";
+        fGerarLog(1, 6);
+
+        @-- Geracao do Log --@
+        aTxtLog = "Verificar se é Substituto via MP";
+        fGerarLog(1, 6);
+
+        SQL_Criar(cPesquisa);
+        SQL_UsarSQLSenior2(cPesquisa, 0);
+        SQL_UsarAbrangencia(cPesquisa, 0);
+        SQL_DefinirComando(cPesquisa, "Select USU_EmpApv \
+                                       From USU_TWkfSub \
+                                       Where USU_EmpSub = :nNumEmp \
+                                       And   USU_TpCSub = :nTipCol \
+                                       And   USU_CadSub = :nNumCad \
+                                       And   (USU_DInSub < :dDatAcc \
+                                       or    (USU_DInSub = :dDatAcc and USU_HInSub <= :nHorAcc)) \
+                                       and   (USU_DTeSub > :dDatAcc \
+                                       or     USU_DTeSub = :dDatZer \
+                                       or     (USU_DTeSub = :dDatAcc and (USU_HTeSub = 0 or USU_HTeSub >= :nHorAcc))) \
+                                       And   USU_SubVMP = 'S' \
+                                      ");
+
+        SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+        SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+        SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+        SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+        SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+        SQL_DefinirInteiro(cPesquisa, "nHorAcc", nHorAcc);
+
+        SQL_AbrirCursor(cPesquisa);
+        nEhChefe = cFalso;
+        Se (SQL_EOF(cPesquisa) = cFalso)
+        Inicio
+          nEhChefe = cVerdadeiro;
+
+          @-- Geracao do Log --@
+          aTxtLog = "É Substitudo via MP";
+          fGerarLog(1, 7);
+        Fim;
+        SQL_FecharCursor(cPesquisa);
+        SQL_Destruir(cPesquisa);
+
+        Se (nEhChefe = cFalso)
+        Inicio
+          @-- Geracao do Log --@
+          aTxtLog = "NÃO é Substitudo via MP";
+          fGerarLog(1, 7);
+
+          Definir Alfa aSQL;
+          Definir Alfa aDiaSem;
+          Definir Alfa aICard;
+          Definir Alfa aFaixas;
+          Definir Alfa aFaixa;
+          Definir Alfa aHora;
+          Definir Alfa aMinuto;
+
+          @-- Inicializar variaveis --@
+          aFaixas = "";
+          nMarcacaoValida = cFalso;
+
+          @-- Validação pela FXHORARIA --@
+          Se ((aAppOnl = "S")                                      @-- Marcacao Online --@
+          ou  (dDatAcc = dDatHoj)                                  @-- Data Marcacao é Hoje --@
+          ou  ((dDatAcc = (dDatHoj - 1)) e (nHorAcc >= 1365)))     @-- Data Marcacao é Ontem e Horário Marcacao é >= 22:45 --@
+          Inicio
+            @-- Geracao do Log --@
+            aTxtLog = "Verificar na tabela FxHoraria";
+            fGerarLog(1, 7);
+
+            RetornaDiaSemana(dDatAcc, aDiaSem);
+
+            @-- Geracao do Log --@
+            aTxtLog = "aDiaSem (full): " + aDiaSem;
+            fGerarLog(1, 8);
+
+            CopiarAlfa(aDiaSem, 1, 3);
+            TiraAcentos(aDiaSem, aDiaSem);
+
+            @-- Geracao do Log --@
+            aTxtLog = "aDiaSem (abrev): " + aDiaSem;
+            fGerarLog(1, 8);
+
+            ConverteMascara(1, nNumFis, aICard, "9[12]");
+
+            @-- Geracao do Log --@
+            aTxtLog = "aICard: " + aICard;
+            fGerarLog(1, 8);
+
+            aSQL = " Select a.fx_" + aDiaSem + "_p faixas "
+                 + " From FxHoraria a "
+                 + " Where a.ICard = :aICard ";
+
+            @-- Geracao do Log --@
+            aTxtLog = "aSQL: " + aSQL;
+            fGerarLog(1, 8);
+
+            SQL_Criar(cPesquisa);
+            SQL_UsarSQLSenior2(cPesquisa, 0);
+            SQL_UsarAbrangencia(cPesquisa, 0);
+            SQL_DefinirComando(cPesquisa, aSQL);
+
+            SQL_DefinirAlfa(cPesquisa, "aICard", aICard);
+
+            SQL_AbrirCursor(cPesquisa);
+            Se (SQL_EOF(cPesquisa) = cFalso)
+            Inicio
+              SQL_RetornarAlfa(cPesquisa, "Faixas", aFaixas);
+            Fim;
+            SQL_FecharCursor(cPesquisa);
+            SQL_Destruir(cPesquisa);
+
+            @-- Geracao do Log --@
+            aTxtLog = "aFaixas: " + aFaixas;
+            fGerarLog(1, 8);
+            aTxtLog = "Verificar se marcação encontra-se na faixa horaria autorizada";
+            fGerarLog(1, 8);
+            IntParaAlfa(nHorAcc, aTxtLog);
+            aTxtLog = "nHorAcc: " + aTxtLog;
+            fGerarLog(1, 9);
+
+            Para (i=0; i<7; i++) @-- o campos de faixa horaria da telamatica pode conter no máximo 07 faixas --@
+            Inicio
+              aFaixa = aFaixas;
+              nFaixa = (i * 8) + 1; @-- Cada faixa é compostar por 08 caracteres --@
+              CopiarAlfa(aFaixa, nFaixa, 8);
+
+              @-- Geracao do Log --@
+              IntParaAlfa(nFaixa, aTxtLog);
+              aTxtLog = "nFaixa: " + aTxtLog;
+              fGerarLog(1, 10);
+              aTxtLog = "aFaixa: " + aFaixa;
+              fGerarLog(1, 10);
+
+              Se (aFaixa = "24002400")
+              Inicio
+                @-- Geracao do Log --@
+                aTxtLog = "Acabaram as faixas válidas";
+                fGerarLog(1, 11);
+
+                Pare;
+              Fim;
+
+              Para (h=0; h<=1; h++)
+              Inicio
+                nPosIni = (h * 4) + 1;
+
+                nHor = 0;
+                nMin = 0;
+                aHora = aFaixa;
+                aMinuto = aFaixa;
+
+                CopiarAlfa(aHora, nPosIni, 2);
+                CopiarAlfa(aMinuto, nPosIni + 2, 2);
+
+                @-- Geracao do Log --@
+                IntParaAlfa(nPosIni, aTxtLog);
+                aTxtLog = "nPosIni: " + aTxtLog;
+                fGerarLog(1, 10);
+                aTxtLog = "aHora: " + aHora;
+                fGerarLog(1, 10);
+                aTxtLog = "aMinuto: " + aMinuto;
+                fGerarLog(1, 10);
+
+                AlfaParaInt(aHora, nHora);
+                AlfaParaInt(aMinuto, nMinuto);
+
+                nHorMin = (nHora * 60) + nMinuto;
+                Se (h = 0)
+                Inicio
+                  nHorIni = nHorMin;
+                Fim;
+                Senao
+                Inicio
+                  nHorFim = nHorMin;
+                Fim;
+              Fim;
+
+              @-- Geracao do Log --@
+              IntParaAlfa(nHorIni, aTxtLog);
+              aTxtLog = "nHorIni: " + aTxtLog;
+              fGerarLog(1, 10);
+              IntParaAlfa(nHorFim, aTxtLog);
+              aTxtLog = "nHorFim: " + aTxtLog;
+              fGerarLog(1, 10);
+
+              Se ((nHorAcc >= nHorIni)
+              e   (nHorAcc <= nHorFim))
+              Inicio
+                nMarcacaoValida = cVerdadeiro;
+
+                @-- Geracao do Log --@
+                aTxtLog = "Faixa horaria Válida (FxHoraria)";
+                fGerarLog(1, 11);
+              Fim;
+            Fim;
+
+            Se (nMarcacaoValida = cVerdadeiro)
+            Inicio
+              @-- Geracao do Log --@
+              aTxtLog = "Verificar existencia de Solicitacao de Hora Extra Aprovada";
+              fGerarLog(1, 7);
+
+              SQL_Criar(cPesquisa);
+              SQL_UsarSQLSenior2(cPesquisa, 0);
+              SQL_UsarAbrangencia(cPesquisa, 0);
+              SQL_DefinirComando(cPesquisa, "Select a.USU_NumSHE, c.USU_HorIni, c.USU_HorFim \
+                                             From USU_TAEMCSH b, USU_TAEMDSH c, USU_TAEMSHE a \
+                                             Where a.USU_NumSHE = b.USU_NumSHE \
+                                             And   a.USU_NumSHE = c.USU_NumSHE \
+                                             And   a.USU_TipHEx = 1 \
+                                             And   a.USU_SitSHE in (53,56) \
+                                             And   c.USU_DatSol = :dDatAcc \
+                                             And   b.USU_SitCSH = 4 \
+                                             And   c.USU_SitDSH = 0 \
+                                             And   b.USU_NumEmp = :nNumEmp \
+                                             And   b.USU_TipCol = :nTipCol \
+                                             And   b.USU_NumCad = :nNumCad \
+                                            ");
+
+              SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+              SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+              SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+              SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+
+              SQL_AbrirCursor(cPesquisa);
+              Enquanto (SQL_EOF(cPesquisa) = cFalso)
+              Inicio
+                SQL_RetornarInteiro(cPesquisa, "USU_NumSHE", nSHENumSol);
+                SQL_RetornarInteiro(cPesquisa, "USU_HorIni", nSHEHorIni);
+                SQL_RetornarInteiro(cPesquisa, "USU_HorFim", nSHEHorFim);
+
+                @-- Geracao do Log --@
+                IntParaAlfa(nSHENumSol, aTxtLog);
+                aTxtLog = "nSHENumSol: " + aTxtLog;
+                fGerarLog(1, 8);
+                ConverteMascara(4, nSHEHorIni, aTxtLog, "HH:MM");
+                aTxtLog = "nSHEHorIni: " + aTxtLog;
+                fGerarLog(1, 8);
+                ConverteMascara(4, nSHEHorFim, aTxtLog, "HH:MM");
+                aTxtLog = "nSHEHorFim: " + aTxtLog;
+                fGerarLog(1, 8);
+
+                Se (nSHEHorIni < nSHEHorFim)
+                Inicio
+                  Se ((nHorAcc <= nSHEHorFim)
+                  e   (nHorAcc >= nSHEHorIni))
+                  Inicio
+                    nMarcacaoValida = cFalso;
+                    nTipAcc = 46; @-- Acesso Negado pela Faixa Horária --@
+                    nSitPro = 9;  @-- Fora da Faixa Horária --@
+
+                    aResult = "ERROR";
+                    RegistrarMarcacion.ErroExecucao = "[E025] Não é permitido realizar HE Remota.";
+                    aErro = "AEM_025";
+
+                    @-- Geracao do Log --@
+                    aTxtLog = "[E025] Não é permitido realizar HE Remota";
+                    fGerarLog(1, 6);
+                  Fim;
+                Fim;
+                Senao
+                Se (nSHEHorIni > nSHEHorFim)
+                Inicio
+                  Se ((nHorAcc >= 0)
+                  e   (nHorAcc <= nSHEHorFim)
+                  ou  ((nHorAcc >= nSHEHorIni)
+                  e    (nHorAcc <= 1439)))
+                  Inicio
+                    nMarcacaoValida = cFalso;
+                    nTipAcc = 46; @-- Acesso Negado pela Faixa Horária --@
+                    nSitPro = 9;  @-- Fora da Faixa Horária --@
+
+                    aResult = "ERROR";
+                    RegistrarMarcacion.ErroExecucao = "[E025b] Não é permitido realizar HE Remota.";
+                    aErro = "AEM_025";
+
+                    @-- Geracao do Log --@
+                    aTxtLog = "[E025b] Não é permitido realizar HE Remota";
+                    fGerarLog(1, 6);
+                  Fim;
+                Fim;
+
+                SQL_Proximo(cPesquisa);
+              Fim;
+              SQL_FecharCursor(cPesquisa);
+              SQL_Destruir(cPesquisa);
+            Fim;
+          Fim;
+
+          Se ((aAppOnl <> "S")
+          e   (nSitPro = 1)) @-- Processar --@
+          Inicio
+
+            @-- Geracao do Log --@
+            aTxtLog = "Validar a Faixa Horária definido pelo Horário";
+            fGerarLog(1, 7);
+
+            RetornaHorario(nNumEmp, nTipCol, nNumCad, dDatAcc, "S", nCodHor);
+
+            @-- Geracao do Log --@
+            IntParaAlfa(nCodHor, aTxtLog);
+            aTxtLog = "nCodHor: " + aTxtLog;
+            fGerarLog(1, 8);
+
+            Se (nCodHor = 9997)
+            Inicio
+              @-- Geracao do Log --@
+              aTxtLog = "É Feriado";
+              fGerarLog(1, 7);
+              aTxtLog = "Identificar a escala";
+              fGerarLog(1, 8);
+
+              RetornaEscala(nNumEmp, nTipCol, nNumCad, dDatAcc, nCodEsc, nCodTma, nCodInt, nCodEqp, nCodCat, aMsgErro);
+
+              @-- Geracao do Log --@
+              IntParaAlfa(nCodEsc, aTxtLog);
+              aTxtLog = "nCodEsc: " + aTxtLog;
+              fGerarLog(1, 9);
+              aTxtLog = "Verificar se é uma escala de turno";
+              fGerarLog(1, 9);
+
+              SQL_Criar(cPesquisa);
+              SQL_UsarSQLSenior2(cPesquisa, 0);
+              SQL_UsarAbrangencia(cPesquisa, 0);
+              SQL_DefinirComando(cPesquisa, "Select CodEsc \
+                                             From R006ESC \
+                                             Where CodEsc = :nCodEsc \
+                                             And   ClaEsc <> 51 \
+                                            ");
+
+              SQL_DefinirInteiro(cPesquisa, "nCodEsc", nCodEsc);
+
+              SQL_AbrirCursor(cPesquisa);
+              nAchou = cFalso;
+              Se (SQL_EOF(cPesquisa) = cFalso)
+              Inicio
+                nAchou = cVerdadeiro;
+              Fim;
+              SQL_FecharCursor(cPesquisa);
+              SQL_Destruir(cPesquisa);
+
+              @-- Geracao do Log --@
+              IntParaAlfa(nAchou, aTxtLog);
+              aTxtLog = "É escala de Turno (0:Não | 1:Sim): " + aTxtLog;
+              fGerarLog(1, 10);
+
+              Se (nAchou = cVerdadeiro)
+              Inicio
+                @-- Geracao do Log --@
+                aTxtLog = "Buscar horário desconsiderando o Feriado";
+                fGerarLog(1, 10);
+
+                RetornaHorario(nNumEmp, nTipCol, nNumCad, dDatAcc, "N", nCodHor);
+
+                @-- Geracao do Log --@
+                IntParaAlfa(nCodHor, aTxtLog);
+                aTxtLog = "nCodHor: " + aTxtLog;
+                fGerarLog(1, 11);
+              Fim;
+            Fim;
+
+            nPriMar = -1;
+            nSegMar = -1;
+            nTerMar = -1;
+            nQuaMar = -1;
+
+            @-- Geracao do Log --@
+            aTxtLog = "Buscar Faixas horárias permitidas";
+            fGerarLog(1, 8);
+
+            SQL_Criar(cPesquisa);
+            SQL_UsarSQLSenior2(cPesquisa, 0);
+            SQL_UsarAbrangencia(cPesquisa, 0);
+            SQL_DefinirComando(cPesquisa, "Select CodHor, SeqFai, IniPto, FimPto \
+                                           From R004FHR \
+                                           Where CodHor = :nCodHor \
+                                           Order By CodHor, SeqFai \
+                                          ");
+
+            SQL_DefinirInteiro(cPesquisa, "nCodHor", nCodHor);
+
+            SQL_AbrirCursor(cPesquisa);
+            Enquanto (SQL_EOF(cPesquisa) = cFalso)
+            Inicio
+              SQL_RetornarInteiro(cPesquisa, "SeqFai", nSeqFai);
+              SQL_RetornarInteiro(cPesquisa, "IniPto", nIniPto);
+              SQL_RetornarInteiro(cPesquisa, "FimPto", nFimPto);
+
+              Se (nSeqFai = 1)
+              Inicio
+                nPriMar = nIniPto;
+                nSegMar = nFimPto;
+              Fim;
+              Senao
+              Inicio
+                nTerMar = nIniPto;
+                nQuaMar = nFimPto;
+              Fim;
+
+              SQL_Proximo(cPesquisa);
+            Fim;
+            SQL_FecharCursor(cPesquisa);
+            SQL_Destruir(cPesquisa);
+
+            @-- Geracao do Log --@
+            IntParaAlfa(nHorAcc, aTxtLog);
+            aTxtLog = "nHorAcc: " + aTxtLog;
+            fGerarLog(1, 9);
+            IntParaAlfa(nPriMar, aTxtLog);
+            aTxtLog = "nPriMar: " + aTxtLog;
+            fGerarLog(1, 9);
+            IntParaAlfa(nSegMar, aTxtLog);
+            aTxtLog = "nSegMar: " + aTxtLog;
+            fGerarLog(1, 9);
+            IntParaAlfa(nTerMar, aTxtLog);
+            aTxtLog = "nTerMar: " + aTxtLog;
+            fGerarLog(1, 9);
+            IntParaAlfa(nQuaMar, aTxtLog);
+            aTxtLog = "nQuaMar: " + aTxtLog;
+            fGerarLog(1, 9);
+
+            @-- Geracao do Log --@
+            aTxtLog = "Verificar se tem Programação de Compensação que extenda o horário";
+            fGerarLog(1, 8);
+
+            SQL_Criar(cPesquisa);
+            SQL_UsarSQLSenior2(cPesquisa, 0);
+            SQL_UsarAbrangencia(cPesquisa, 0);
+            SQL_DefinirComando(cPesquisa, "Select PerCmp, QtdHor \
+                                           From R064CMP \
+                                           Where NumEmp = :nNumEmp \
+                                           And   TipCol = :nTipCol \
+                                           And   NumCad = :nNumCad \
+                                           And   TipCmp = 1 \
+                                           And   PerCmp in (6,7) \
+                                           And   :dDatAcc Between DatIni And DatFim \
+                                          ");
+
+            SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+            SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+            SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+            SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+
+            SQL_AbrirCursor(cPesquisa);
+            Enquanto (SQL_EOF(cPesquisa) = cFalso)
+            Inicio
+              SQL_RetornarInteiro(cPesquisa, "PerCmp", nPerCmp);
+              SQL_RetornarInteiro(cPesquisa, "QtdHor", nQtdHor);
+
+              @-- Geracao do Log --@
+              IntParaAlfa(nPerCmp, aTxtLog);
+              aTxtLog = "nPerCmp: " + aTxtLog;
+              fGerarLog(1, 9);
+              IntParaAlfa(nQtdHor, aTxtLog);
+              aTxtLog = "nQtdHor: " + aTxtLog;
+              fGerarLog(1, 9);
+
+              Se (nPerCmp = 6) @-- Antecipar o Início do expediente --@
+              Inicio
+                @-- Geracao do Log --@
+                aTxtLog = "Antecipar Início";
+                fGerarLog(1, 10);
+
+                nPriMar = nPriMar - nQtdHor;
+              Fim;
+              Senao
+              Se (nPerCmp = 7) @-- Prorrogar o Término do expediente --@
+              Inicio
+                @-- Geracao do Log --@
+                aTxtLog = "Prorrogar Término";
+                fGerarLog(1, 10);
+
+                Se ((nTerMar = -1)
+                e   (nQuaMar = -1))
+                Inicio
+                  @-- Geracao do Log --@
+                  aTxtLog = "Primeira Jornada";
+                  fGerarLog(1, 11);
+
+                  nSegMar = nSegMar + nQtdHor;
+                Fim;
+                Senao
+                Inicio
+                  @-- Geracao do Log --@
+                  aTxtLog = "Segunda Jornada";
+                  fGerarLog(1, 11);
+
+                  nQuaMar = nQuaMar + nQtdHor;
+                Fim;
+              Fim;
+
+              SQL_Proximo(cPesquisa);
+            Fim;
+            SQL_FecharCursor(cPesquisa);
+            SQL_Destruir(cPesquisa);
+
+            @-- Geracao do Log --@
+            IntParaAlfa(nPriMar, aTxtLog);
+            aTxtLog = "nPriMar(ajustada): " + aTxtLog;
+            fGerarLog(1, 9);
+            IntParaAlfa(nSegMar, aTxtLog);
+            aTxtLog = "nSegMar(ajustada): " + aTxtLog;
+            fGerarLog(1, 9);
+            IntParaAlfa(nQuaMar, aTxtLog);
+            aTxtLog = "nQuaMar(ajustada): " + aTxtLog;
+            fGerarLog(1, 9);
+
+            @-- Geracao do Log --@
+            aTxtLog = "Validar Faixa horária da marcação";
+            fGerarLog(1, 8);
+
+            nMarcacaoValida = cFalso;
+            Se (((nHorAcc >= nPriMar)
+            e    (nHorAcc <= nSegMar))
+            ou  ((nHorAcc >= nTerMar)
+            e    (nHorAcc <= nQuaMar)))
+            Inicio
+              nMarcacaoValida = cVerdadeiro;
+
+              @-- Geracao do Log --@
+              aTxtLog = "Faixa horaria Regra: 01";
+              fGerarLog(1, 9);
+            Fim;
+            Senao
+            Inicio
+              Se (nPriMar > nSegMar)
+              Inicio
+                Se (((nHorAcc >= nPriMar)
+                e    (nHorAcc <= 1440))
+                ou  ((nHorAcc >= 0)
+                e    (nHorAcc <= nSegMar)))
+                Inicio
+                  nMarcacaoValida = cVerdadeiro;
+
+                  @-- Geracao do Log --@
+                  aTxtLog = "Faixa horaria Regra: 02";
+                  fGerarLog(1, 9);
+                Fim;
+              Fim;
+            Fim;
+
+            Se (nMarcacaoValida = cVerdadeiro)
+            Inicio
+              @-- Geracao do Log --@
+              aTxtLog = "Dentro da faixa horária permitida";
+              fGerarLog(1, 7);
+            Fim;
+          Fim;
+
+          Se ((nMarcacaoValida = cFalso)
+          e   (nSitPro = 1)) @-- Processar --@
+          Inicio
+            nTipAcc = 46; @-- Acesso Negado pela Faixa Horária --@
+            nSitPro = 3;  @-- Fora da Faixa Horária --@
+
+            aResult = "ERROR";
+            RegistrarMarcacion.ErroExecucao = "[E046] Acesso Negado pela Faixa Horária.";
+            aErro = "AEM_046";
+
+            @-- Geracao do Log --@
+            aTxtLog = "[E046] Marcação fora da faixa horaria";
+            fGerarLog(1, 6);
+          Fim;
+        Fim;
+
+        Se (nMarcacaoValida = cVerdadeiro)
+        Inicio
+          @-- Geracao do Log --@
+          aTxtLog = "aPMaFLS:" + aPMaFLS;
+          fGerarLog(1, 4);
+
+          Se (aPMaFLS <> "S")
+          Inicio
+            @-- Inicializar as variaveis --@
+            aLatDoM = "";
+            aLonDoM = "";
+            nRMxDoM = 0;
+            nAchou = cFalso;
+            nValidarDomicilio = cVerdadeiro;
+
+            @-- Geracao do Log --@
+            aTxtLog = "Verificar se deve ser validado o Domicilio";
+            fGerarLog(1, 4);
+
+            SQL_Criar(cPesquisa);
+            SQL_UsarSQLSenior2(cPesquisa, 0);
+            SQL_UsarAbrangencia(cPesquisa, 0);
+            SQL_DefinirComando(cPesquisa, "Select a.USU_RMxDoM \
+                                           From USU_TAEMDEF a \
+                                           Where a.USU_CmpDef = (Select Max(x.USU_CmpDef) \
+                                                                 From USU_TAEMDEF x \
+                                                                 Where x.USU_CmpDef <= trunc(Sysdate)) \
+                                           And   a.USU_RMxDoM = 0 \
+                                          ");
+
+            SQL_AbrirCursor(cPesquisa);
+            Se (SQL_EOF(cPesquisa) = cFalso)
+            Inicio
+              nValidarDomicilio = cFalso;
+            Fim;
+            SQL_FecharCursor(cPesquisa);
+            SQL_Destruir(cPesquisa);
+
+            @-- Geracao do Log --@
+            IntParaAlfa(nValidarDomicilio, aTxtLog);
+            aTxtLog = "nValidarDomicilio (0:Nao | 1:Sim):" + aTxtLog;
+            fGerarLog(1, 4);
+
+            Se (nValidarDomicilio = cVerdadeiro)
+            Inicio
+              @-- Label necessário para tratar quando é a primera vez realizada uma marcação remota e não existe um domicilio registrado e deverá ser criado --@
+              ValidarDomicilio:;
+
+              @-- Geracao do Log --@
+              aTxtLog = "Buscar Localização do Domicilio empregado";
+              fGerarLog(1, 4);
+
+              SQL_Criar(cPesquisa);
+              SQL_UsarSQLSenior2(cPesquisa, 0);
+              SQL_UsarAbrangencia(cPesquisa, 0);
+              SQL_DefinirComando(cPesquisa, "Select a.USU_LatDoM, a.USU_LonDoM, a.USU_RMxDoM \
+                                             From USU_TAEMHDM a \
+                                             Where a.USU_NumEmp = :nNumEmp \
+                                             And   a.USU_TipCol = :nTipCol \
+                                             And   a.USU_NumCad = :nNumCad \
+                                             And   a.USU_DatAlt = (Select max(x.USU_DatAlt) \
+                                                                   From USU_TAEMHDM x \
+                                                                   Where x.USU_NumEmp = a.USU_NumEmp \
+                                                                   And   x.USU_TipCol = a.USU_TipCol \
+                                                                   And   x.USU_NumCad = a.USU_NumCad \
+                                                                   And   x.USU_DatAlt <= :dDatAcc) \
+                                            ");
+
+              SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+              SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+              SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+              SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+
+              SQL_AbrirCursor(cPesquisa);
+              Se (SQL_EOF(cPesquisa) = cFalso)
+              Inicio
+                SQL_RetornarAlfa(cPesquisa, "USU_LatDoM", aLatDoM);
+                SQL_RetornarAlfa(cPesquisa, "USU_LonDoM", aLonDoM);
+                SQL_RetornarInteiro(cPesquisa, "USU_RMxDoM", nRMxDoM);
+
+                TiraEspacos(aLatDoM, aLatDoM);
+                TiraEspacos(aLonDoM, aLonDoM);
+              Fim;
+              SQL_FecharCursor(cPesquisa);
+              SQL_Destruir(cPesquisa);
+
+              Se ((aLatDoM = "")
+              ou  (aLonDoM = ""))
+              Inicio
+                @-- Geracao do Log --@
+                aTxtLog = "Verificar se é a primeira marcação remota";
+                fGerarLog(1, 6);
+
+                SQL_Criar(cPesquisa);
+                SQL_UsarSQLSenior2(cPesquisa, 0);
+                SQL_UsarAbrangencia(cPesquisa, 0);
+                SQL_DefinirComando(cPesquisa, "Select a.USU_NumIde \
+                                               From USU_TAEMCPT a \
+                                               Where a.USU_NumEmp = :nNumEmp \
+                                               and   a.USU_TipCol = :nTipCol \
+                                               And   a.USU_NumCad = :nNumCad \
+                                               And   a.USU_NumIde = (Select Min(x.USU_NumIde) \
+                                                                     From USU_TAEMCPT x \
+                                                                     Where x.USU_NumEmp = a.USU_NumEmp \
+                                                                     and   x.USU_TipCol = a.USU_TipCol \
+                                                                     And   x.USU_NumCad = a.USU_NumCad \
+                                                                     And   x.USU_SitPro <> 1) \
+                                               ");
+
+                SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+                SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+                SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+
+                SQL_AbrirCursor(cPesquisa);
+                nAchou = cFalso;
+                Se (SQL_EOF(cPesquisa) = cFalso)
+                Inicio
+                  nAchou = cVerdadeiro;
+                Fim;
+                SQL_FecharCursor(cPesquisa);
+                SQL_Destruir(cPesquisa);
+
+                Se (nAchou = cFalso)
+                Inicio
+                  @-- Geracao do Log --@
+                  aTxtLog = "É a primeira marcação remota, criar o domicilio";
+                  fGerarLog(1, 7);
+
+                  ExecSQLEx("Insert into USU_TAEMHDM \
+                               (USU_NUMEMP, USU_TIPCOL, USU_NUMCAD, USU_DATALT, \
+                                USU_LATDOM, USU_DTHINC, USU_LONDOM, USU_USUINC, \
+                                USU_DTHMOD, USU_USUMOD, USU_RMXDOM)\
+                              values   \
+                               (:nNumEmp, :nTipCol, :nNumCad, :dDatHoj, \
+                                :aAppLat, sysdate, :aAppLon, :nCodUsu, \
+                                :dDatZer, 0, 0)\
+                            ", nRetErro, aMsgErro);
+
+                  Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+                  Inicio
+                    @-- Geracao do Log --@
+                    aTxtLog = "[E018] Erro ao Incluir Domicilio na USU_TAEMHDM. << " + aMsgErro + " >>";
+                    fGerarLog(1, 3);
+
+                    aResult = "ERROR";
+                    RegistrarMarcacion.ErroExecucao = "[E018] Erro al Incluir Domicilio.";
+                    aErro = "AEM_015";
+
+                    VaPara Saida;
+                  Fim;
+
+                  @-- Geracao do Log --@
+                  aTxtLog = "VaPara Revalidar o domicilio";
+                  fGerarLog(1, 8);
+
+                  VaPara ValidarDomicilio;
+                Fim;
+
+                nTipAcc = 47; @-- Acesso Negado pelo Local de Marcação --@
+                nSitPro = 6;  @-- Não foi localizada a lat/long do Domicilio --@
+
+                aResult = "ERROR";
+                RegistrarMarcacion.ErroExecucao = "[E049] Não foi localizada a lat/long do Domicilio.";
+                aErro = "AEM_049";
+
+                @-- Geracao do Log --@
+                aTxtLog = "[E049] Não foi localizada a lat/long do Domicilio.";
+                fGerarLog(1, 6);
+              Fim;
+              Senao
+              Inicio
+                @-- Geracao do Log --@
+                aTxtLog = "aAppLat:" + aAppLat;
+                fGerarLog(1, 5);
+                aTxtLog = "aAppLon:" + aAppLon;
+                fGerarLog(1, 5);
+                aTxtLog = "aLatDoM:" + aLatDoM;
+                fGerarLog(1, 5);
+                aTxtLog = "aLonDoM:" + aLonDoM;
+                fGerarLog(1, 5);
+
+                TrocaString(aAppLat, ".", ",", aNumeroConverter);
+                fAlfaParaNumero();
+                nAppLat = nNumeroConvertido;
+
+                TrocaString(aAppLon, ".", ",", aNumeroConverter);
+                fAlfaParaNumero();
+                nAppLon = nNumeroConvertido;
+
+                TrocaString(aLatDoM, ".", ",", aNumeroConverter);
+                fAlfaParaNumero();
+                nLatDoM = nNumeroConvertido;
+
+                TrocaString(aLonDoM, ".", ",", aNumeroConverter);
+                fAlfaParaNumero();
+                nLonDoM = nNumeroConvertido;
+
+                @-- Geracao do Log --@
+                NumeroParaAlfa(nAppLat, aTxtLog);
+                aTxtLog = "nAppLat:" + aTxtLog;
+                fGerarLog(1, 6);
+                NumeroParaAlfa(nAppLon, aTxtLog);
+                aTxtLog = "nAppLon:" + aTxtLog;
+                fGerarLog(1, 6);
+                NumeroParaAlfa(nLatDoM, aTxtLog);
+                aTxtLog = "nLatDoM:" + aTxtLog;
+                fGerarLog(1, 6);
+                NumeroParaAlfa(nLonDoM, aTxtLog);
+                aTxtLog = "nLonDoM:" + aTxtLog;
+                fGerarLog(1, 6);
+
+                nDistancia = 0;
+
+                @-- Geracao do Log --@
+                aTxtLog = "Calcular a Distância da Marcação do Domicilio";
+                fGerarLog(1, 4);
+
+                SQL_Criar(cPesquisa);
+                SQL_UsarSQLSenior2(cPesquisa, 0);
+                SQL_UsarAbrangencia(cPesquisa, 0);
+                SQL_DefinirComando(cPesquisa, "Select a.USU_RMxDoM, \
+                                                      Trunc(DistanciaEntreCoordenadas(:nAppLat,:nAppLon,:nLatDoM,:nLonDoM),2) distancia \
+                                               From USU_TAEMDEF a \
+                                               Where a.USU_CmpDef = (Select Max(x.USU_CmpDef) \
+                                                                     From USU_TAEMDEF x \
+                                                                     Where x.USU_CmpDef <= trunc(Sysdate)) \
+                                              ");
+
+                SQL_DefinirFlutuante(cPesquisa, "nAppLat", nAppLat);
+                SQL_DefinirFlutuante(cPesquisa, "nAppLon", nAppLon);
+                SQL_DefinirFlutuante(cPesquisa, "nLatDoM", nLatDoM);
+                SQL_DefinirFlutuante(cPesquisa, "nLonDoM", nLonDoM);
+
+                SQL_AbrirCursor(cPesquisa);
+                Se (SQL_EOF(cPesquisa) = cFalso)
+                Inicio
+                  SQL_RetornarFlutuante(cPesquisa, "distancia", nDistancia);
+
+                  Se (nRMxDoM = 0)
+                  Inicio
+                    SQL_RetornarFlutuante(cPesquisa, "USU_RMxDoM", nRMxDoM);
+                  Fim;
+                Fim;
+                SQL_FecharCursor(cPesquisa);
+                SQL_Destruir(cPesquisa);
+
+                @-- Geracao do Log --@
+                NumeroParaAlfa(nRMxDoM, aTxtLog);
+                aTxtLog = "nRMxDoM (metros):" + aTxtLog;
+                fGerarLog(1, 5);
+                NumeroParaAlfa(nDistancia, aTxtLog);
+                aTxtLog = "nDistancia (metros):" + aTxtLog;
+                fGerarLog(1, 5);
+
+                Se (nDistancia > nRMxDoM)
+                Inicio
+                  nTipAcc = 47; @-- Acesso Negado pelo Local de Marcação --@
+                  nSitPro = 5;  @-- Fora do limite para marcação --@
+                  nMarcacaoValida = cFalso;
+
+                  aResult = "ERROR";
+                  RegistrarMarcacion.ErroExecucao = "[E048] Fora do limite (distância) para marcação.";
+                  aErro = "AEM_048";
+                  RegistrarMarcacion.distancia = nDistancia;
+
+                  @-- Geracao do Log --@
+                  aTxtLog = "[E048] Fora do limite para marcação.";
+                  fGerarLog(1, 6);
+                Fim;
+              Fim;
+            Fim;
+          Fim;
+        Fim;
+      Fim;
+    Fim;
+  Fim;
+Fim; @-- Se empresa >= 501 --@
+Senao
+Inicio
+  @-- Configurações para a Margem Esquerda --@
+  nCodDsp = 849;
+  nCodRlg = 168;
+  nCodPlt = 1;
+
+  Se (nSitPro = 1) @-- Processar --@
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Verificar se DatAcc é muito Retroativa";
+    fGerarLog(1, 4);
+
+    RetDifDat(1, dDatAcc, dDatHoj, nDiasRetro);
+    @-- Geracao do Log --@
+    IntParaAlfa(nDiasRetro, aTxtLog);
+    aTxtLog = "nDiasRetro: " + aTxtLog;
+    fGerarLog(1, 5);
+
+    Se (nDiasRetro > 30)
+    Inicio
+      nTipAcc = 0;  @-- Não Regitrar na R070ACC --@
+      nSitPro = 7;  @-- Data inválida (Cálculo já Finalizado) --@
+
+      aResult = "ERROR";
+      RegistrarMarcacion.ErroExecucao = "[E016] Data inválida (Muito retroativa).";
+      aErro = "AEM_016";
+
+      @-- Geracao do Log --@
+      aTxtLog = "Data inválida (Muito retroativa)";
+      fGerarLog(1, 6);
+    Fim;
+  Fim;
+Fim;
+
+Se (nSitPro = 1) @-- Processar --@
+Inicio
+  Se (nTipAcc = 1)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Validar a Situação do Empregado";
+    fGerarLog(1, 4);
+
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, "Select b.CodSit, b.DesSit \
+                                   From R038AFA a, R010SIT b \
+                                   Where a.SitAfa = b.CodSit \
+                                   And   b.BloAce = 'S' \
+                                   And   a.NumEmp = :nNumEmp \
+                                   And   a.TipCol = :nTipCol \
+                                   And   a.NumCad = :nNumCad \
+                                   And   (a.DatAfa < :dDatAcc \
+                                   or     (a.DatAfa = :dDatAcc and a.HorAfa <= :nHorAcc)) \
+                                   And   (a.DatTer > :dDatAcc \
+                                   or     a.DatTer = :dDatZer \
+                                   or     (a.DatTer = :dDatAcc and (a.HorTer = 0 or a.HorTer >= :nHorAcc))) \
+                                  ");
+
+    SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+    SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+    SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+    SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+    SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+    SQL_DefinirInteiro(cPesquisa, "nHorAcc", nHorAcc);
+
+    SQL_AbrirCursor(cPesquisa);
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cPesquisa, "CodSit", nCodSit);
+      SQL_RetornarAlfa(cPesquisa, "DesSit", aAux);
+
+      nTipAcc = 24; @-- Acesso Negado pela Situacao --@
+      nSitPro = 4;  @-- Situação de afastamento bloqueia Acesso --@
+
+      aResult = "ERROR";
+      aErro = "AEM_024";
+      RegistrarMarcacion.ErroExecucao = "[E024] Acesso Negado pela Situacao (" + aAux + ").";
+
+      @-- Geracao do Log --@
+      IntParaAlfa(nCodSit, aTxtLog);
+      aTxtLog = "nCodSit:" + aTxtLog + " - " + aAux;
+      fGerarLog(1, 6);
+      aTxtLog = "[E024] Acesso Negado pela Situacao";
+      fGerarLog(1, 6);
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+  Fim;
+Fim;
+
+nSeqAcc = 0;
+Se (nTipAcc <> 0)
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "Buscar o Sequencial da Marcacao na R070ACC";
+  fGerarLog(1, 4);
+
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select Nvl(Max(SeqAcc),0) SeqAcc \
+                                 From R070ACC \
+                                 Where NumCra = :nNumCra \
+                                 And   DatAcc = :dDatAcc \
+                                 And   HorAcc = :nHorAcc \
+                                ");
+
+  SQL_DefinirFlutuante(cPesquisa, "nNumCra", nNumCra);
+  SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+  SQL_DefinirInteiro(cPesquisa, "nHorAcc", nHorAcc);
+
+  SQL_AbrirCursor(cPesquisa);
+  Se (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "SeqAcc", nSeqAcc);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nSeqAcc, aTxtLog);
+  aTxtLog = "nSeqAcc(1): " + aTxtLog;
+  fGerarLog(1, 4);
+
+  nSeqAcc = nSeqAcc + 1; @-- Proxima sequencia --@
+Fim;
+
+@-- Geracao do Log --@
+IntParaAlfa(nTipAcc, aTxtLog);
+aTxtLog = "nTipAcc: " + aTxtLog;
+fGerarLog(1, 4);
+IntParaAlfa(nCodDsp, aTxtLog);
+aTxtLog = "nCodDsp: " + aTxtLog;
+fGerarLog(1, 4);
+IntParaAlfa(nCodRlg, aTxtLog);
+aTxtLog = "nCodRlg: " + aTxtLog;
+fGerarLog(1, 4);
+IntParaAlfa(nCodPlt, aTxtLog);
+aTxtLog = "nCodPlt: " + aTxtLog;
+fGerarLog(1, 4);
+IntParaAlfa(nSeqAcc, aTxtLog);
+aTxtLog = "nSeqAcc: " + aTxtLog;
+fGerarLog(1, 4);
+
+IniciarTransacao();
+  Se (nTipAcc <> 0)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Incluir Marcação na R070ACC";
+    fGerarLog(1, 4);
+
+    ExecSQLEx("Insert into R070ACC \
+                  (NumCra, DatAcc, HorAcc, SeqAcc, \
+                   TipAcc, CodPlt, CodRlg, CodFnc, \
+                   DirAcc, QtdAcc, OriAcc, UsoMar, \
+                   NumEmp, TipCol, NumCad, DatApu, \
+                   CodRef, UsoRef, ValRef, CodSor, \
+                   FlaAcc, ExcPon, CodDsp, NumNsr) \
+               Values \
+                  (:nNumCra, :dDatAcc, :nHorAcc, :nSeqAcc, \
+                   :nTipAcc, :nCodPlt, :nCodRlg, 0, \
+                   'E', 0, 'E', 2, \
+                   null, null, null, :dDatZer, \
+                   0, 0, 0, 0, \
+                   0, 'N', :nCodDsp, 0) \
+              ", nRetErro, aMsgErro);
+
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "[E011] Erro ao Incluir Marcacao na R070ACC. << " + aMsgErro + " >>";
+      fGerarLog(1, 3);
+
+      aResult = "ERROR";
+      RegistrarMarcacion.ErroExecucao = "[E011] Erro al Incluir Marcación.";
+      aErro = "AEM_011";
+
+      DesfazerTransacao();
+
+      VaPara Saida;
+    Fim;
+  Fim;
+
+  ConverteParaMinusculo(aAppLog, aAppLog);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Incluir Registro da Marcação fornecido pelo APP";
+  fGerarLog(1, 1);
+
+  aDatHor = aAppDat + " " + aAppHor;
+
+  ExecSQLEx("Insert into USU_TAEMCPT \
+               (USU_NumIde, USU_AppIde, USU_AppDHr, USU_AppLat, \
+                USU_AppLon, USU_AppLog, USU_DtHInc, USU_NumCra, \
+                USU_DatAcc, USU_HorAcc, USU_SeqAcc, USU_NumEmp, \
+                USU_TipCol, USU_NumCad, USU_AppSit, USU_SitPro, \
+                USU_DtHPro, USU_AppOnl ) \
+             Values \
+               (SeqIdAEMCPT.NextVal, :nAppIde, :aDatHor, :aAppLat, \
+                :aAppLon, :aAppLog, SysDate, :nNumCra, \
+                :dDatAcc, :nHorAcc, :nSeqAcc, :nNumEmp, \
+                :nTipCol, :nNumCad, 'true', :nSitPro, \
+                SysDate,  :aAppOnl) \
+            ", nRetErro, aMsgErro);
+
+  Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "[E012] Erro ao Incluir Registro da Marcação. << " + aMsgErro + " >>";
+    fGerarLog(1, 2);
+
+    aResult = "ERROR";
+    RegistrarMarcacion.ErroExecucao = "[E012] Erro al Registro Marcación.";
+    aErro = "AEM_012";
+
+    DesfazerTransacao();
+
+    VaPara Saida;
+  Fim;
+FinalizarTransacao();
+
+
+Saida:;
+  TiraEspacos(aResult, aResult);
+  Se (aResult = "")
+  Inicio
+    aResult = "OK";
+  Fim;
+
+  RegistrarMarcacion.Result = aResult;
+  RegistrarMarcacion.Erro = aErro;
+
+  @-- Geracao do Log --@
+  aTxtLog = "RegistrarMarcacion.Erro: " + RegistrarMarcacion.Erro;
+  fGerarLog(1, 1);
+  aTxtLog = "aErro: " + aErro;
+  fGerarLog(1, 2);
+  aTxtLog = "RegistrarMarcacion.Result: " + RegistrarMarcacion.Result;
+  fGerarLog(1, 1);
+  aTxtLog = "aResult: " + aResult;
+  fGerarLog(1, 2);
+
+  Se (RegistrarMarcacion.ErroExecucao <> "")
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "ErroExecucao:" + RegistrarMarcacion.ErroExecucao;
+    fGerarLog(1, 3);
+    nStatus = 1; @-- ERRO na Execucao --@
+  Fim;
+
+  @-- Grava no Banco Log de Execucao 2 = FINALIZACAO --@
+  fGravarLogExecucao(2);
+
+  RegistrarMarcacion.ErroExecucao = ""; @-- Limpar para que o retorno nas variaveis "ERRO" e "RESULT" funcione corretamente --@
+
+  @-- Geracao do Log --@
+  aTxtLog = "Término WebService :: py.itaipu.empleado.RegistrarMarcacion";
+  fGerarLog(1, 0);
+
+  @-- Fechar arquivo do Log --@
+  fGerarLog(2, 0);
+
+
+@-- *************************************** --@
+@--   Início da implementação das funções   --@
+@-- *************************************** --@
+
+@-- Criar / Fechar / Gravar arquivo de Log --@
+Funcao fGerarLog(Numero pGLOpcao, Numero pGLNivel);
+Inicio
+  Se (aGerLog = "S")
+  Inicio
+    Definir Alfa cGLPesquisa;
+    Definir Alfa aGLAuxLog;
+    Definir Alfa aGLSigWSv;
+    Definir Alfa aGLDatLog; aGLDatLog = "";
+    Definir Alfa aPathLog;
+
+    Se (pGLNivel < 0)
+    Inicio
+      pGLNivel = 0;
+    Fim;
+
+    Se (pGLOpcao = 0) @-- Inicializar Log --@
+    Inicio
+      @-- Carregar definicoes --@
+      SQL_Criar(cGLPesquisa);
+      SQL_UsarSQLSenior2(cGLPesquisa, 0);
+      SQL_UsarAbrangencia(cGLPesquisa, 0);
+      SQL_DefinirComando(cGLPesquisa, "Select USU_PthLog \
+                                       From USU_TGSWDef \
+                                       Where USU_CmpDef = (Select Max(x.USU_CmpDef) \
+                                                           From USU_TGSWDef x \
+                                                           Where x.USU_CmpDef <= trunc(sysdate) \
+                                                          ) \
+                                      ");
+      SQL_AbrirCursor(cGLPesquisa);
+      Se (SQL_EOF(cGLPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cGLPesquisa, "USU_PthLog", aPathLog);
+
+        TiraEspacos(aPathLog, aPathLog);
+        TamanhoAlfa(aPathLog, nTam);
+        aGLAuxLog = aPathLog;
+        CopiarAlfa(aGLAuxLog, nTam, 1);
+        Se (aGLAuxLog <> "\\")
+        Inicio
+          aPathLog = aPathLog + "\\";
+        Fim;
+        aPathLog = aPathLog + "wsv\\";
+      Fim;
+      SQL_FecharCursor(cGLPesquisa);
+      SQL_Destruir(cGLPesquisa);
+
+      @-- Carregar Sigla do WebService --@
+      aGLSigWSv = "";
+      SQL_Criar(cGLPesquisa);
+      SQL_UsarSQLSenior2(cGLPesquisa, 0);
+      SQL_UsarAbrangencia(cGLPesquisa, 0);
+      SQL_DefinirComando(cGLPesquisa, "Select USU_SigWSv \
+                                       From USU_TGSWWSv \
+                                       Where USU_IdeWsv = :nIdeWsv \
+                                      ");
+      SQL_DefinirInteiro(cGLPesquisa, "nIdeWsv", nIdeWsv);
+      SQL_AbrirCursor(cGLPesquisa);
+      Se (SQL_EOF(cGLPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cGLPesquisa, "USU_SigWSv", aGLSigWSv);
+        ConverteParaMinusculo(aGLSigWSv, aGLSigWSv);
+      Fim;
+      SQL_FecharCursor(cGLPesquisa);
+      SQL_Destruir(cGLPesquisa);
+    Fim;
+
+    Se ((pGLOpcao = 0)  @-- Inicializar Log --@
+    ou  (pGLOpcao = 2)) @-- Fechar Log --@
+    Inicio
+      SQL_Criar(cGLPesquisa);
+      SQL_UsarSQLSenior2(cGLPesquisa, 0);
+      SQL_UsarAbrangencia(cGLPesquisa, 0);
+      SQL_DefinirComando(cGLPesquisa, "Select to_Char(systimestamp,'yyyy-mm-dd-HH24-MI-SS-FF6') Data from dual");
+      SQL_AbrirCursor(cGLPesquisa);
+      Se (SQL_EOF(cGLPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cGLPesquisa, "Data", aGLDatLog);
+      Fim;
+      SQL_FecharCursor(cGLPesquisa);
+      SQL_Destruir(cGLPesquisa);
+    Fim;
+
+    Se (pGLOpcao = 0) @-- Inicializar Log --@
+    Inicio
+      aGLAuxLog = aPathLog + "wsv-" + aGLSigWSv + "-" + aGLDatLog + ".log";
+      ConverteParaMinusculo(aGLAuxLog, aGLAuxLog);
+      nArqLog = Abrir(aGLAuxLog, GravarNL);
+      aTxtLog = "Inicio da Geracao do Log";
+      pGLNivel = -1;
+      pGLOpcao = 1;
+      aGLDatLog = " >> " + aGLDatLog;
+    Fim;
+
+    Se (pGLOpcao = 2) @-- Fechar Log --@
+    Inicio
+      aGLAuxLog = "Fim da Geracao do Log >> " + aGLDatLog;
+      GravarNL(nArqLog, aGLAuxLog);
+      Fechar(nArqLog);
+    Fim; @-- Opcao = Adicionar Log --@
+    Senao
+    Se (pGLOpcao = 1) @-- Adicionar Log --@
+    Inicio
+      TrocaString(aTxtLog, CRLF, "##[CRLF]##", aTxtLog);
+      TrocaString(aTxtLog, CR, "##[CR]##", aTxtLog);
+      TrocaString(aTxtLog, LF, "##[LF]##", aTxtLog);
+
+      @-- Identar conforme o nível indicado --@
+      Para (nNiv=0; nNiv <= pGLNivel; nNiv++)
+      Inicio
+        aTxtLog = "  " + aTxtLog;
+      Fim;
+      aGLAuxLog = aTxtLog + aGLDatLog;
+      GravarNL(nArqLog, aGLAuxLog);
+    Fim; @-- Opcao = Adicionar Log --@
+  Fim;
+Fim;
+
+@-- Funcao para Converter Alfa para Data --@
+Funcao fAlfaParaData();
+Inicio
+  Definir Alfa aCaracteresValidos; aCaracteresValidos = "/0123456789";
+  Definir Alfa aDia; aDia = "";
+  Definir Alfa aMes; aMes = "";
+  Definir Alfa aAno; aAno = "";
+  Definir Numero nDia;
+  Definir Numero nMes;
+  Definir Numero nAno;
+  Definir Alfa aCharAtu;
+  Definir Alfa aTxtConv;
+
+  aErroConversao = "";
+  dDataConvertida = 0;
+
+  TiraEspacos(aDataConverter, aTxtConv);
+  nTemErro = 0;
+  nEhDia = 1;
+  nEhMes = 0;
+  nEhAno = 0;
+
+  TamanhoAlfa(aTxtConv, nTamTxt);
+  Para (nCharAtu = 1; nCharAtu <= nTamTxt; nCharAtu++)
+  Inicio
+    aCharAtu = aTxtConv;
+    CopiarAlfa(aCharAtu, nCharAtu, 1);
+    PosicaoAlfa(aCharAtu, aCaracteresValidos, nPosChar);
+    Se (nPosChar = 0)
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "Foi Encontrado um Caracter inválido.(" + aDataConverter + ")[Ok]";
+      Pare;
+    Fim;
+    Senao
+    Se (aCharAtu = "/")
+    Inicio
+      Se ((nEhDia = 1)
+      e   (nEhMes = 0))
+      Inicio
+        nEhMes = 1;
+      Fim;
+      Senao
+      Se ((nEhMes = 1)
+      e   (nEhAno = 0))
+      Inicio
+        nEhAno = 1;
+        PosicaoAlfa("/", aCaracteresValidos, nPosChar);
+        DeletarAlfa(aCaracteresValidos, nPosChar, 1);
+      Fim;
+    Fim;
+    Senao
+    Inicio
+      Se ((nEhDia = 1)
+      e   (nEhMes = 0))
+      Inicio
+        aDia = aDia + aCharAtu;
+      Fim;
+      Senao
+      Se ((nEhMes = 1)
+      e   (nEhAno = 0))
+      Inicio
+        aMes = aMes + aCharAtu;
+      Fim;
+      Senao
+      Inicio
+        aAno = aAno + aCharAtu;
+      Fim;
+    Fim;
+  Fim;
+  Se (nTemErro = 0)
+  Inicio
+    Se (aDia = "")
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "O Dia da data não foi informado.(" + aDataConverter + ")[Ok]";
+    Fim;
+    Senao
+    Se (aMes = "")
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "O Mês da data não foi informado.(" + aDataConverter + ")[Ok]";
+    Fim;
+    Se (aAno = "")
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "O Ano da data não foi informado.(" + aDataConverter + ")[Ok]";
+    Fim;
+    Senao
+    Inicio
+      AlfaParaInt(aDia, nDia);
+      AlfaParaInt(aMes, nMes);
+      AlfaParaInt(aAno, nAno);
+      Se ((nMes = 0)
+      ou  (nMes > 12))
+      Inicio
+        nTemErro = 1;
+        aErroConversao = "O Mês é inválido .(" + aDataConverter + ")[Ok]";
+      Fim;
+      Senao
+      Se ((nDia = 0)
+      ou  (nDia > 31))
+      Inicio
+        nTemErro = 1;
+        aErroConversao = "O Dia é inválido .(" + aDataConverter + ")[Ok]";
+      Fim;
+      Senao
+      Inicio
+        Se (nAno <= 20)
+        Inicio
+          nAno = nAno + 2000;
+        Fim;
+        Senao
+        Se (nAno < 1000)
+        Inicio
+          nAno = nAno + 1900;
+        Fim;
+        Se ((nAno = 0)
+        ou  (nAno > 2080))
+        Inicio
+          nTemErro = 1;
+          aErroConversao = "O Ano é inválido .(" + aDataConverter + ")[Ok]";
+        Fim;
+        Senao
+        Inicio
+          MontaData(nDia, nMes, nAno, dDataConvertida);
+        Fim;
+      Fim;
+    Fim;
+  Fim;
+Fim;
+
+Funcao fAlfaParaNumero();
+Inicio
+  Definir Alfa aParInt; aParInt = "";
+  Definir Alfa aParDec; aParDec = "";
+  Definir Alfa aCharAtu;
+  Definir Alfa aTxtConv;
+  Definir Alfa aCaracteresValidos; aCaracteresValidos = ",.0123456789";
+
+  nNumeroConvertido = 0;
+  aErroConversao = "";
+
+  TiraEspacos(aNumeroConverter, aTxtConv);
+  nEhDecimal = 0;
+  nTemErro = 0;
+  nEhNegativo = 0;
+
+  aCharAtu = aTxtConv;
+  CopiarAlfa(aCharAtu, 1, 1);
+  Se (aCharAtu = "-")
+  Inicio
+    nEhNegativo = 1;
+    DeletarAlfa(aTxtConv, 1, 1);
+  Fim;
+
+  TamanhoAlfa(aTxtConv, nTamTxt);
+  PosicaoAlfa("%", aTxtConv, nPosChar);
+  Se ((nTamTxt > 1)
+  e   (nTamTxt = nPosChar))
+  Inicio
+    DeletarAlfa(aTxtConv, nPosChar, 1);
+    TamanhoAlfa(aTxtConv, nTamTxt);
+  Fim;
+
+  Para (nCharAtu = 1; nCharAtu <= nTamTxt; nCharAtu++)
+  Inicio
+    aCharAtu = aTxtConv;
+    CopiarAlfa(aCharAtu, nCharAtu, 1);
+    PosicaoAlfa(aCharAtu, aCaracteresValidos, nPosChar);
+    Se (nPosChar = 0)
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "Foi Encontrado um Caracter inválido.(" + aNumeroConverter + ")[Ok]";
+      Pare;
+    Fim;
+    Senao
+    Se (aCharAtu = ",")
+    Inicio
+      nEhDecimal = 1;
+      DeletarAlfa(aCaracteresValidos, nPosChar, 1);
+      PosicaoAlfa(".", aCaracteresValidos, nPosChar);
+      DeletarAlfa(aCaracteresValidos, nPosChar, 1);
+    Fim;
+    Senao
+    Se (aCharAtu <> ".")
+    Inicio
+      Se (nEhDecimal = 1)
+      Inicio
+        aParDec = aParDec + aCharAtu;
+      Fim;
+      Senao
+      Inicio
+        aParInt = aParInt + aCharAtu;
+      Fim;
+    Fim;
+
+  Fim;
+  Se (nTemErro = 1)
+  Inicio
+    nNumeroConvertido = 0;
+  Fim;
+  Senao
+  Inicio
+    AlfaParaInt(aParInt, nParInt);
+    nParDec = 0;
+    Se (nEhDecimal = 1)
+    Inicio
+      AlfaParaInt(aParDec, nParDec);
+      TamanhoAlfa(aParDec, nTamTxt);
+      Para (nCharAtu = 1; nCharAtu <= nTamTxt; nCharAtu++)
+      Inicio
+        nParDec = nParDec / 10;
+      Fim;
+    Fim;
+
+    nNumeroConvertido = nParInt + nParDec;
+    Se (nEhNegativo = 1)
+    Inicio
+      nNumeroConvertido = nNumeroConvertido * -1;
+    Fim;
+  Fim;
+Fim;
+
+Funcao fGravarLogExecucao(Numero pTipOpe);
+Inicio
+  Definir Alfa aTxtMsg;
+  Se (pTipOpe = 1) @-- Inicio --@
+  Inicio
+    @-- Executar a Sequence para pegar o novo número de Log --@
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, "Select SeqIdGSWLWS.NextVal Num \
+                                   From dual \
+                                  ");
+    SQL_AbrirCursor(cPesquisa);
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cPesquisa, "Num", nIdeCon);
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+
+    ExecSQLEx("Insert into USU_TGSWLWS \
+                  (USU_IdeCon, USU_IdeWSv, USU_DtHIni, \
+                   USU_DtHFim, USU_Login,  USU_CodUsu, \
+                   USU_NumEmp, USU_TipCol, USU_NumCad, \
+                   USU_Status, USU_TxtMsg, USU_IdeSUW) \
+                values \
+                  (:nIdeCon, :nIdeWsv,  SysDate, \
+                   :dDatZer, :aAppLog, :nCodUsu, \
+                   :nNumEmp, :nTipCol, :nNumCad, \
+                   0, 'Inicializando', :nIdeSUW) \
+              ", nRetErro, aMsgErro);
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Insert Log:" + aMsgErro;
+      fGerarLog(1, 1);
+    Fim;
+  Fim;
+  Senao @-- Termino --@
+  Inicio
+    aTxtMsg = "";
+    Se (nStatus = 1)
+    Inicio
+      aTxtMsg = RegistrarMarcacion.ErroExecucao;
+    Fim;
+
+    ExecSQLEx("Update USU_TGSWLWS \
+               set   USU_DtHFim =  SysDate, \
+                     USU_CodUsu = :nCodUsu, \
+                     USU_NumEmp = :nNumEmp, \
+                     USU_TipCol = :nTipCol, \
+                     USU_NumCad = :nNumCad, \
+                     USU_Status = :nStatus, \
+                     USU_TxtMsg = :aTxtMsg \
+               where USU_IdeCon = :nIdeCon \
+              ", nRetErro, aMsgErro);
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Update Log:" + aMsgErro;
+      fGerarLog(1, 1);
+    Fim;
+  Fim;
+Fim;
+
+Funcao fAlfaParaDataHora(Numero End pData, Numero End pHora);
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "fAlfaParaDataHora :: Inicio";
+  fGerarLog(1, 17);
+
+  Definir Alfa aAPDHDatOri;
+  Definir Alfa aAPDHHorOri;
+  Definir Alfa aAPDHHor;
+  Definir Alfa aAPDHMin;
+
+  @-- Geracao do Log --@
+  aTxtLog = "aDataHoraConverter: " + aDataHoraConverter;
+  fGerarLog(1, 18);
+
+  aAPDHDatOri = aDataHoraConverter;
+  CopiarAlfa(aAPDHDatOri, 1, 10);
+
+  aAPDHHorOri = aDataHoraConverter;
+  CopiarAlfa(aAPDHHorOri, 12, 5);
+
+  @-- Geracao do Log --@
+  aTxtLog = "aAPDHDatOri: " + aAPDHDatOri;
+  fGerarLog(1, 18);
+  aTxtLog = "aAPDHHorOri: " + aAPDHHorOri;
+  fGerarLog(1, 18);
+
+  aDataConverter = aAPDHDatOri;
+  fAlfaParaData();
+
+  aAPDHHor = aAPDHHorOri;
+  CopiarAlfa(aAPDHHor, 1, 2);
+  aAPDHMin = aAPDHHorOri;
+  CopiarAlfa(aAPDHMin, 4, 2);
+
+  @-- Geracao do Log --@
+  aTxtLog = "aAPDHHor: " + aAPDHHor;
+  fGerarLog(1, 18);
+  aTxtLog = "aAPDHMin: " + aAPDHMin;
+  fGerarLog(1, 18);
+
+  AlfaParaInt(aAPDHHor, nAPDHHor);
+  AlfaParaInt(aAPDHMin, nAPDHMin);
+
+  pData = dDataConvertida;
+  pHora = (nAPDHHor * 60) + nAPDHMin;
+
+  @-- Geracao do Log --@
+  ConverteMascara(3, pData, aTxtLog, "DD/MM/YYYY");
+  aTxtLog = "pData: " + aTxtLog;
+  fGerarLog(1, 18);
+  ConverteMascara(4, pHora, aTxtLog, "HH:MM");
+  aTxtLog = "pHora: " + aTxtLog;
+  fGerarLog(1, 18);
+
+  @-- Geracao do Log --@
+  aTxtLog = "fAlfaParaDataHora :: Fim";
+  fGerarLog(1, 17);
+Fim;

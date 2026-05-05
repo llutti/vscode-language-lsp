@@ -46,7 +46,16 @@ describe('integration: singlefile as context', () => {
 
   it('keeps fallback and single-file context aligned for a real _Webservices example', async () => {
     const repoRoot = path.resolve(__dirname, '..', '..', '..', '..', '..');
-    const filePath = path.join(repoRoot, 'exemplos', 'HR', '_Webservices', 'ws - py.itaipu.diversos.terceros.txt');
+    const filePath = path.join(
+      repoRoot,
+      'packages',
+      'compiler',
+      'test',
+      'fixtures',
+      'hr-examples',
+      'webservices',
+      'servico-terceiros.txt'
+    );
     const text = fs.readFileSync(filePath, 'utf8');
     const rootDir = path.dirname(filePath);
     const fileName = path.basename(filePath);

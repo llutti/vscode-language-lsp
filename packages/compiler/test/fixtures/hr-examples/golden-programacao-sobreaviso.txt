@@ -1,0 +1,378 @@
+/************************************************************************
+*                                                                       *
+*    PORTAL RH - ESA - Escala de Sobreaviso                             *
+*    Regra: 874 - Consulta Sobreavisos Programados                      *
+*    Objetivo: Consultar os Sobreavisos Progamados.                     *
+*                                                                       *
+************************************************************************/
+
+Definir Numero nIdeSis; nIdeSis = 4; @-- ESA --@
+
+Definir Alfa aPagHtml;
+Definir Alfa aOperacao;
+Definir Alfa aIdioma;
+
+Definir Alfa cPesquisa;
+Definir Alfa cAuxiliar;
+Definir Alfa aAux;
+Definir Alfa aSQL;
+
+Definir Data dDatIni;
+Definir Data dDatFim;
+
+Definir Alfa aAbrERs;
+Definir Alfa aAbrLoc;
+Definir Alfa aNomLoc;
+Definir Alfa aProgramacoes;
+
+Definir Data dIniSob;
+Definir Data dFimSob;
+Definir Alfa aIniSob;
+Definir Alfa aFimSob;
+Definir Alfa aHorIni;
+Definir Alfa aHorFim;
+Definir Alfa aIMaSol;
+Definir Alfa aIdeSol;
+Definir Alfa aNumSol;
+Definir Alfa aSitPrg;
+Definir Alfa aNumEmp;
+Definir Alfa aTipCol;
+Definir Alfa aNumCad;
+Definir Alfa aDesEsp;
+Definir Alfa aCelIta;
+Definir Alfa aTelCon;
+Definir Alfa aEndCon;
+Definir Alfa aEhCons;
+
+@-- Carregar as Definicoes Globais --@
+f850CarregarDefinicoes(nIdeSis);
+
+@-- Iniciar Geracao do Log --@
+f850GerarLog(0, 0);
+aTxtLog = "Executando a Regra HR874 - Consulta Sobreavisos Programados :: Inicio";
+f850GerarLog(1, 0);
+
+nCodUsu = CodUsu;
+RetColabPorCodUsu(nCodUsu, nEmpUsu, nTpCUsu, nCadUsu);
+
+WCheckValString("Idioma", "Idioma", aIdioma, "S", 0);
+TiraEspacos(aIdioma, aIdioma);
+ConverteParaMaiusculo(aIdioma, aIdioma);
+Se (aIdioma = "")
+Inicio
+  aIdioma = "ES";
+Fim;
+
+WCheckValInteger("eg", "Consulta Gerencial", nEhGer, "S", 0); @-- Determina se é consulta gerencial --@
+WCheckValString("OP", "Operação", aOperacao, "S", 0);
+TiraEspacos(aOperacao, aOperacao);
+ConverteParaMaiusculo(aOperacao, aOperacao);
+
+@-- Geracao do Log --@
+aTxtLog = "aOperacao:" + aOperacao;
+f850GerarLog(1, 1);
+IntParaAlfa(CodUsu, aTxtLog);
+aTxtLog = "Usuario:" + aTxtLog + " - " + NomUsu;
+f850GerarLog(1, 1);
+IntParaAlfa(nEmpUsu, aTxtLog);
+aTxtLog = "nEmpUsu:" + aTxtLog;
+f850GerarLog(1, 1);
+IntParaAlfa(nTpCUsu, aTxtLog);
+aTxtLog = "nTpCUsu:" + aTxtLog;
+f850GerarLog(1, 1);
+IntParaAlfa(nCadUsu, aTxtLog);
+aTxtLog = "nCadUsu:" + aTxtLog;
+f850GerarLog(1, 1);
+IntParaAlfa(nEhGer, aTxtLog);
+aTxtLog = "nEhGer:" + aTxtLog;
+f850GerarLog(1, 1);
+
+Se (aOperacao = "PESQUISAR")
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "PESQUISAR :: Início";
+  f850GerarLog(1, 2);
+
+  WCheckValData("DatIni", "Data Inicial", dDatIni, "S");
+  WCheckValData("DatFim", "Data Final", dDatFim, "S");
+  WCheckValString("AbrERs", "Abrangência de Empresa Responsável", aAbrERs, "S", 0);
+  WCheckValString("AbrLoc", "Abrangência de Local", aAbrLoc, "S", 0);
+
+  TiraEspacos(aAbrLoc, aAbrLoc);
+
+  @-- Geracao do Log --@
+  aTxtLog = "aAbrERs:" + aAbrERs;
+  f850GerarLog(1, 3);
+  aTxtLog = "aAbrLoc:" + aAbrLoc;
+  f850GerarLog(1, 3);
+  ConverteMascara(3, dDatIni, aTxtLog, "DD/MM/YYYY");
+  aTxtLog = "dDatIni:" + aTxtLog;
+  f850GerarLog(1, 3);
+  ConverteMascara(3, dDatFim, aTxtLog, "DD/MM/YYYY");
+  aTxtLog = "dDatFim:" + aTxtLog;
+  f850GerarLog(1, 3);
+
+  aSQL = " Select a.USU_SitSol, b.USU_SitCol, a.USU_DatIni, a.USU_DatFim, "
+       +        " a.USU_HorIni, a.USU_HorFim, Decode(:aIdioma, 'ES', c.USU_DesEsp, c.USU_DesPtb) DesEsp, "
+       +        " b.USU_NumEmp, b.USU_TipCol, b.USU_NumCad, Decode(b.USU_SolCon,0,'false','true') EhCons, "
+       +        " b.USU_CodEsp, b.USU_CelIta, a.USU_NumSol, a.USU_SemSob, "
+       +        " a.USU_AnoSob, a.USU_CodERs, a.USU_IMaSol, a.USU_ISeSol, a.USU_IAnSol, "
+       +        " f.NomLoc "
+       + " From R038HLO e, USU_TESASSC b, USU_TESASSA a, R016ORN f, USU_TESAESP c "
+       + " Where a.USU_NumSol = b.USU_NumSol "
+       + " And   c.USU_CodEsp = b.USU_CodEsp "
+       + " And   e.NumEmp = b.USU_NumEmp "
+       + " And   e.TipCol = b.USU_TipCol "
+       + " And   e.NumCad = b.USU_NumCad "
+       + " And   e.DatAlt = (Select Max(y.DatAlt) "
+       +                   " From R038HLO y "
+       +                   " Where y.NumEmp = b.USU_NumEmp "
+       +                   " And   y.TipCol = b.USU_TipCol "
+       +                   " And   y.NumCad = b.USU_NumCad "
+       +                   " And   y.DatAlt <= :dDatFim) "
+       + " And   e.TabOrg = f.TabOrg "
+       + " And   e.NumLoc = f.NumLoc "
+       + " And   a.USU_DatIni Between :dDatIni and :dDatFim "
+       + " And   a.USU_SitSol IN (51,52,53,56) "
+       + " And   b.USU_SitCol IN (1,4) ";
+
+  Se (aAbrERs <> "")
+  Inicio
+    aSQL = aSQL + " And a.USU_CodERs in (" + aAbrERs + ") ";
+  Fim;
+
+  Se (aAbrLoc <> "")
+  Inicio
+    aSQL = aSQL + " And e.NumLoc in (" + aAbrLoc + ") ";
+  Fim;
+
+  aSQL = aSQL + " Order By a.USU_AnoSob, a.USU_SemSob, a.USU_DatIni, f.NomLoc, b.USU_NumCad ";
+
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, aSQL);
+
+  SQL_DefinirData(cPesquisa, "dDatIni", dDatIni);
+  SQL_DefinirData(cPesquisa, "dDatFim", dDatFim);
+  SQL_DefinirAlfa(cPesquisa, "aIdioma", aIdioma);
+
+  SQL_AbrirCursor(cPesquisa);
+  Enquanto (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "USU_NumSol", nNumSol);
+    SQL_RetornarInteiro(cPesquisa, "USU_SitSol", nSitSol);
+    SQL_RetornarInteiro(cPesquisa, "USU_CodERs", nCodERs);
+
+    SQL_RetornarAlfa(cPesquisa, "USU_IMaSol", aIMaSol);
+    SQL_RetornarInteiro(cPesquisa, "USU_ISeSol", nISeSol);
+    SQL_RetornarInteiro(cPesquisa, "USU_IAnSol", nIAnSol);
+
+    SQL_RetornarInteiro(cPesquisa, "USU_SitCol", nSitCol);
+    SQL_RetornarInteiro(cPesquisa, "USU_NumEmp", nNumEmp);
+    SQL_RetornarInteiro(cPesquisa, "USU_TipCol", nTipCol);
+    SQL_RetornarInteiro(cPesquisa, "USU_NumCad", nNumCad);
+    SQL_RetornarAlfa(cPesquisa, "NomLoc", aNomLoc);
+    SQL_RetornarAlfa(cPesquisa, "DesEsp", aDesEsp);
+
+    SQL_RetornarData(cPesquisa, "USU_DatIni", dIniSob);
+    SQL_RetornarData(cPesquisa, "USU_DatFim", dFimSob);
+    SQL_RetornarInteiro(cPesquisa, "USU_HorIni", nHorIni);
+    SQL_RetornarInteiro(cPesquisa, "USU_HorFim", nHorFim);
+
+    SQL_RetornarAlfa(cPesquisa, "USU_CelIta", aCelIta);
+    SQL_RetornarAlfa(cPesquisa, "EhCons", aEhCons);
+
+    @-- Determinar a Situacao da Programacao --@
+    nSitPrg = 3; @-- 1:Em Elaboracao | 2:Aguardando Decisao | 3:Aprovada --@
+    Se (nSitSol = 51)
+    Inicio
+      nSitPrg = 1;
+    Fim;
+    Senao
+    Se ((nSitSol = 52)
+    ou  ((nSitSol = 56)
+    e    (nSitCol = 1)))
+    Inicio
+      nSitPrg = 2;
+    Fim;
+
+    @-- Buscar os dados de Contato para o Empregado --@
+    aEndCon = "";
+    aTelCon = "";
+    SQL_Criar(cAuxiliar);
+    SQL_UsarSQLSenior2(cAuxiliar, 0);
+    SQL_UsarAbrangencia(cAuxiliar, 0);
+    SQL_DefinirComando(cAuxiliar, "Select Distinct USU_EndCon, USU_TelCon \
+                                   From \
+                                    ( \
+                                      Select EndRua || decode(trim(EndNum), null, null, ', ' || trim(EndNum)) \
+                                                    || decode(trim(EndCpl), null, null, ', ' || trim(EndCpl)) USU_EndCon, \
+                                              NumTel USU_TelCon \
+                                      From R034Cpl \
+                                      Where NumEmp = :nNumEmp \
+                                      And   TipCol = :nTipCol \
+                                      And   NumCad = :nNumCad \
+                                      UNION ALL \
+                                      Select distinct a.USU_EndCon, a.USU_TelCon \
+                                      From USU_TESAHDC a \
+                                      Where a.USU_NumEmp = :nNumEmp \
+                                      And   a.USU_TipCol = :nTipCol \
+                                      And   a.USU_NumCad = :nNumCad \
+                                      And   a.USU_DatAlt = (Select max(x.USU_DatAlt) \
+                                                            From USU_TESAHDC x \
+                                                            Where x.USU_NumEmp = :nNumEmp \
+                                                            And   x.USU_TipCol = :nTipCol \
+                                                            And   x.USU_NumCad = :nNumCad \
+                                                            And   x.USU_DatAlt <= :dDatIni ) \
+                                    ) \
+                                   Order By USU_EndCon, USU_TelCon \
+                                  ");
+
+    SQL_DefinirInteiro(cAuxiliar, "nNumEmp", nNumEmp);
+    SQL_DefinirInteiro(cAuxiliar, "nTipCol", nTipCol);
+    SQL_DefinirInteiro(cAuxiliar, "nNumCad", nNumCad);
+    SQL_DefinirData(cAuxiliar, "dDatIni", dIniSob);
+
+    SQL_AbrirCursor(cAuxiliar);
+    Se (SQL_EOF(cAuxiliar) = cFalso)
+    Inicio
+      SQL_RetornarAlfa(cAuxiliar, "USU_EndCon", aEndCon);
+      SQL_RetornarAlfa(cAuxiliar, "USU_TelCon", aTelCon);
+    Fim;
+    SQL_FecharCursor(cAuxiliar);
+    SQL_Destruir(cAuxiliar);
+
+    @-- Preparar Informacoes para JSON --@
+    aR850FIMarSol = aIMaSol; @-- Margem da Solicitacao a ser utilizada na formatacao da Identificacao --@
+    f850FormatarIdentificacao(nISeSol, nIAnSol);
+    aIdeSol = aR850FIIdeSol;
+
+    IntParaAlfa(nNumSol, aNumSol);
+    IntParaAlfa(nSitPrg, aSitPrg);
+    IntParaAlfa(nCodERs, aCodERs);
+
+    IntParaAlfa(nNumEmp, aNumEmp);
+    IntParaAlfa(nTipCol, aTipCol);
+    IntParaAlfa(nNumCad, aNumCad);
+
+    ConverteMascara(3, dIniSob, aIniSob, "YYYY-MM-DD");
+    ConverteMascara(3, dFimSob, aFimSob, "YYYY-MM-DD");
+    IntParaAlfa(nHorIni, aHorIni);
+    IntParaAlfa(nHorFim, aHorFim);
+
+    aR850TPJTextoConverter = aNomLoc;
+    f850TextoParaJson();
+    aNomLoc = aR850TPJTextoConvertido;
+
+    aR850TPJTextoConverter = aDesEsp;
+    f850TextoParaJson();
+    aDesEsp = aR850TPJTextoConvertido;
+
+    aR850TPJTextoConverter = aEndCon;
+    f850TextoParaJson();
+    aEndCon = aR850TPJTextoConvertido;
+
+    aR850TPJTextoConverter = aTelCon;
+    f850TextoParaJson();
+    aTelCon = aR850TPJTextoConvertido;
+
+    aR850TPJTextoConverter = aCelIta;
+    f850TextoParaJson();
+    aCelIta = aR850TPJTextoConvertido;
+
+    f853CarregarColaborador(nIdeSis, nNumEmp, nTipCol, nNumCad, 0 ,0 ,0);
+
+    @-- Gerar o JSON --@
+    aProgramacoes = aProgramacoes
+                  + ",{"
+                  + " \"numSol\":"   + aNumSol
+                  + ",\"ideSol\":\"" + aIdeSol + "\""
+                  + ",\"sitPrg\":"   + aSitPrg
+                  + ",\"ehCons\":"   + aEhCons
+                  + ",\"numEmp\":"   + aNumEmp
+                  + ",\"tipCol\":"   + aTipCol
+                  + ",\"numCad\":"   + aNumCad
+                  + ",\"nomLoc\":\"" + aNomLoc + "\""
+                  + ",\"datIni\":\"" + aIniSob + "\""
+                  + ",\"horIni\":"   + aHorIni
+                  + ",\"datFim\":\"" + aFimSob + "\""
+                  + ",\"horFim\":"   + aHorFim
+                  + ",\"desEsp\":\"" + aDesEsp + "\""
+                  + ",\"celIta\":\"" + aCelIta + "\""
+                  + ",\"telCon\":\"" + aTelCon + "\""
+                  + ",\"endCon\":\"" + aEndCon + "\""
+                  + ",\"colaborador\":{" + a853Colaborador + "}"
+                  + "}";
+
+    SQL_Proximo(cPesquisa);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  DeletarAlfa(aProgramacoes, 1, 1); @-- Apagar a primeira virgula --@
+  aRetornoDados = aRetornoDados + ",\"programacoes\":[" + aProgramacoes + "]";
+
+  @-- Geracao do Log --@
+  aTxtLog = "PESQUISAR :: Término";
+  f850GerarLog(1, 2);
+
+  VaPara Saida;
+Fim;
+
+nRetornoSucesso = cFalso;
+aRetornoMsg = ", {\"codigo\":8, \"params\":[\"" + aOperacao + " \"]}"; @-- Operacao desconhecida --@
+
+Saida:;
+
+  aAux = "true";
+  Se (nRetornoSucesso = cFalso)
+  Inicio
+    aAux = "false";
+  Fim;
+
+  aPagHtml = "{"
+           + " \"sucesso\":" + aAux;
+
+  Se (aRetornoDados <> "")
+  Inicio
+    DeletarAlfa(aRetornoDados, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"dados\":{ " + aRetornoDados + "}";
+  Fim;
+
+  Se (aRetornoMsg <> "")
+  Inicio
+    DeletarAlfa(aRetornoMsg, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"mensagens\":[ " + aRetornoMsg + "]";
+  Fim;
+
+  Se (aRetornoAcoes <> "")
+  Inicio
+    DeletarAlfa(aRetornoAcoes, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"acoes\":[ " + aRetornoAcoes + "]";
+  Fim;
+
+  Se (aRetornoDadosTecnicos <> "")
+  Inicio
+    aPagHtml = aPagHtml + ", \"dadosTecnicos\":{"
+                        + "\"modulo\":\"HR\""
+                        + ",\"regra\":874"
+                        + ",\"operacao\":\"" + aOperacao + "\""
+                        + aRetornoDadosTecnicos
+                        + "}";
+  Fim;
+
+  aPagHtml = aPagHtml + "}";
+
+  @-- Geracao do Log --@
+  aTxtLog = "Regra HR874 - Consulta Sobreavisos Programados :: Término";
+  f850GerarLog(1, 0);
+
+  @-- Fechar arquivo do Log --@
+  f850GerarLog(2, 0);
+
+  WEB_HTML = aPagHtml;
+
+@-- *************************************** --@
+@--   Início da implementação das funções   --@
+@-- *************************************** --@

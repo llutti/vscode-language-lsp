@@ -1,0 +1,303 @@
+/*
+  1. 	no momento em que o usário alterar ocorrências para situação 620 (Desconto Saldo BH)
+  ira verificar se há saldo positivo naquele momento. A regra deve bloquear
+  a inclusão da situação 620 sempre que o empregado não possuir saldo suficiente para
+  a compensação da hora.
+
+  2. 	para os PROFISSIONAIS, no momento que alterar alguma situação para 620 deve-se
+  verificar se o total de horas a compensar são iguais ou superiores a 50% da jornada
+  diária obrigatória;
+
+  3.	os PROFISSIONAIS podem compensar horas até 5 dias consecutivos. A regra deverá
+  verificar os dias anteriores se a situação 620 já ocorreu, se sim, deve alertar o
+  usuário no momento da alteração da situação (verificar dias conforme jornada de
+  trabalho do empregado, desconsiderar sábado, domingo ou feriado caso não há jornada
+  normal de trabalho);
+
+  CRIACAO SANDRO RONQUI (SENIOR) 24/08/2010
+*/
+
+Definir Cursor Cur_Pesquisa;
+Definir Alfa cPesquisa;
+Definir Alfa aMensagem;
+Definir Alfa aHorSal;
+Definir Alfa aHorPer;
+Definir Alfa aCodCar;
+Definir Data dDatPro;
+Definir Data dDatZer;
+Definir Data dDatApu;
+Definir Data dDatIni;
+Definir Data dDatFim;
+Definir Alfa aAux;
+Definir Alfa aEhUniv;
+Definir Alfa aErro;
+
+nNumEmp = R034FUN.NumEmp;
+nTipCol = R034FUN.TipCol;
+nNumCad = R034FUN.NumCad;
+aCodCar = R034FUN.CodCar;
+nCodHor = CodHor;
+dDatPro = DatPro;
+dDatZer = 0;
+
+@---- REGRA DEVERA TRATA SOMENTE EMPRESA ENTRE 501 e 807 -----@
+Se ((nNumEmp >= 501) ou (nNumEmp <= 807))
+Inicio
+
+  @-- verificar se esta sendo utilizada alguma situacao interna (lancamento retroativo) --@
+  Para (nCodSit=655; nCodSit <= 668; nCodSit++)
+  Inicio
+    Se (nCodSit <> 660) @-- Situacao Liberada --@
+    Inicio
+      Se (HorSit[nCodSit] <> 0)
+      Inicio
+        IntParaAlfa(nCodSit, aAux);
+        aAux = "No es permitido utilizar la situacion " + aAux + ".";
+        Mensagem(Erro, aAux);
+        Cancel(1);
+      Fim;
+    Fim;
+  Fim;
+
+  @-- Buscar informacoes do Colaborador --@
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select a.USU_Livre1, \
+                                        b.USU_EhUniv \
+                                From R034FUN a, R024CAR b \
+                                Where a.NumEmp = :nNumEmp \
+                                And   a.TipCol = :nTipCol \
+                                And   a.NumCad = :nNumCad \
+                                And   a.EstCar = b.EstCar \
+                                And   a.CodCar = b.CodCar \
+                                ");
+  SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+  SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+  SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+  nLivre1 = 0;
+  aEhUniv = "N";
+
+  SQL_AbrirCursor(cPesquisa);
+  Se (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "USU_Livre1", nLivre1);
+    SQL_RetornarAlfa(cPesquisa, "USU_EhUniv", aEhUniv);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  nEhTecnico = 1;
+  Se ((nLivre1 = 1)
+  ou  (aEhUniv = "S"))
+  Inicio
+    nEhTecnico = 0;
+  Fim;
+
+  @---- TRECHO 01 ----@
+  @-- Como o Banco 501 foi Ativado apenas em 01/10/2010, antes desta data ñ será validado o saldo do banco para compensacao --@
+  @-- Como o Banco 501 foi Ativado apenas em 01/09/2012 para a filial 01, antes desta data ñ será validado o saldo do banco para compensacao --@
+
+  @ Retorna saldo do banco no dia processado @
+  RetBHRDat(nNumEmp, nTipCol, nNumCad, 501, DatPro, nHorSal);
+
+  @ Se saldo for menor do que a situacao que esta sendo lancada mostra mensagem e cancela a gravacao @
+  Se ((HorSit[620] >= nHorSal) e (HorSit[620] <> 0))
+  Inicio
+    ConverteMascara(4, nHorSal, aHorSal, "#-b#HHH:MM");
+    Se (nHorSal = 0)
+    Inicio
+      aHorSal = "000:00";
+    Fim;
+
+    aMensagem = "El Saldo Actual del Empl. es de " + aHorSal + ", y no es suficiente para la compensación solicitada!";
+    Mensagem(Erro, aMensagem);
+    Cancel(1);
+  Fim;
+
+
+  @---- TRECHO 02 ----@
+  @ Cargos Profissionais @
+  Se ((nEhTecnico = 0)
+  e   (HorSit[620] <> 0))
+  Inicio
+    vPrvHo = CodHor;
+    nHrsMan = 0;
+    nHrsTar = 0;
+
+    @-- Calcular a quantidade de horas das meia (Manha e tarde) jornada  --@
+    Cur_Pesquisa.SQL "Select SeqMar, HorBat \
+                      From R004MHR \
+                      Where CodHor = :nCodHor \
+                      Order by SeqMar \
+                     ";
+    Cur_Pesquisa.UsaAbrangencia(0);
+    Cur_Pesquisa.AbrirCursor();
+    nHorIni = 0;
+    nHorFim = 0;
+    nBatFim = 0;
+
+    Enquanto (Cur_Pesquisa.Achou)
+    Inicio
+      Se ((Cur_Pesquisa.SeqMar = 1)
+      ou  (Cur_Pesquisa.SeqMar = 3))
+      Inicio
+        nHorIni = Cur_Pesquisa.HorBat;
+        nBatFim = 0;
+      Fim;
+      Se ((Cur_Pesquisa.SeqMar = 2)
+      ou  (Cur_Pesquisa.SeqMar = 4))
+      Inicio
+        nHorFim = Cur_Pesquisa.HorBat;
+        nBatFim = 1;
+      Fim;
+
+      Cur_Pesquisa.Proximo();
+
+      Se (nBatFim = 1)
+      Inicio
+        nBatFim = 0;
+        Se (nHrsMan = 0)
+        Inicio
+          nHrsMan = nHorFim - nHorIni;
+          nHorIni = 0;
+          nHorFim = 0;
+        Fim;
+        Senao
+        Inicio
+          nHrsTar = nHorFim - nHorIni;
+          Pare;
+        Fim;
+      Fim;
+    Fim;
+    Cur_Pesquisa.FecharCursor();
+
+    Se ((HorSit[620] <> PrvTrd)
+    e   (HorSit[620] <> nHrsMan)
+    e   (HorSit[620] <> nHrsTar))
+    Inicio
+      aMensagem = "Compensación diferente que media jornada o jornada completa, no es permitido!";
+      Mensagem(Erro, aMensagem);
+      Cancel(1);
+    Fim;
+  Fim;
+
+  @-- Verificar se é receso colectivo, para permitir compensar +5 dias consecutivos --@
+
+  @---- TRECHO 03 ----@
+  vPrvHo = CodHor;
+  Se ((HorSit[620] > 0)
+  e   (HorSit[620] = PrvTrd))
+  Inicio
+    nMaxDia = 5; @-- Limite de dias consecutivos para compensacao --@
+
+    @-- Inicio - Tratar Recesso de Final de Ano --@
+    aAux = "";
+    Se (ClaEsc <> 51) @ Turnos @
+    Inicio
+      aAux = "and USU_LibTur = 'S'";
+    Fim;
+    Senao @ Comercial @
+    Inicio
+      aAux = "and USU_LibCom = 'S'";
+    Fim;
+
+    @-- Primeiro verifica a empresa do colaborador se nao encontrar utiliza a 501 --@
+    Para (i=0; i<=1; i++)
+    Inicio
+      nEmpAux = nNumEmp;
+      Se (i = 1)
+      Inicio
+        nEmpAux = 501;
+      Fim;
+
+      Cur_Pesquisa.SQL "Select USU_MaxDia \
+                        from USU_TAEMRCS \
+                        where :dDatPro Between USU_DIRCBH and USU_DFRCBH \
+                        and   USU_NumEmp = :nEmpAux \
+                        __inserir (:aAux) \
+                       ";
+      Cur_Pesquisa.UsaAbrangencia(0);
+      nAchou = cFalso;
+      Cur_Pesquisa.AbrirCursor();
+      Se (Cur_Pesquisa.Achou)
+      Inicio
+        nMaxDia = Cur_Pesquisa.USU_MaxDia;
+        nAchou = cVerdadeiro;
+      Fim;
+      Cur_Pesquisa.FecharCursor();
+
+      Se (nAchou = cVerdadeiro)
+      Inicio
+        Pare;
+      Fim;
+    Fim;
+    @-- Fim - Tratar Recesso de Final de Ano --@
+
+    nDia = nMaxDia;
+    nQtdDia = 0;
+    nAux = 0;
+    dDatApu = DatPro;
+    Enquanto (nDia <> 0)
+    Inicio
+      dDatApu--;
+      RetornaHorarioApurado(nNumEmp, nTipCol, nNumCad, dDatApu, nCodHor, aMensagem);
+
+      Se (nCodHor < 9996)
+      Inicio
+        @ VERIFICA A QTDADE DE HORAS NA SITUACA 620 NO DIA @
+        Cur_Pesquisa.SQL "Select QtdHor \
+                          From R066SIT \
+                          Where NumEmp =:nNumEmp \
+                          And   TipCol =:nTipCol \
+                          And   NumCad =:nNumCad \
+                          And   CodSit = 620 \
+                          And   DatApu =:dDatApu ";
+        Cur_Pesquisa.AbrirCursor();
+        nQtdHor = 0;
+        Se (Cur_Pesquisa.Achou)
+        Inicio
+          nQtdHor = Cur_Pesquisa.QtdHor;
+        Fim;
+        Cur_Pesquisa.FecharCursor();
+
+        Se (PrvTrd <> nQtdHor)
+        Inicio
+          nQtdDia = 0;
+          Pare;
+        Fim;
+        nQtdDia++;
+
+        @-- Voltar apenas 5 dias uteis --@
+        nDia--;
+        Se (nDia = 0)
+        Inicio
+          Pare;
+        Fim;
+      Fim; @-- Se é dia útil --@
+    Fim;
+
+    @ Mais de 5 dias compensados em sequencia @
+    Se (nQtdDia >= nMaxDia)
+    Inicio
+      IntParaAlfa(nMaxDia, aAux);
+      aMensagem = "Empleado ya compenso en los últimos " + aAux + " días!";
+      Mensagem(Erro, aMensagem);
+      Cancel(1);
+    Fim;
+  Fim;
+
+  @-- JIRA VETORRO-436 Bloquear carga de situacion 528 Auxilio Enfermedad --@
+  Se (HorSit[528] <> 0)
+  Inicio
+    aAux = "¡Situación 528 - Auxilio Enfermedad obsoleta no se debe utilizar!";
+    Mensagem(Erro, aAux);
+  Fim;
+
+  @-- Calcula Atividade Gremial --@
+  f510AtividadeGremial(nNumEmp, nTipCol, nNumCad, dDatPro);
+  @-- Verifica Gestao Documentação --@
+  f510GestaoDocumentacao(nNumEmp, nTipCol, nNumCad, dDatPro);
+  @-- Verifica Atividade Docente --@
+  f510AtividadeDocente(nNumEmp, nTipCol, nNumCad, dDatPro);
+Fim;

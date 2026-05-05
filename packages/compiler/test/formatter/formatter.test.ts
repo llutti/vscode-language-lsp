@@ -753,15 +753,14 @@ describe('formatter', () =>
     expect(formatText({ text: result, options }).text).toBe(result);
   });
 
-  it('valida idempotencia e invariantes em exemplos reais HR e _Webservices', () =>
+  it('valida idempotencia e invariantes em fixtures HR e webservices', () =>
   {
-    const hrDir = path.join(process.cwd(), 'exemplos/HR');
-    const wsDir = path.join(process.cwd(), 'exemplos/HR/_Webservices');
-    if (!fs.existsSync(hrDir) || !fs.existsSync(wsDir)) return;
+    const hrDir = path.join(__dirname, '..', 'fixtures', 'hr-examples');
+    const wsDir = path.join(hrDir, 'webservices');
 
     const hrFiles = fs
       .readdirSync(hrDir)
-      .filter((name) => /^HR.*\.txt$/i.test(name))
+      .filter((name) => /\.txt$/i.test(name))
       .sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
       .slice(0, 3)
       .map((name) => path.join(hrDir, name));

@@ -1,0 +1,408 @@
+/************************************************************************
+*                                                                       *
+*    PORTAL RH - AEM - Ajuste Eletrônico da Marcações                   *
+*    Regra: 897 - Criar e Executar Pendências coletivas                 *
+*                                                                       *
+************************************************************************/
+
+Definir Alfa aPagHtml;
+Definir Alfa aOperacao;
+Definir Alfa aIdioma;
+Definir Alfa aSQL;
+Definir Alfa aLstIdeFlx;
+Definir Alfa aJusDec;
+
+@-- Identificar se a URL de acesso é Externa (DMZ) :: (0:Interno | 1:Externo) --@
+WCheckValInteger("ex", "Acesso Externo", nEhURLExt, "S", 0);
+
+@-- Identicação do Sistema na WEB --@
+WCheckValString("SYS", "Sigla do Sistema", aSigSis, "S", 0);
+TiraEspacos(aSigSis, aSigSis);
+Se (aSigSis = "")
+Inicio
+  aSigSis = "AEM";
+Fim;
+
+@-- Buscar o Código de Identificação do Sistema --@
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select USU_IdeSis \
+                               From USU_TGSWSis \
+                               Where Upper(USU_SigSis) = Upper(:aSigSis) \
+                              ");
+SQL_DefinirAlfa(cPesquisa, "aSigSis", aSigSis);
+
+SQL_AbrirCursor(cPesquisa);
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarInteiro(cPesquisa, "USU_IdeSis", nIdeSis);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+@-- Carregar as Definicoes Globais --@
+f850CarregarDefinicoes(nIdeSis);
+
+@-- Iniciar Geracao do Log --@
+f850GerarLog(0, 0);
+aTxtLog = "Regra HR897 :: Criar e Executar Pendências coletivas";
+f850GerarLog(1, 0);
+
+nCodUsu = CodUsu;
+RetColabPorCodUsu(nCodUsu, nEmpUsu, nTpCUsu, nCadUsu);
+
+WCheckValString("Idioma", "Idioma", aIdioma, "S", 0);
+TiraEspacos(aIdioma, aIdioma);
+ConverteParaMaiusculo(aIdioma, aIdioma);
+Se (aIdioma = "")
+Inicio
+  aIdioma = "ES";
+Fim;
+
+WCheckValString("OP", "Operação", aOperacao, "S", 0);
+TiraEspacos(aOperacao, aOperacao);
+ConverteParaMaiusculo(aOperacao, aOperacao);
+
+WCheckValInteger("ApvCol", "Aprovacao Coletiva", nApvCol, "S", 0);
+
+@-- Geracao do Log --@
+IntParaAlfa(nEhURLExt, aTxtLog);
+aTxtLog = "nEhURLExt (0:Interno | 1:Externo):" + aTxtLog;
+f850GerarLog(1, 1);
+aTxtLog = "aOperacao:" + aOperacao;
+f850GerarLog(1, 1);
+aTxtLog = "aIdioma:" + aIdioma;
+f850GerarLog(1, 1);
+IntParaAlfa(CodUsu, aTxtLog);
+aTxtLog = "Usuario:" + aTxtLog + " - " + NomUsu;
+f850GerarLog(1, 1);
+IntParaAlfa(nApvCol, aTxtLog);
+aTxtLog = "nApvCol (0=Falso | 1=Verdadeiro):" + aTxtLog;
+f850GerarLog(1, 1);
+
+Se ((aOperacao = "APROVAR")
+ou  (aOperacao = "REPROVAR")
+ou  (aOperacao = "CANCELAR"))
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = aOperacao + " :: Início";
+  f850GerarLog(1, 2);
+
+  @-- Inicializar Variaveis --@
+  aR899LisPen = "";
+  aLstIdeFlx = "";
+
+  nMotPen = 1; @-- Aprovar --@
+  Se (aOperacao = "REPROVAR")
+  Inicio
+    nMotPen = 2; @-- Reprovar --@
+  Fim;
+  Senao
+  Se (aOperacao = "CANCELAR")
+  Inicio
+    nMotPen = 4; @-- Cancelar --@
+  Fim;
+
+  @-- Navegar pelas Variaveis enviado pelo HTML para identificar as solicitacoes --@
+  WCountFields(nQtdCpos);
+  Para (nIdxCpo = 1; nIdxCpo < nQtdCpos; nIdxCpo++)
+  Inicio
+    WReturnFieldsName(nIdxCpo, aNomCpo);
+    aCpoAux = aNomCpo;
+    CopiarAlfa(aCpoAux, 1, 6);
+    ConverteParaMaiusculo(aCpoAux, aCpoAux);
+
+    Se (aCpoAux = "ROWIDE") @-- Identificado da Linha --@
+    Inicio
+      WCheckValString(aNomCpo, "Id Linha", aRowId, "S", 0);
+
+      aNomCpo = "CodWkf" + aRowId;
+      WCheckValInteger(aNomCpo, "Código WKF", nCodWkf, "S", 0);
+
+      aNomCpo = "IdeFlx" + aRowId;
+      WCheckValInteger(aNomCpo, "Identificador Fluxo", nIdeFlx, "S", 0);
+
+      aNomCpo = "CodCFx" + aRowId;
+      WCheckValInteger(aNomCpo, "Código Controle Fluxo", nCodCFx, "S", 0);
+
+      aNomCpo = "TokCon" + aRowId;
+      WCheckValString(aNomCpo, "Token Controle", aTokCon, "S", 0);
+
+      aNomCpo = "NumSol" + aRowId;
+      WCheckValInteger(aNomCpo, "Número Solicitação", nNumSol, "S", 0);
+
+      aNomCpo = "AuxSol" + aRowId;
+      WCheckValInteger(aNomCpo, "Número Auxiliar Solicitação", nAuxSol, "S", 0);
+
+      aNomCpo = "NumEmp" + aRowId;
+      WCheckValInteger(aNomCpo, "Empresa do Empregado", nNumEmp, "S", 0);
+
+      aNomCpo = "TipCol" + aRowId;
+      WCheckValInteger(aNomCpo, "Tipo Colaborador do Empregado", nTipCol, "S", 0);
+
+      aNomCpo = "NumCad" + aRowId;
+      WCheckValInteger(aNomCpo, "Cadastro do Empregado", nNumCad, "S", 0);
+
+      aNomCpo = "JusDec" + aRowId;
+      WCheckValString(aNomCpo, "Justificativa da Decisao", aJusDec, "S", 0);
+
+      Base64Decode(aJusDec, aJusDec);
+
+      @-- Geracao do Log --@
+      aTxtLog = "aRowId:" + aRowId;
+      f850GerarLog(1, 4);
+      IntParaAlfa(nCodWkf, aTxtLog);
+      aTxtLog = "nCodWkf:" + aTxtLog;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nIdeFlx, aTxtLog);
+      aTxtLog = "nIdeFlx:" + aTxtLog;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nCodCFx, aTxtLog);
+      aTxtLog = "nCodCFx:" + aTxtLog;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nNumSol, aTxtLog);
+      aTxtLog = "nNumSol:" + aTxtLog;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nAuxSol, aTxtLog);
+      aTxtLog = "nAuxSol:" + aTxtLog;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nNumEmp, aTxtLog);
+      aTxtLog = "nNumEmp:" + aTxtLog;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nTipCol, aTxtLog);
+      aTxtLog = "nTipCol:" + aTxtLog;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nNumCad, aTxtLog);
+      aTxtLog = "nNumCad:" + aTxtLog;
+      f850GerarLog(1, 5);
+      aTxtLog = "aJusDec:" + aJusDec;
+      f850GerarLog(1, 5);
+
+      AlfaParaInt(aTokCon, nTokCon);
+
+      @-- Geracao do Log --@
+      aTxtLog = "aTokCon:" + aTokCon;
+      f850GerarLog(1, 5);
+      IntParaAlfa(nTokCon, aTxtLog);
+      aTxtLog = "nTokCon:" + aTxtLog;
+      f850GerarLog(1, 5);
+
+      Se ((aOperacao = "CANCELAR")
+      e   (nTokCon = 0))
+      Inicio
+        nSucesso = cVerdadeiro;
+      Fim;
+      Senao
+      Inicio
+        @-- Valida se Decisao ainda é Valida --@
+        f853DecisaoAindaPendente(nCodWkf, nIdeFlx, nCodCfx,
+                                 nTokCon, nSucesso);
+      Fim;
+
+      Se (nSucesso = cVerdadeiro)
+      Inicio
+        nOriPen = 1; @-- Origem da Pendencia: 01 = Sistema --@
+        nNumPen = 0;
+        aR850TxtJusDec = aJusDec;
+        dR850CPDatIni = 0;
+        dR850CPDatFim = 0;
+        nR850CPAuxSol = nAuxSol;
+
+        f850CriarPendencia(nCodWkf, nIdeFlx, nCodCFx,
+                           nNumSol, nMotPen, nEmpUsu,
+                           nTpCUsu, nCadUsu, 0,
+                           nOriPen, 0,  nNumPen,
+                           0, 0, 0);
+
+        Se (nNumPen <> 0)
+        Inicio
+          IntParaAlfa(nNumPen, aAux);
+          aR899LisPen = aR899LisPen + "," + aAux;
+
+          @-- Cria lista com solicitacoes de Ajuste de Marcacao e HE para Apuracao --@
+          Se ((nCodWkf = 1)
+          ou  (nCodWkf = 2))
+          Inicio
+            IntParaAlfa(nIdeFlx, aAux);
+            aLstIdeFlx = aLstIdeFlx + "," + aAux;
+          Fim;
+        Fim;
+        Senao
+        Inicio
+          @-- Geracao do Log --@
+          aTxtLog = "Erro durante a criacao da Pendencia";
+          f850GerarLog(1, 3);
+        Fim;
+      Fim;
+      Senao
+      Inicio
+        @-- Geracao do Log --@
+        aTxtLog = "Decisão não é mais Válida";
+        f850GerarLog(1, 5);
+      Fim;
+    Fim;
+  Fim;
+
+  @-- Geracao do Log --@
+  aTxtLog = "aR899LisPen:" + aR899LisPen;
+  f850GerarLog(1, 4);
+  aTxtLog = "aLstIdeFlx:" + aLstIdeFlx;
+  f850GerarLog(1, 4);
+
+  Se (aR899LisPen <> "")
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Apagar Tabela Temporaria de HE (USU_TAEMTHE)";
+    f850GerarLog(1, 4);
+
+    f853ApagarControleAprovacaoHE(nCodUsu);
+
+    @-- Geracao do Log --@
+    aTxtLog = "Processar as Pendencias :: Inicio";
+    f850GerarLog(1, 4);
+
+    DeletarAlfa(aR899LisPen, 1, 1); @-- Apagar a primeira virgula --@
+
+    nR899NumPen = 0;
+    nR899OriPen = 1; @-- Pendencias Geradas pelo Sistema --@
+    Regra(899);
+
+    @-- Geracao do Log --@
+    aTxtLog = "Processar as Pendencias :: Fim";
+    f850GerarLog(1, 4);
+
+    Se (aLstIdeFlx <> "")
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Processar as Pendencias de Apuracao :: Inicio";
+      f850GerarLog(1, 4);
+
+      DeletarAlfa(aLstIdeFlx, 1, 1); @-- Apagar a primeira virgula --@
+
+      aSQL = "Select USU_NumEmp, USU_TipCol, USU_NumCad \
+              From USU_TAEMSAM \
+              Where USU_IdeFlx in (" + aLstIdeFlx + ") \
+              Union \
+              Select USU_NumEmp, USU_TipCol, USU_NumCad \
+              From USU_TAEMCSH \
+              Where USU_IdeFlx in (" + aLstIdeFlx + ") \
+              ";
+
+      SQL_Criar(cPesquisa);
+      SQL_UsarSQLSenior2(cPesquisa, 0);
+      SQL_UsarAbrangencia(cPesquisa, 0);
+      SQL_DefinirComando(cPesquisa, aSQL);
+      SQL_AbrirCursor(cPesquisa);
+      Enquanto (SQL_EOF(cPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarInteiro(cPesquisa, "USU_NumEmp", nNumEmp);
+        SQL_RetornarInteiro(cPesquisa, "USU_TipCol", nTipCol);
+        SQL_RetornarInteiro(cPesquisa, "USU_NumCad", nNumCad);
+
+        @-- Geracao do Log --@
+        IntParaAlfa(nNumEmp, aTxtLog);
+        aTxtLog = "nNumEmp:" + aTxtLog;
+        f850GerarLog(1, 5);
+        IntParaAlfa(nTipCol, aTxtLog);
+        aTxtLog = "nTipCol:" + aTxtLog;
+        f850GerarLog(1, 5);
+        IntParaAlfa(nNumCad, aTxtLog);
+        aTxtLog = "nNumCad:" + aTxtLog;
+        f850GerarLog(1, 5);
+
+        @-- Executa Funcao para apuracao do Empregado --@
+        f853IniciarApuracaoPonto(nNumEmp, nTipCol, nNumCad, cFalso);
+
+        SQL_Proximo(cPesquisa);
+      Fim;
+      SQL_FecharCursor(cPesquisa);
+      SQL_Destruir(cPesquisa);
+
+      @-- Geracao do Log --@
+      aTxtLog = "Processar as Pendencias de Apuracao :: Fim";
+      f850GerarLog(1, 4);
+    Fim;
+
+    @-- Geracao do Log --@
+    aTxtLog = "Apagar Tabela Temporaria de HE (USU_TAEMTHE)";
+    f850GerarLog(1, 4);
+
+    f853ApagarControleAprovacaoHE(nCodUsu);
+  Fim;
+
+  nRetornoSucesso = cVerdadeiro;
+
+  Se (nApvCol = cFalso)
+  Inicio
+    TiraEspacos(aRetornoAcoes, aRetornoAcoes);
+    Se (aRetornoAcoes = "")
+    Inicio
+      Se (aOperacao = "CANCELAR")
+      Inicio
+        aRetornoMsg = aRetornoMsg + ",{\"codigo\":11}"; @-- Sucesso --@
+
+        @-- parametro aba utilizado para tela de ajuste  --@
+        aRetornoAcoes = aRetornoAcoes + ",{\"acao\":5,\"params\":{\"aba\":2}}"; @-- Recaregar Tela --@
+      Fim;
+      Senao
+      Inicio
+        aRetornoAcoes = aRetornoAcoes + ",{\"acao\":4}"; @-- Tela de Pendencias --@
+      Fim;
+    Fim;
+  Fim;
+
+  @-- Geracao do Log --@
+  aTxtLog = aOperacao + " :: Término";
+  f850GerarLog(1, 2);
+
+  VaPara Saida;
+Fim;
+
+nRetornoSucesso = cFalso;
+aRetornoMsg = aRetornoMsg + ", {\"codigo\":8, \"params\":[\"" + aOperacao + " \"]}"; @-- Operacao desconhecida --@
+
+Saida:;
+
+  aAux = "true";
+  Se (nRetornoSucesso = cFalso)
+  Inicio
+    aAux = "false";
+  Fim;
+
+  aPagHtml = "{"
+           + " \"sucesso\":" + aAux;
+
+  Se (aRetornoDados <> "")
+  Inicio
+    DeletarAlfa(aRetornoDados, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"dados\":{ " + aRetornoDados + "}";
+  Fim;
+
+  Se (aRetornoMsg <> "")
+  Inicio
+    DeletarAlfa(aRetornoMsg, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"mensagens\":[ " + aRetornoMsg + "]";
+  Fim;
+
+  Se (aRetornoAcoes <> "")
+  Inicio
+    DeletarAlfa(aRetornoAcoes, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"acoes\":[ " + aRetornoAcoes + "]";
+  Fim;
+
+  aPagHtml = aPagHtml + "}";
+
+  @-- Fechar arquivo do Log --@
+  aTxtLog = "Regra HR897 :: Criar e Executar pendencias Coletivas";
+  f850GerarLog(1, 0);
+
+  @-- Fechar arquivo do Log --@
+  f850GerarLog(2, 0);
+
+  WEB_HTML = aPagHtml;
+
+
+@-- *************************************** --@
+@--   Início da implementação das funções   --@
+@-- *************************************** --@

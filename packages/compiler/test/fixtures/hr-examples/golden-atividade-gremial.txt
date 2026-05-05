@@ -1,0 +1,357 @@
+/************************************************************************
+*                                                                       *
+*    PORTAL RH - AEM - Ajuste Eletronico da Marcacoes                   *
+*    Regra: 881 - Pesquisar Utilizacao Atividade Gremial                *
+*                                                                       *
+************************************************************************/
+
+Definir Numero nIdeSis; nIdeSis = 2; @-- AEM --@
+
+Definir Alfa aPagHtml;
+Definir Alfa aOperacao;
+Definir Alfa aIdioma;
+
+Definir Alfa cPesquisa;
+Definir Alfa cAuxiliar;
+Definir Alfa aAux;
+Definir Alfa aAux2;
+Definir Alfa aSQL;
+Definir Alfa aEmpregados;
+
+@-- Carregar as Definicoes Globais --@
+f850CarregarDefinicoes(nIdeSis);
+
+@-- Iniciar Geracao do Log --@
+f850GerarLog(0, 0);
+aTxtLog = "Regra HR881 :: Utilização Atividade Gremial :: Inicio";
+f850GerarLog(1, 0);
+
+nCodUsu = CodUsu;
+RetColabPorCodUsu(nCodUsu, nEmpUsu, nTpCUsu, nCadUsu);
+
+WCheckValString("Idioma", "Idioma", aIdioma, "S", 0);
+TiraEspacos(aIdioma, aIdioma);
+Se (aIdioma = "")
+Inicio
+  aIdioma = "PT";
+Fim;
+ConverteParaMaiusculo(aIdioma, aIdioma);
+
+WCheckValString("OP", "Operação", aOperacao, "S", 0);
+TiraEspacos(aOperacao, aOperacao);
+Se (aOperacao = "")
+Inicio
+  aOperacao = "Consultar";
+Fim;
+ConverteParaMaiusculo(aOperacao, aOperacao);
+
+@-- Geracao do Log --@
+aTxtLog = "aOperacao:" + aOperacao;
+f850GerarLog(1, 1);
+IntParaAlfa(CodUsu, aTxtLog);
+aTxtLog = "Usuario:" + aTxtLog + " - " + NomUsu;
+f850GerarLog(1, 1);
+IntParaAlfa(nEmpUsu, aTxtLog);
+aTxtLog = "nEmpUsu:" + aTxtLog;
+f850GerarLog(1, 1);
+IntParaAlfa(nTpCUsu, aTxtLog);
+aTxtLog = "nTpCUsu:" + aTxtLog;
+f850GerarLog(1, 1);
+IntParaAlfa(nCadUsu, aTxtLog);
+aTxtLog = "nCadUsu:" + aTxtLog;
+f850GerarLog(1, 1);
+
+Se (aOperacao = "PESQUISAR")
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "Inicio - PESQUISAR";
+  f850GerarLog(1, 2);
+
+  Definir Alfa aTipEmp;
+  Definir Alfa aNumEmp;
+  Definir Alfa aTipCol;
+  Definir Alfa aNumCad;
+  Definir Alfa aNomFun;
+  Definir Alfa aDatSol;
+  Definir Data dDatSol;
+  Definir Alfa aHorSol;
+  Definir Alfa aHorRea;
+  Definir Alfa aNomSin;
+  Definir Data dDatIni;
+  Definir Data dDatFim;
+  Definir Alfa aNomLoc;
+  Definir Alfa aIdeSol;
+  Definir Alfa adesWkf;
+  Definir Alfa aSQL;
+
+  WCheckValString("IMASol", "Margem", aIMASol, "S", 0);
+  WCheckValInteger("CodSin", "Sindicato", nCodSin, "S", 0);
+  WCheckValInteger("NumLoc", "Local", nNumLoc, "S", 0);
+  WCheckValInteger("NumEmp", "Empresa", nNumEmp, "S", 0);
+  WCheckValInteger("TipCol", "Tipo de Empregado", nTipCol, "S", 0);
+  WCheckValInteger("NumCad", "Cadastro", nNumCad, "S", 0);
+  WCheckValData("DatIni", "Data Inicial", dDatIni, "S");
+  WCheckValData("DatFim", "Data Fim", dDatFim, "S");
+
+  @-- Geracao do Log --@
+  aTxtLog = "aIMASol: " + aIMASol;
+  f850GerarLog(1, 3);
+  IntParaAlfa(nCodSin, aTxtLog);
+  aTxtLog = "nCodSin:" + aTxtLog;
+  f850GerarLog(1, 3);
+  IntParaAlfa(nNumLoc, aTxtLog);
+  aTxtLog = "nNumLoc:" + aTxtLog;
+  f850GerarLog(1, 3);
+  IntParaAlfa(nNumEmp, aTxtLog);
+  aTxtLog = "nNumEmp:" + aTxtLog;
+  f850GerarLog(1, 3);
+  IntParaAlfa(nTipCol, aTxtLog);
+  aTxtLog = "nTipCol:" + aTxtLog;
+  f850GerarLog(1, 3);
+  IntParaAlfa(nNumCad, aTxtLog);
+  aTxtLog = "nNumCad:" + aTxtLog;
+  f850GerarLog(1, 3);
+  ConverteMascara(3, dDatIni, aTxtLog, "DD/MM/YYYY");
+  aTxtLog = "dDatIni:" + aTxtLog;
+  f850GerarLog(1, 3);
+  ConverteMascara(3, dDatFim, aTxtLog, "DD/MM/YYYY");
+  aTxtLog = "dDatFim:" + aTxtLog;
+  f850GerarLog(1, 3);
+
+  aSQL = "Select a.USU_NumEmp, a.USU_TipCol, a.USU_NumCad, b.NomFun, " +
+         "        a.USU_DatSol, a.USU_HorSol, a.USU_HorRea, a.USU_CodSin, " +
+         "        c.NomSin, e.NomLoc, a.USU_CodWkf, a.USU_IdeFlx " +
+         " From USU_TAEMAGC a, R034Fun b, R014Sin c, R038HLO d, R016ORN e " +
+         " Where a.USU_NumEmp = b.NumEmp " +
+         " And   a.USU_TipCol = b.TipCol " +
+         " And   a.USU_NumCad = b.NumCad " +
+         " And   a.USU_CodSin = c.CodSin " +
+         " And   d.TabOrg = e.TabOrg " +
+         " And   d.NumLoc = e.NumLoc " +
+         " And   d.NumEmp = a.USU_NumEmp " +
+         " And   d.TipCol = a.USU_TipCol " +
+         " And   d.NumCad = a.USU_NumCad " +
+         " And   d.DatAlt = (Select Max(r.DatAlt) " +
+                           "From R038HLO r " +
+                           "Where d.NumEmp = r.NumEmp " +
+                           "And   d.TipCol = r.TipCol " +
+                           "And   d.NumCad = r.NumCad " +
+                           "And   r.DatAlt <= a.USU_DatSol)" +
+         " And   (('MD' = :aIMASol and USU_NumEmp in (501, 800, 807)) " +
+         " or     ('ME' = :aIMASol and USU_NumEmp in (1, 51, 71))) " +
+         " And   USU_TipCol = 1 " +
+         " And   (USU_NumCad = :nNumCad or :nNumCad = 0) " +
+         " And   (USU_CodSin = :nCodSin or :nCodSin = 0) " +
+         " And   USU_DatSol between :dDatIni and :dDatFim " +
+         " And   ((a.USU_SitSol in (1,3) and a.USU_HorRea <> 0) " +
+         " Or     (a.USU_SitSol = 0 and a.USU_HorRea = 0)) ";
+
+  Se (nNumLoc <> 0)
+  Inicio
+    aSQL = aSQL +
+                  " And Exists (Select w.TabOrg " +
+                               "From R038HLO w " +
+                               "Where w.NumEmp = a.USU_NumEmp " +
+                               "And   w.TipCol = a.USU_TipCol " +
+                               "And   w.NumCad = a.USU_NumCad " +
+                               "And   w.DatAlt = (Select Max(q.DatAlt) " +
+                                                 "From R038HLO q " +
+                                                 "Where w.NumEmp = q.NumEmp " +
+                                                 "And   w.TipCol = q.TipCol " +
+                                                 "And   w.NumCad = q.NumCad " +
+                                                 "And   q.DatAlt <= a.USU_DatSol)" +
+                               "And   w.NumLoc = :nNumLoc) ";
+  Fim;
+
+  aSQL = aSQL +
+         " Order BY a.USU_NumCad, a.USU_DatSol";
+
+  @-- Geracao do Log --@
+  aTxtLog = "aSQL: " + aSQL;
+  f850GerarLog(1, 3);
+
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, aSQL);
+
+  SQL_DefinirAlfa(cPesquisa, "aIMASol", aIMASol);
+  SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+  SQL_DefinirInteiro(cPesquisa, "nCodSin", nCodSin);
+  SQL_DefinirData(cPesquisa, "dDatIni", dDatIni);
+  SQL_DefinirData(cPesquisa, "dDatFim", dDatFim);
+
+  Se (nNumLoc <> 0)
+  Inicio
+    SQL_DefinirInteiro(cPesquisa, "nNumLoc", nNumLoc);
+  Fim;
+  aEmpregados = "";
+
+  SQL_AbrirCursor(cPesquisa);
+  Enquanto (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "USU_NumEmp", nNumEmp);
+    SQL_RetornarInteiro(cPesquisa, "USU_TipCol", nTipCol);
+    SQL_RetornarInteiro(cPesquisa, "USU_NumCad", nNumCad);
+    SQL_RetornarAlfa(cPesquisa, "NomFun", aNomFun);
+    SQL_RetornarData(cPesquisa, "USU_DatSol", dDatSol);
+    SQL_RetornarInteiro(cPesquisa, "USU_HorSol", nHorSol);
+    SQL_RetornarInteiro(cPesquisa, "USU_HorRea", nHorRea);
+    SQL_RetornarInteiro(cPesquisa, "USU_CodSin", nCodSin);
+    SQL_RetornarAlfa(cPesquisa, "NomSin", aNomSin);
+    SQL_RetornarAlfa(cPesquisa, "NomLoc", aNomLoc);
+
+    SQL_RetornarInteiro(cPesquisa, "USU_CodWkf", nCodWkf);
+    SQL_RetornarInteiro(cPesquisa, "USU_IdeFlx", nIdeFlx);
+
+    aTipEmp = "Empleado";
+    Se (nNumEmp = 800)
+    Inicio
+      aTipEmp = "Aprendiz";
+    Fim;
+    Senao
+    Se (nNumEmp = 807)
+    Inicio
+      aTipEmp = "Pasante";
+    Fim;
+
+    IntParaAlfa(nNumEmp, aNumEmp);
+    IntParaAlfa(nTipCol, aTipCol);
+    IntParaAlfa(nNumCad, aNumCad);
+    ConverteMascara(3, dDatSol, aDatSol, "YYYY-MM-DD");
+    IntParaAlfa(nHorSol, aHorSol);
+    IntParaAlfa(nHorRea, aHorRea);
+
+    nTemSol = cFalso;
+    Se (nCodWkf = 1)
+    Inicio
+      nTemSol = cVerdadeiro;
+      aSQL = "Select a.USU_ISeSol ISeSol, a.USU_IMaSol IMaSol, a.USU_IAnSol IAnSol, \
+                     Decode(:aIdioma, 'ES', b.USU_DesEsp, b.USU_DesPtb) DesWkf \
+              From USU_TAEMSAM a, USU_TWkfCad b \
+              Where b.USU_CodWkf = a.USU_CodWkf \
+              And   a.USU_CodWkf = :nCodWkf \
+              And   a.USU_IdeFlx = :nIdeFlx ";
+    Fim;
+    Senao
+    Se (nCodWkf = 3)
+    Inicio
+      nTemSol = cVerdadeiro;
+      aSQL = "Select a.USU_ISeSap ISeSol, a.USU_IMaSap IMaSol, a.USU_IAnSap IAnSol, \
+                     Decode(:aIdioma, 'ES', b.USU_DesEsp, b.USU_DesPtb) DesWkf \
+              From USU_TAEMSAP a, USU_TWkfCad b \
+              Where b.USU_CodWkf = a.USU_CodWkf \
+              And   a.USU_CodWkf = :nCodWkf \
+              And   a.USU_IdeFlx = :nIdeFlx ";
+    Fim;
+
+    Se (nTemSol = cVerdadeiro)
+    Inicio
+      SQL_Criar(cAuxiliar);
+      SQL_UsarSQLSenior2(cAuxiliar, 0);
+      SQL_UsarAbrangencia(cAuxiliar, 0);
+      SQL_DefinirComando(cAuxiliar, aSQL);
+      SQL_DefinirInteiro(cAuxiliar, "nCodWkf", nCodWkf);
+      SQL_DefinirInteiro(cAuxiliar, "nIdeFlx", nIdeFlx);
+      SQL_DefinirAlfa(cAuxiliar, "aIdioma", aIdioma);
+      aDesWkf = "- -";
+      aIdeSol = "- -";
+
+      SQL_AbrirCursor(cAuxiliar);
+      Se (SQL_EOF(cAuxiliar) = cFalso)
+      Inicio
+        SQL_RetornarInteiro(cAuxiliar, "IAnSol", nIAnSol);
+        SQL_RetornarInteiro(cAuxiliar, "ISeSol", nISeSol);
+        SQL_RetornarAlfa(cAuxiliar, "IMaSol", aIMaSol);
+        SQL_RetornarAlfa(cAuxiliar, "DesWkf", aDesWkf);
+
+        Se (nIAnSol <> 0)
+        Inicio
+          aR850FIMarSol = aIMaSol; @-- Margem da Solicitacao a ser utilizada na formatacao da Identificacao --@
+          f850FormatarIdentificacao(nISeSol, nIAnSol);
+
+          aIdeSol = aR850FIIdeSol;
+        Fim;
+      Fim;
+      SQL_FecharCursor(cAuxiliar);
+      SQL_Destruir(cAuxiliar);
+    Fim;
+    Senao
+    Inicio
+      aDesWkf = "- -";
+      aIdeSol = "- -";
+    Fim;
+
+    aEmpregados = aEmpregados + ",{"
+                              + "\"nomSin\":\""  + aNomSin + "\""
+                              + ",\"tipEmp\":\"" + aTipEmp + "\""
+                              + ",\"numCad\":"   + aNumCad
+                              + ",\"nomFun\":\"" + aNomFun + "\""
+                              + ",\"datSol\":\"" + aDatSol + "\""
+                              + ",\"horSol\":"   + aHorSol
+                              + ",\"horRea\":"   + aHorRea
+                              + ",\"numEmp\":"   + aNumEmp
+                              + ",\"tipCol\":"   + aTipCol
+                              + ",\"nomLoc\":\"" + aNomLoc + "\""
+                              + ",\"desWkf\":\"" + aDesWkf + "\""
+                              + ",\"ideSol\":\"" + aIdeSol + "\""
+                              + "}";
+
+    SQL_Proximo(cPesquisa);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  DeletarAlfa(aEmpregados, 1, 1); @-- Apagar a primeira virgula --@
+  aRetornoDados = aRetornoDados + ",\"empregados\":[" + aEmpregados + "]";
+
+  @-- Geracao do Log --@
+  aTxtLog = "Termino - PESQUISAR";
+  f850GerarLog(1, 2);
+
+  VaPara Saida;
+Fim;
+
+
+nRetornoSucesso = cFalso;
+aRetornoMsg = ", {\"codigo\":8, \"params\":[\"" + aOperacao + " \"]}"; @-- Operacao desconhecida --@
+
+Saida:;
+
+  aAux = "true";
+  Se (nRetornoSucesso = cFalso)
+  Inicio
+    aAux = "false";
+  Fim;
+
+  aPagHtml = "{"
+           + " \"sucesso\":" + aAux;
+
+  Se (aRetornoDados <> "")
+  Inicio
+    DeletarAlfa(aRetornoDados, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"dados\":{ " + aRetornoDados + "}";
+  Fim;
+
+  Se (aRetornoMsg <> "")
+  Inicio
+    DeletarAlfa(aRetornoMsg, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"mensagens\":[ " + aRetornoMsg + "]";
+  Fim;
+
+  Se (aRetornoAcoes <> "")
+  Inicio
+    DeletarAlfa(aRetornoAcoes, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"acoes\":[ " + aRetornoAcoes + "]";
+  Fim;
+
+  aPagHtml = aPagHtml + "}";
+
+  @-- Geracao do Log --@
+  aTxtLog = "Regra HR881 :: Utilização Atividade Gremial :: Fim";
+  f850GerarLog(1, 0);
+
+  @-- Fechar arquivo do Log --@
+  f850GerarLog(2, 0);
+
+  WEB_HTML = aPagHtml;

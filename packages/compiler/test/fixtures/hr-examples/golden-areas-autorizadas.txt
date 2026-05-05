@@ -1,0 +1,424 @@
+/************************************************************************
+*                                                                       *
+*    PORTAL - ESA - Escala de Sobreaviso                                *
+*    Regra: 873 - Locais Autorizados a realizar Sobreaviso              *
+*                                                                       *
+************************************************************************/
+
+Definir Numero nIdeSis; nIdeSis = 4; @-- ESA --@
+
+Definir Alfa aPagHtml;
+Definir Alfa aOperacao;
+Definir Alfa aIdioma;
+
+Definir Alfa cPesquisa;
+Definir Alfa aSQL;
+
+Definir Alfa aFiltro;
+
+Definir Alfa aMsgErro;
+Definir Alfa aRowId;
+
+Definir Alfa aLstLocais;
+Definir Alfa aTabOrg;
+Definir Alfa aNumLoc;
+Definir Alfa aNomLoc;
+Definir Alfa aCodLoc;
+Definir Alfa aDatIni;
+Definir Alfa aDatFim;
+Definir Data dDatIni;
+Definir Data dDatFim;
+
+@-- Identificar se a URL de acesso é Externa (DMZ) :: (0:Interno | 1:Externo) --@
+WCheckValInteger("ex", "Acesso Externo", nEhURLExt, "S", 0);
+@-- Parametro LX anexado em toda execucao --@
+WCheckValString("lx", "lx", aCliLx, "S", 0);
+
+@-- Carregar as Definicoes Globais --@
+f850CarregarDefinicoes(nIdeSis);
+
+@-- Iniciar Geracao do Log --@
+f850GerarLog(0, 0);
+aTxtLog = "Executando a Regra HR873 :: Locais Autorizados a realizar Sobreaviso";
+f850GerarLog(1, 0);
+
+WCheckValString("Idioma", "Idioma", aIdioma, "S", 0);
+TiraEspacos(aIdioma, aIdioma);
+ConverteParaMaiusculo(aIdioma, aIdioma);
+Se (aIdioma = "")
+Inicio
+  aIdioma = "ES";
+Fim;
+
+WCheckValString("OP", "Operação", aOperacao, "S", 0);
+TiraEspacos(aOperacao, aOperacao);
+ConverteParaMaiusculo(aOperacao, aOperacao);
+
+@-- Geracao do Log --@
+IntParaAlfa(nEhURLExt, aTxtLog);
+aTxtLog = "cli.url: " + aTxtLog + " (0:Interno | 1:Externo)";
+f850GerarLog(1, 1);
+aTxtLog = "cli.lx: " + aCliLx;
+f850GerarLog(1, 1);
+aTxtLog = "aOperacao:" + aOperacao;
+f850GerarLog(1, 1);
+IntParaAlfa(CodUsu, aTxtLog);
+aTxtLog = "Usuario:" + aTxtLog + " - " + NomUsu;
+f850GerarLog(1, 1);
+
+Se (aOperacao = "CARREGAR")
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "CARREGAR :: Início";
+  f850GerarLog(1, 2);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Identificar TabOrg Atual";
+  f850GerarLog(1, 3);
+
+  nTabOrg = 0;
+
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select x.TabOrg \
+                                 From R030Org x \
+                                 Where x.NumEmp = :nNumEmp \
+                                 And   x.DatAlt = (Select Max(z.DatAlt) \
+                                                   From R030Org z \
+                                                   Where z.NumEmp = x.NumEmp \
+                                                   And   z.DatAlt <= :dDatHoj) \
+                                ");
+
+  SQL_DefinirInteiro(cPesquisa, "nNumEmp", nEmpUSU);
+  SQL_DefinirData(cPesquisa, "dDatHoj", dDatHoj);
+
+  SQL_AbrirCursor(cPesquisa);
+  Se (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "TabOrg", nTabOrg);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  IntParaAlfa(nTabOrg, aTabOrg);
+
+  @-- Geracao do Log --@
+  aTxtLog = "nTabOrg:" + aTabOrg;
+  f850GerarLog(1, 4);
+
+  Se (nTabOrg > 0)
+  Inicio
+    aRetornoDados = aRetornoDados + ",\"tabOrg\":" + aTabOrg;
+  Fim;
+
+  @-- Geracao do Log --@
+  aTxtLog = "Carregar NÃO Locais Autorizados";
+  f850GerarLog(1, 3);
+
+  aLstLocais = "";
+
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select JSON_ARRAYAGG( \
+                                          JSON_OBJECT( \
+                                            KEY 'numLoc' IS b.NumLoc, \
+                                            KEY 'nomLoc' IS b.NomLoc, \
+                                            KEY 'codLoc' IS c.CodLoc \
+                                          ) \
+                                        ORDER BY b.NomLoc \
+                                        RETURNING CLOB) Texto \
+                                 From R016ORN b, R016HIE c \
+                                 Where b.TabOrg = :nTabOrg \
+                                 And   b.TabOrg = c.TabOrg \
+                                 And   b.NumLoc = c.NumLoc \
+                                 And   c.DatIni <= :dDatHoj \
+                                 And   c.DatFim >= :dDatHoj \
+                                 And   not exists (Select a.USU_TabOrg \
+                                                   From USU_TESALAU a \
+                                                   Where a.USU_TabOrg = b.TabOrg \
+                                                   And   a.USU_NumLoc = b.NumLoc \
+                                                   And   a.USU_DatIni <= :dDatHoj \
+                                                   And   (a.USU_DatFim = :dDatZer or a.USU_DatFim >= :dDatHoj)) \
+                                 And   Exists (Select w.NumEmp \
+                                               From R034Fun w \
+                                               Where w.NumEmp in (1,51,71,501,800,807) \
+                                               And   w.TipCol = 1 \
+                                               And   w.TabOrg = b.TabOrg \
+                                               And   w.NumLoc = b.NumLoc \
+                                               And   not w.SitAfa in (132, 550)) \
+                                ");
+
+  SQL_DefinirInteiro(cPesquisa, "nTabOrg", nTabOrg);
+  SQL_DefinirData(cPesquisa, "dDatHoj", dDatHoj);
+  SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+
+  SQL_AbrirCursor(cPesquisa);
+  Enquanto (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarAlfa(cPesquisa, "Texto", aLstLocais);
+
+    SQL_Proximo(cPesquisa);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  Se (aLstLocais = "")
+  Inicio
+    aLstLocais = "[]";
+  Fim;
+
+  aRetornoDados = aRetornoDados + ",\"locaisNAOAutorizados\":" + aLstLocais;
+
+  @-- Geracao do Log --@
+  aTxtLog = "Carregar Locais Autorizados";
+  f850GerarLog(1, 3);
+
+  aLstLocais = "";
+
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select JSON_ARRAYAGG( \
+                                          JSON_OBJECT( \
+                                            KEY 'numLoc' IS b.NumLoc, \
+                                            KEY 'nomLoc' IS b.NomLoc, \
+                                            KEY 'codLoc' IS c.CodLoc, \
+                                            KEY 'datIni' IS to_char(a.USU_DatIni, 'YYYY-MM-DD'), \
+                                            KEY 'datFim' IS Decode(a.USU_DatFim, :dDatZer, null, to_char(a.USU_DatFim, 'YYYY-MM-DD')) \
+                                          ABSENT ON NULL) \
+                                        ORDER BY b.NomLoc \
+                                        RETURNING CLOB) Texto \
+                                 From USU_TESALAU a, R016ORN b, R016HIE c \
+                                 Where a.USU_TabOrg = b.TabOrg \
+                                 And   a.USU_NumLoc = b.NumLoc \
+                                 And   a.USU_DatIni <= :dDatHoj \
+                                 And   (a.USU_DatFim = :dDatZer or a.USU_DatFim >= :dDatHoj) \
+                                 And   b.TabOrg = c.TabOrg \
+                                 And   b.NumLoc = c.NumLoc \
+                                 And   c.DatIni <= :dDatHoj \
+                                 And   c.DatFim >= :dDatHoj \
+                                 And   Exists (Select w.NumEmp \
+                                               From R034Fun w \
+                                               Where w.NumEmp in (1,51,71,501,800,807) \
+                                               And   w.TipCol = 1 \
+                                               And   w.TabOrg = b.TabOrg \
+                                               And   w.NumLoc = b.NumLoc \
+                                               And   not w.SitAfa in (132, 550)) \
+                                ");
+
+  SQL_DefinirData(cPesquisa, "dDatHoj", dDatHoj);
+  SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+
+  SQL_AbrirCursor(cPesquisa);
+  Enquanto (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarAlfa(cPesquisa, "Texto", aLstLocais);
+
+    SQL_Proximo(cPesquisa);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  Se (aLstLocais = "")
+  Inicio
+    aLstLocais = "[]";
+  Fim;
+
+  aRetornoDados = aRetornoDados + ",\"locaisAutorizados\":" + aLstLocais;
+
+  @-- Geracao do Log --@
+  aTxtLog = "CARREGAR :: Término";
+  f850GerarLog(1, 2);
+
+  VaPara Saida;
+Fim;
+
+Se (aOperacao = "GRAVARALTERACOES")
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "GRAVARALTERACOES :: Início";
+  f850GerarLog(1, 2);
+
+  WCheckValInteger("TabOrg", "Tabela Organograma", nTabOrg, "S", 0);
+
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nTabOrg, aTxtLog);
+  aTxtLog = "nTabOrg:" + aTxtLog;
+  f850GerarLog(1, 3);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Iniciar Transacao";
+  f850GerarLog(1, 3);
+
+  IniciarTransacao();
+
+    WCountFields(nQtdCpos);
+    Para (nIdxCpo = 1; nIdxCpo < nQtdCpos; nIdxCpo++)
+    Inicio
+      WReturnFieldsName(nIdxCpo, aNomCpo);
+      aCpoAux = aNomCpo;
+      CopiarAlfa(aCpoAux, 1, 6);
+      ConverteParaMaiusculo(aCpoAux, aCpoAux);
+
+      Se (aCpoAux = "ROWIDE") @-- Tratar o Local --@
+      Inicio
+        WCheckValString(aNomCpo, "Id Local", aRowId, "S", 0);
+
+        aNomCpo = "sitReg" + aRowId;
+        WCheckValInteger(aNomCpo, "Situacao Registro", nSitReg, "S", 0);
+
+        aNomCpo = "numLoc" + aRowId;
+        WCheckValInteger(aNomCpo, "Local", nNumLoc, "S", 0);
+
+        aNomCpo = "datIni" + aRowId;
+        WCheckValData(aNomCpo, "Data Inicial", dDatIni, "S");
+
+        aNomCpo = "datFim" + aRowId;
+        WCheckValData(aNomCpo, "Data Final", dDatFim, "S");
+
+        aTxtLog = "aRowId: " + aRowId;
+        f850GerarLog(1, 4);
+        IntParaAlfa(nSitReg, aTxtLog);
+        aTxtLog = "nSitReg: " + aTxtLog;
+        f850GerarLog(1, 4);
+        IntParaAlfa(nNumLoc, aTxtLog);
+        aTxtLog = "nNumLoc: " + aTxtLog;
+        f850GerarLog(1, 4);
+        ConverteMascara(3, dDatIni, aTxtLog, "DD/MM/YYYY");
+        aTxtLog = "dDatIni: " + aTxtLog;
+        f850GerarLog(1, 4);
+        ConverteMascara(3, dDatFim, aTxtLog, "DD/MM/YYYY");
+        aTxtLog = "dDatFim: " + aTxtLog;
+        f850GerarLog(1, 4);
+
+        Se (nSitReg = 0) @-- 0 = Incluir --@
+        Inicio
+          ExecSQLEx("Insert into USU_TESALAU \
+                        (USU_TabOrg, USU_NumLoc, USU_DatIni, USU_DatFim, \
+                         USU_CUsInc, USU_DtHInc, USU_CUsMod, USU_DtHMod) \
+                      Values \
+                      (:nTabOrg, :nNumLoc, :dDatIni, :dDatFim, \
+                       :nCodUsu, SysDate, :nCodUsu, SysDate) \
+                    ", nRetErro, aMsgErro);
+
+          Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+          Inicio
+             @-- Geracao do Log --@
+            aTxtLog = "[E001]: Erro ao Incluir USU_TESALAU. << " + aMsgErro + " >>";
+            f850GerarLog(1, 5);
+
+            nRetornoSucesso = cFalso;
+            aRetornoMsg = aRetornoMsg + ",{\"codigo\":15,\"tipo\":\"Erro\",\"params\":[\"E001\"]}"; @-- Erro na Solicitacao --@
+
+            DesfazerTransacao();
+
+            VaPara Saida;
+          Fim;
+
+        Fim;
+        Senao
+        Se (nSitReg = 2) @-- 2 = Excluir --@
+        Inicio
+          ExecSQLEx("Update USU_TESALAU \
+                     Set USU_DatFim = :dDatFim, \
+                         USU_CUsMod = :nCodUsu, \
+                         USU_DtHMod = SysDate \
+                     Where USU_TabOrg = :nTabOrg \
+                     And   USU_NumLoc = :nNumLoc \
+                     And   USU_DatIni = :dDatIni \
+                    ", nRetErro, aMsgErro);
+
+          Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+          Inicio
+             @-- Geracao do Log --@
+            aTxtLog = "[E002]: Erro ao Excluir USU_TESALAU. << " + aMsgErro + " >>";
+            f850GerarLog(1, 5);
+
+            nRetornoSucesso = cFalso;
+            aRetornoMsg = aRetornoMsg + ",{\"codigo\":15,\"tipo\":\"Erro\",\"params\":[\"E002\"]}"; @-- Erro na Solicitacao --@
+
+            DesfazerTransacao();
+
+            VaPara Saida;
+          Fim;
+        Fim;
+      Fim; @-- Se RowId --@
+    Fim; @-- Para Campos --@
+
+    @-- Geracao do Log --@
+    aTxtLog = "Finalizar Transacao";
+    f850GerarLog(1, 3);
+
+  FinalizarTransacao();
+
+  nRetornoSucesso = cVerdadeiro;
+  aRetornoMsg = aRetornoMsg + ", {\"codigo\":11}"; @-- Gravação realizada com sucesso --@
+  aRetornoAcoes = aRetornoAcoes + ",{\"acao\":5}"; @-- Recarregar a Tela --@
+
+  @-- Geracao do Log --@
+  aTxtLog = "GRAVARALTERACOES :: Término";
+  f850GerarLog(1, 2);
+
+  VaPara Saida;
+Fim;
+
+
+nRetornoSucesso = cFalso;
+aRetornoMsg = ", {\"codigo\":8, \"params\":[\"" + aOperacao + " \"]}"; @-- Operacao desconhecida --@
+
+Saida:;
+
+  aAux = "true";
+  Se (nRetornoSucesso = cFalso)
+  Inicio
+    aAux = "false";
+  Fim;
+
+  aPagHtml = "{"
+           + " \"sucesso\":" + aAux;
+
+  Se (aRetornoDados <> "")
+  Inicio
+    DeletarAlfa(aRetornoDados, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"dados\":{ " + aRetornoDados + "}";
+  Fim;
+
+  Se (aRetornoMsg <> "")
+  Inicio
+    DeletarAlfa(aRetornoMsg, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"mensagens\":[ " + aRetornoMsg + "]";
+  Fim;
+
+  Se (aRetornoAcoes <> "")
+  Inicio
+    DeletarAlfa(aRetornoAcoes, 1, 1); @-- Apagar a primeira virgula --@
+    aPagHtml = aPagHtml + ", \"acoes\":[ " + aRetornoAcoes + "]";
+  Fim;
+
+  Se (aRetornoDadosTecnicos <> "")
+  Inicio
+    aPagHtml = aPagHtml + ", \"dadosTecnicos\":{"
+                        + "\"modulo\":\"HR\""
+                        + ",\"regra\":873"
+                        + ",\"operacao\":\"" + aOperacao + "\""
+                        + aRetornoDadosTecnicos
+                        + "}";
+  Fim;
+
+  aPagHtml = aPagHtml + "}";
+
+  @-- Geracao do Log --@
+  aTxtLog = "HR873 :: Locais Autorizados a realizar Sobreaviso :: Término";
+  f850GerarLog(1, 0);
+
+  @-- Fechar arquivo do Log --@
+  f850GerarLog(2, 0);
+
+  WEB_HTML = aPagHtml;
+
+@-- *************************************** --@
+@--   Início da implementação das funções   --@
+@-- *************************************** --@

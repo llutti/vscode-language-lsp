@@ -1,0 +1,1707 @@
+@-- Identificador do WebService --@
+Definir Numero nIdeWSv; nIdeWSv = 26; @-- Registrar Domicilio Marcação --@
+
+@-- Relação dos código de erros registrado no APP Marcaciones --@
+@-- --------------------------------------------------------- --@
+@-- AEM_001 - Login no Informado --@
+@-- AEM_002 - Identificador del Sistema no Informado --@
+@-- AEM_003 - Fecha no Informada --@
+@-- AEM_004 - Fecha inválida --@
+@-- AEM_005 - Horário inválido --@
+@-- AEM_006 - Hora inválida --@
+@-- AEM_007 - Minuto inválido --@
+@-- AEM_008 - Login no Localizado --@
+@-- AEM_009 - Login no Vinculado a un empleado --@
+@-- AEM_010 - Carnet no localizado --@
+@-- AEM_011 - Erro al Incluir Marcación --@
+@-- AEM_012 - Erro al Registro Marcación --@
+@-- AEM_013 - Sede inválida --@
+@-- AEM_014 - Justificativa no Informada --@
+@-- AEM_015 - Erro al Registrar Domicilio --@
+@-- AEM_016 - Fecha inválida (Cálculo ya cerrado) --@
+@-- AEM_017 - Marcación ONLINE fuera de tolerancia --@
+@-- AEM_023 - Já existe uma solicitação pendente de aprovação --@
+@-- AEM_024 - Acesso Negado pela Situação --@
+@-- AEM_046 - Acesso Negado pela Faixa Horária --@
+@-- AEM_047 - Acesso Negado pelo Local não Permitido --@
+@-- AEM_048 - Fora do limite para marcação --@
+@-- AEM_049 - Não foi localizada a lat/long do Domicilio --@
+
+Definir Funcao fGravarLogExecucao(Numero pTipOpe);
+
+Definir Alfa CR; RetornaASCII(13, CR);
+Definir Alfa LF; RetornaASCII(10, LF);
+Definir Alfa CRLF; CRLF = CR + LF;
+
+Definir Alfa aGerLog; aGerLog = "S";
+Definir Alfa aTxtLog; aTxtLog = "";
+Definir Alfa aMsgErro;
+Definir Funcao fGerarLog(Numero pGLOpcao, Numero pGLNivel); @-- Funcao para gravar um arquivo de Log --@
+
+
+Definir Alfa aTxtJusDec; @-- Texto da Justificativa da Decisao --@
+Definir Data dCPDatIni; @-- Data para inicio da Apuracao --@
+Definir Data dCPDatFim; @-- Data para fim da Apuracao --@
+Definir Funcao fCriarPendencia(Numero pCPCodWkf, Numero pCPIdeFlx, Numero pCPCodCFx,
+                               Numero pCPNumSol, Numero pCPMotPen, Numero pCPNumEmp,
+                               Numero pCPTipCol, Numero pCPNumCad, Numero pCPCodDec,
+                               Numero pCPOriPen, Numero pCPIdeTxt, Numero End pCPNumPen,
+                               Numero pCPDtLDec, Numero pCPHrLDec, Numero pCPMotDec);
+
+Definir Alfa aATGTexto;
+Definir Funcao fAtualizarTextoGSW(Numero pATGCodWkf, Numero End pATGNumTxt);
+
+Definir Alfa aTextoWKF;
+Definir Funcao fAtualizarTextoWKF(Numero pCodWkf, Numero pIdeWkf, Numero End pIdeTxt);
+
+Definir Funcao fControleFluxo(Numero pCFCodWkf, Numero pCFIdeFlx, Numero pCFCodCFx, Numero pCFPasso,  Numero pCFNewDec,
+                              Numero pCFPapFlx, Numero pCFEmpRsp, Numero pCFTipRsp, Numero pCFCadRsp, Numero pCFJusDec,
+                              Numero pCFSeqApv, Numero pCFEtaFlx, Numero pCFNumEmp, Numero pCFTipCol, Numero pCFNumCad);
+
+Definir Alfa aSQL;
+Definir Alfa aAux;
+Definir Alfa cPesquisa;
+Definir Alfa aErro;
+
+Definir Data dDatHoj; dDatHoj = DatSis;
+Definir Data dDatZer; dDatZer = 0;
+Definir Numero nHorAgo; nHorAgo = HorSis;
+
+Definir Numero nNumEmp;
+Definir Numero nTipCol;
+Definir Numero nNumCad;
+Definir Alfa aResult;
+
+Definir Alfa aAppLog;
+Definir Alfa aAppLat;
+Definir Alfa aAppLon;
+Definir Alfa aAppJus; @-- Texto da Justificativa --@
+
+Definir Alfa aIMaSol;
+
+@-- Iniciar Geracao do Log --@
+fGerarLog(0, 0);
+aTxtLog = "WebService :: HR :: interno.py.itaipu.app.RegistrarDomicilio";
+fGerarLog(1, 0);
+
+RegistrarDomicilio.ErroExecucao = "";
+aErro = "";
+
+aAppLog = RegistrarDomicilio.Login;
+nIdeSUW = RegistrarDomicilio.IdeSUW;
+aAppLat = RegistrarDomicilio.Latitude;
+aAppLon = RegistrarDomicilio.Longitude;
+aAppJus = RegistrarDomicilio.Justificativa;
+nNumEmp = RegistrarDomicilio.NumEmp;
+nTipCol = 1;
+nNumCad = RegistrarDomicilio.NumCad;
+
+aResult = "";
+nStatus = 0; @-- 0 = Sucesso, 1 = Erro na Execucao --@
+
+@-- Grava no Banco Log de Execucao 1 = INICIO --@
+fGravarLogExecucao(1);
+
+TiraEspacos(aAppLog, aAppLog);
+
+@-- Geracao do Log --@
+aTxtLog = "aAppLog: ||" + aAppLog + "||";
+fGerarLog(1, 1);
+IntParaAlfa(nIdeSUW, aTxtLog);
+aTxtLog = "nIdeSUW: " + aTxtLog;
+fGerarLog(1, 1);
+IntParaAlfa(nNumEmp, aTxtLog);
+aTxtLog = "nNumEmp: " + aTxtLog;
+fGerarLog(1, 1);
+IntParaAlfa(nNumCad, aTxtLog);
+aTxtLog = "nNumCad: " + aTxtLog;
+fGerarLog(1, 1);
+aTxtLog = "aAppLat: " + aAppLat;
+fGerarLog(1, 1);
+aTxtLog = "aAppLon: " + aAppLon;
+fGerarLog(1, 1);
+aTxtLog = "aAppJus: " + aAppJus;
+fGerarLog(1, 1);
+
+Se (aAppLog = "")
+Inicio
+  aResult = "ERROR";
+  RegistrarDomicilio.ErroExecucao = "[E001] Login no Informado.";
+  aErro = "AEM_001";
+  VaPara Saida;
+Fim;
+
+Se (nIdeSUW = 0)
+Inicio
+  aResult = "ERROR";
+  RegistrarDomicilio.ErroExecucao = "[E002] Identificador del Sistema no Informado.";
+  aErro = "AEM_002";
+  VaPara Saida;
+Fim;
+
+Se (aAppJus = "")
+Inicio
+  aResult = "ERROR";
+  RegistrarDomicilio.ErroExecucao = "[E014] Justificativa no Informada.";
+  aErro = "AEM_014";
+  VaPara Saida;
+Fim;
+
+@-- Ajustar número da Empresa Aprendiz --@
+Se (nNumEmp = 700)
+Inicio
+  nNumEmp = 800;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nNumEmp, aTxtLog);
+  aTxtLog = "nNumEmp(2): " + aTxtLog;
+  fGerarLog(1, 1);
+Fim;
+
+Se ((nNumEmp = 0)
+ou  (nNumCad = 0))
+Inicio
+  @-- Geracao do Log --@
+  aTxtLog = "Buscar Empresa/Matricula pelo Login";
+  fGerarLog(1, 1);
+
+  nNumEmp = 0;
+  nNumCad = 0;
+
+  ConverteParaMaiusculo(aAppLog, aAppLog);
+
+  @-- Buscar o código do usuário --@
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select CodEnt \
+                                 From R910ENT \
+                                 Where Upper(NomEnt) = :aNomEnt \
+                                ");
+
+  SQL_DefinirAlfa(cPesquisa, "aNomEnt", aAppLog);
+
+  SQL_AbrirCursor(cPesquisa);
+  nCodUsu = 0;
+  Se (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "CodEnt", nCodUsu);
+  Fim;
+  SQL_Destruir(cPesquisa);
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nCodUsu, aTxtLog);
+  aTxtLog = "nCodUsu:" + aTxtLog;
+  fGerarLog(1, 2);
+
+  Se (nCodUsu = 0)
+  Inicio
+    aResult = "ERROR";
+    RegistrarDomicilio.ErroExecucao = "[E008] Login no Localizado.";
+    aErro = "AEM_008";
+  Fim;
+
+  RetColabPorCodUsu(nCodUsu, nNumEmp, nTipCol, nNumCad);
+
+  Se (nNumCad = 0)
+  Inicio
+    aResult = "ERROR";
+    RegistrarDomicilio.ErroExecucao = "[E009] Login no Vinculado a un empleado.";
+    aErro = "AEM_009";
+  Fim;
+
+  Se (RegistrarDomicilio.ErroExecucao <> "")
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Buscar pelo E-mail";
+    fGerarLog(1, 2);
+
+    aSQL = "Select NumEmp, TipCol, NumCad " +
+           "From R034Cpl " +
+           "Where NumEmp in (1, 51, 71, 81, 91, 501, 800, 807) " +
+           "And   TipCol = 1 " +
+           "And   (Upper(EmaCom) = Upper('" + aAppLog + "@itaipu.gov.py') " +
+           "or     Upper(EmaCom) = Upper('" + aAppLog + "@itaipu.gov.br')) ";
+
+    @-- Geracao do Log --@
+    aTxtLog = "aSQL: " + aSQL;
+    fGerarLog(1, 3);
+
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, aSQL);
+
+    SQL_AbrirCursor(cPesquisa);
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cPesquisa, "NumEmp", nNumEmp);
+      SQL_RetornarInteiro(cPesquisa, "TipCol", nTipCol);
+      SQL_RetornarInteiro(cPesquisa, "NumCad", nNumCad);
+
+      RegistrarDomicilio.ErroExecucao = "";
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+
+    Se (nNumCad = 0)
+    Inicio
+      VaPara Saida;
+    Fim;
+  Fim;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nNumEmp, aTxtLog);
+  aTxtLog = "nNumEmp(1):" + aTxtLog;
+  fGerarLog(1, 2);
+  IntParaAlfa(nTipCol, aTxtLog);
+  aTxtLog = "nTipCol(1):" + aTxtLog;
+  fGerarLog(1, 2);
+  IntParaAlfa(nNumCad, aTxtLog);
+  aTxtLog = "nNumCad(1):" + aTxtLog;
+  fGerarLog(1, 2);
+Fim;
+
+@-- Geracao do Log --@
+aTxtLog = "Validar a Situação do Empregado";
+fGerarLog(1, 4);
+
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select b.CodSit, b.DesSit \
+                                From R038AFA a, R010SIT b \
+                                Where a.SitAfa = b.CodSit \
+                                And   b.BloAce = 'S' \
+                                And   a.NumEmp = :nNumEmp \
+                                And   a.TipCol = :nTipCol \
+                                And   a.NumCad = :nNumCad \
+                                And   (a.DatAfa < :dDatAcc \
+                                or     (a.DatAfa = :dDatAcc and a.HorAfa <= :nHorAcc)) \
+                                And   (a.DatTer > :dDatAcc \
+                                or     a.DatTer = :dDatZer \
+                                or     (a.DatTer = :dDatAcc and (a.HorTer = 0 or a.HorTer >= :nHorAcc))) \
+                              ");
+
+SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+SQL_DefinirData(cPesquisa, "dDatAcc", dDatAcc);
+SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+SQL_DefinirInteiro(cPesquisa, "nHorAcc", nHorAcc);
+
+SQL_AbrirCursor(cPesquisa);
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarInteiro(cPesquisa, "CodSit", nCodSit);
+  SQL_RetornarAlfa(cPesquisa, "DesSit", aAux);
+
+  aResult = "ERROR";
+  aErro = "AEM_024";
+  RegistrarDomicilio.ErroExecucao = "[E024] Acesso Negado pela Situacao (" + aAux + ").";
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nCodSit, aTxtLog);
+  aTxtLog = "nCodSit:" + aTxtLog + " - " + aAux;
+  fGerarLog(1, 6);
+  aTxtLog = "[E024] Acesso Negado pela Situacao";
+  fGerarLog(1, 6);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+@-- Geracao do Log --@
+aTxtLog = "Verificar se existe uma solicitação pendente";
+fGerarLog(1, 4);
+
+nNumSol = 0;
+
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select USU_NumSol \
+                               From USU_TGSWSAC \
+                               Where USU_NumEmp = :nNumEmp \
+                               And   USU_TipCol = :nTipCol \
+                               And   USU_NumCad = :nNumCad \
+                               And   USU_SitSol in (51,52) \
+                              ");
+
+SQL_DefinirInteiro(cPesquisa, "nNumEmp", nNumEmp);
+SQL_DefinirInteiro(cPesquisa, "nTipCol", nTipCol);
+SQL_DefinirInteiro(cPesquisa, "nNumCad", nNumCad);
+
+SQL_AbrirCursor(cPesquisa);
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarInteiro(cPesquisa, "USU_NumSol", nNumSol);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+Se (nNumSol <> 0)
+Inicio
+  aResult = "ERROR";
+  aErro = "AEM_023";
+  RegistrarDomicilio.ErroExecucao = "[E023] Já existe uma solicitação pendente de aprovação.";
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nNumSol, aTxtLog);
+  aTxtLog = "nNumSol:" + aTxtLog;
+  fGerarLog(1, 6);
+  aTxtLog = "[E023] Já existe uma solicitação pendente de aprovação";
+  fGerarLog(1, 6);
+
+  VaPara Saida;
+Fim;
+
+IniciarTransacao();
+
+  @-- Geracao do Log --@
+  aTxtLog = "Criar a Solicitacao";
+  fGerarLog(1, 4);
+
+  @-- Inicializar as Variáveis --@
+  nCodWkf = 22; @-- 22 = Alteração Cadastral --@
+  nSitSol = 51; @-- 51 = Em Criacao --@
+  nTipAlt = 1;  @-- 1 = Domicilio Marcacao --@
+  nJusSol = 0;
+  nNumSol = 0;
+  aIMaSol = "";
+  Se (nNumEmp > 0)
+  Inicio
+    aIMaSol = "MD";
+    Se (nNumEmp < 500)
+    Inicio
+      aIMaSol = "ME";
+    Fim;
+  Fim;
+
+  @-- Executar a Sequence para pegar os novos números --@
+  SQL_Criar(cPesquisa);
+  SQL_UsarSQLSenior2(cPesquisa, 0);
+  SQL_UsarAbrangencia(cPesquisa, 0);
+  SQL_DefinirComando(cPesquisa, "Select SeqIdCtrWKF.NextVal IdeFlx, \
+                                        SeqGSWSAC.NextVal NumSol, \
+                                        SeqIdGSWAne.NextVal IdeAne \
+                                  From dual \
+                                ");
+  SQL_AbrirCursor(cPesquisa);
+  nIdeFlx = 0;
+  Se (SQL_EOF(cPesquisa) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cPesquisa, "IdeFlx", nIdeFlx);
+    SQL_RetornarInteiro(cPesquisa, "NumSol", nNumSol);
+    SQL_RetornarInteiro(cPesquisa, "IdeAne", nIdeAne);
+  Fim;
+  SQL_FecharCursor(cPesquisa);
+  SQL_Destruir(cPesquisa);
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nNumSol, aTxtLog);
+  aTxtLog = "nNumSol: " + aTxtLog;
+  fGerarLog(1, 5);
+  IntParaAlfa(nIdeFlx, aTxtLog);
+  aTxtLog = "nIdeFlx: " + aTxtLog;
+  fGerarLog(1, 5);
+  IntParaAlfa(nIdeAne, aTxtLog);
+  aTxtLog = "nIdeAne: " + aTxtLog;
+  fGerarLog(1, 5);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Inicio - Tratar Texto";
+  fGerarLog(1, 4);
+
+  @-- Tratar Texto Justificativa --@
+  aATGTexto = aAppJus;
+  fAtualizarTextoGSW(nCodWkf, nJusSol);
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nJusSol, aTxtLog);
+  aTxtLog = "nJusSol:" + aTxtLog;
+  fGerarLog(1, 5);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Fim - Tratar Texto";
+  fGerarLog(1, 4);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Executar Insert USU_TGSWSAC";
+  fGerarLog(1, 5);
+
+  ExecSQLEx("Insert into USU_TGSWSAC \
+                (USU_NumSol, USU_IMaSol, USU_IAnSol, USU_ISeSol, \
+                USU_JusSol, USU_SitSol, USU_EmpSol, USU_TpCSol, \
+                USU_CadSol, USU_DCrSol, USU_HCrSol, \
+                USU_CodWkf, USU_IdeFlx, USU_NumEmp, USU_TipCol, \
+                USU_NumCad, USU_TipAlt, USU_LatDoM, USU_LonDoM, \
+                USU_IdeAne, USU_DtLDec, USU_HrLDec) \
+              Values \
+                (:nNumSol, :aIMaSol, 0, 0, \
+                 :nJusSol, :nSitSol, :nNumEmp, :nTipCol, \
+                 :nNumCad, :dDatHoj, :nHorAgo, \
+                 :nCodWkf, :nIdeFlx, :nNumEmp, :nTipCol, \
+                 :nNumCad, :nTipAlt, :aAppLat, :aAppLon, \
+                 :nIdeAne, :dDatZer, 0) \
+            ", nRetErro, aMsgErro);
+
+  Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "[E015] Erro ao Incluir Solicitacao Registro Domicilio. << " + aMsgErro + " >>";
+    fGerarLog(1, 6);
+
+    aResult = "ERROR";
+    RegistrarDomicilio.ErroExecucao = "[E015] Erro al Registrar Domicilio.";
+    aErro = "AEM_015";
+
+    DesfazerTransacao();
+    VaPara Saida;
+  Fim;
+
+  @-- Geracao do Log --@
+  aTxtLog = "Registrar a Criacao no Fluxo";
+  fGerarLog(1, 5);
+
+  nCFCodERS = 501;
+  fControleFluxo(nCodWkf, nIdeFlx, 0, 1, 0, 51, nNumEmp, nTipCol, nNumCad, 0, 0, 0, nNumEmp, nTipCol, nNumCad);
+
+  @-- Corrigir a data de recebimento, pois a decisão é 0 (zero) --@
+  ExecSQLEx("Update USU_TWkfCFx \
+             Set USU_DtHRec = sysdate \
+             Where USU_CodWkf = :nCodWkf \
+             And   USU_IdeFlx = :nIdeFlx \
+             And   USU_CodCFx = 1 \
+            ", nRetErro, aMsgErro);
+
+  Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "[E016] Erro Atualizar Control del Flujo Decisión. :: " + aMsgErro;
+    fGerarLog(1, 6);
+
+    aResult = "ERROR";
+    RegistrarDomicilio.ErroExecucao = "[E016] Erro al Atualizar Control del Flujo Decisión.";
+    aErro = "AEM_015";
+
+    DesfazerTransacao();
+    VaPara Saida;
+  Fim;
+
+
+  @-- Geracao do Log --@
+  aTxtLog = "Criar Pendencia para enviar para aprovação";
+  fGerarLog(1, 5);
+
+  fCriarPendencia(nCodWkf, nIdeFlx, 0, nNumSol, 12, nNumEmp, nTipCol, nNumCad, 0, 1, 0, nNumPen, dDatZer, 0, 0);
+
+FinalizarTransacao();
+
+Saida:;
+  TiraEspacos(aResult, aResult);
+  Se (aResult = "")
+  Inicio
+    aResult = "OK";
+  Fim;
+
+  RegistrarDomicilio.Result = aResult;
+  RegistrarDomicilio.Erro = aErro;
+
+  @-- Geracao do Log --@
+  aTxtLog = "RegistrarDomicilio.Erro: " + RegistrarDomicilio.Erro;
+  fGerarLog(1, 1);
+  aTxtLog = "aErro: " + aErro;
+  fGerarLog(1, 2);
+  aTxtLog = "RegistrarDomicilio.Result: " + RegistrarDomicilio.Result;
+  fGerarLog(1, 1);
+  aTxtLog = "aResult: " + aResult;
+  fGerarLog(1, 2);
+
+  Se (RegistrarDomicilio.ErroExecucao <> "")
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "ErroExecucao:" + RegistrarDomicilio.ErroExecucao;
+    fGerarLog(1, 3);
+    nStatus = 1; @-- ERRO na Execucao --@
+  Fim;
+
+  @-- Grava no Banco Log de Execucao 2 = FINALIZACAO --@
+  fGravarLogExecucao(2);
+
+  RegistrarDomicilio.ErroExecucao = ""; @-- Limpar para que o retorno nas variaveis "ERRO" e "RESULT" funcione corretamente --@
+
+  @-- Geracao do Log --@
+  aTxtLog = "Término WebService :: interno.py.itaipu.empleado.RegistrarDomicilio";
+  fGerarLog(1, 0);
+
+  @-- Fechar arquivo do Log --@
+  fGerarLog(2, 0);
+
+
+@-- *************************************** --@
+@--   Início da implementação das funções   --@
+@-- *************************************** --@
+
+@-- Criar / Fechar / Gravar arquivo de Log --@
+Funcao fGerarLog(Numero pGLOpcao, Numero pGLNivel);
+Inicio
+  Se (aGerLog = "S")
+  Inicio
+    Definir Alfa cGLPesquisa;
+    Definir Alfa aGLAuxLog;
+    Definir Alfa aGLSigWSv;
+    Definir Alfa aGLDatLog; aGLDatLog = "";
+    Definir Alfa aPathLog;
+
+    Se (pGLNivel < 0)
+    Inicio
+      pGLNivel = 0;
+    Fim;
+
+    Se (pGLOpcao = 0) @-- Inicializar Log --@
+    Inicio
+      @-- Carregar definicoes --@
+      SQL_Criar(cGLPesquisa);
+      SQL_UsarSQLSenior2(cGLPesquisa, 0);
+      SQL_UsarAbrangencia(cGLPesquisa, 0);
+      SQL_DefinirComando(cGLPesquisa, "Select USU_PthLog \
+                                       From USU_TGSWDef \
+                                       Where USU_CmpDef = (Select Max(x.USU_CmpDef) \
+                                                           From USU_TGSWDef x) \
+                                      ");
+      SQL_AbrirCursor(cGLPesquisa);
+      Se (SQL_EOF(cGLPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cGLPesquisa, "USU_PthLog", aPathLog);
+
+        TiraEspacos(aPathLog, aPathLog);
+        TamanhoAlfa(aPathLog, nTam);
+        aGLAuxLog = aPathLog;
+        CopiarAlfa(aGLAuxLog, nTam, 1);
+        Se (aGLAuxLog <> "\\")
+        Inicio
+          aPathLog = aPathLog + "\\";
+        Fim;
+        aPathLog = aPathLog + "wsv\\";
+      Fim;
+      SQL_FecharCursor(cGLPesquisa);
+      SQL_Destruir(cGLPesquisa);
+
+      @-- Carregar Sigla do WebService --@
+      aGLSigWSv = "";
+      SQL_Criar(cGLPesquisa);
+      SQL_UsarSQLSenior2(cGLPesquisa, 0);
+      SQL_UsarAbrangencia(cGLPesquisa, 0);
+      SQL_DefinirComando(cGLPesquisa, "Select USU_SigWSv \
+                                       From USU_TGSWWSv \
+                                       Where USU_IdeWsv = :nIdeWsv \
+                                      ");
+      SQL_DefinirInteiro(cGLPesquisa, "nIdeWsv", nIdeWsv);
+      SQL_AbrirCursor(cGLPesquisa);
+      Se (SQL_EOF(cGLPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cGLPesquisa, "USU_SigWSv", aGLSigWSv);
+        ConverteParaMinusculo(aGLSigWSv, aGLSigWSv);
+      Fim;
+      SQL_FecharCursor(cGLPesquisa);
+      SQL_Destruir(cGLPesquisa);
+    Fim;
+
+    Se ((pGLOpcao = 0)  @-- Inicializar Log --@
+    ou  (pGLOpcao = 2)) @-- Fechar Log --@
+    Inicio
+      SQL_Criar(cGLPesquisa);
+      SQL_UsarSQLSenior2(cGLPesquisa, 0);
+      SQL_UsarAbrangencia(cGLPesquisa, 0);
+      SQL_DefinirComando(cGLPesquisa, "Select to_Char(systimestamp,'yyyy-mm-dd-HH24-MI-SS-FF6') Data from dual");
+      SQL_AbrirCursor(cGLPesquisa);
+      Se (SQL_EOF(cGLPesquisa) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cGLPesquisa, "Data", aGLDatLog);
+      Fim;
+      SQL_FecharCursor(cGLPesquisa);
+      SQL_Destruir(cGLPesquisa);
+    Fim;
+
+    Se (pGLOpcao = 0) @-- Inicializar Log --@
+    Inicio
+      aGLAuxLog = aPathLog + "wsv-" + aGLSigWSv + "-" + aGLDatLog + ".log";
+      ConverteParaMinusculo(aGLAuxLog, aGLAuxLog);
+      nArqLog = Abrir(aGLAuxLog, GravarNL);
+      aTxtLog = "Inicio da Geracao do Log";
+      pGLNivel = -1;
+      pGLOpcao = 1;
+      aGLDatLog = " >> " + aGLDatLog;
+    Fim;
+
+    Se (pGLOpcao = 2) @-- Fechar Log --@
+    Inicio
+      aGLAuxLog = "Fim da Geracao do Log >> " + aGLDatLog;
+      GravarNL(nArqLog, aGLAuxLog);
+      Fechar(nArqLog);
+    Fim; @-- Opcao = Adicionar Log --@
+    Senao
+    Se (pGLOpcao = 1) @-- Adicionar Log --@
+    Inicio
+      TrocaString(aTxtLog, CRLF, "##[CRLF]##", aTxtLog);
+      TrocaString(aTxtLog, CR, "##[CR]##", aTxtLog);
+      TrocaString(aTxtLog, LF, "##[LF]##", aTxtLog);
+
+      @-- Identar conforme o nível indicado --@
+      Para (nNiv=0; nNiv <= pGLNivel; nNiv++)
+      Inicio
+        aTxtLog = "  " + aTxtLog;
+      Fim;
+      aGLAuxLog = aTxtLog + aGLDatLog;
+      GravarNL(nArqLog, aGLAuxLog);
+    Fim; @-- Opcao = Adicionar Log --@
+  Fim;
+Fim;
+
+Funcao fGravarLogExecucao(Numero pTipOpe);
+Inicio
+  Definir Alfa aTxtMsg;
+  Se (pTipOpe = 1) @-- Inicio --@
+  Inicio
+    @-- Executar a Sequence para pegar o novo número de Log --@
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, "Select SeqIdGSWLWS.NextVal Num \
+                                   From dual \
+                                  ");
+    SQL_AbrirCursor(cPesquisa);
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cPesquisa, "Num", nIdeCon);
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+
+    ExecSQLEx("Insert into USU_TGSWLWS \
+                  (USU_IdeCon, USU_IdeWSv, USU_DtHIni, \
+                   USU_DtHFim, USU_Login,  USU_CodUsu, \
+                   USU_NumEmp, USU_TipCol, USU_NumCad, \
+                   USU_Status, USU_TxtMsg, USU_IdeSUW) \
+                values \
+                  (:nIdeCon, :nIdeWsv,  SysDate, \
+                   :dDatZer, :aAppLog, :nCodUsu, \
+                   :nNumEmp, :nTipCol, :nNumCad, \
+                   0, 'Inicializando', :nIdeSUW) \
+              ", nRetErro, aMsgErro);
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Insert Log:" + aMsgErro;
+      fGerarLog(1, 1);
+    Fim;
+  Fim;
+  Senao @-- Termino --@
+  Inicio
+    aTxtMsg = "";
+    Se (nStatus = 1)
+    Inicio
+      aTxtMsg = RegistrarDomicilio.ErroExecucao;
+    Fim;
+
+    ExecSQLEx("Update USU_TGSWLWS \
+               set   USU_DtHFim =  SysDate, \
+                     USU_CodUsu = :nCodUsu, \
+                     USU_NumEmp = :nNumEmp, \
+                     USU_TipCol = :nTipCol, \
+                     USU_NumCad = :nNumCad, \
+                     USU_Status = :nStatus, \
+                     USU_TxtMsg = :aTxtMsg \
+               where USU_IdeCon = :nIdeCon \
+              ", nRetErro, aMsgErro);
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Update Log:" + aMsgErro;
+      fGerarLog(1, 1);
+    Fim;
+  Fim;
+Fim;
+
+@-- Funcao irá incluir um registro na tabela de pendencias --@
+Funcao fCriarPendencia(Numero pCPCodWkf, Numero pCPIdeFlx, Numero pCPCodCFx,
+                       Numero pCPNumSol, Numero pCPMotPen, Numero pCPNumEmp,
+                       Numero pCPTipCol, Numero pCPNumCad, Numero pCPCodDec,
+                       Numero pCPOriPen, Numero pCPIdeTxt, Numero End pCPNumPen,
+                       Numero pCPDtLDec, Numero pCPHrLDec, Numero pCPMotDec);
+Inicio
+  Definir Alfa cCPPPDec;
+  Definir Data dCPDatIni;
+  Definir Data dCPDatFim;
+  Definir Data dCPIniApu;
+  Definir Data dCPFimApu;
+  Definir Data dCPDtLDec;
+
+  @-- Geracao do Log --@
+  aTxtLog = "Inicio - fCriarPendencia";
+  fGerarLog(1, 10);
+
+  @-- Geracao do Log --@
+  IntParaAlfa(pCPNumSol, aTxtLog);
+  aTxtLog = "pCPNumSol: " + aTxtLog;
+  fGerarLog(1, 11);
+  IntParaAlfa(pCPCodWkf, aTxtLog);
+  aTxtLog = "pCPCodWkf: " + aTxtLog;
+  fGerarLog(1, 11);
+  IntParaAlfa(pCPIdeFlx, aTxtLog);
+  aTxtLog = "pCPIdeFlx: " + aTxtLog;
+  fGerarLog(1, 11);
+  IntParaAlfa(pCPCodCFx, aTxtLog);
+  aTxtLog = "pCPCodCFx: " + aTxtLog;
+  fGerarLog(1, 11);
+  IntParaAlfa(pCPIdeTxt, aTxtLog);
+  aTxtLog = "pCPIdeTxt: " + aTxtLog;
+  fGerarLog(1, 11);
+  IntParaAlfa(pCPMotDec, aTxtLog);
+  aTxtLog = "pCPMotDec: " + aTxtLog;
+  fGerarLog(1, 11);
+  IntParaAlfa(pCPMotPen, aTxtLog);
+  aTxtLog = "pCPMotPen: " + aTxtLog;
+  fGerarLog(1, 11);
+  ConverteMascara(3, pCPDtLDec, aTxtLog, "DD/MM/YYYY");
+  aTxtLog = "pCPDtLDec: " + aTxtLog;
+  fGerarLog(1, 11);
+  ConverteMascara(4, pCPHrLDec, aTxtLog, "HH:MM");
+  aTxtLog = "pCPHrLDec: " + aTxtLog;
+  fGerarLog(1, 11);
+
+  dCPDatIni = dCPDatIni;
+  dCPDatFim = dCPDatFim;
+  dCPDtLDec = pCPDtLDec;
+  nCPHrLDec = pCPHrLDec;
+  nCPIdeTxt = pCPIdeTxt;
+  TiraEspacos(aTxtJusDec, aTxtJusDec);
+
+  Se (dCPDatIni >= dDatHoj)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Data de Inicio >= Hoje";
+    fGerarLog(1, 11);
+
+    VaPara SaidaFuncaoCriarPendencia;
+  Fim;
+
+  Se (dCPDatFim > dDatHoj)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Data de dCPDatFim > Hoje";
+    fGerarLog(1, 11);
+
+    dCPDatFim = dDatHoj;
+  Fim;
+
+  @-- Se Pendencia for de Apuracao --@
+  Se (pCPMotPen = 3)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Pendencia de Apuracao";
+    fGerarLog(1, 11);
+
+    @-- Verificar se ja existe pendencia de apuracao valida para o empregado --@
+    SQL_Criar(cCPPPDec);
+    SQL_UsarSQLSenior2(cCPPPDec, 0);
+    SQL_UsarAbrangencia(cCPPPDec, 0);
+    SQL_DefinirComando(cCPPPDec, "Select USU_DatIni, USU_DatFim, USU_NumPen \
+                                  From USU_TWkfPen \
+                                  Where USU_NumEmp = :pCPNumEmp \
+                                  And   USU_TipCol = :pCPTipCol \
+                                  And   USU_NumCad = :pCPNumCad \
+                                  And   USU_MotPen = 3 \
+                                  And   USU_SitPen = 1 \
+                                  ");
+    SQL_DefinirInteiro(cCPPPDec, "pCPNumEmp", pCPNumEmp);
+    SQL_DefinirInteiro(cCPPPDec, "pCPTipCol", pCPTipCol);
+    SQL_DefinirInteiro(cCPPPDec, "pCPNumCad", pCPNumCad);
+    dCPIniApu = 0;
+    dCPFimApu = 0;
+    nCPNumPen = 0;
+    nAlterar = cFalso;
+
+    SQL_AbrirCursor(cCPPPDec);
+    Se (SQL_EOF(cCPPPDec) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cCPPPDec, "USU_NumPen", nCPNumPen);
+      SQL_RetornarData(cCPPPDec, "USU_DatIni", dCPIniApu);
+      SQL_RetornarData(cCPPPDec, "USU_DatFim", dCPFimApu);
+    Fim;
+    SQL_FecharCursor(cCPPPDec);
+    SQL_Destruir(cCPPPDec);
+
+    @-- Geracao do Log --@
+    IntParaAlfa(nCPNumPen, aTxtLog);
+    aTxtLog = "nCPNumPen: " + aTxtLog;
+    fGerarLog(1, 12);
+    ConverteMascara(3, dCPIniApu, aTxtLog, "DD/MM/YYYY");
+    aTxtLog = "dCPIniApu: " + aTxtLog;
+    fGerarLog(1, 12);
+    ConverteMascara(3, dCPFimApu, aTxtLog, "DD/MM/YYYY");
+    aTxtLog = "dCPFimApu: " + aTxtLog;
+    fGerarLog(1, 12);
+
+    @-- Encontrou Pendencia Pendente --@
+    Se (nCPNumPen <> 0)
+    Inicio
+      Se ((dCPDatIni >= dCPIniApu)
+      e   (dCPDatFim <= dCPFimApu))
+      Inicio
+        VaPara SaidaFuncaoCriarPendencia;
+      Fim;
+
+      Se (dCPDatIni < dCPIniApu)
+      Inicio
+        nAlterar = cVerdadeiro;
+        dCPIniApu = dCPDatIni;
+      Fim;
+
+      Se (dCPDatFim > dCPFimApu)
+      Inicio
+        nAlterar = cVerdadeiro;
+        dCPFimApu = dCPDatFim;
+      Fim;
+
+      @-- Geracao do Log --@
+      IntParaAlfa(nAlterar, aTxtLog);
+      aTxtLog = "nAlterar 0:Nao Alterar | 1:Alterar: " + aTxtLog;
+      fGerarLog(1, 12);
+      ConverteMascara(3, dCPIniApu, aTxtLog, "DD/MM/YYYY");
+      aTxtLog = "dCPIniApu(2): " + aTxtLog;
+      fGerarLog(1, 12);
+      ConverteMascara(3, dCPFimApu, aTxtLog, "DD/MM/YYYY");
+      aTxtLog = "dCPFimApu(2): " + aTxtLog;
+      fGerarLog(1, 12);
+
+      Se (nAlterar = cVerdadeiro)
+      Inicio
+        ExecSQLEx("Update USU_TWkfPen \
+                   Set USU_DatIni = :dCPIniApu, \
+                       USU_DatFim = :dCPFimApu \
+                   Where USU_NumPen = :nCPNumPen \
+                  ", nRetErro, aMsgErro);
+
+        Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+        Inicio
+          @-- Geracao do Log --@
+          aTxtLog = "Erro ao Atualizar Data de Apuracao da Pendencia: " + aMsgErro;
+          fGerarLog(1, 13);
+        Fim;
+        Senao
+        Inicio
+          VaPara SaidaFuncaoCriarPendencia;
+        Fim;
+      Fim;
+    Fim;
+  Fim;
+
+  Se (aTxtJusDec <> "")
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Gravar o Texto da Justificativa";
+    fGerarLog(1, 11);
+
+    aTextoWKF = aTxtJusDec;
+    fAtualizarTextoWKF(pCPCodWkf, pCPIdeFlx, nCPIdeTxt);
+  Fim;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nCPIdeTxt, aTxtLog);
+  aTxtLog = "nCPIdeTxt: " + aTxtLog;
+  fGerarLog(1, 11);
+
+  @-- Buscar o proximo Número de Pendencia disponível --@
+  SQL_Criar(cCPPPDec);
+  SQL_UsarSQLSenior2(cCPPPDec, 0);
+  SQL_UsarAbrangencia(cCPPPDec, 0);
+  SQL_DefinirComando(cCPPPDec, "Select SeqIdWkfPen.NextVal Num \
+                                From dual \
+                               ");
+  SQL_AbrirCursor(cCPPPDec);
+  nCPNumPen = 0;
+  Se (SQL_EOF(cCPPPDec) = cFalso)
+  Inicio
+    SQL_RetornarInteiro(cCPPPDec, "Num", nCPNumPen);
+  Fim;
+  SQL_FecharCursor(cCPPPDec);
+  SQL_Destruir(cCPPPDec);
+
+  @-- Incluir a Pendencia --@
+  ExecSQLEx("Insert Into USU_TWkfPen \
+               (USU_NumPen, USU_CodWkf, USU_NumSol, USU_DtHCri, \
+                USU_DtHInE, USU_MotPen, USU_NumEmp, USU_TipCol, \
+                USU_NumCad, USU_CodDec, USU_JusDec, USU_SitPen, \
+                USU_OriPen, USU_DtHFiE, USU_IdeFlx, USU_CodCFx, \
+                USU_DatIni, USU_DatFim, USU_MotDec, USU_DtLDec, \
+                USU_HrLDec) \
+              Values \
+               (:nCPNumPen, :pCPCodWkf, :pCPNumSol, SysDate, \
+                :dDatZer, :pCPMotPen, :pCPNumEmp, :pCPTipCol, \
+                :pCPNumCad, :pCPCodDec, :nCPIdeTxt, 1, \
+                :pCPOriPen, :dDatZer, :pCPIdeFlx, :pCPCodCFx, \
+                :dCPDatIni, :dCPDatFim, :pCPMotDec, :dCPDtLDec, \
+                :nCPHrLDec) \
+            ", nRetErro, aMsgErro);
+
+  Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+  Inicio
+    nCPNumPen = 0;
+    nRetornoSucesso = cFalso;
+
+    @-- Geracao do Log --@
+    aTxtLog = "[ECP01]: Erro ao Incluir Pendencia. << " + aMsgErro + " >>";
+    fGerarLog(1, 11);
+
+    VaPara SaidaFuncaoCriarPendencia;
+  Fim;
+
+  pCPNumPen = nCPNumPen;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(pCPNumPen, aTxtLog);
+  aTxtLog = "pCPNumPen: " + aTxtLog;
+  fGerarLog(1, 11);
+
+  SaidaFuncaoCriarPendencia:;
+
+    @-- Geracao do Log --@
+    aTxtLog = "Final - fCriarPendencia";
+    fGerarLog(1, 10);
+Fim;
+
+Funcao fAtualizarTextoGSW(Numero pATGCodWkf, Numero End pATGNumTxt);
+Inicio
+  Definir Alfa cATGPesquisa;
+  Definir Alfa aCpoAux;
+
+  @-- Geracao do Log --@
+  aTxtLog = "Inicio - fAtualizarTextoGSW";
+  fGerarLog(1, 6);
+  IntParaAlfa(pATGCodWkf, aCpoAux);
+  aTxtLog = "pATGCodWkf:" + aCpoAux;
+  fGerarLog(1, 7);
+  IntParaAlfa(pATGNumTxt, aCpoAux);
+  aTxtLog = "pATGNumTxt(1):" + aCpoAux;
+  fGerarLog(1, 7);
+  aTxtLog = "aATGTexto:" + aATGTexto;
+  fGerarLog(1, 7);
+
+  nATGCodWkf = pATGCodWkf;
+  nATGNumTxt = pATGNumTxt;
+
+  @-- Verificar se o Numero do Texto existe --@
+  Se (nATGNumTxt <> 0)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Verificar se o Numero do Texto existe (GSW)";
+    fGerarLog(1, 7);
+
+    SQL_Criar(cATGPesquisa);
+    SQL_UsarSQLSenior2(cATGPesquisa, 1);
+    SQL_UsarAbrangencia(cATGPesquisa, 0);
+    SQL_DefinirComando(cATGPesquisa, "Select USU_NumTxt \
+                                      From USU_TGSWTxt \
+                                      Where USU_NumTxt = :nATGNumTxt \
+                                     ");
+
+    SQL_DefinirInteiro(cATGPesquisa, "nATGNumTxt", nATGNumTxt);
+
+    SQL_AbrirCursor(cATGPesquisa);
+    Se (SQL_EOF(cATGPesquisa) = cVerdadeiro) @-- Se Nao Achou --@
+    Inicio
+      nATGNumTxt = 0;
+
+      @-- Geracao do Log --@
+      aTxtLog = "Numero do Texto nao Localizado (GSW)";
+      fGerarLog(1, 7);
+    Fim;
+    SQL_FecharCursor(cATGPesquisa);
+    SQL_Destruir(cATGPesquisa);
+  Fim;
+
+  TiraEspacos(aATGTexto, aATGTexto);
+  Se ((nATGNumTxt = 0)
+  e   (aATGTexto <> ""))
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Incluir o Texto";
+    fGerarLog(1, 7);
+
+    SQL_Criar(cATGPesquisa);
+    SQL_UsarSQLSenior2(cATGPesquisa, 0);
+    SQL_UsarAbrangencia(cATGPesquisa, 0);
+    SQL_DefinirComando(cATGPesquisa, "Select SeqIdGSWTxt.NextVal Num \
+                                      From dual \
+                                     ");
+    SQL_AbrirCursor(cATGPesquisa);
+    nATGNumTxt = 0;
+    Se (SQL_EOF(cATGPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cATGPesquisa, "Num", nATGNumTxt);
+    Fim;
+    SQL_FecharCursor(cATGPesquisa);
+    SQL_Destruir(cATGPesquisa);
+
+    ExecSQLEx("Insert Into USU_TGSWTxt \
+                 (USU_NumTxt, USU_ConTxt, \
+                  USU_DatMod, USU_HorMod, \
+                  USU_CodWkf) \
+               values \
+                 (:nATGNumTxt, :aATGTexto, \
+                  :dDatHoj, :nHorAgo, \
+                  :nATGCodWkf) \
+              ", nRetErro, aMsgErro);
+
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      aMsgErro = "[EF01]: Erro ao Incluir Texto (GSW). << " + aMsgErro + " >>";
+      WAdicionaListaErros("EF01", aMsgErro);
+    Fim;
+  Fim;
+  Senao
+  Inicio
+    Se (nATGNumTxt <> 0)
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Alterar o Texto (GSW)";
+      fGerarLog(1, 7);
+
+      @-- Tratamento para nao grava null no banco --@
+      Se (aATGTexto = "")
+      Inicio
+        aATGTexto = " ";
+      Fim;
+
+      ExecSQLEx("Update USU_TGSWTxt \
+                 Set USU_ConTxt = :aATGTexto, \
+                     USU_DatMod = :dDatHoj, \
+                     USU_HorMod = :nHorAgo \
+                 Where USU_NumTxt = :nATGNumTxt \
+                ", nRetErro, aMsgErro);
+
+      Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+      Inicio
+        aMsgErro = "[EF02]: Erro ao Atualizar Texto (GSW). << " + aMsgErro + " >>";
+        WAdicionaListaErros("EF02", aMsgErro);
+      Fim;
+    Fim;
+    Senao
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Sem Texto (GSW)";
+      fGerarLog(1, 7);
+    Fim;
+  Fim;
+
+  pATGNumTxt = nATGNumTxt;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(pATGNumTxt, aTxtLog);
+  aTxtLog = "pATGNumTxt(2):" + aTxtLog;
+  fGerarLog(1, 7);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Final - fAtualizarTextoGSW";
+  fGerarLog(1, 6);
+Fim;
+
+@-- Definicao dos Passos: --@
+@-- . 01 = Incluir novo Controle de Fluxo --@
+@-- . 02 = Alterar um Controle de Fluxo (Marcar decisão tomada) --@
+@-- . 03 = Alterar um Controle de Fluxo (Marcar Aguardando Decisão) --@
+@-- . 04 = Incluir Novo Controle de Fluxo Avulso --@
+@-- . 06 = Incluir Novo Controle de Fluxo Aprovacao Secundaria --@
+@-- . 07 = Incluir Novo Controle de Fluxo Aprovacao, Mudando Sequencia de Aprovacao principal --@
+@-- . 08 = Incluir Novo Controle de Fluxo Avulso, Mudando Sequencia de Aprovacao principal --@
+@-- nCFCodERS =  Parametro Empresa Responsavel --@
+Funcao fControleFluxo(Numero pCFCodWkf, Numero pCFIdeFlx, Numero pCFCodCFx, Numero pCFPasso,  Numero pCFNewDec,
+                      Numero pCFPapFlx, Numero pCFEmpRsp, Numero pCFTipRsp, Numero pCFCadRsp, Numero pCFJusDec,
+                      Numero pCFSeqApv, Numero pCFEtaFlx, Numero pCFNumEmp, Numero pCFTipCol, Numero pCFNumCad);
+Inicio
+  Definir Alfa cCFPesquisa;
+
+  @-- Geracao do Log --@
+  aTxtLog = "Inicio - fControleFluxo";
+  fGerarLog(1, 5);
+
+  @-- Geracao do Log --@
+  IntParaAlfa(pCFCodWkf, aTxtLog);
+  aTxtLog = "pCFCodWkf:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFIdeFlx, aTxtLog);
+  aTxtLog = "pCFIdeFlx:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFCodCFx, aTxtLog);
+  aTxtLog = "pCFCodCFx:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFPasso, aTxtLog);
+  aTxtLog = "pCFPasso:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFNewDec, aTxtLog);
+  aTxtLog = "pCFNewDec:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFPapFlx, aTxtLog);
+  aTxtLog = "pCFPapFlx:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFEmpRsp, aTxtLog);
+  aTxtLog = "pCFEmpRsp:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFTipRsp, aTxtLog);
+  aTxtLog = "pCFTipRsp:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFCadRsp, aTxtLog);
+  aTxtLog = "pCFCadRsp:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFJusDec, aTxtLog);
+  aTxtLog = "pCFJusDec:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFSeqApv, aTxtLog);
+  aTxtLog = "pCFSeqApv:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFEtaFlx, aTxtLog);
+  aTxtLog = "pCFEtaFlx:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFNumEmp, aTxtLog);
+  aTxtLog = "pCFNumEmp:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFTipCol, aTxtLog);
+  aTxtLog = "pCFTipCol:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(pCFNumCad, aTxtLog);
+  aTxtLog = "pCFNumCad:" + aTxtLog;
+  fGerarLog(1, 6);
+  IntParaAlfa(nCFCodERS, aTxtLog);
+  aTxtLog = "nCFCodERS:" + aTxtLog;
+  fGerarLog(1, 6);
+
+  @-- Inicializar Variaveis --@
+  nCFEhInc = cVerdadeiro; @-- cVerdadeiro = Inclusao | cFalso = Update --@
+  nCFGrvRec = 1; @-- Gravar Hora de Recebimento || 0 = falso || 1 = Verdadeiro SysDate || 2 = Verdadeiro Data do recebimento sem decisao --@
+  nCFGrvDec = cFalso; @-- Gravar Hora da Decisao --@
+
+  Se (pCFNewDec = 0)
+  Inicio
+    nCFGrvRec = cFalso;
+  Fim;
+
+  Se (pCFPasso = 2)
+  Inicio
+    nCFEhInc = cFalso;
+    nCFGrvRec = 0;           @-- Gravar Hora de Recebimento --@
+    nCFGrvDec = cVerdadeiro; @-- Gravar Hora da Decisao --@
+  Fim;
+  Senao
+  Se (pCFPasso = 3)
+  Inicio
+    nCFEhInc = cFalso;
+    nCFGrvRec = 1; @-- Gravar Hora de Recebimento --@
+  Fim;
+  Senao
+  Se ((pCFPasso = 4)
+  ou  (pCFPasso = 8))
+  Inicio
+    nCFGrvDec = cVerdadeiro; @-- Gravar Hora da Decisao --@
+  Fim;
+  Senao
+  Se (pCFPasso = 5)
+  Inicio
+    nCFEhInc = cFalso;
+    nCFGrvDec = cVerdadeiro; @-- Gravar Hora da Decisao --@
+    nCFGrvRec = 1;
+  Fim;
+  Senao
+  Se (pCFPasso = 7)
+  Inicio
+    nCFEhInc = cVerdadeiro;
+    nCFGrvDec = cFalso; @-- Gravar Hora da Decisao --@
+    nCFGrvRec = 0;
+  Fim;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(nCFEhInc, aTxtLog);
+  aTxtLog = "nCFEhInc (0:Falso | 1:Verdadeiro):" + aTxtLog;
+  fGerarLog(1, 6);
+
+  Se (nCFEhInc = cVerdadeiro)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Incluir Controle";
+    fGerarLog(1, 7);
+    IntParaAlfa(nCFGrvRec, aTxtLog);
+    aTxtLog = "nCFGrvRec (0:Falso | 1:Verdadeiro | 2:Verdadeiro Data do recebimento sem Decisao):" + aTxtLog;
+    fGerarLog(1, 8);
+    IntParaAlfa(nCFGrvDec, aTxtLog);
+    aTxtLog = "nCFGrvDec (0:Falso | 1:Verdadeiro):" + aTxtLog;
+    fGerarLog(1, 8);
+
+    nCFSeqApv = pCFSeqApv;
+    nCFSeqASe = 0;
+    nCFSitCfx = 0; @-- 0 = Normal || 1 = Cancelado --@
+
+    Se ((pCFEmpRsp = 0)
+    ou  (pCFTipRsp = 0)
+    ou  (pCFCadRsp = 0))
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Responsável inválido";
+      fGerarLog(1, 9);
+
+      aMsgErro = "[ECF04]: Erro Responsável inválido";
+      WAdicionaListaErros("ECF04", aMsgErro);
+    Fim;
+    Senao
+    Inicio
+      Se ((pCFPasso = 8)
+      e   (nCFSeqApv = 0))
+      Inicio
+        @-- Geracao do Log --@
+        aTxtLog = "Localizar o fluxo ativo no momento";
+        fGerarLog(1, 7);
+
+        SQL_Criar(cCFPesquisa);
+        SQL_UsarSQLSenior2(cCFPesquisa, 0);
+        SQL_UsarAbrangencia(cCFPesquisa, 0);
+        SQL_DefinirComando(cCFPesquisa, "Select a.USU_SeqApv \
+                                         From USU_TWKFCFx a \
+                                         Where a.USU_CodWkf = :nCodWkf \
+                                         And   a.USU_IdeFlx = :nIdeFlx \
+                                         And   a.USU_CodCFx = (Select Max(x.USU_CodCFx) \
+                                                               From USU_TWKFCFx x \
+                                                               Where x.USU_CodWkf = a.USU_CodWkf \
+                                                               And   x.USU_IdeFlx = a.USU_IdeFlx \
+                                                               And   x.USU_SitCFx = 0 \
+                                                               And   x.USU_DtHRec = (Select Max(y.USU_DtHRec) \
+                                                                                     From USU_TWKFCFx y \
+                                                                                     Where y.USU_CodWkf = x.USU_CodWkf \
+                                                                                     And   y.USU_IdeFlx = x.USU_IdeFlx \
+                                                                                     And   y.USU_SitCFx = 0) \
+                                                              )\
+                                        ");
+
+        SQL_DefinirInteiro(cCFPesquisa, "nCodWkf", pCFCodWkf);
+        SQL_DefinirInteiro(cCFPesquisa, "nIdeFlx", pCFIdeFlx);
+
+        SQL_AbrirCursor(cCFPesquisa);
+        Se (SQL_EOF(cCFPesquisa) = cFalso)
+        Inicio
+          SQL_RetornarInteiro(cCFPesquisa, "USU_SeqApv", nCFSeqApv);
+          nCFSeqApv = nCFSeqApv + 1;
+        Fim;
+        SQL_FecharCursor(cCFPesquisa);
+        SQL_Destruir(cCFPesquisa);
+
+        @-- Geracao do Log --@
+        IntParaAlfa(nCFSeqApv, aTxtLog);
+        aTxtLog = "nCFSeqApv: " + aTxtLog;
+        fGerarLog(1, 9);
+      Fim;
+
+      Se (nCFSeqApv = 0)
+      Inicio
+        @-- Geracao do Log --@
+        aTxtLog = "Buscar Proxima Sequencia de Aprovacao";
+        fGerarLog(1, 8);
+
+        @-- Buscar proxima sequencia de aprovacao --@
+        SQL_Criar(cCFPesquisa);
+        SQL_UsarSQLSenior2(cCFPesquisa, 0);
+        SQL_UsarAbrangencia(cCFPesquisa, 0);
+        SQL_DefinirComando(cCFPesquisa, "Select NVL(Max(USU_SeqApv),0) SeqApv \
+                                         From USU_TWKFCfx \
+                                         Where USU_CodWkf = :pCFCodWkf \
+                                         And   USU_IdeFlx = :pCFIdeFlx \
+                                        ");
+        SQL_DefinirInteiro(cCFPesquisa, "pCFCodWkf", pCFCodWkf);
+        SQL_DefinirInteiro(cCFPesquisa, "pCFIdeFlx", pCFIdeFlx);
+
+        SQL_AbrirCursor(cCFPesquisa);
+        Se (SQL_EOF(cCFPesquisa) = cFalso)
+        Inicio
+          SQL_RetornarInteiro(cCFPesquisa, "SeqApv", nCFSeqApv);
+        Fim;
+        SQL_FecharCursor(cCFPesquisa);
+        SQL_Destruir(cCFPesquisa);
+        nCFSeqApv++;
+
+        @-- Geracao do Log --@
+        IntParaAlfa(nCFSeqApv, aTxtLog);
+        aTxtLog = "nCFSeqApv:" + aTxtLog;
+        fGerarLog(1, 9);
+      Fim;
+
+      Se (pCFPasso = 6)
+      Inicio
+        @-- Geracao do Log --@
+        aTxtLog = "Buscar Proxima Sequencia de Aprovacao";
+        fGerarLog(1, 8);
+
+        @-- Buscar proxima sequencia de aprovacao Secundaria --@
+        SQL_Criar(cCFPesquisa);
+        SQL_UsarSQLSenior2(cCFPesquisa, 0);
+        SQL_UsarAbrangencia(cCFPesquisa, 0);
+        SQL_DefinirComando(cCFPesquisa, "Select NVL(Min(USU_SeqAse),0) SeqAse \
+                                         From USU_TWKFCfx \
+                                         Where USU_CodWkf = :nCodWkf \
+                                         And   USU_IdeFlx = :nIdeFlx \
+                                         And   USU_SeqApv = :nSeqApv \
+                                         And   USU_CodDec = 0 \
+                                        ");
+        SQL_DefinirInteiro(cCFPesquisa, "nCodWkf", pCFCodWkf);
+        SQL_DefinirInteiro(cCFPesquisa, "nIdeFlx", pCFIdeFlx);
+        SQL_DefinirInteiro(cCFPesquisa, "nSeqApv", nCFSeqApv);
+
+        SQL_AbrirCursor(cCFPesquisa);
+        Se (SQL_EOF(cCFPesquisa) = cFalso)
+        Inicio
+          SQL_RetornarInteiro(cCFPesquisa, "SeqAse", nCFSeqASe);
+        Fim;
+        SQL_FecharCursor(cCFPesquisa);
+        SQL_Destruir(cCFPesquisa);
+
+        @-- Geracao do Log --@
+        IntParaAlfa(nCFSeqASe, aTxtLog);
+        aTxtLog = "nCFSeqASe(a):" + aTxtLog;
+        fGerarLog(1, 9);
+
+        Se (nCFSeqASe = 0)
+        Inicio
+          SQL_Criar(cCFPesquisa);
+          SQL_UsarSQLSenior2(cCFPesquisa, 0);
+          SQL_UsarAbrangencia(cCFPesquisa, 0);
+          SQL_DefinirComando(cCFPesquisa, "Select NVL(Max(USU_SeqAse),0) SeqAse \
+                                           From USU_TWKFCfx \
+                                           Where USU_CodWkf = :nCodWkf \
+                                           And   USU_IdeFlx = :nIdeFlx \
+                                           And   USU_SeqApv = :nSeqApv \
+                                          ");
+          SQL_DefinirInteiro(cCFPesquisa, "nCodWkf", pCFCodWkf);
+          SQL_DefinirInteiro(cCFPesquisa, "nIdeFlx", pCFIdeFlx);
+          SQL_DefinirInteiro(cCFPesquisa, "nSeqApv", nCFSeqApv);
+
+          SQL_AbrirCursor(cCFPesquisa);
+          Se (SQL_EOF(cCFPesquisa) = cFalso)
+          Inicio
+            SQL_RetornarInteiro(cCFPesquisa, "SeqAse", nCFSeqASe);
+          Fim;
+          SQL_FecharCursor(cCFPesquisa);
+          SQL_Destruir(cCFPesquisa);
+
+          @-- Geracao do Log --@
+          IntParaAlfa(nCFSeqASe, aTxtLog);
+          aTxtLog = "nCFSeqASe(c):" + aTxtLog;
+          fGerarLog(1, 9);
+
+          nCFSeqASe++;
+        Fim;
+        Senao
+        Inicio
+          nCFCodWkf = pCFCodWkf;
+          nCFIdeFlx = pCFIdeFlx;
+
+          ExecSQLEx("Update USU_TWKFCfx \
+                     Set USU_SeqASe = USU_SeqASe + 1 \
+                     Where USU_CodWkf = :nCFCodWkf \
+                     And   USU_IdeFlx = :nCFIdeFlx \
+                     And   USU_SeqApv = :nCFSeqApv \
+                     And   USU_CodDec = 0 \
+                    ", nRetErro, aMsgErro);
+
+          Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+          Inicio
+            @-- Geracao do Log --@
+            aTxtLog = "Erro ao Ajustar sequencia secundaria";
+            fGerarLog(1, 10);
+
+            aMsgErro = "[ECF01a]: Erro ao Ajustar sequencia secundaria. << " + aMsgErro + " >>";
+            WAdicionaListaErros("ECF01a", aMsgErro);
+          Fim;
+        Fim;
+
+        @-- Geracao do Log --@
+        IntParaAlfa(nCFSeqASe, aTxtLog);
+        aTxtLog = "nCFSeqASe(b):" + aTxtLog;
+        fGerarLog(1, 9);
+      Fim;
+      Senao
+      Se ((pCFPasso = 7)
+      ou  (pCFPasso = 8))
+      Inicio
+        nCFCodWkf = pCFCodWkf;
+        nCFIdeFlx = pCFIdeFlx;
+
+        ExecSQLEx("Update USU_TWKFCfx \
+                   Set USU_SeqApv = USU_SeqApv + 1 \
+                   Where USU_CodWkf = :nCFCodWkf \
+                   And   USU_IdeFlx = :nCFIdeFlx \
+                   And   USU_SeqApv >= :nCFSeqApv \
+                  ", nRetErro, aMsgErro);
+
+        Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+        Inicio
+          @-- Geracao do Log --@
+          aTxtLog = "Erro ao Ajustar Sequencia Principal";
+          fGerarLog(1, 10);
+
+          aMsgErro = "[ECF01b]: Erro ao Ajustar Sequencia Principal. << " + aMsgErro + " >>";
+          WAdicionaListaErros("ECF01b", aMsgErro);
+        Fim;
+      Fim;
+
+      ExecSQLEx("Insert into USU_TWKFCfx \
+                    (USU_CodWkf, USU_IdeFlx, USU_CodCFx, \
+                     USU_SeqApv, USU_SeqASe, USU_PapFlx, USU_EtaFlx, \
+                     USU_DthRec, \
+                     USU_DthDec, USU_EmpRsp, USU_TpcRsp, USU_CadRsp, \
+                     USU_CodDec, USU_JusDec, USU_EmpSub, USU_TpcSub, \
+                     USU_CadSub, USU_SitCfx, USU_CodERS, USU_NumEmp, \
+                     USU_TipCol, USU_NumCad, USU_SeqWkf) \
+                 Values \
+                    (:pCFCodWkf, :pCFIdeFlx, (Select NVL(Max(USU_CodCFx),0)+1 From USU_TWKFCfx Where USU_CodWkf=:pCFCodWkf and USU_IdeFlx=:pCFIdeFlx), \
+                     :nCFSeqApv, :nCFSeqASe, :pCFPapFlx, :pCFEtaFlx, \
+                     Case When (:nCFGrvRec=1) then SysDate \
+                          When (:nCFGrvRec=0) then :dDatZer \
+                          else (Select USU_DthRec \
+                                From USU_TWKFCfx \
+                                Where USU_CodWkf = :pCFCodWkf \
+                                and   USU_IdeFlx = :pCFIdeFlx \
+                                and   USU_DthRec <> :dDatZer \
+                                and   USU_DthDec = :dDatZer) End, \
+                     Case When (:nCFGrvDec=1) then SysDate else :dDatZer End, :pCFEmpRsp, :pCFTipRsp, :pCFCadRsp, \
+                     :pCFNewDec, :pCFJusDec, 0, 0, \
+                     0, :nCFSitCfx, :nCFCodERS, :pCFNumEmp, \
+                     :pCFTipCol, :pCFNumCad, 0) \
+                ", nRetErro, aMsgErro);
+
+      Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+      Inicio
+        @-- Geracao do Log --@
+        aTxtLog = "Erro ao Incluir Controle Fluxo";
+        fGerarLog(1, 10);
+
+        aMsgErro = "[ECF01]: Erro Incluir Controle Fluxo. << " + aMsgErro + " >>";
+        WAdicionaListaErros("ECF01", aMsgErro);
+      Fim;
+    Fim;
+  Fim; @-- Eh Inclusao --@
+  Senao
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Alterar Controle";
+    fGerarLog(1, 7);
+    IntParaAlfa(nCFGrvRec, aTxtLog);
+    aTxtLog = "nCFGrvRec (0:Falso | 1:Verdadeiro):" + aTxtLog;
+    fGerarLog(1, 8);
+    IntParaAlfa(nCFGrvDec, aTxtLog);
+    aTxtLog = "nCFGrvDec (0:Falso | 1:Verdadeiro):" + aTxtLog;
+    fGerarLog(1, 8);
+
+    Se (pCFCodCFx = 0)
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Código do Controle Fluxo nao Informado";
+      fGerarLog(1, 8);
+
+      aMsgErro = "[ECF02]: Erro Código do Controle Fluxo nao Informado.";
+      WAdicionaListaErros("ECF02", aMsgErro);
+    Fim;
+    Senao
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Atualizar Controle Fluxo";
+      fGerarLog(1, 8);
+
+      ExecSQLEx("Update USU_TWKFCfx \
+                 Set USU_DthRec = Case When (:nCFGrvRec=1) then SysDate else USU_DthRec End, \
+                     USU_DthDec = Case When (:nCFGrvDec=1) then SysDate else :dDatZer End, \
+                     USU_CodDec = :pCFNewDec, \
+                     USU_JusDec = :pCFJusDec, \
+                     USU_EmpSub = Case When (USU_EmpRsp <> :pCFEmpRsp or USU_TpcRsp <> :pCFTipRsp or USU_CadRsp <> :pCFCadRsp) then :pCFEmpRsp else 0 End, \
+                     USU_TpcSub = Case When (USU_EmpRsp <> :pCFEmpRsp or USU_TpcRsp <> :pCFTipRsp or USU_CadRsp <> :pCFCadRsp) then :pCFTipRsp else 0 End, \
+                     USU_CadSub = Case When (USU_EmpRsp <> :pCFEmpRsp or USU_TpcRsp <> :pCFTipRsp or USU_CadRsp <> :pCFCadRsp) then :pCFCadRsp else 0 End \
+                 Where USU_CodWkf = :pCFCodWkf \
+                 And   USU_IdeFlx = :pCFIdeFlx \
+                 And   USU_CodCFx = :pCFCodCFx \
+                ", nRetErro, aMsgErro);
+
+      Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+      Inicio
+        @-- Geracao do Log --@
+        aTxtLog = "Erro ao Alterar Controle Fluxo";
+        fGerarLog(1, 8);
+
+        aMsgErro = "[ECF03]: Erro ao Alterar Controle Fluxo. << " + aMsgErro + " >>";
+        WAdicionaListaErros("ECF03", aMsgErro);
+      Fim;
+    Fim;
+  Fim; @-- Eh Alteracao --@
+
+  @-- Geracao do Log --@
+  aTxtLog = "Fim - fControleFluxo";
+  fGerarLog(1, 5);
+Fim; @-- Funcao fControleFluxo --@
+
+
+@-- Funcao para gravar o texto a ser associado ao controle do fluxo --@
+Funcao fAtualizarTextoWKF(Numero pATWCodWkf, Numero pATWIdeFlx, Numero End pATWIdeTxt);
+Inicio
+  Definir Alfa cAtualTxt;
+  Definir Data dTxtHoj; dTxtHoj = DatSis;
+  Definir Numero nTxtAgo; nTxtAgo = HorSis;
+  Definir Alfa aATWKFAux;
+
+  @-- Geracao do Log --@
+  aTxtLog = "Inicio - fAtualizarTextoWKF";
+  fGerarLog(1, 15);
+  IntParaAlfa(pATWCodWkf, aTxtLog);
+  aTxtLog = "pATWCodWkf:" + aTxtLog;
+  fGerarLog(1, 16);
+  IntParaAlfa(pATWIdeFlx, aTxtLog);
+  aTxtLog = "pATWIdeFlx:" + aTxtLog;
+  fGerarLog(1, 16);
+  IntParaAlfa(pATWIdeTxt, aTxtLog);
+  aTxtLog = "pATWIdeTxt:" + aTxtLog;
+  fGerarLog(1, 16);
+  aTxtLog = "aTextoWKF:" + aTextoWKF;
+  fGerarLog(1, 16);
+
+  nIdeTxt = pATWIdeTxt;
+  @-- Verificar se o Numero do Texto existe --@
+  Se (nIdeTxt <> 0)
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Verificar se o Numero do Texto existe (wkf)";
+    fGerarLog(1, 16);
+
+    SQL_Criar(cAtualTxt);
+    SQL_UsarSQLSenior2(cAtualTxt, 1);
+    SQL_UsarAbrangencia(cAtualTxt, 0);
+    SQL_DefinirComando(cAtualTxt, "Select USU_IdeTxt \
+                                   From USU_TWkfTxt \
+                                   Where USU_CodWkf = :nCodWkf \
+                                   And   USU_IdeFlx = :nIdeFlx \
+                                   And   USU_IdeTxt = :nIdeTxt \
+                                  ");
+    SQL_DefinirInteiro(cAtualTxt, "nCodWkf", pATWCodWkf);
+    SQL_DefinirInteiro(cAtualTxt, "nIdeFlx", pATWIdeFlx);
+    SQL_DefinirInteiro(cAtualTxt, "nIdeTxt", nIdeTxt);
+    SQL_AbrirCursor(cAtualTxt);
+    Se (SQL_EOF(cAtualTxt) = cVerdadeiro) @-- Se Nao Achou --@
+    Inicio
+      nIdeTxt = 0;
+
+      @-- Geracao do Log --@
+      aTxtLog = "Numero do Texto do Workflow nao Localizado (wkf)";
+      fGerarLog(1, 16);
+    Fim;
+    SQL_FecharCursor(cAtualTxt);
+    SQL_Destruir(cAtualTxt);
+  Fim;
+
+  TiraEspacos(aTextoWKF, aTextoWKF);
+  Se ((nIdeTxt = 0)
+  e   (aTextoWKF <> ""))
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "Incluir o Texto (wkf)";
+    fGerarLog(1, 16);
+
+    SQL_Criar(cAtualTxt);
+    SQL_UsarSQLSenior2(cAtualTxt, 1);
+    SQL_UsarAbrangencia(cAtualTxt, 0);
+    SQL_DefinirComando(cAtualTxt, "Select Max(USU_IdeTxt) Num \
+                                   From USU_TWkfTxt \
+                                   Where USU_CodWkf = :nCodWkf \
+                                   And   USU_IdeFlx = :nIdeFlx \
+                                  ");
+    SQL_DefinirInteiro(cAtualTxt, "nCodWkf", pATWCodWkf);
+    SQL_DefinirInteiro(cAtualTxt, "nIdeFlx", pATWIdeFlx);
+    SQL_AbrirCursor(cAtualTxt);
+    nIdeTxt = 0;
+    Se (SQL_EOF(cAtualTxt) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cAtualTxt, "Num", nIdeTxt);
+    Fim;
+    SQL_FecharCursor(cAtualTxt);
+    SQL_Destruir(cAtualTxt);
+
+    nIdeTxt++;
+
+    @-- Geracao do Log --@
+    IntParaAlfa(nIdeTxt, aTxtLog);
+    aTxtLog = "nIdeTxt(1):" + aTxtLog;
+    fGerarLog(1, 16);
+
+    ExecSQLEx("Insert Into USU_TWkfTxt \
+                 (USU_CodWkf, USU_IdeFlx, \
+                  USU_IdeTxt, USU_ConTxt, \
+                  USU_DatMod, USU_HorMod) \
+               values \
+                 (:pATWCodWkf, :pATWIdeFlx, \
+                  :nIdeTxt, :aTextoWKF, \
+                  :dTxtHoj, :nTxtAgo) \
+              ", nRetErro, aMsgErro);
+
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      aMsgErro = "[EF03]: Erro ao Incluir Texto (wkf). << " + aMsgErro + " >>";
+      WAdicionaListaErros("EF03", aMsgErro);
+
+      @-- Geracao do Log --@
+      aTxtLog = "aMsgErro:" + aMsgErro;
+      fGerarLog(1, 16);
+    Fim;
+  Fim;
+  Senao
+  Inicio
+    Se (nIdeTxt <> 0)
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Alterar o Texto (wkf)";
+      fGerarLog(1, 16);
+
+      @-- Tratamento para nao grava null no banco --@
+      Se (aTextoWKF = "")
+      Inicio
+        aTextoWKF = " ";
+      Fim;
+
+      ExecSQLEx("Update USU_TWkfTxt \
+                 Set USU_ConTxt = :aTextoWKF, \
+                     USU_DatMod = :dTxtHoj, \
+                     USU_HorMod = :nTxtAgo \
+                 Where USU_CodWkf = :pATWCodWkf \
+                 And   USU_IdeFlx = :pATWIdeFlx \
+                 And   USU_IdeTxt = :nIdeTxt \
+                ", nRetErro, aMsgErro);
+
+      Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+      Inicio
+        aMsgErro = "[EF04]: Erro ao Atualizar Texto (wkf). << " + aMsgErro + " >>";
+        WAdicionaListaErros("EF04", aMsgErro);
+
+        @-- Geracao do Log --@
+        aTxtLog = "aMsgErro:" + aMsgErro;
+        fGerarLog(1, 16);
+      Fim;
+    Fim;
+    Senao
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Sem Texto (wkf)";
+      fGerarLog(1, 16);
+    Fim;
+  Fim;
+
+  pATWIdeTxt = nIdeTxt;
+
+  @-- Geracao do Log --@
+  IntParaAlfa(pATWIdeTxt, aTxtLog);
+  aTxtLog = "pATWIdeTxt(2):" + aTxtLog;
+  fGerarLog(1, 16);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Final - fAtualizarTextoWKF";
+  fGerarLog(1, 15);
+Fim;

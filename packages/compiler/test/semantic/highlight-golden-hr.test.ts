@@ -11,54 +11,55 @@ type GoldenFile = {
   system: 'HCM' | 'ACESSO' | 'ERP';
 };
 
+const HR_FIXTURES_ROOT = path.join(__dirname, '..', 'fixtures', 'hr-examples');
+
 const GOLDEN_SET_QUICK: GoldenFile[] = [
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR511 - PY - Trata comisionado sin justificar.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-trata-comissionado.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR879 - AEM - Liberacao Faixa Horaria Turno.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-liberacao-faixa-horaria.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR512 - PY - Apuracao - Consistencia Acerto.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-consistencia-acerto.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR884 - AEM - Estatisticas.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-estatisticas.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR881 - AEM - Pesquisa Utilizacao Ativ Gremial.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-atividade-gremial.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR874 - ESA - Consulta Programacao Sobreaviso.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-programacao-sobreaviso.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR864 - AEM - Domicilio Marcacao.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-domicilio-marcacao.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR897 - AEM - Criar Executar Pendencias Coletivas.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-pendencias-coletivas.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR873 - ESA - Areas Autorizadas.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-areas-autorizadas.txt'),
     system: 'HCM'
   },
   {
-    filePath: path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR/HR866 - ESA - Consulta Sobreaviso Realizado.txt'),
+    filePath: path.join(HR_FIXTURES_ROOT, 'golden-consulta-sobreaviso.txt'),
     system: 'HCM'
   }
 ];
 
 function discoverHrFilesFull(maxFiles: number): GoldenFile[] {
-  const hrRoot = path.join(__dirname, '..', '..', '..', '..', 'exemplos/HR');
-  const files = fs.readdirSync(hrRoot)
+  const files = fs.readdirSync(HR_FIXTURES_ROOT)
     .filter((name) => name.toLowerCase().endsWith('.txt'))
-    .map((name) => path.join(hrRoot, name))
+    .map((name) => path.join(HR_FIXTURES_ROOT, name))
     .sort()
     .slice(0, maxFiles);
   return files.map((filePath) => ({ filePath, system: 'HCM' as const }));

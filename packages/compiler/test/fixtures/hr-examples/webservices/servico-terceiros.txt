@@ -1,0 +1,545 @@
+@-- Identificador do WebService --@
+Definir Numero nIdeWSv; nIdeWSv = 7; @-- Dados de Terceiros --@
+
+Definir Funcao fGravarLogExecucao(Numero pTipOpe);
+
+Definir Alfa CR; RetornaASCII(13, CR);
+Definir Alfa LF; RetornaASCII(10, LF);
+Definir Alfa CRLF; CRLF = CR + LF;
+
+Definir Alfa aGerLog; aGerLog = "S";
+Definir Alfa aTxtLog; aTxtLog = "";
+Definir Alfa aMsgErro;
+Definir Funcao fGerarLog(Numero pOpcao, Numero pNivel); @-- Funcao para gravar um arquivo de Log --@
+
+Definir Alfa aErroConversao;
+Definir Alfa aDataConverter;
+Definir Data dDataConvertida;
+Definir Funcao fAlfaParaData();
+
+Definir Alfa aSQL;
+Definir Alfa aAux;
+Definir Alfa cPesquisa;
+Definir Alfa aSelect;
+
+Definir Data dDatHoj; dDatHoj = DatSis;
+Definir Data dDatZer; dDatZer = 0;
+
+Definir Numero nNumEmp;
+Definir Numero nTipCol;
+Definir Numero nNumCad;
+Definir Numero nCodFil;
+Definir Alfa aResult;
+Definir Alfa aLogin;
+Definir Alfa aFecRef;
+Definir Data dFecRef;
+Definir Alfa aDatNas;
+Definir Data dDatNas;
+Definir Alfa aIniCon;
+Definir Data dIniCon;
+Definir Alfa aFimCon;
+Definir Data dFimCon;
+Definir Alfa aNomFun;
+Definir Alfa aTipSex;
+Definir Alfa aNomOem;
+Definir Alfa aNomFil;
+Definir Alfa aNumCid;
+
+@-- Iniciar Geracao do Log --@
+fGerarLog(0, 0);
+aTxtLog = "Inicio WebService :: HR :: py.itaipu.diversos.terceros";
+fGerarLog(1, 0);
+
+terceros.ErroExecucao = "";
+aFecRef = terceros.FecRef;
+aLogin  = terceros.Login;
+nIdeSUW = terceros.IdeSUW;
+aResult = "";
+nStatus = 0; @-- 0 = Sucesso, 1 = Erro na Execucao --@
+
+@-- Grava no Banco Log de Execucao 1 = INICIO --@
+fGravarLogExecucao(1);
+
+TiraEspacos(aFecRef, aFecRef);
+TiraEspacos(aLogin, aLogin);
+
+@-- Geracao do Log --@
+aTxtLog = "aFecRef: " + aFecRef;
+fGerarLog(1, 1);
+aTxtLog = "aLogin: ||" + aLogin + "||";
+fGerarLog(1, 1);
+IntParaAlfa(nIdeSUW, aTxtLog);
+aTxtLog = "nIdeSUW: " + aTxtLog;
+fGerarLog(1, 1);
+
+Se (aLogin = "")
+Inicio
+  aResult = "ERROR";
+  terceros.ErroExecucao = "[E003] Login não Informado";
+  VaPara Saida;
+Fim;
+
+Se (nIdeSUW = 0)
+Inicio
+  aResult = "ERROR";
+  terceros.ErroExecucao = "[E004] Identificador do Sistema não Informado";
+  VaPara Saida;
+Fim;
+
+Se (aFecRef = "")
+Inicio
+  aResult = "ERROR";
+  terceros.ErroExecucao = "[E005] Fecha Referencia no informada";
+  VaPara Saida;
+Fim;
+
+@-- Converter a Data Referencia de Alfa para Data --@
+aDataConverter = aFecRef;
+fAlfaParaData();
+dFecRef = dDataConvertida;
+
+Se (aErroConversao <> "")
+Inicio
+  aResult = "ERROR";
+  terceros.ErroExecucao = "[E007] Fecha invalida";
+  VaPara Saida;
+Fim;
+
+@-- Geracao do Log --@
+ConverteMascara(3, dFecRef, aTxtLog, "DD/MM/YYYY");
+aTxtLog = "dFecRef: " + aTxtLog;
+fGerarLog(1, 1);
+
+@-- Buscar o código do usuário --@
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 1);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select CodEnt \
+                               From R910ENT \
+                               Where Upper(NomEnt) = Upper(:aNomEnt) \
+                              ");
+SQL_DefinirAlfa(cPesquisa, "aNomEnt", aLogin);
+SQL_AbrirCursor(cPesquisa);
+nCodUsu = 0;
+Se (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+  SQL_RetornarInteiro(cPesquisa, "CodEnt", nCodUsu);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+@-- Geracao do Log --@
+IntParaAlfa(nCodUsu, aTxtLog);
+aTxtLog = "nCodUsu: " + aTxtLog;
+fGerarLog(1, 1);
+
+Se (nCodUsu <> 0)
+Inicio
+  RetColabPorCodUsu(nCodUsu, nEmpUsu, nTipUsu, nCadUsu);
+Fim;
+
+@-- Carrega Dados de Terceiros --@
+SQL_Criar(cPesquisa);
+SQL_UsarSQLSenior2(cPesquisa, 0);
+SQL_UsarAbrangencia(cPesquisa, 0);
+SQL_DefinirComando(cPesquisa, "Select A.NumCad, B.NumCid, A.NomFun, A.DatNas, \
+                                      A.TipSex, D.NomOem, E.NomFil, C.DatAlt, C.DatFim \
+                               from   R034FUN A, R034CPL B, R038HCT C, R032OEM D, R030FIL E \
+                               where  B.NumEmp = A.NumEmp \
+                               and    B.TipCol = A.TipCol \
+                               and    B.NumCad = A.NumCad \
+                               and    C.NumEmp = A.NumEmp \
+                               and    C.TipCol = A.TipCol \
+                               and    C.NumCad = A.NumCad \
+                               and    D.CodOem = C.CodOem \
+                               and    E.NumEmp = A.NumEmp \
+                               and    E.CodFil = A.CodFil \
+                               and    A.NumEmp = 999 \
+                               and    C.DatAlt <= :dFecRef \
+                               and    (C.DatFim >= :dFecRef or C.DatFim = :dDatZer) \
+                               order by C.DatAlt, A.NumCad");
+
+SQL_DefinirData(cPesquisa, "dFecRef", dFecRef);
+SQL_DefinirData(cPesquisa, "dDatZer", dDatZer);
+
+SQL_AbrirCursor(cPesquisa);
+Enquanto (SQL_EOF(cPesquisa) = cFalso)
+Inicio
+
+  SQL_RetornarInteiro(cPesquisa, "NumCad", nNumCad);
+  SQL_RetornarAlfa(cPesquisa, "NumCid", aNumCid);
+  SQL_RetornarAlfa(cPesquisa, "NomFun", aNomFun);
+  SQL_RetornarData(cPesquisa, "DatNas", dDatNas);
+  SQL_RetornarAlfa(cPesquisa, "TipSex", aTipSex);
+  SQL_RetornarAlfa(cPesquisa, "NomOem", aNomOem);
+  SQL_RetornarAlfa(cPesquisa, "NomFil", aNomFil);
+  SQL_RetornarData(cPesquisa, "DatAlt", dIniCon);
+  SQL_RetornarData(cPesquisa, "DatFim", dFimCon);
+
+  ConverteMascara(3, dDatNas, aDatNas, "dd/mm/yyyy");
+  ConverteMascara(3, dIniCon, aIniCon, "dd/mm/yyyy");
+  ConverteMascara(3, dFimCon, aFimCon, "dd/mm/yyyy");
+
+  TiraEspacos(aNumCid, aNumCid);
+  TiraEspacos(aNomFun, aNomFun);
+  TiraEspacos(aNomOem, aNomOem);
+  TiraEspacos(aNomFil, aNomFil);
+
+  terceros.listaTerceros.CriarLinha();
+  terceros.listaTerceros.NumCad = nNumCad;
+  terceros.listaTerceros.NumIde = aNumCid;
+  terceros.listaTerceros.NomFun = aNomFun;
+  terceros.listaTerceros.FecNas = aDatNas;
+  terceros.listaTerceros.TipSex = aTipSex;
+  terceros.listaTerceros.NomOem = aNomOem;
+  terceros.listaTerceros.NomFil = aNomFil;
+  terceros.listaTerceros.FecIni = aIniCon;
+  terceros.listaTerceros.FecFim = aFimCon;
+
+  SQL_Proximo(cPesquisa);
+Fim;
+SQL_FecharCursor(cPesquisa);
+SQL_Destruir(cPesquisa);
+
+Saida:;
+  TiraEspacos(aResult, aResult);
+  Se (aResult = "")
+  Inicio
+    aResult = "OK";
+  Fim;
+
+  terceros.Result = aResult;
+
+  @-- Geracao do Log --@
+  aTxtLog = "terceros.Result: " + terceros.Result;
+  fGerarLog(1, 4);
+  aTxtLog = "aResult: " + aResult;
+  fGerarLog(1, 4);
+
+  Se (terceros.ErroExecucao <> "")
+  Inicio
+    @-- Geracao do Log --@
+    aTxtLog = "ErroExecucao:" + terceros.ErroExecucao;
+    fGerarLog(1, 1);
+    nStatus = 1; @-- ERRO na Execucao --@
+  Fim;
+
+  @-- Grava no Banco Log de Execucao 2 = FINALIZACAO --@
+  fGravarLogExecucao(2);
+
+  @-- Geracao do Log --@
+  aTxtLog = "Término WebService :: py.itaipu.diversos.terceros";
+  fGerarLog(1, 0);
+
+  @-- Fechar arquivo do Log --@
+  fGerarLog(2, 0);
+
+
+@-- Criar / Fechar / Gravar arquivo de Log --@
+Funcao fGerarLog(Numero pOpcao, Numero pNivel);
+Inicio
+  Se (aGerLog = "S")
+  Inicio
+    Definir Alfa cCurLog;
+    Definir Alfa aAuxLog;
+    Definir Alfa aSigWSv;
+    Definir Alfa aDatLog;
+    Definir Alfa aPathLog;
+
+    Se (pNivel < 0)
+    Inicio
+      pNivel = 0;
+    Fim;
+
+    Se (pOpcao = 0) @-- Inicializar Log --@
+    Inicio
+      @-- Carregar definicoes --@
+      SQL_Criar(cCurLog);
+      SQL_UsarSQLSenior2(cCurLog, 0);
+      SQL_UsarAbrangencia(cCurLog, 0);
+      SQL_DefinirComando(cCurLog, "Select USU_PthLog \
+                                   From USU_TGSWDef \
+                                   Where USU_CmpDef = (Select Max(x.USU_CmpDef) \
+                                                       From USU_TGSWDef x) \
+                                  ");
+      SQL_AbrirCursor(cCurLog);
+      Se (SQL_EOF(cCurLog) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cCurLog, "USU_PthLog", aPathLog);
+
+        TiraEspacos(aPathLog, aPathLog);
+        TamanhoAlfa(aPathLog, nTam);
+        aAuxLog = aPathLog;
+        CopiarAlfa(aAuxLog, nTam, 1);
+        Se (aAuxLog <> "\\")
+        Inicio
+          aPathLog = aPathLog + "\\";
+        Fim;
+        aPathLog = aPathLog + "wsv\\";
+      Fim;
+      SQL_FecharCursor(cCurLog);
+      SQL_Destruir(cCurLog);
+
+      @-- Carregar Sigla do WebService --@
+      aSigWSv = "";
+      SQL_Criar(cCurLog);
+      SQL_UsarSQLSenior2(cCurLog, 0);
+      SQL_UsarAbrangencia(cCurLog, 0);
+      SQL_DefinirComando(cCurLog, "Select USU_SigWSv \
+                                   From USU_TGSWWSv \
+                                   Where USU_IdeWsv = :nIdeWsv \
+                                  ");
+      SQL_DefinirInteiro(cCurLog, "nIdeWsv", nIdeWsv);
+      SQL_AbrirCursor(cCurLog);
+      Se (SQL_EOF(cCurLog) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cCurLog, "USU_SigWSv", aSigWSv);
+        ConverteParaMinusculo(aSigWSv, aSigWSv);
+      Fim;
+      SQL_FecharCursor(cCurLog);
+      SQL_Destruir(cCurLog);
+
+      SQL_Criar(cCurLog);
+      SQL_UsarSQLSenior2(cCurLog, 0);
+      SQL_UsarAbrangencia(cCurLog, 0);
+      SQL_DefinirComando(cCurLog, "Select to_Char(systimestamp,'yyyy-mm-dd-HH24-MI-SS-FF6') Data from dual");
+      SQL_AbrirCursor(cCurLog);
+      Se (SQL_EOF(cCurLog) = cFalso)
+      Inicio
+        SQL_RetornarAlfa(cCurLog, "Data", aDatLog);
+      Fim;
+      SQL_FecharCursor(cCurLog);
+      SQL_Destruir(cCurLog);
+
+      aAuxLog = aPathLog + "wsv-" + aSigWSv + "-" + aDatLog + ".log";
+      nArqLog = Abrir(aAuxLog, GravarNL);
+      aTxtLog = "Inicio da Geracao do Log";
+      pNivel = -1;
+      pOpcao = 1;
+    Fim;
+
+    ConverteMascara(3, dDatHoj, aDatLog, "YYYY-MM-DD");
+
+    RetornaHorMinSeg(nHorLog, nMinLog, nSegLog);
+    ConverteMascara(1, nHorLog, aAuxLog, "99");
+    aDatLog = aDatLog + " " + aAuxLog;
+    ConverteMascara(1, nMinLog, aAuxLog, "99");
+    aDatLog = aDatLog + ":" + aAuxLog;
+    ConverteMascara(1, nSegLog, aAuxLog, "99");
+    aDatLog = aDatLog + ":" + aAuxLog;
+
+    Se (pOpcao = 2) @-- Fechar Log --@
+    Inicio
+      aAuxLog = aDatLog + " >> Fim da Geracao do Log";
+      GravarNL(nArqLog, aAuxLog);
+      Fechar(nArqLog);
+    Fim; @-- Opcao = Adicionar Log --@
+    Senao
+    Se (pOpcao = 1) @-- Adicionar Log --@
+    Inicio
+      TrocaString(aTxtLog, CRLF, "##[CRLF]##", aTxtLog);
+      TrocaString(aTxtLog, CR, "##[CR]##", aTxtLog);
+      TrocaString(aTxtLog, LF, "##[LF]##", aTxtLog);
+
+      @-- Identar conforme o nível indicado --@
+      Para (nNiv=0; nNiv <= pNivel; nNiv++)
+      Inicio
+        aTxtLog = "  " + aTxtLog;
+      Fim;
+      aAuxLog = aDatLog + " >> " + aTxtLog;
+      GravarNL(nArqLog, aAuxLog);
+    Fim; @-- Opcao = Adicionar Log --@
+  Fim;
+Fim;
+
+@-- Funcao para Converter Alfa para Data --@
+Funcao fAlfaParaData();
+Inicio
+  Definir Alfa aCaracteresValidos; aCaracteresValidos = "/0123456789";
+  Definir Alfa aDia; aDia = "";
+  Definir Alfa aMes; aMes = "";
+  Definir Alfa aAno; aAno = "";
+  Definir Numero nDia;
+  Definir Numero nMes;
+  Definir Numero nAno;
+  Definir Alfa aCharAtu;
+  Definir Alfa aTxtConv;
+
+  aErroConversao = "";
+  dDataConvertida = 0;
+
+  TiraEspacos(aDataConverter, aTxtConv);
+  nTemErro = 0;
+  nEhDia = 1;
+  nEhMes = 0;
+  nEhAno = 0;
+
+  TamanhoAlfa(aTxtConv, nTamTxt);
+  Para (nCharAtu = 1; nCharAtu <= nTamTxt; nCharAtu++)
+  Inicio
+    aCharAtu = aTxtConv;
+    CopiarAlfa(aCharAtu, nCharAtu, 1);
+    PosicaoAlfa(aCharAtu, aCaracteresValidos, nPosChar);
+    Se (nPosChar = 0)
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "Foi Encontrado um Caracter inválido.(" + aDataConverter + ")[Ok]";
+      Pare;
+    Fim;
+    Senao
+    Se (aCharAtu = "/")
+    Inicio
+      Se ((nEhDia = 1)
+      e   (nEhMes = 0))
+        nEhMes = 1;
+      Senao
+      Se ((nEhMes = 1)
+      e   (nEhAno = 0))
+      Inicio
+        nEhAno = 1;
+        PosicaoAlfa("/", aCaracteresValidos, nPosChar);
+        DeletarAlfa(aCaracteresValidos, nPosChar, 1);
+      Fim;
+    Fim;
+    Senao
+    Inicio
+      Se ((nEhDia = 1)
+      e   (nEhMes = 0))
+        aDia = aDia + aCharAtu;
+      Senao
+      Se ((nEhMes = 1)
+      e   (nEhAno = 0))
+        aMes = aMes + aCharAtu;
+      Senao
+        aAno = aAno + aCharAtu;
+    Fim;
+  Fim;
+  Se (nTemErro = 0)
+  Inicio
+    Se (aDia = "")
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "O Dia da data não foi informado.(" + aDataConverter + ")[Ok]";
+    Fim;
+    Senao
+    Se (aMes = "")
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "O Mês da data não foi informado.(" + aDataConverter + ")[Ok]";
+    Fim;
+    Se (aAno = "")
+    Inicio
+      nTemErro = 1;
+      aErroConversao = "O Ano da data não foi informado.(" + aDataConverter + ")[Ok]";
+    Fim;
+    Senao
+    Inicio
+      AlfaParaInt(aDia, nDia);
+      AlfaParaInt(aMes, nMes);
+      AlfaParaInt(aAno, nAno);
+      Se ((nMes = 0)
+      ou  (nMes > 12))
+      Inicio
+        nTemErro = 1;
+        aErroConversao = "O Mês é inválido .(" + aDataConverter + ")[Ok]";
+      Fim;
+      Senao
+      Se ((nDia = 0)
+      ou  (nDia > 31))
+      Inicio
+        nTemErro = 1;
+        aErroConversao = "O Dia é inválido .(" + aDataConverter + ")[Ok]";
+      Fim;
+      Senao
+      Inicio
+        Se (nAno <= 20)
+          nAno = nAno + 2000;
+        Senao
+        Se (nAno < 1000)
+          nAno = nAno + 1900;
+        Se ((nAno = 0)
+        ou  (nAno > 2080))
+        Inicio
+          nTemErro = 1;
+          aErroConversao = "O Ano é inválido .(" + aDataConverter + ")[Ok]";
+        Fim;
+        Senao
+          MontaData(nDia, nMes, nAno, dDataConvertida);
+      Fim;
+    Fim;
+  Fim;
+Fim;
+
+
+Funcao fGravarLogExecucao(Numero pTipOpe);
+Inicio
+  Definir Alfa aTxtMsg;
+  Se (pTipOpe = 1) @-- Inicio --@
+  Inicio
+    @-- Executar a Sequence para pegar o novo número de Log --@
+    SQL_Criar(cPesquisa);
+    SQL_UsarSQLSenior2(cPesquisa, 0);
+    SQL_UsarAbrangencia(cPesquisa, 0);
+    SQL_DefinirComando(cPesquisa, "Select SeqIdGSWLWS.NextVal Num \
+                                   From dual \
+                                  ");
+    SQL_AbrirCursor(cPesquisa);
+    Se (SQL_EOF(cPesquisa) = cFalso)
+    Inicio
+      SQL_RetornarInteiro(cPesquisa, "Num", nIdeCon);
+    Fim;
+    SQL_FecharCursor(cPesquisa);
+    SQL_Destruir(cPesquisa);
+
+    ExecSQLEx("Insert into USU_TGSWLWS \
+                  (USU_IdeCon, USU_IdeWSv, USU_DtHIni, \
+                   USU_DtHFim, USU_Login,  USU_CodUsu, \
+                   USU_NumEmp, USU_TipCol, USU_NumCad, \
+                   USU_Status, USU_TxtMsg, USU_IdeSUW) \
+                values \
+                  (:nIdeCon, :nIdeWsv,  SysDate, \
+                   :dDatZer,  :aLogin,  :nCodUsu, \
+                   :nEmpUsu, :nTipUsu,  :nCadUsu, \
+                   0, 'Inicializando', :nIdeSUW) \
+              ", nRetErro, aMsgErro);
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Insert Log:" + aMsgErro;
+      fGerarLog(1, 1);
+    Fim;
+  Fim;
+  Senao @-- Termino --@
+  Inicio
+    aTxtMsg = "";
+    Se (nStatus = 1)
+    Inicio
+      aTxtMsg = terceros.ErroExecucao;
+    Fim;
+    Senao
+    Inicio
+      aTxtMsg = "Data Referencia: " + aFecRef;
+      nAux = terceros.listaTerceros.QtdLinhas;
+      IntParaAlfa(nAux, aAux);
+      aTxtMsg = aTxtMsg + " Qtdade Registros: " + aAux;
+    Fim;
+
+
+    ExecSQLEx("Update USU_TGSWLWS \
+               set   USU_DtHFim =  SysDate, \
+                     USU_CodUsu = :nCodUsu, \
+                     USU_NumEmp = :nEmpUsu, \
+                     USU_TipCol = :nTipUsu, \
+                     USU_NumCad = :nCadUsu, \
+                     USU_Status = :nStatus, \
+                     USU_TxtMsg = :aTxtMsg \
+               where USU_IdeCon = :nIdeCon \
+              ", nRetErro, aMsgErro);
+    Se (nRetErro = 1) @-- Se Ocorreu algum erro --@
+    Inicio
+      @-- Geracao do Log --@
+      aTxtLog = "Update Log:" + aMsgErro;
+      fGerarLog(1, 1);
+    Fim;
+  Fim;
+Fim;
