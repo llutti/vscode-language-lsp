@@ -101,6 +101,39 @@ export function activate(context: vscode.ExtensionContext) {
     }
   };
   const contextSystems: ContextSystem[] = ['HCM', 'ACESSO', 'ERP'];
+  const getContextsConfigSignature = () => {
+    const resources: Array<vscode.Uri | undefined> = [
+      undefined,
+      ...(vscode.workspace.workspaceFolders ?? []).map((folder) => folder.uri)
+    ];
+    return JSON.stringify(resources.map((resource) => {
+      const inspected = vscode.workspace.getConfiguration('lsp', resource).inspect<unknown[]>('contexts');
+      return {
+        resource: resource?.toString() ?? '',
+        globalValue: inspected?.globalValue ?? null,
+        workspaceValue: inspected?.workspaceValue ?? null,
+        workspaceFolderValue: inspected?.workspaceFolderValue ?? null
+      };
+    }));
+  };
+  let contextsConfigSignature = getContextsConfigSignature();
+  let contextRestartPromptVisible = false;
+
+  const requestContextRestart = () => {
+    if (contextRestartPromptVisible) return;
+    contextRestartPromptVisible = true;
+    void vscode.window.showWarningMessage(
+      'LSP: a configuração de contextos foi alterada. Reinicie a janela para aplicar completamente.',
+      'Reiniciar agora'
+    ).then((action) => {
+      if (action === 'Reiniciar agora') {
+        void vscode.commands.executeCommand('workbench.action.reloadWindow');
+      }
+      contextRestartPromptVisible = false;
+    }, () => {
+      contextRestartPromptVisible = false;
+    });
+  };
 
   const getActiveResource = () => vscode.window.activeTextEditor?.document.uri;
   const isValidIdentifier = (value: string) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(value);
@@ -807,6 +840,14 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration('lsp.fallback.defaultSystem')) {
         void updateFallbackStatus(vscode.window.activeTextEditor);
+      }
+
+      if (event.affectsConfiguration('lsp') || event.affectsConfiguration('lsp.contexts')) {
+        const nextContextsConfigSignature = getContextsConfigSignature();
+        if (nextContextsConfigSignature !== contextsConfigSignature) {
+          contextsConfigSignature = nextContextsConfigSignature;
+          requestContextRestart();
+        }
       }
     })
   );

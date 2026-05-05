@@ -20,7 +20,9 @@
   ],
   "private": true,
   "main": "dist/extension.js",
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "files": [
     "dist",
     "syntaxes",
