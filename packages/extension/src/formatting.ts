@@ -19,6 +19,28 @@ function detectEol(text: string): '\r\n' | '\n' {
   return text.includes('\r\n') ? '\r\n' : '\n';
 }
 
+function emptyFormatReport(settings: FormatSettings): FormatDocumentReport {
+  return {
+    format: {
+      decision: 'no_op',
+      reason: 'already_canonical',
+      parseErrors: [],
+      parseErrorCount: 0
+    },
+    embeddedSql: {
+      enabled: Boolean(settings.embeddedSqlEnabled),
+      attempts: [],
+      attemptedCount: 0,
+      eligibleCount: 0,
+      appliedCount: 0,
+      noOpCount: 0,
+      rejectedCount: 0,
+      errorCount: 0,
+      debug: { events: [], eventCount: 0 }
+    }
+  } as FormatDocumentReport;
+}
+
 /**
  * LSP requirement for this milestone:
  * - return a single TextEdit replacing the entire document.
@@ -31,19 +53,7 @@ export function formatDocumentDetailed(doc: TextDocument, settings: FormatSettin
   if (!settings.enabled) {
     return {
       edits: [],
-      report: {
-        embeddedSql: {
-          enabled: Boolean(settings.embeddedSqlEnabled),
-          attempts: [],
-          attemptedCount: 0,
-          eligibleCount: 0,
-          appliedCount: 0,
-          noOpCount: 0,
-          rejectedCount: 0,
-          errorCount: 0,
-          debug: { events: [], eventCount: 0 }
-        }
-      }
+      report: emptyFormatReport(settings)
     };
   }
   try {
@@ -74,19 +84,7 @@ export function formatDocumentDetailed(doc: TextDocument, settings: FormatSettin
   } catch {
     return {
       edits: [],
-      report: {
-        embeddedSql: {
-          enabled: Boolean(settings.embeddedSqlEnabled),
-          attempts: [],
-          attemptedCount: 0,
-          eligibleCount: 0,
-          appliedCount: 0,
-          noOpCount: 0,
-          rejectedCount: 0,
-          errorCount: 0,
-          debug: { events: [], eventCount: 0 }
-        }
-      }
+      report: emptyFormatReport(settings)
     };
   }
 }

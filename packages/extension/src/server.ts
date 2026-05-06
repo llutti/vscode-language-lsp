@@ -1820,6 +1820,12 @@ function recordPullDiagnosticsMetrics(input: {
 
 type FormatDecision = 'apply' | 'no_op' | 'cancel' | 'skip' | 'error';
 type TokenDecision = 'fresh' | 'delta' | 'reuse_previous' | 'cancel_stale' | 'drop_transient' | 'error';
+type FormatReportWithDecision = FormatDocumentReport & {
+  format?: {
+    parseErrors: Array<{ code?: string; message: string }>;
+    parseErrorCount: number;
+  };
+};
 
 function recordFormatDecision(input: {
   filePath: string;
@@ -1846,6 +1852,7 @@ function recordFormatDecision(input: {
     phase: 'formatter'
   });
   const embeddedSql = input.formatReport?.embeddedSql;
+  const format = (input.formatReport as FormatReportWithDecision | undefined)?.format;
   const primaryAttempt = embeddedSql?.attempts[0];
   recordDecisionEvent(
     observability,
@@ -1872,7 +1879,10 @@ function recordFormatDecision(input: {
       embeddedSqlPrimaryDecision: primaryAttempt?.decision ?? null,
       embeddedSqlPrimaryReason: primaryAttempt?.reason ?? null,
       sqlWrapperKind: primaryAttempt?.wrapperKind ?? null,
-      sqlSourceKind: primaryAttempt?.sourceKind ?? null
+      sqlSourceKind: primaryAttempt?.sourceKind ?? null,
+      formatParseErrorCount: format?.parseErrorCount ?? 0,
+      formatFirstParseErrorCode: format?.parseErrors[0]?.code ?? null,
+      formatFirstParseErrorMessage: format?.parseErrors[0]?.message ?? null
     }
   );
   for (const attempt of embeddedSql?.attempts ?? [])

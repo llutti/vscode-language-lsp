@@ -1,3 +1,5 @@
+import type { Range } from '../source/types';
+
 export type EmbeddedSqlDialect = 'sql' | 'oracle' | 'sqlserver';
 
 export type EmbeddedSqlWrapperKind = 'cursor_sql' | 'execsql' | 'execsqlex' | 'sql_definircomando';
@@ -58,7 +60,23 @@ export type EmbeddedSqlFormatReport = {
   errorCount: number;
 };
 
+export type FormatNoOpReason = 'already_canonical' | 'parse_errors';
+
+export type FormatParseError = {
+  code?: string;
+  message: string;
+  range: Range;
+};
+
+export type FormatDecisionReport = {
+  decision: 'apply' | 'no_op';
+  reason: FormatNoOpReason | 'formatted';
+  parseErrors: FormatParseError[];
+  parseErrorCount: number;
+};
+
 export type FormatDocumentReport = {
+  format: FormatDecisionReport;
   embeddedSql: EmbeddedSqlFormatReport;
 };
 

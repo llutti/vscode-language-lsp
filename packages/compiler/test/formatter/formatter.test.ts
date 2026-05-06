@@ -252,6 +252,33 @@ describe('formatter', () =>
     expect(unsafe).toBe('ExecSql "BEGIN SELECT campo1 FROM Tabela; END";\n');
   });
 
+  it('relata no-op por erro sintatico quando formatter aborta antes do printer', () =>
+  {
+    const input =
+      'Definir Cursor C_TemFer;\n' +
+      'C_TemFer.SQL "SELECT * FROM R038AFA"\n' +
+      'C_TemFer.AbrirCursor();\n';
+
+    const result = formatDocumentWithDetails({
+      sourcePath: '/tmp/cursor-sql-missing-semicolon.lspt',
+      text: input,
+      options
+    });
+
+    expect(result.text).toBe(input);
+    expect(result.report.format).toEqual({
+      decision: 'no_op',
+      reason: 'parse_errors',
+      parseErrorCount: 1,
+      parseErrors: [
+        expect.objectContaining({
+          code: 'SYN_EXPECTED_SEMICOLON',
+          message: "Esperado ';' após atribuição"
+        })
+      ]
+    });
+  });
+
   it('formata concatenação estática direta em wrappers autorizados', () =>
   {
     const input = [

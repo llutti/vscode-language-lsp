@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { formatDocument } from '../../../src/formatting';
+import { formatDocument, formatDocumentDetailed } from '../../../src/formatting';
 
 const settings = {
   enabled: true,
@@ -60,6 +60,25 @@ describe('formatDocument', () => {
     const doc = TextDocument.create('file:///test.lspt', 'lsp', 1, 'Funcao X(;\nInicio\nFim;\n');
     const edits = formatDocument(doc, settings);
     expect(edits).toEqual([]);
+  });
+
+  it('reports parse_errors when syntax blocks formatting', () => {
+    const doc = TextDocument.create(
+      'file:///cursor-sql.lspt',
+      'lsp',
+      1,
+      'Definir Cursor C_TemFer;\nC_TemFer.SQL "SELECT * FROM R038AFA"\nC_TemFer.AbrirCursor();\n'
+    );
+
+    const result = formatDocumentDetailed(doc, settings);
+
+    expect(result.edits).toEqual([]);
+    expect(result.report.format.reason).toBe('parse_errors');
+    expect(result.report.format.parseErrorCount).toBe(1);
+    expect(result.report.format.parseErrors[0]).toEqual(expect.objectContaining({
+      code: 'SYN_EXPECTED_SEMICOLON',
+      message: "Esperado ';' após atribuição"
+    }));
   });
 
 

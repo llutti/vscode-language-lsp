@@ -5,7 +5,7 @@ import { formatEmbeddedSqlInDocument } from './embedded-sql';
 import { defaultEmbeddedSqlFormatterProviderRegistry } from './embedded-sql-provider-registry';
 import { printTokensToDoc } from './printer';
 import { render } from './render';
-import type { FormatDocumentReport, FormatOptions } from './types';
+import type { EmbeddedSqlFormatReport, FormatDocumentReport, FormatOptions } from './types';
 
 const DEFAULT_OPTIONS: FormatOptions = {
   indentSize: 2,
@@ -68,6 +68,20 @@ function normalizeOptions(options: FormatOptions): FormatOptions {
   };
 }
 
+function emptyEmbeddedSqlReport(enabled: boolean): EmbeddedSqlFormatReport {
+  return {
+    enabled,
+    attempts: [],
+    attemptedCount: 0,
+    eligibleCount: 0,
+    appliedCount: 0,
+    noOpCount: 0,
+    rejectedCount: 0,
+    errorCount: 0,
+    debug: { events: [], eventCount: 0 }
+  };
+}
+
 // Nível B (milestone-formatter.md): sem wrap/printWidth por enquanto.
 
 export function formatLspText(input: { text: string; options: FormatOptions }): { text: string; edits?: never } {
@@ -126,17 +140,17 @@ export function formatDocumentWithDetails(input: {
     return {
       text: input.text,
       report: {
-        embeddedSql: {
-          enabled: opts.embeddedSqlEnabled ?? false,
-          attempts: [],
-          attemptedCount: 0,
-          eligibleCount: 0,
-          appliedCount: 0,
-          noOpCount: 0,
-          rejectedCount: 0,
-          errorCount: 0,
-          debug: { events: [], eventCount: 0 }
-        }
+        format: {
+          decision: 'no_op',
+          reason: 'parse_errors',
+          parseErrors: parsed.errors.map((error) => ({
+            code: error.code,
+            message: error.message,
+            range: error.range
+          })),
+          parseErrorCount: parsed.errors.length
+        },
+        embeddedSql: emptyEmbeddedSqlReport(opts.embeddedSqlEnabled ?? false)
       }
     };
   }
@@ -153,17 +167,13 @@ export function formatDocumentWithDetails(input: {
     return {
       text: normalizedElseIf,
       report: {
-        embeddedSql: {
-          enabled: false,
-          attempts: [],
-          attemptedCount: 0,
-          eligibleCount: 0,
-          appliedCount: 0,
-          noOpCount: 0,
-          rejectedCount: 0,
-          errorCount: 0,
-          debug: { events: [], eventCount: 0 }
-        }
+        format: {
+          decision: normalizedElseIf === input.text ? 'no_op' : 'apply',
+          reason: normalizedElseIf === input.text ? 'already_canonical' : 'formatted',
+          parseErrors: [],
+          parseErrorCount: 0
+        },
+        embeddedSql: emptyEmbeddedSqlReport(false)
       }
     };
   }
@@ -180,6 +190,12 @@ export function formatDocumentWithDetails(input: {
   return {
     text: embeddedSql.text,
     report: {
+      format: {
+        decision: embeddedSql.text === input.text ? 'no_op' : 'apply',
+        reason: embeddedSql.text === input.text ? 'already_canonical' : 'formatted',
+        parseErrors: [],
+        parseErrorCount: 0
+      },
       embeddedSql: embeddedSql.report
     }
   };

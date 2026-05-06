@@ -6,6 +6,9 @@ Alterações realizadas na extensão.
 ### Novidades
   - Adicionar o diagnóstico `LSP1106` para sinalizar declarações duplicadas de `Definir Funcao`.
 
+### Atualizar
+  - Melhorar o retorno do formatador quando a formatação for bloqueada por erro sintático, exibindo uma mensagem com a causa do bloqueio.
+
 ## [2.0.1] - 05/05/2026
 ### Atualizar
   - Melhorar documentação das funções:

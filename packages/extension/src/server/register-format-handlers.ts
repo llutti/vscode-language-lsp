@@ -2,12 +2,24 @@ import { performance } from 'node:perf_hooks';
 import type {
   CancellationToken,
   Connection,
+  MessageActionItem,
+  Range,
   TextEdit
 } from 'vscode-languageserver/node';
 import type { TextDocument } from 'vscode-languageserver-textdocument';
 import type { FormatWindow } from './compile/format-change-classifier';
 import type { ResolvedContext } from './server-runtime';
 import type { FormatDocumentReport } from '@lsp/compiler';
+
+type FormatReportWithDecision = FormatDocumentReport & {
+  format?: {
+    reason?: string;
+    parseErrors: Array<{ message: string; code?: string; range?: Range }>;
+    parseErrorCount: number;
+  };
+};
+
+const GO_TO_FORMAT_ERROR_ACTION: MessageActionItem = { title: 'Ir para erro' };
 
 export function registerFormatHandlers(input: {
   connection: Connection;
@@ -67,6 +79,28 @@ export function registerFormatHandlers(input: {
     scheduleSemanticTokensRefresh,
     getCurrentPullDiagnosticState
   } = input;
+
+  const activeParseErrorNoticeKeyByUri = new Map<string, string>();
+
+  const formatNoEditReason = (formatReport: FormatDocumentReport | undefined, fallbackReason: string | null): string =>
+  {
+    const format = (formatReport as FormatReportWithDecision | undefined)?.format;
+    if (format?.reason === 'parse_errors') return 'parse_errors';
+    return fallbackReason ?? 'already_canonical';
+  };
+
+  const formatParseErrorMessage = (formatReport: FormatDocumentReport | undefined): { key: string; message: string; range?: Range } | null =>
+  {
+    const format = (formatReport as FormatReportWithDecision | undefined)?.format;
+    if (format?.reason !== 'parse_errors') return null;
+    const firstError = format.parseErrors[0];
+    const suffix = firstError ? ` ${firstError.message}` : '';
+    return {
+      key: `${format.parseErrorCount}:${firstError?.code ?? ''}:${firstError?.message ?? ''}`,
+      message: `LSP: formatação ignorada por erro sintático.${suffix}`,
+      ...(firstError?.range ? { range: firstError.range } : {})
+    };
+  };
 
   const runFormatting = (
     doc: TextDocument,
@@ -186,23 +220,46 @@ export function registerFormatHandlers(input: {
           durationMs: Math.round(performance.now() - startedAt),
           semanticPrewarm,
           diagnosticsRefreshExpected: false,
-        cursorAware: cursorOffset !== undefined,
-        cancelledPhase: outcome.phase,
-        formatReport
-      });
+          cursorAware: cursorOffset !== undefined,
+          cancelledPhase: outcome.phase,
+          formatReport
+        });
         return cursorOffset === undefined ? [] : { edits: [], cursorOffset };
       }
 
       const result = outcome.result;
       const edits = Array.isArray(result) ? result : result.edits;
       const editLength = edits.reduce((sum, edit) => sum + edit.newText.length, 0);
+      const noEditReason = formatNoEditReason(formatReport, formatSkipReason);
+      const parseErrorNotice = edits.length === 0 ? formatParseErrorMessage(formatReport) : null;
+      const parseErrorNoticeKey = parseErrorNotice ? `${doc.version}:${parseErrorNotice.key}` : null;
+      if (parseErrorNotice && activeParseErrorNoticeKeyByUri.get(doc.uri) !== parseErrorNoticeKey)
+      {
+        activeParseErrorNoticeKeyByUri.set(doc.uri, parseErrorNoticeKey!);
+        void connection.window.showWarningMessage(parseErrorNotice.message, GO_TO_FORMAT_ERROR_ACTION).then((action) =>
+        {
+          if (activeParseErrorNoticeKeyByUri.get(doc.uri) === parseErrorNoticeKey)
+          {
+            activeParseErrorNoticeKeyByUri.delete(doc.uri);
+          }
+          if (action?.title !== GO_TO_FORMAT_ERROR_ACTION.title || !parseErrorNotice.range) return;
+          void connection.window.showDocument({
+            uri: doc.uri,
+            takeFocus: true,
+            selection: parseErrorNotice.range
+          }).catch((error: unknown) =>
+          {
+            sendLog('debug', `format: show parse error failed error=${String(error)}`, { id: requestId }, filePath);
+          });
+        });
+      }
       recordFormatDecision({
         filePath,
         requestId,
         uri: doc.uri,
         docVersion: doc.version,
         decision: edits.length > 0 ? 'apply' : (formatSkipReason ? 'skip' : 'no_op'),
-        reason: edits.length > 0 ? 'full_document_edit' : (formatSkipReason ?? 'already_canonical'),
+        reason: edits.length > 0 ? 'full_document_edit' : noEditReason,
         editCount: edits.length,
         editLength,
         durationMs: Math.round(performance.now() - startedAt),
