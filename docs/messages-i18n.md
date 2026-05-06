@@ -31,6 +31,7 @@ Este documento define traduções base para códigos de diagnóstico do catálog
 | LSP1103 | Implementação de função fora do escopo global | Implementación de función fuera del ámbito global | Function implementation outside global scope |
 | LSP1104 | Função com mais de 15 parâmetros | Función con más de 15 parámetros | Function with more than 15 parameters |
 | LSP1105 | Declaração de função fora do escopo global | Declaración de función fuera del ámbito global | Function declaration outside global scope |
+| LSP1106 | Declaração duplicada de função customizada | Declaración duplicada de función personalizada | Duplicate custom function declaration |
 | LSP1201 | Parâmetro não utilizado | Parámetro no utilizado | Unused parameter |
 | LSP1202 | Parâmetro END nunca atribuído | Parámetro END nunca asignado | END parameter never assigned |
 | LSP1203 | Variável não utilizada | Variable no utilizada | Unused variable |

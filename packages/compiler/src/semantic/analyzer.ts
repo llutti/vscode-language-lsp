@@ -127,6 +127,7 @@ export type SemanticCache = {
 
 type FuncRecord = {
   decl: FuncDeclNode | null;
+  duplicateDecls: FuncDeclNode[];
   impl: FuncImplNode | null;
 };
 
@@ -2675,7 +2676,7 @@ function collectFunctionRecords(files: FileNode[]): Map<string, FuncRecord> {
   const ensure = (key: string): FuncRecord => {
     const existing = records.get(key);
     if (existing) return existing;
-    const created: FuncRecord = { decl: null, impl: null };
+    const created: FuncRecord = { decl: null, duplicateDecls: [], impl: null };
     records.set(key, created);
     return created;
   };
@@ -2683,7 +2684,12 @@ function collectFunctionRecords(files: FileNode[]): Map<string, FuncRecord> {
   for (const file of files) {
     for (const stmt of file.statements) {
       if (stmt.kind === 'FuncDecl') {
-        ensure(stmt.nameNormalized).decl = stmt;
+        const record = ensure(stmt.nameNormalized);
+        if (!record.decl) {
+          record.decl = stmt;
+        } else {
+          record.duplicateDecls.push(stmt);
+        }
       }
       if (stmt.kind === 'FuncImpl') {
         ensure(stmt.nameNormalized).impl = stmt;
@@ -2696,6 +2702,18 @@ function collectFunctionRecords(files: FileNode[]): Map<string, FuncRecord> {
 
 function emitFunctionDiagnostics(ctx: AnalyzerContext, records: Map<string, FuncRecord>): void {
   for (const record of records.values()) {
+    for (const duplicateDecl of record.duplicateDecls) {
+      pushDiagnostic(
+        ctx,
+        mkDiag(ctx, {
+          id: DiagnosticCodes.FunctionDeclarationDuplicated,
+          severity: 'Info',
+          message: `Função já declarada: ${duplicateDecl.name}.`,
+          sourcePath: duplicateDecl.sourcePath,
+          range: duplicateDecl.nameRange ?? duplicateDecl.range
+        })
+      );
+    }
     if (record.impl) {
       emitDuplicateParamDiagnostics(ctx, record.impl);
     } else if (record.decl) {

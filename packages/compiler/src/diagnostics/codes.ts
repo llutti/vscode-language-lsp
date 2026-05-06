@@ -17,6 +17,7 @@ export const DiagnosticCodes = {
   FunctionGlobalOnly: 'LSP1103',
   FunctionImplGlobalOnly: 'LSP1105',
   FunctionParamLimitExceeded: 'LSP1104',
+  FunctionDeclarationDuplicated: 'LSP1106',
   ParamUnused: 'LSP1201',
   ParamEndNeverAssigned: 'LSP1202',
   ParamEndAssignedViaCall: 'LSP1204',

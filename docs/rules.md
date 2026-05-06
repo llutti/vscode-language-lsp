@@ -108,6 +108,10 @@ Contrato TS-like/LSP-like (M8):
 ## 6. Funções customizadas
 
 - Sintaxe: `Definir Funcao` e `Funcao <nome>(...)`.
+- `Definir Funcao` é único por nome dentro do contexto:
+  - a primeira declaração encontrada na ordem oficial de compilação é a assinatura canônica;
+  - declarações posteriores com o mesmo nome emitem **Info** (`LSP1106`);
+  - declarações duplicadas não substituem a primeira assinatura para validação de chamadas e demais consultas semânticas.
 - Máximo **15 parâmetros**.
 - Parâmetros são **obrigatórios** (sem opcionais).
 - **Parâmetro `END`**:

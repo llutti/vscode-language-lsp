@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.2] - 06/05/2026
+### Novidades
+  - Adicionar o diagnóstico `LSP1106` para sinalizar declarações duplicadas de `Definir Funcao`.
+
 ## [2.0.1] - 05/05/2026
 ### Atualizar
   - Melhorar documentação das funções:

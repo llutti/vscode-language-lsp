@@ -166,6 +166,10 @@ export enum EParameterType {
 - Implementadas via `Funcao <nome>(); {}` ou `Inicio/Fim`
 - **Somente em escopo global**
 - Não podem ser declaradas ou implementadas dentro de blocos
+- `Definir Funcao` é único por nome dentro do contexto de validação:
+  - a primeira declaração encontrada na ordem oficial de compilação é a declaração canônica;
+  - qualquer declaração posterior com o mesmo nome deve emitir Info (`LSP1106`);
+  - declarações duplicadas não podem sobrescrever a primeira declaração nem alterar a assinatura usada em validações posteriores.
 
 #### Parâmetros
 

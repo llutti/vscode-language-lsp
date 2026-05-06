@@ -78,6 +78,32 @@ describe('semantic missing rules', () => {
     expect(hasDiag(result, 'LSP1102')).toBe(true);
   });
 
+  it('emits info when a custom function declaration is duplicated by name', async () => {
+    const result = await analyze([
+      'Definir Funcao fDuplicada(Numero pValor);',
+      'Definir Funcao fDuplicada(Alfa pValor);'
+    ].join('\n'));
+    const duplicates = result.diagnostics.filter((d) => d.id === 'LSP1106');
+    expect(duplicates).toHaveLength(1);
+    expect(duplicates[0]?.severity).toBe('Info');
+    expect(duplicates[0]?.message).toContain('fDuplicada');
+    expect(duplicates[0]?.range.start.line).toBe(1);
+    expect(hasDiag(result, 'LSP1101')).toBe(true);
+  });
+
+  it('keeps the first custom function declaration as the canonical signature', async () => {
+    const result = await analyze([
+      'Definir Funcao fPrimeira(Numero pValor);',
+      'Definir Funcao fPrimeira(Alfa pValor);',
+      'Funcao fPrimeira(Numero pValor);',
+      'Inicio',
+      'Fim;',
+      'fPrimeira("abc");'
+    ].join('\n'));
+    expect(hasDiag(result, 'LSP1106')).toBe(true);
+    expect(hasDiag(result, 'LSP1402')).toBe(true);
+  });
+
   it('errors when function declarations/implementations are not global', async () => {
     const result = await analyzeFixture('function-non-global.lsp');
     expect(hasDiag(result, 'LSP1105')).toBe(true);

@@ -61,6 +61,7 @@ Observabilidade TS-like (M8):
 | LSP1103 | Error | Não | Implementação de função fora do escopo global |
 | LSP1104 | Error | Não | Função com mais de 15 parâmetros |
 | LSP1105 | Error | Não | Declaração de função fora do escopo global |
+| LSP1106 | Info | Não | Declaração duplicada de função customizada |
 | LSP1201 | Warning | Não | Parâmetro não utilizado |
 | LSP1202 | Warning | Não | Parâmetro END nunca atribuído |
 | LSP1203 | Info | Não | Variável não utilizada |
@@ -262,6 +263,19 @@ Observação:
 ### LSP1105 — Error
 **Mensagem efetiva**
 - `Funções só podem ser declaradas no escopo global`
+
+**Quick Fix atual:** Não
+
+---
+
+### LSP1106 — Info
+**Mensagem efetiva**
+- `Função já declarada: <nome>.`
+
+**Quando ocorre**
+- Emitido em toda declaração `Definir Funcao` posterior à primeira declaração com o mesmo nome dentro do contexto.
+- A duplicidade é determinada apenas pelo nome normalizado da função; diferenças de assinatura não criam overload.
+- A primeira declaração, pela ordem oficial de compilação, permanece como assinatura canônica para validação de chamadas.
 
 **Quick Fix atual:** Não
 
