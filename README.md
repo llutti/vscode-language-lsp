@@ -117,6 +117,15 @@ Regras importantes:
 - `LSP: Validar Contextos`
 - `LSP: Abrir Configurações de Contexto`
 
+
+>
+> **IMPORTANTE: reinicie a extensão após alterar contextos.**
+>
+> Depois de criar, editar ou remover contextos, reinicie a extensão para que as alterações sejam carregadas corretamente.
+>
+>
+
+
 ### Arquivo único (`SingleFile`)
 
 Se o arquivo LSP estiver fora de qualquer contexto configurado, a extensão entra automaticamente em modo **SingleFile**.
