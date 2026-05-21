@@ -38,7 +38,7 @@
     "package.nls.es.json"
   ],
   "engines": {
-    "vscode": "^1.118.0"
+    "vscode": "^1.120.0"
   },
   "scripts": {
     "build": "node ./esbuild.mjs --production",
@@ -52,15 +52,17 @@
     "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\""
   },
   "dependencies": {
-    "@lsp/compiler": "file:../compiler"
+    "@lsp/compiler": "file:../compiler",
+    "lsp": "^2.0.3",
+    "sql-formatter": "^15.8.0"
   },
   "devDependencies": {
-    "@types/node": "^25.3.5",
-    "@types/vscode": "^1.118.0",
+    "@types/node": "^25.9.1",
+    "@types/vscode": "^1.120.0",
     "esbuild": "^0.28.0",
     "fast-glob": "^3.3.2",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.5",
+    "vitest": "^4.1.7",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11"

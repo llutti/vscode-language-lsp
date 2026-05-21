@@ -16,8 +16,12 @@
     "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\""
   },
   "dependencies": {
-    "@types/vscode": "^1.118.0",
+    "@lsp/compiler": "^2.0.3",
+    "@types/node": "^25.9.1",
+    "@types/vscode": "^1.120.0",
     "fast-glob": "^3.3.2",
-    "sql-formatter": "^15.7.3"
+    "lsp": "^2.0.3",
+    "sql-formatter": "^15.8.0",
+    "vitest": "^4.1.7"
   }
 }
