@@ -2,6 +2,11 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.3] - 28/05/2026
+### Atualizar
+  - Ajustar o formatador para normalizar operadores lógicos (`e`/`ou`) em expressões multilinha de `Se`, `Enquanto` e `Para`, movendo o operador do fim da linha anterior para o início da linha de continuação.
+  - Preservar comentários inline ao normalizar expressões lógicas multilinha, mantendo o padrão TS-like do formatador.
+
 ## [2.0.2] - 06/05/2026
 ### Novidades
   - Adicionar o diagnóstico `LSP1106` para sinalizar declarações duplicadas de `Definir Funcao`.
