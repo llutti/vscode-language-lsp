@@ -343,6 +343,14 @@ Esse processo deve ser tratado como uma atividade dedicada da V2.
     - o corpo desse `Se` continua seguindo as regras normais de indentação (bloco ou single-statement);
     - esta normalização faz parte do contrato oficial do formatter, não é heurística opcional.
 
+- Regra especifica (headers de controle multiline) - **normalizacao de operadores logicos `e`/`ou`**:
+  - Em headers multiline de `Se`, `Enquanto` e `Para`, quando um operador logico estiver no fim da linha anterior, o formatter deve imprimir a forma canonica com `e`/`ou` no inicio da linha de continuacao.
+  - Forma canonica:
+    - a primeira linha mantem o primeiro termo da condicao;
+    - cada linha de continuacao comeca com `e` ou `ou`, usando continuation indent TS-like;
+    - comentarios de linha trailing associados aos termos permanecem inline, sem alteracao do conteudo do comentario;
+    - o formatter nao aplica wrap por largura e nao tenta preservar alinhamentos manuais/colunas do arquivo original.
+
 ---
 
 ## 15. Syntax Highlighting Avançado

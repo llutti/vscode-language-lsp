@@ -1061,6 +1061,32 @@ describe('formatter', () =>
       '       - nAtraso;\n'
     );
   });
+
+  it('move operadores logicos para o inicio da proxima linha em header multiline', () =>
+  {
+    const input =
+      '        Se (((xCod = 8) ou\n' +
+      '         (xCod = 9) ou\n' +
+      '         (xCod = 31) ou @ Teste de comentario @\n' +
+      '         (xCod = 51) ou\n' +
+      '         (xCod = 52)) e\n' +
+      '         (xCod = 53))\n' +
+      '          nOk = cVerdadeiro;\n';
+
+    const result = formatText({ text: input, options }).text;
+    expect(result).toBe(
+      'Se (((xCod = 8)\n' +
+      '  ou (xCod = 9)\n' +
+      '  ou (xCod = 31) @ Teste de comentario @\n' +
+      '  ou (xCod = 51)\n' +
+      '  ou (xCod = 52))\n' +
+      '  e (xCod = 53))\n' +
+      '  nOk = cVerdadeiro;\n\n'
+    );
+    expect(protectedTokens(result)).toEqual(protectedTokens(input));
+    expect(formatText({ text: result, options }).text).toBe(result);
+  });
+
   it('eh idempotente para regra de concat multiline', () =>
   {
     const input = 'aSQL = "A" + "B" + "C" + "D";\n';

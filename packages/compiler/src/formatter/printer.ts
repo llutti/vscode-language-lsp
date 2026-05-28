@@ -778,6 +778,147 @@ export function printTokensToDoc(
     }
   };
 
+  type LogicalHeaderSegment = {
+    range: [number, number];
+    leadingOperator: string | null;
+    trailingComment: [number, number] | null;
+  };
+
+  const isLogicalOperatorToken = (token: Token | null): boolean =>
+    !!token && token.type === 'Operator' && LOGICAL_KEYWORDS.has(token.normalized);
+
+  const tryPrintLogicalControlHeader = (startIndex: number): number | null => {
+    const startToken = tokens[startIndex]! ?? null;
+    if (
+      !startToken
+      || !((startToken.type === 'Keyword' || startToken.type === 'Identifier') && CONTROL_KEYWORDS.has(startToken.normalized))
+    ) {
+      return null;
+    }
+
+    const openIndex = nextSignificantIndex(startIndex + 1);
+    if (openIndex < 0 || !isDelimiter(tokens[openIndex]!, '(')) return null;
+
+    let depth = 0;
+    let closeIndex = -1;
+    for (let j = openIndex; j < tokens.length; j += 1) {
+      const token = tokens[j]!;
+      if (!token || token.type === 'EOF') break;
+      if (isDelimiter(token, '(')) depth += 1;
+      else if (isDelimiter(token, ')')) {
+        depth -= 1;
+        if (depth === 0) {
+          closeIndex = j;
+          break;
+        }
+      }
+    }
+
+    if (closeIndex < 0) return null;
+    if (tokens[startIndex]!.range.start.line === tokens[closeIndex]!.range.end.line) return null;
+
+    const segments: LogicalHeaderSegment[] = [];
+    let segmentStart = openIndex + 1;
+    let logicalOperatorCount = 0;
+    let sawMultilineLogicalBreak = false;
+    let lastLeadingOperator: string | null = null;
+    depth = 0;
+
+    for (let j = openIndex + 1; j < closeIndex; j += 1) {
+      const token = tokens[j]!;
+      if (!token || token.type === 'EOF') continue;
+
+      if (isDelimiter(token, '(')) {
+        depth += 1;
+        continue;
+      }
+      if (isDelimiter(token, ')')) {
+        depth = Math.max(0, depth - 1);
+        continue;
+      }
+
+      if (!isLogicalOperatorToken(token)) continue;
+
+      const prevSigIndex = previousSignificantIndex(j - 1);
+      const nextSigIndex = nextSignificantIndex(j + 1);
+      const prevSig = prevSigIndex >= 0 ? tokens[prevSigIndex]! ?? null : null;
+      const nextSig = nextSigIndex >= 0 ? tokens[nextSigIndex]! ?? null : null;
+      const hasLineBreakAroundOperator =
+        (!!prevSig && hasNewlineBetween(sourceText, prevSig.endOffset, token.startOffset))
+        || (!!nextSig && hasNewlineBetween(sourceText, token.endOffset, nextSig.startOffset));
+      if (!hasLineBreakAroundOperator) continue;
+
+      if (j <= segmentStart) return null;
+
+      logicalOperatorCount += 1;
+      sawMultilineLogicalBreak = true;
+
+      let trailingComment: [number, number] | null = null;
+      let nextSegmentStart = j + 1;
+      const afterOperatorIndex = nextSignificantIndex(j + 1);
+      const rawAfterOperator = tokens[j + 1]! ?? null;
+      if (rawAfterOperator && isLineComment(rawAfterOperator) && afterOperatorIndex > j + 1) {
+        trailingComment = [j + 1, j + 1];
+        nextSegmentStart = afterOperatorIndex;
+      }
+
+      segments.push({
+        range: [segmentStart, j - 1],
+        leadingOperator: lastLeadingOperator,
+        trailingComment
+      });
+      lastLeadingOperator = token.value;
+      segmentStart = nextSegmentStart;
+      if (trailingComment) j = nextSegmentStart - 1;
+    }
+
+    if (!sawMultilineLogicalBreak || logicalOperatorCount < 1 || segmentStart > closeIndex - 1) return null;
+    segments.push({
+      range: [segmentStart, closeIndex - 1],
+      leadingOperator: lastLeadingOperator,
+      trailingComment: null
+    });
+    if (segments.length < 2 || segments[0]!.leadingOperator !== null) return null;
+
+    emitTokenSpanInline(startIndex, openIndex);
+    emitTokenSpanInline(segments[0]!.range[0], segments[0]!.range[1]);
+    if (segments[0]!.trailingComment) {
+      emitText(' ');
+      emitTokenSpanInline(segments[0]!.trailingComment[0], segments[0]!.trailingComment[1]);
+    }
+
+    for (let segmentIndex = 1; segmentIndex < segments.length; segmentIndex += 1) {
+      const segment = segments[segmentIndex]!;
+      emitLine();
+      emitIndentSpaces(INDENT_SIZE);
+      emitText(segment.leadingOperator ?? 'ou');
+      pendingSpace = true;
+      emitTokenSpanInline(segment.range[0], segment.range[1]);
+      if (segment.trailingComment) {
+        emitText(' ');
+        emitTokenSpanInline(segment.trailingComment[0], segment.trailingComment[1]);
+      }
+    }
+
+    emitText(tokens[closeIndex]!.value);
+
+    const next = nextSignificant(closeIndex + 1);
+    const shouldBreakAfterInlineControlHeader =
+      !!next
+      && next.range.start.line === tokens[closeIndex]!.range.end.line
+      && !isKeyword(next, 'inicio')
+      && !isDelimiter(next, '{')
+      && !isLineComment(next);
+    if (shouldBreakAfterInlineControlHeader) {
+      emitLine();
+    }
+
+    prevPrev = prev;
+    prev = tokens[closeIndex]!;
+    prevSourceLine = tokens[closeIndex]!.range.end.line;
+    return closeIndex;
+  };
+
   const tryPrintConcatAssignmentStatement = (startIndex: number): number | null => {
     if (controlHeader) return null;
     const startToken = tokens[startIndex]!;
@@ -1351,6 +1492,12 @@ export function printTokensToDoc(
     ) {
       pushIndent();
       singleStmtEndLines.push(singleStatementRanges.get(t.range.start.line)!);
+    }
+
+    const logicalControlHeaderEnd = tryPrintLogicalControlHeader(i);
+    if (logicalControlHeaderEnd !== null) {
+      i = logicalControlHeaderEnd;
+      continue;
     }
 
     const additiveStatementEnd = tryPrintAdditiveAssignmentStatement(i);
