@@ -1,6 +1,6 @@
 {
   "extension.displayName": "LSP - Linguagem Senior de Programação",
-  "extension.description": "Suporte para a Linguagem Senior de Programação",
+  "extension.description": "Suporte para a Linguagem Senior de Programação com diagnósticos, formatação, destaque semântico, snippets e correções rápidas.",
   "lsp.configuration.title": "LSP",
   "lsp.configuration.contexts.description": "Define contextos independentes de validação para o compilador.",
   "lsp.configuration.contexts.item.name.description": "Nome do contexto (para identificação em logs e diagnósticos).",

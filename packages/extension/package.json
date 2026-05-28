@@ -16,13 +16,28 @@
   },
   "categories": [
     "Programming Languages",
-    "Snippets"
+    "Snippets",
+    "Formatters",
+    "Linters"
   ],
-  "private": true,
+  "keywords": [
+    "lsp",
+    "senior",
+    "senior sistemas",
+    "linguagem senior",
+    "syntax highlighting",
+    "realce de sintaxe",
+    "diagnostics",
+    "diagnosticos",
+    "formatter",
+    "formatador",
+    "snippets"
+  ],
+  "private": false,
+  "extensionKind": [
+    "workspace"
+  ],
   "main": "dist/extension.js",
-  "activationEvents": [
-    "onStartupFinished"
-  ],
   "files": [
     "dist",
     "syntaxes",
@@ -298,7 +313,6 @@
         "category": "LSP"
       }
     ],
-    "menus": {},
     "languages": [
       {
         "id": "lsp",

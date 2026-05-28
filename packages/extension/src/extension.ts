@@ -79,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   };
 
-  client = new LanguageClient('lsp', 'Linguaguem de Suporte para "Linguaguem Senior de Programação"', serverOptions, clientOptions);
+  client = new LanguageClient('lsp', 'Linguagem de Suporte para "Linguagem Senior de Programação"', serverOptions, clientOptions);
   const clientStart = client.start();
   context.subscriptions.push({
     dispose: () => {
