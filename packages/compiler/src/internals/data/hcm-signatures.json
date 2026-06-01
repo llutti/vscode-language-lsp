@@ -6641,5 +6641,79 @@
     ],
     "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/retcodhor.htm",
     "docVersion": "6.10.4"
+  },
+  {
+    "name": "CalculaDias",
+    "documentation": " Calcular a quantidade de dias corridos desde a **Data Inicial** até a **Data Final**, considerando todos os dias da semana e feriados, conforme a configuração feita nos parâmetros referentes aos dias da semana e feriados.",
+    "params": [
+      {
+        "name": "Domingo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 = Desconsidera domingos, 1 = Considera domingos."
+      },
+      {
+        "name": "Segunda",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 = Desconsidera segundas, 1 = Considera segundas."
+      },
+      {
+        "name": "Terca",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 = Desconsidera terças, 1 = Considera terças."
+      },
+      {
+        "name": "Quarta",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 = Desconsidera quartas, 1 = Considera quartas."
+      },
+      {
+        "name": "Quinta",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 = Desconsidera quintas, 1 = Considera quintas."
+      },
+      {
+        "name": "Sexta",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 = Desconsidera sextas, 1 = Considera sextas."
+      },
+      {
+        "name": "Sabado",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "0 = Desconsidera sábados, 1 = Considera sábados."
+      },
+      {
+        "name": "Feriados",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina se os dias de feriado devem ser considerados ou não.\n\n  - Para que os feriados sejam considerados, informe o valor 0 para o parâmetro Feriados.\n\n**Atenção**:\n O sistema verificará se os dias da semana são feriados somente quando o valor dos parâmetros referentes aos dias da semana forem **=1**.\n\n  - Para que os feriados sejam desconsiderados, no parâmetro xFeriados informe o código da tabela de feriados (contendo os feriados que não deverão ser considerados)."
+      },
+      {
+        "name": "DatIni",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data inicial a ter os dias contados."
+      },
+      {
+        "name": "DatFim",
+        "type": "Data",
+        "isReturnValue": false,
+        "documentation": "Data final a ter os dias contados."
+      },
+      {
+        "name": "Retorno",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Total de dias contados entre o período inicial e final."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/calculadias.htm",
+    "docVersion": "6.10.4"
   }
 ]

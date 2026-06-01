@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.4] - 01/06/2026
+### Novidades
+  - Adicionar documentação da função `CalculaDias`
+
 ## [2.0.3] - 28/05/2026
 ### Atualizar
   - Ajustar o formatador para normalizar operadores lógicos (`e`/`ou`) em expressões multilinha de `Se`, `Enquanto` e `Para`, movendo o operador do fim da linha anterior para o início da linha de continuação.
