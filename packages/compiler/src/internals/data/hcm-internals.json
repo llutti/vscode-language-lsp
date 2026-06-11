@@ -10618,5 +10618,14 @@
     "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/variaveis/turche.htm",
     "docVersion": "6.10.4",
     "documentation": "Turno da chefia encontrado pelas funções BusCadChefe e BusCadChefeLocal."
+  },
+  {
+    "label": "ValStr",
+    "kind": "variable",
+    "isConst": false,
+    "dataType": "Alfa",
+    "documentation": "Variável reservada usada apenas no gerador de relatórios, para alterar a descrição de um campo tipo Descrição. O texto passado para ValStr será impresso no lugar da descrição original do campo.",
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/index.htm#rubi/palavras_reservadas.htm",
+    "docVersion": "6.10.4"
   }
 ]
