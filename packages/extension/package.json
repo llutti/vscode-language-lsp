@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@lsp/compiler": "file:../compiler",
-    "lsp": "^2.0.3",
+    "lsp": "^2.0.5",
     "sql-formatter": "^15.8.0"
   },
   "devDependencies": {
