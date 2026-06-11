@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.5] - 11/06/2026
+### Novidades
+  - Adicionar documentação da variável reservada `ValStr`
+
 ## [2.0.4] - 01/06/2026
 ### Novidades
   - Adicionar documentação da função `CalculaDias`
