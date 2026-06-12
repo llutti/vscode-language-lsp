@@ -68,13 +68,13 @@
   },
   "dependencies": {
     "@lsp/compiler": "file:../compiler",
-    "lsp": "^2.0.5",
+    "lsp": "^2.0.6",
     "sql-formatter": "^15.8.1"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
     "@types/vscode": "^1.120.0",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
     "fast-glob": "^3.3.2",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8",

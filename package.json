@@ -27,6 +27,6 @@
   },
   "dependencies": {
     "@types/vscode": "^1.120.0",
-    "esbuild": "^0.28.0"
+    "esbuild": "^0.28.1"
   }
 }
