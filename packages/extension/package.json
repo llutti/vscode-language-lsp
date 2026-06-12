@@ -2,7 +2,7 @@
   "name": "lsp",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "publisher": "llutti",
   "icon": "images/icon.png",
   "license": "LICENSE.md",
@@ -68,16 +68,16 @@
   },
   "dependencies": {
     "@lsp/compiler": "file:../compiler",
-    "lsp": "^2.0.3",
-    "sql-formatter": "^15.8.0"
+    "lsp": "^2.0.6",
+    "sql-formatter": "^15.8.1"
   },
   "devDependencies": {
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.3",
     "@types/vscode": "^1.120.0",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
     "fast-glob": "^3.3.2",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.7",
+    "vitest": "^4.1.8",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11"
