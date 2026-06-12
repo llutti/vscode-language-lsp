@@ -2,6 +2,19 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.6] - 12/06/2026
+### Novidades
+- Adicionado ícone da linguagem LSP (versões light/dark) em `packages/extension/images/` e referência em `package.json` (contributes.languages[].icon) para exibir o ícone no seletor "Select Language Mode".
+- Atualização detalhada do `.vscode/launch.json`: o Extension Development Host (EDH) agora é iniciado com os seguintes ajustes para isolamento e limpeza automática pelo sistema operacional:
+  - `--extensionDevelopmentPath=${workspaceRoot}\packages\extension` — garante que o EDH carregue o código que está sendo desenvolvido (não a versão instalada globalmente).
+  - `--user-data-dir=%TEMP%\vscode-language-lsp-edh\user-data` — perfil do EDH isolado em diretório temporário do sistema, facilitando limpeza por processos de manutenção do sistema.
+  - `--extensions-dir=%TEMP%\vscode-language-lsp-edh\extensions` — pasta de extensões do EDH isolada em `%TEMP%`; evita que as extensões do usuário conflitem com o ambiente de desenvolvimento e permite descarte automático.
+
+Motivação e notas técnicas:
+- O EDH não lê extensões do `extensions-dir` como substituto de `--extensionDevelopmentPath`; esta última é necessária para carregar a extensão em desenvolvimento. A combinação das flags acima isola o ambiente (configurações e extensões) e mantém apenas a extensão em desenvolvimento ativa, reduzindo interferência de extensões instaladas pelo usuário.
+- Usar diretórios temporários (`%TEMP%`) facilita que o conteúdo seja removido por garbage collectors do SO ou por scripts de limpeza, evitando acúmulo de perfis de desenvolvimento.
+
+
 ## [2.0.5] - 11/06/2026
 ### Novidades
   - Adicionar documentação da variável reservada `ValStr`
