@@ -322,6 +322,10 @@
         "extensions": [
           ".lspt"
         ],
+        "icon": {
+          "light": "./images/lsp-light.svg",
+          "dark": "./images/lsp-dark.svg"
+        },
         "configuration": "./lsp-configuration.json"
       }
     ],
