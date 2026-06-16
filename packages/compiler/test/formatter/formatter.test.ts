@@ -905,6 +905,17 @@ describe('formatter', () =>
     expect(formatText({ text: result, options }).text).toBe(result);
   });
 
+  it('preserva quebra manual em assinatura com comentario trailing entre parametros', () =>
+  {
+    const input =
+      'Definir Funcao f913Cancelar(Numero pCNumSol, Numero pCSolCan,\n' +
+      '                            Numero pCEmpRsp, Numero pCTpCRsp, Numero pCCadRsp,  @-- Responsavel pelo Cancelamento --@\n' +
+      '                            Numero End pCSucesso);\n';
+    const result = formatText({ text: input, options }).text;
+    expect(result).toBe(input);
+    expect(formatText({ text: result, options }).text).toBe(result);
+  });
+
   it("preserva chamada multilinha e alinha continuacao na coluna do '('", () =>
   {
     const input =
