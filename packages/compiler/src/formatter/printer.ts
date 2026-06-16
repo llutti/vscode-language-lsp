@@ -581,10 +581,19 @@ export function printTokensToDoc(
     return true;
   };
 
-  const collectFunctionParams = (openIndex: number): { closeIndex: number; params: Array<[number, number]> } | null => {
+  const collectFunctionParams = (openIndex: number): {
+    closeIndex: number;
+    params: Array<[number, number]>;
+    breakAfter: Set<number>;
+    trailingCommentAfterComma: Map<number, { index: number; spacing: string | null }>;
+    hasLineComment: boolean;
+  } | null => {
     let depth = 0;
     let start = openIndex + 1;
     const params: Array<[number, number]> = [];
+    const breakAfter = new Set<number>();
+    const trailingCommentAfterComma = new Map<number, { index: number; spacing: string | null }>();
+    let hasLineComment = false;
 
     const pushParam = (s: number, e: number) => {
       if (e < s) return;
@@ -597,6 +606,15 @@ export function printTokensToDoc(
       }
       params.push([s, e]);
       return true;
+    };
+
+    const nextNonEofIndex = (from: number): number => {
+      for (let k = from; k < tokens.length; k += 1) {
+        const token = tokens[k]!;
+        if (!token || token.type === 'EOF') return -1;
+        return k;
+      }
+      return -1;
     };
 
     for (let j = openIndex + 1; j < tokens.length; j++) {
@@ -612,7 +630,7 @@ export function printTokensToDoc(
         if (depth === 0) {
           const ok = pushParam(start, j - 1);
           if (ok === null) return null;
-          return { closeIndex: j, params };
+          return { closeIndex: j, params, breakAfter, trailingCommentAfterComma, hasLineComment };
         }
         depth -= 1;
         continue;
@@ -621,7 +639,26 @@ export function printTokensToDoc(
       if (depth === 0 && isDelimiter(t, ',')) {
         const ok = pushParam(start, j - 1);
         if (ok === null) return null;
-        start = j + 1;
+        const paramIndex = params.length - 1;
+        let nextStartIndex = j + 1;
+        const rawNextIndex = nextNonEofIndex(j + 1);
+        const rawNext = rawNextIndex >= 0 ? tokens[rawNextIndex]! ?? null : null;
+        if (rawNext && isLineComment(rawNext) && !hasNewlineBetween(sourceText, t.endOffset, rawNext.startOffset)) {
+          const spacing = getOriginalInlineSpacingBeforeComment(sourceText, rawNext.startOffset);
+          trailingCommentAfterComma.set(paramIndex, { index: rawNextIndex, spacing });
+          breakAfter.add(paramIndex);
+          hasLineComment = true;
+          const afterCommentIndex = nextSignificantIndex(rawNextIndex + 1);
+          if (afterCommentIndex < 0) return null;
+          nextStartIndex = afterCommentIndex;
+          j = rawNextIndex;
+        } else {
+          const next = nextSignificant(j + 1);
+          if (next && next.range.start.line > t.range.end.line) {
+            breakAfter.add(paramIndex);
+          }
+        }
+        start = nextStartIndex;
       }
     }
 
@@ -1521,7 +1558,15 @@ export function printTokensToDoc(
         for (let p = 0; p < collected.params.length; p++) {
           if (p > 0) {
             emitText(',');
-            if (p % maxParamsPerLine === 0) {
+            const previousParamIndex = p - 1;
+            const trailingComment = collected.trailingCommentAfterComma.get(previousParamIndex);
+            if (trailingComment) {
+              if (pendingSpace) pendingSpace = false;
+              emitRawWhitespace(trailingComment.spacing ?? ' ');
+              emitTokenSpanInline(trailingComment.index, trailingComment.index);
+            }
+            if ((collected.hasLineComment && collected.breakAfter.has(previousParamIndex))
+              || (!collected.hasLineComment && p % maxParamsPerLine === 0)) {
               emitLine();
               emitIndentSpaces(alignColumn - indentLevel * INDENT_SIZE);
             } else {
