@@ -2,7 +2,7 @@
 
 Alterações realizadas na extensão.
 
-## [2.0.6] - 12/06/2026
+## [2.0.6] - 16/06/2026
 ### Novidades
 - Adicionado ícone da linguagem LSP (versões light/dark) em `packages/extension/images/` e referência em `package.json` (contributes.languages[].icon) para exibir o ícone no seletor "Select Language Mode".
 - Atualização detalhada do `.vscode/launch.json`: o Extension Development Host (EDH) agora é iniciado com os seguintes ajustes para isolamento e limpeza automática pelo sistema operacional:
