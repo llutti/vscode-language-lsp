@@ -805,6 +805,26 @@
     "docVersion": "5.10.4"
   },
   {
+    "name": "HttpAlteraCodifCaracPadrao",
+    "documentation": "Altera a codificação de caracteres que é usado por padrão nas respostas do servidor. Esta configuração é usada apenas nos casos onde o servidor não especifica a codificação de caracteres no conteúdo da resposta.\n\n**Exemplo:**\n``` lsp\n  definir alfa vHTTP;\n  definir alfa vHTML;\n  HttpObjeto(vHTTP);\n  HttpAlteraCodifCaracPadrao(vHTTP, \"utf-8\");\n```\n\n**Observação**: Se o sistema não suportar a codificação informada ou o valor informado for inválido, o sistema poderá não conseguir codificar o valor, retornando vazio (\"\") neste caso, ou gerando uma mensagem de erro. O valor padrão para esta configuração é **ISO-8859-1**. Codificações suportadas: **UTF-8**, **ISO-8859-1** e **Windows-1252**",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      },
+      {
+        "name": "Codificação",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da codificação que deve ser usada para as novas requisições. Por exemplo: \"UTF-8\", \"ISO-8859-1\", \"Windows-1252\", entre outros."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/index.htm#lsp/funcoes/requisicoes-http/http-altera-codif-carac-padrao.htm",
+    "docVersion": "5.10.4"
+  },
+  {
     "name": "HttpPatch",
     "documentation": "Executa uma requisição HTTP usando o método PATCH. O método de requisição PATCH, somente no formato texto e sem suporte para envio de arquivos, é usado para aplicar modificações parciais em um recurso.",
     "params": [

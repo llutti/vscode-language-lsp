@@ -642,6 +642,7 @@
   "httpget",
   "httpnormalizaretorno",
   "httpobjeto",
+  "httpalteracodifcaracpadrao",
   "httppatch",
   "httppost",
   "httpput",
