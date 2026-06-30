@@ -5,7 +5,8 @@ Alterações realizadas na extensão.
 ## [2.0.8] - 25/06/2026
 ### Novidades
   - Adicionando variável reservada `SibDia`
-  - Disponível apenas em regras de processo 698, 699, 700 e 707 do Controle de Ponto e Refeitório (Módulo HCM).
+    - Disponível apenas em regras de processo 698, 699, 700 e 707 do Controle de Ponto e Refeitório (Módulo HCM).
+  - Adicionando função interna `HttpAlteraCodifCaracPadrao` para alterar a codificação de caracteres padrão do corpo da requisição HTTP.
 
 ## [2.0.6] - 16/06/2026
 ### Novidades
