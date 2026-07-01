@@ -14980,7 +14980,7 @@
     "kind": "variable",
     "isConst": false,
     "dataType": "Numero",
-    "documentation": "Retorna os símbolos referentes aos dias da escala do colaborador. É indexada de 1 a 31.",
+    "documentation": "Retorna os símbolos referentes aos dias da escala do colaborador. É indexada de 1 a 31.\n\n**Utilização**:\n\n Somente nas regra por processo:\n\n- **698** (Geração Escalas - Gerenciamento Inserir Escalas)\n\n- **699** (Geração Escalas - Gerenciamento Alterar Escalas)\n\n- **700** (Geração Escalas - Gerenciamento Excluir Escalas)\n\n- **707** (Geração Escalas - Gerenciamento Colaboradores Escalas).\n\nDisponível para o Módulo: Controle de Ponto e Refeitório.",
     "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/variaveis/sibdia.htm",
     "docVersion": "6.10.4"
   },

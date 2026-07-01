@@ -63,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
     debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
   };
 
-  const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.{lspt,txt}');
+  const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.{lsp,lspt,txt}');
   context.subscriptions.push(fileWatcher);
 
   const clientOptions: LanguageClientOptions = {
@@ -281,10 +281,10 @@ export function activate(context: vscode.ExtensionContext) {
         system: 'HCM'
       },
       {
-        label: 'Arquivos .lspt (recursivo)',
+        label: 'Arquivos .lsp / .lspt (recursivo)',
         description: 'Projeto padrão com subdiretórios',
         rootDir: rootHint || '.',
-        filePattern: '**/*.lspt',
+        filePattern: '**/*.{lsp,lspt}',
         includeSubdirectories: true,
         system: 'HCM'
       },

@@ -608,7 +608,7 @@
         "name": "Objeto",
         "type": "Alfa",
         "isReturnValue": false,
-        "documentation": ""
+        "documentation": "Indica o objeto HTTP."
       },
       {
         "name": "SSL",
@@ -628,13 +628,13 @@
         "name": "Objeto",
         "type": "Alfa",
         "isReturnValue": false,
-        "documentation": ""
+        "documentation": "Indica o objeto HTTP."
       },
       {
         "name": "SSL",
         "type": "Numero",
-        "isReturnValue": false,
-        "documentation": ""
+        "isReturnValue": true,
+        "documentation": "O valor da propriedade Utilizar SSL."
       }
     ],
     "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpleconfiguracaossl.htm",
@@ -802,6 +802,464 @@
       }
     ],
     "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpobjeto.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAlteraCodifCaracPadrao",
+    "documentation": "Altera a codificação de caracteres que é usado por padrão nas respostas do servidor. Esta configuração é usada apenas nos casos onde o servidor não especifica a codificação de caracteres no conteúdo da resposta.\n\n**Exemplo:**\n``` lsp\n  definir alfa vHTTP;\n  definir alfa vHTML;\n  HttpObjeto(vHTTP);\n  HttpAlteraCodifCaracPadrao(vHTTP, \"utf-8\");\n```\n\n**Observação**: Se o sistema não suportar a codificação informada ou o valor informado for inválido, o sistema poderá não conseguir codificar o valor, retornando vazio (\"\") neste caso, ou gerando uma mensagem de erro. O valor padrão para esta configuração é **ISO-8859-1**. Codificações suportadas: **UTF-8**, **ISO-8859-1** e **Windows-1252**",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      },
+      {
+        "name": "Codificação",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome da codificação que deve ser usada para as novas requisições. Por exemplo: \"UTF-8\", \"ISO-8859-1\", \"Windows-1252\", entre outros."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/index.htm#lsp/funcoes/requisicoes-http/http-altera-codif-carac-padrao.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAdicionaExcecaoProxy",
+    "documentation": "Adiciona o endereço passado no parâmetro Endereço na lista de exceções de proxy. Mais detalhes e exemplo são apresentados na documentação da função [HttpLeContadorExcecoesProxy](https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httplecontadorexcecoesproxy.htm).\n\n**Observações:** O Endereço adicionado na lista **não** deve ser precedido do protocolo. Por exemplo, em vez de adicionar **http://localhost**, cadastrar apenas **localhost**. Ao verificar uma URL, é sempre comparado o início dela com os endereços cadastrados. Por exemplo, se na lista de exceções estiver cadastrado **www.senior.com** ou **www.senior.com.br**, a URL http://www.senior.com.br/demonstracao/id001.htm será acessada sem passar pelo servidor proxy.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP."
+      },
+      {
+        "name": "Endereço",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Endereço que deve ser adicionado na lista de exceções de proxy."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/index.htm#lsp/funcoes/requisicoes-http/httpadicionaexcecaoproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAlteraAutenticacaoProxy",
+    "documentation": "Faz o inverso da função **HttpLeAutenticacaoProxy**, ou seja, altera os valores ao invés de ler.\n\n**Sintaxe**: HttpAlteraAutenticacaoProxy(**Alfa** Objeto, **Alfa** Usuario, **Alfa** Senha);\n\n**Exemplo:**\n``` lsp\n  Definir Alfa vHTTP;\n  HttpObjeto(vHTTP);\n  HttpAlteraAutenticacaoProxy(vHTTP, \"nome\", \"senha\");\n\n```\n\n**Observação**: Caso não seja informado um usuário e senha válidos e a conexão exigir autenticação em um servidor proxy, será exibida uma tela de autenticação.\n\nComo a tela de autenticação não está disponível na WEB 5.0, se a conexão exigir autenticação deve-se obrigatoriamente informar um usuário e senha válidos, seja na opção padrão, no SGU ou na própria regra.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP."
+      },
+      {
+        "name": "Usuario",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do usuário para autenticação no proxy."
+      },
+      {
+        "name": "Senha",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Senha do usuário para autenticação no proxy."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpalteraautenticacaoproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAlteraConfiguracaoProxy",
+    "documentation": "Faz o inverso da função **HttpLeConfiguracaoProxy**, ou seja, altera os valores ao invés de ler.\n\n**Sintaxe:** HttpAlteraConfiguracaoProxy(**Alfa** Objeto, **Numero** UsarProxy, **Alfa** Servidor, **Numero** Porta, **Numero** AutPorUsu);\n\n**Exemplo:**\n``` lsp\n  Definir Alfa vHTTP;\n  HttpObjeto(vHTTP);\n  HttpAlteraConfiguracaoProxy(vHTTP, 1, \"10.0.0.1\", 3120, 1);\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP."
+      },
+      {
+        "name": "UsarProxy",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica se deve ou não usar o proxy"
+      },
+      {
+        "name": "Servidor",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome/Número do servidor proxy."
+      },
+      {
+        "name": "Porta",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Número da porta do servidor proxy."
+      },
+      {
+        "name": "AutPorUsu",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica se a autenticação no proxy será feita por usuário e senha"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpalteraconfiguracaoproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAlteraMostrarProgresso",
+    "documentation": "Faz o inverso da função **HttpLeMostrarProgresso**, ou seja, altera o valor ao invés de ler.\n\n**Sintaxe:** HttpAlteraMostrarProgresso(**Alfa** Objeto, **Numero** Mostrar);\n\n**Exemplo:**\n ``` lsp\n  Definir Alfa vHTTP;\n  HttpObjeto(vHTTP);\n  HttpAlteraMostrarProgresso(vHTTP, 1);\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP."
+      },
+      {
+        "name": "Mostrar",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica se deve ou não mostrar a tela de progresso."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpalteramostrarprogresso.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpAlteraRedirecionamento",
+    "documentation": "Especifica se as requisições realizadas devem tratar os redirecionamentos retornados pelo servidor destino.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nHttpObjeto(vHTTP);\nHttpAlteraRedirecionamento(vHTTP, 1);\n```\n\n**Observação:** Utilize **0** para desabilitar o tratamento automático de redirecionamentos e **1** para habilitá-lo.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Objeto HTTP."
+      },
+      {
+        "name": "AceitaRedirecionamento",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica se os redirecionamentos retornados pelo servidor devem ser tratados automaticamente. Valores aceitos: 0 (não) e 1 (sim)."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-altera-redirecionamento.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpDesabilitaErroResposta",
+    "documentation": "Desabilita a geração automática de erros de execução. Após esta chamada, nenhum erro será gerado caso a resposta do servidor seja diferente de **200** ou **204**. O tratamento dos códigos de erro passa a ser responsabilidade da regra.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Alfa vHTML;\nHttpObjeto(vHTTP);\nHttpDesabilitaErroResposta(vHTTP);\nHttpGet(vHTTP, \"http://exemplo.com\", vHTML);\n```\n\n**Observação:** Mesmo quando o servidor retorna erro, pode existir conteúdo na resposta. O comportamento padrão é manter esta configuração habilitada.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-desabilita-erro-resposta.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpDesabilitarCookies",
+    "documentation": "Desabilita o recurso de manter os cookies ao utilizar requisições HTTP em regras LSP.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpdesabilitarcookies.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpDesabilitaSNI",
+    "documentation": "Desabilita o SNI (Server Name Indication) na requisição HTTP.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Alfa vHTML;\nHttpObjeto(vHTTP);\nHttpDesabilitaSNI(vHTTP);\nHttpGet(vHTTP, \"https://www.google.com.br/\", vHTML);\n```\n\n**Observação:** O SNI já é desabilitado por padrão.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-desabilita-sni.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpExcluiExcecaoProxy",
+    "documentation": "Exclui da lista de exceções de proxy o endereço localizado no índice informado.\n\n**Observação:** O índice é baseado em zero (0). Para obter a quantidade de exceções e consultar seus índices, utilize as funções **HttpLeContadorExcecoesProxy** e **HttpLeExcecaoProxy**.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      },
+      {
+        "name": "Indice",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Índice da exceção de proxy que será removida. O primeiro índice é 0."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpexcluiexcecaoproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpHabilitaErroResposta",
+    "documentation": "Habilita a geração automática de erros de execução. Quando habilitada, caso a resposta HTTP seja diferente de **200** ou **204**, será gerada uma mensagem de erro automaticamente.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nHttpObjeto(vHTTP);\nHttpHabilitaErroResposta(vHTTP);\n```\n\n**Observação:** Este é o comportamento padrão do objeto HTTP. Caso tenha sido utilizada a função HttpDesabilitaErroResposta, esta função restaura o comportamento padrão.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-habilita-erro-resposta.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpHabilitarCookies",
+    "documentation": "Habilita o recurso de manter os cookies ao utilizar requisições HTTP em regras LSP.\n\n**Observação:** Após habilitado, os cookies enviados pelo servidor serão armazenados no objeto HTTP e reutilizados automaticamente nas próximas requisições realizadas com o mesmo objeto.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httphabilitarcookies.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpHabilitaSNI",
+    "documentation": "Responsável por habilitar o SNI (Server Name Indication) na requisição HTTP. O padrão é desabilitado. Quando habilitado, ao realizar uma requisição HTTP, o nome do servidor é enviado na requisição com base na URL requisitada.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Alfa vHTML;\n\nHttpObjeto(vHTTP);\nHttpHabilitaSNI(vHTTP);\n\n/* Ao realizar o HttpGet o nome do servidor será enviado junto à requisição */\nHttpGet(vHTTP, \"https://www.google.com.br/\", vHTML);\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-habilita-sni.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeAutenticacaoProxy",
+    "documentation": "Faz a leitura e retorna os valores do usuário e senha de autenticação no servidor proxy. Caso o objeto HTTP esteja configurado para utilizar autenticação por usuário, serão retornados os valores configurados no SGU; caso contrário, serão retornados os valores das propriedades **Usuário padrão** e **Senha padrão**.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Alfa vUsuario;\nDefinir Alfa vSenha;\n\nHttpObjeto(vHTTP);\nHttpLeAutenticacaoProxy(vHTTP, vUsuario, vSenha);\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica o objeto HTTP do qual as informações serão obtidas."
+      },
+      {
+        "name": "Usuario",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Recebe o usuário configurado para autenticação no servidor proxy."
+      },
+      {
+        "name": "Senha",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Recebe a senha configurada para autenticação no servidor proxy."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpleautenticacaoproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeCabecalhoResposta",
+    "documentation": "Consulta os valores associados aos cabeçalhos de resposta das requisições HTTP. Estes valores somente estão disponíveis após a realização de uma requisição (GET, POST, PUT, PATCH ou DELETE). Todos os valores são retornados como **Alfa**, sem qualquer conversão de dados.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Alfa vHTML;\nDefinir Alfa vContentType;\nDefinir Alfa vContentLength;\n\nHttpObjeto(vHTTP);\nHttpGet(vHTTP, \"http://exemplo.com/app/path\", vHTML);\n\nHttpLeCabecalhoResposta(vHTTP, \"Content-Type\", vContentType);\nHttpLeCabecalhoResposta(vHTTP, \"Content-Length\", vContentLength);\n```\n\n**Observação:** Se o mesmo cabeçalho for retornado mais de uma vez pelo servidor, apenas o primeiro valor será retornado, com exceção dos cabeçalhos **WWW-Authenticate** e **Proxy-Authenticate**.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP do qual o cabeçalho será obtido."
+      },
+      {
+        "name": "Nome",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do cabeçalho HTTP que será consultado. Não pode ser vazio (\"\")."
+      },
+      {
+        "name": "Valor",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Recebe o valor do cabeçalho solicitado. Caso o cabeçalho não exista, será retornado vazio (\"\")."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-le-cabecalho-resposta.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeCodigoResposta",
+    "documentation": "Consulta o código de resposta da última requisição HTTP enviada ao servidor.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Alfa vHTML;\nDefinir Numero vCodigo;\n\nHttpObjeto(vHTTP);\nHttpGet(vHTTP, \"http://exemplo.com\", vHTML);\nHttpLeCodigoResposta(vHTTP, vCodigo);\n```\n\n**Observação:** O código retornado corresponde ao código de status HTTP (por exemplo, 200, 404, 500) da última requisição realizada com o objeto HTTP.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica o objeto HTTP do qual o código de resposta será obtido."
+      },
+      {
+        "name": "Codigo",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Recebe o código de resposta HTTP retornado pelo servidor."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/http-le-codigo-resposta.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeConfiguracaoProxy",
+    "documentation": "Faz a leitura do valor das propriedades **Utilizar servidor proxy**, **Servidor**, **Porta** e **Utilizar autenticação por usuário** do objeto HTTP, retornando seus valores nos parâmetros correspondentes.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Numero vUsarProxy;\nDefinir Alfa vServidor;\nDefinir Numero vPorta;\nDefinir Numero vAutPorUsu;\n\nHttpObjeto(vHTTP);\nHttpLeConfiguracaoProxy(vHTTP, vUsarProxy, vServidor, vPorta, vAutPorUsu);\n```\n\n**Observação:** Os parâmetros **UsarProxy** e **AutPorUsu** retornam **0** quando a opção está desmarcada e **1** quando está marcada.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica o objeto HTTP do qual as configurações serão obtidas."
+      },
+      {
+        "name": "UsarProxy",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Recebe 0 quando o uso de proxy está desabilitado ou 1 quando está habilitado."
+      },
+      {
+        "name": "Servidor",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Recebe o endereço do servidor proxy configurado."
+      },
+      {
+        "name": "Porta",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Recebe a porta configurada para o servidor proxy."
+      },
+      {
+        "name": "AutPorUsu",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Recebe 0 quando a autenticação por usuário está desabilitada ou 1 quando está habilitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpleconfiguracaoproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeContadorExcecoesProxy",
+    "documentation": "Retorna a quantidade de endereços cadastrados na lista de exceções de proxy.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Numero vQuantidade;\n\nHttpObjeto(vHTTP);\nHttpLeContadorExcecoesProxy(vHTTP, vQuantidade);\n```\n\n**Observação:** Utilize esta função em conjunto com **HttpLeExcecaoProxy** para percorrer todas as exceções cadastradas.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica o objeto HTTP do qual a lista de exceções será consultada."
+      },
+      {
+        "name": "Quantidade",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Recebe a quantidade de exceções de proxy cadastradas."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httplecontadorexcecoesproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeExcecaoProxy",
+    "documentation": "Retorna no parâmetro **Endereço** o endereço cadastrado na lista de exceções de proxy correspondente ao índice informado.\n\n**Observação:** O índice é baseado em zero (0). Mais detalhes e exemplo de utilização podem ser encontrados na documentação da função **HttpLeContadorExcecoesProxy**.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica o objeto HTTP do qual a exceção será obtida."
+      },
+      {
+        "name": "Indice",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Índice da exceção de proxy que será consultada. O primeiro índice é 0."
+      },
+      {
+        "name": "Endereco",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Recebe o endereço da exceção de proxy correspondente ao índice informado."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpleexcecaoproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLeMostrarProgresso",
+    "documentation": "Faz a leitura da propriedade **Exibir progresso de download** do objeto HTTP.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Numero vMostrar;\n\nHttpObjeto(vHTTP);\nHttpLeMostrarProgresso(vHTTP, vMostrar);\n```\n\n**Observação:** O parâmetro **Mostrar** retorna **0** quando a exibição do progresso está desabilitada e **1** quando está habilitada.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica o objeto HTTP do qual a configuração será obtida."
+      },
+      {
+        "name": "Mostrar",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Recebe 0 quando a exibição do progresso está desabilitada ou 1 quando está habilitada."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httplemostrarprogresso.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpLimpaExcecoesProxy",
+    "documentation": "Exclui todos os endereços cadastrados na lista de exceções de proxy.\n\n**Observação:** Mais detalhes e um exemplo de utilização podem ser encontrados na documentação da função **HttpLeContadorExcecoesProxy**.",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica o objeto HTTP do qual todas as exceções de proxy serão removidas."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httplimpaexcecoesproxy.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "HttpSetaTimeout",
+    "documentation": "Atribui um timeout (tempo de espera), em segundos, para uma requisição HTTP, inclusive HTTPS. Caso a requisição não retorne dentro do tempo estipulado, será lançada uma exceção.\n\n**Exemplo:**\n```lsp\nDefinir Alfa vHTTP;\nDefinir Alfa vHTML;\n\nHttpObjeto(vHTTP);\n\n/* Exemplo atribuindo 5 segundos de timeout */\nHttpSetaTimeout(vHTTP, 5);\n\nHttpGet(vHTTP, \"https://httpstat.us/200?sleep=4000\", vHTML);\nMensagem(Retorna, vHTML);\n```",
+    "params": [
+      {
+        "name": "Objeto",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica o objeto HTTP no qual a configuração será aplicada."
+      },
+      {
+        "name": "Timeout",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Tempo máximo de espera da requisição, em segundos. Caso esse tempo seja excedido, será lançada uma exceção."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/requisicoes-http/httpsetatimeout.htm",
     "docVersion": "5.10.4"
   },
   {
