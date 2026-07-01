@@ -6,6 +6,29 @@ Alterações realizadas na extensão.
 ### Novidades
   - Adicionando variável reservada `SibDia`
     - Disponível apenas em regras de processo 698, 699, 700 e 707 do Controle de Ponto e Refeitório (Módulo HCM).
+  - Adicionando funções HTTP:
+    - `HttpAlteraCodifCaracPadrao`
+    - `HttpAdicionaExcecaoProxy`
+    - `HttpAlteraAutenticacaoProxy`
+    - `HttpAlteraConfiguracaoProxy`
+    - `HttpAlteraMostrarProgresso`
+    - `HttpAlteraRedirecionamento`
+    - `HttpDesabilitaErroResposta`
+    - `HttpDesabilitarCookies`
+    - `HttpDesabilitaSNI`
+    - `HttpExcluiExcecaoProxy`
+    - `HttpHabilitaErroResposta`
+    - `HttpHabilitarCookies`
+    - `HttpHabilitaSNI`
+    - `HttpLeAutenticacaoProxy`
+    - `HttpLeCabecalhoResposta`
+    - `HttpLeCodigoResposta`
+    - `HttpLeConfiguracaoProxy`
+    - `HttpLeContadorExcecoesProxy`
+    - `HttpLeExcecaoProxy`
+    - `HttpLeMostrarProgresso`
+    - `HttpLimpaExcecoesProxy`
+    - `HttpSetaTimeout`
   - Adicionando interpretação de arquivos `*.lsp` como arquivos de linguagem LSP, permitindo que o VSCode aplique o syntax highlighting, autocomplete e hover para funções internas da Senior.
 
 ## [2.0.6] - 16/06/2026
