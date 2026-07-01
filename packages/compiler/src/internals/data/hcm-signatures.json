@@ -5432,490 +5432,6 @@
     "docVersion": ""
   },
   {
-    "name": "SQL_AbrirCursor",
-    "documentation": "Função que abre o cursor depois de informado o SQL a ser utilizado.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_BOF",
-    "documentation": "Função que retorna se o cursor está na posição inicial (antes do primeiro registro). Se o cursor está na posição BOF, o valor retornado é 1 (um), caso contrário é 0 (zero).",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_Criar",
-    "documentation": "Função que cria um cursor, ou um objeto para execução de SQL, e retorna no parâmetro \"Objeto\".",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": true,
-        "documentation": "Informe o cursor."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_DefinirAlfa",
-    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo alfanumérico.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "aValor",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_DefinirBlob",
-    "documentation": "Função que seta define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo blob.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "aValor",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_DefinirBoleano",
-    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo boleano.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "nValor",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_DefinirComando",
-    "documentation": "Função que aplica o comando SQL para o cursor passado como parâmetro.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aSQL",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_DefinirData",
-    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo data.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "dValor",
-        "type": "Data",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_DefinirFlutuante",
-    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo numérico com ponto flutuante.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "nValor",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_DefinirInteiro",
-    "documentation": "Função que define o valor de um parâmetro (seguindo as regras do SQL Senior 2) do tipo inteiro.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "nValor",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_Destruir",
-    "documentation": "Função que destrói um cursor depois de sua utilização, o mesmo deve ser chamado quando o cursor não for mais utilizado.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": true,
-        "documentation": "Informe o cursor."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_EOF",
-    "documentation": "Função que retorna se o cursor está na posição final (depois do último registro). Se o cursor está na posição EOF, o valor retornado é 1 (um), caso contrário é 0 (zero)",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_FecharCursor",
-    "documentation": "Função que fecha a pesquisa sendo feita pelo cursor.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_Proximo",
-    "documentation": "Função que posiciona o cursor no próximo registro.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_RetornarAlfa",
-    "documentation": "Função que retorna um valor do tipo alfa (string) de um campo do registro do cursor.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "aValor",
-        "type": "Alfa",
-        "isReturnValue": true
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_RetornarBlob",
-    "documentation": "Função que retorna um Blob de um campo do registro do cursor.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "aValor",
-        "type": "Alfa",
-        "isReturnValue": true
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_RetornarBoleano",
-    "documentation": "Função que retorna um valor boleano de um campo do registro do cursor.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "nValor",
-        "type": "Numero",
-        "isReturnValue": true
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_RetornarData",
-    "documentation": "Função que retorna uma data de um campo do registro do cursor.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "dValor",
-        "type": "Data",
-        "isReturnValue": true
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_RetornarFlutuante",
-    "documentation": "Função que retorna um valor flutuante de um campo do registro do cursor.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "nValor",
-        "type": "Numero",
-        "isReturnValue": true
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_RetornarInteiro",
-    "documentation": "Função que retorna um valor inteiro de um campo do registro do cursor.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      },
-      {
-        "name": "nValor",
-        "type": "Numero",
-        "isReturnValue": true
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_RetornarSeNulo",
-    "documentation": "Função que retorna um valor booleano, que significa se o campo é nulo ou não.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "aCampo",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_UsarAbrangencia",
-    "documentation": "Função que informa ao cursor se é para utilizar abrangência de usuários.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "nUsar",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "SQL_UsarSQLSenior2",
-    "documentation": "Informa se o comando a ser definido para o cursor utiliza a sintaxe de linguagem Senior ou a sintaxe nativa (linguagem originada da base de dados utilizada, por exemplo Oracle e SQL Server).\n\nPara utilização de comandos nativos é **necessário desabilitar** as rotina de abrangência através da função **SQL_UsarAbrangencia** e, em seguida, informar que não será utilizado a linguagem Senior.",
-    "params": [
-      {
-        "name": "aObjeto",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Informe o cursor."
-      },
-      {
-        "name": "nUsar",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "0 para definir que não será utilizada sintaxe SQL Senior 2 ou um valor diferente de zero para definir que será utilizada a sintaxe SQL Senior 2."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
     "name": "TamanhoAlfa",
     "params": [
       {
@@ -6377,32 +5893,6 @@
     "docVersion": "6.10.4"
   },
   {
-    "name": "ExecSP",
-    "documentation": "A função ExecSP é utilizada para executar uma Stored Procedure contida no banco de dados definida no TBS.",
-    "params": [
-      {
-        "name": "Nome",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Representa o nome da **Stored Procedure** a ser executada."
-      },
-      {
-        "name": "ParametrosEntrada",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Representa os valores que devem ser passados para a **Stored Procedure**. Os parâmetros devem ser passados seguindo a definição dos parâmetros de entrada da Procedure no CBDS."
-      },
-      {
-        "name": "ParametroSaida",
-        "type": "Alfa",
-        "isReturnValue": true,
-        "documentation": "É um parâmetro de saída que traz os valores que foram informados para o procedimento e os valores que retornaram da mesma."
-      }
-    ],
-    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.3/lsp/funcoes/execucao-de-stored-procedures-nas-regras/execsp.htm",
-    "docVersion": "6.10.4"
-  },
-  {
     "name": "BuscaTotalizadoresSituacoes",
     "documentation": "Esta função retorna a quantidade de horas realizadas nas situações cadastradas em um determinado totalizador.",
     "params": [
@@ -6714,6 +6204,44 @@
       }
     ],
     "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/calculadias.htm",
+    "docVersion": "6.10.4"
+  },
+  {
+    "name": "CarregaAbrUsuTabela",
+    "documentation": "A idéia desta função é fornecer um recurso para que seja possível aplicar, através dos parâmetros passados a ela, abrangências de usuário que serão utilizadas em tabelas do sistema, inclusive para tabelas de usuário.",
+    "params": [
+      {
+        "name": "Tabela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Tabela à qual deve ser carregada a abrangência."
+      },
+      {
+        "name": "NomeCampo",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome do campo ao qual a abrangência deve ser aplicada. Pode ser qualquer campo de qualquer tabela, inclusive campos de usuário. A única restrição é que os campos aqui informados deverão ser do tipo Inteiro ou alfa. Não será aplicada abrangência para campos do tipo data, imagem e com valores decimais."
+      },
+      {
+        "name": "Condicao",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica em qual condição a abrangência informada deverá ser aplicada."
+      },
+      {
+        "name": "SobrepoeAbr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica se a abrangência informada deverá sobrepor a abrangência que já pode estar carregada em memória. Isto é útil quando for necessário restringir somente um tipo de abrangência, descartando-se a abrangência que está atualmente cadastrada para os usuários."
+      },
+      {
+        "name": "ValorAbr",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "O valor que deverá ser aplicado na abrangência. Os valores informados deverão estas dispostos da mesma maneira como são cadastrados na tela de \"Cadastro de Abrangências\". Caso seja passado um valor ou abrangência inválida, uma mensagem de erro será retornada e a regra será cancelada. Esta função retorna 1 quando a abrangência foi carregada com sucesso para a memória e zero quando não houve a carga."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_carregaabrusutabela.htm",
     "docVersion": "6.10.4"
   }
 ]
