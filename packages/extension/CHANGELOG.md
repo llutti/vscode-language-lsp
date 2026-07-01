@@ -2,7 +2,7 @@
 
 Alterações realizadas na extensão.
 
-## [2.0.8] - 25/06/2026
+## [2.0.7] - 25/06/2026
 ### Novidades
   - Adicionando variável reservada `SibDia`
     - Disponível apenas em regras de processo 698, 699, 700 e 707 do Controle de Ponto e Refeitório (Módulo HCM).
