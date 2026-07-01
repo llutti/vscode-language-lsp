@@ -6,7 +6,7 @@ Alterações realizadas na extensão.
 ### Novidades
   - Adicionando variável reservada `SibDia`
     - Disponível apenas em regras de processo 698, 699, 700 e 707 do Controle de Ponto e Refeitório (Módulo HCM).
-  - Adicionando função interna `HttpAlteraCodifCaracPadrao` para alterar a codificação de caracteres padrão do corpo da requisição HTTP.
+  - Adicionando interpretação de arquivos `*.lsp` como arquivos de linguagem LSP, permitindo que o VSCode aplique o syntax highlighting, autocomplete e hover para funções internas da Senior.
 
 ## [2.0.6] - 16/06/2026
 ### Novidades
