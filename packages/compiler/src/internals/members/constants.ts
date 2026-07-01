@@ -1,6 +1,20 @@
 import type { TypeName } from '../../parser/ast';
 import { casefold } from '../../utils/casefold';
-import internalVariableNames from '../data/internal-variables.json';
+import hcmInternals from '../data/hcm-internals.json';
+import acessoInternals from '../data/acesso-internals.json';
+import erpInternals from '../data/erp-internals.json';
+import seniorInternals from '../data/senior-internals.json';
+
+type RawInternalVariable = {
+  label: string;
+};
+
+const internalVariableNames: string[] = [
+  ...(hcmInternals as RawInternalVariable[]),
+  ...(acessoInternals as RawInternalVariable[]),
+  ...(erpInternals as RawInternalVariable[]),
+  ...(seniorInternals as RawInternalVariable[]),
+].map(v => v.label);
 
 export type InternalConstant = {
   name: string;
