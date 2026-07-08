@@ -24,11 +24,11 @@
     "typescript-eslint": "^8.63.0",
     "vitest": "^4.1.10"
   },
+  "allowScripts": {
+    "esbuild@0.28.1": true
+  },
   "dependencies": {
     "@types/vscode": "^1.125.0",
     "esbuild": "^0.28.1"
-  },
-  "allowScripts": {
-    "esbuild@0.28.1": true
   }
 }

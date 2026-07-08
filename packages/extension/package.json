@@ -67,15 +67,11 @@
     "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\""
   },
   "dependencies": {
-    "@lsp/compiler": "file:../compiler",
-    "lsp": "^2.0.7",
+    "@lsp/compiler": "*",
     "sql-formatter": "^15.8.2"
   },
   "devDependencies": {
-    "@types/vscode": "^1.125.0",
-    "esbuild": "^0.28.1",
     "fast-glob": "^3.3.2",
-    "typescript": "^6.0.3",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11"
