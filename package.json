@@ -29,6 +29,8 @@
   },
   "dependencies": {
     "@types/vscode": "^1.125.0",
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.1",
+    "fast-glob": "^3.3.3",
+    "sql-formatter": "^15.8.2"
   }
 }

@@ -14,9 +14,5 @@
     "lint": "npm run typecheck && node scripts/lint-consistency.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require(\\\"fs\\\").rmSync(\\\"dist\\\",{recursive:true,force:true})\""
-  },
-  "dependencies": {
-    "fast-glob": "^3.3.2",
-    "sql-formatter": "^15.8.1"
   }
 }
