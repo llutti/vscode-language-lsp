@@ -1,7 +1,9 @@
 [
   {
     "name": "Abrir",
-    "documentation": "Abre arquivos no disco local ou na rede. Se a função for bem sucedida, o valor de retorno será o manipulador de arquivo. Este valor não poderá ser alterado, caso contrário a regra não terá condições de operar com o arquivo. Se a função falhar, um erro acontece e a regra é cancelada.",
+    "documentation": "Abre arquivos no disco local ou na rede. Se a função for bem sucedida, o valor de retorno será o manipulador de arquivo. Este valor não poderá ser alterado, caso contrário a regra não terá condições de operar com o arquivo. **Se a função falhar, um erro acontece e a regra é *ABORTADA* **.",
+    "type": "Numero",
+    "returnValue": true,
     "params": [
       {
         "name": "NomeArquivo",
@@ -12,10 +14,100 @@
         "name": "ModoAbertura [Ler|Gravar|LerNL|GravarNL]",
         "type": "Numero",
         "isReturnValue": false,
-        "documentation": "Determina o modo de abertura do arquivo:n  - **Ler**: Leitura binárian  - **Gravar**: Escrita binárian  - **LerNL**: Leitura em modo texton  - **GravarNL**: Escrita em modo texton"
+        "documentation": "Determina o modo de abertura do arquivo:\n- **Ler**: Leitura binária\n- **Gravar**: Escrita binária\n- **LerNL**: Leitura em modo texto\n- **GravarNL**: Escrita em modo texto"
       }
     ],
-    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/index.htm#lsp/sintaxe-de-comandos-e-operadores.htm",
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/index.htm#lsp/funcoes/manipulacao-de-arquivos-texto/abrir.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "Fechar",
+    "documentation": "Fecha um arquivo previamente aberto.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": ""
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-arquivos-texto/fechar.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "Gravar",
+    "type": "Numero",
+    "returnValue": true,
+    "documentation": "Escreve determinado número de bytes para um arquivo binário e retorna o número de bytes gravados no arquivo.",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "Dados",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo."
+      },
+      {
+        "name": "NumeroDeBytes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o número de bytes que devem ser lidos do arquivo."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-arquivos-texto/gravar.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "GravarNL",
+    "documentation": "Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.",
+    "type": "Numero",
+    "isReturnValue": true,
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "ValorLinha",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-arquivos-texto/gravarnl.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "GravarNLEOL",
+    "documentation": "Grava uma linha em um arquivo texto com a opção de incluir a quebra de linha ao final. Esta função sempre retorna 1 (um).",
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "ValorLinha",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto."
+      },
+      {
+        "name": "UseEOL [0:Não | 1:Sim]",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina se deve ou não ser adicionada a quebra de linha ao final."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/index.htm#lsp/funcoes/manipulacao-de-arquivos-texto/gravarnleol.htm",
     "docVersion": "5.10.4"
   },
   {
@@ -2692,6 +2784,56 @@
       }
     ],
     "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/web-50/winsselecaodalista.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "Ler",
+    "documentation": "Lê determinado números de bytes do arquivo binário indicado. Esta função retorna o **número de bytes** que foram **lidos** do arquivo. Se a leitura atingiu o final do arquivo, o retorno será o **número de bytes lidos** até o final do arquivo.",
+    "type": "Numero",
+    "isReturnValue": true,
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica a variável de onde os dados serão obtidos para leitura."
+      },
+      {
+        "name": "NumeroDeBytes",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o número de bytes que devem ser lidos do arquivo."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-arquivos-texto/ler.htm",
+    "docVersion": "5.10.4"
+  },
+  {
+    "name": "LerNL",
+    "documentation": "Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n\n**Observação:** A função LerNL considera apenas como quebra de linha *“CRLF”* ou *“#13#10”*, padrão do sistema operacional Windows.",
+    "type": "Numero",
+    "isReturnValue": true,
+    "params": [
+      {
+        "name": "ManipuladorArquivo",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
+      },
+      {
+        "name": "Retorno",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Indica a variável de onde os dados serão obtidos para leitura."
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/tecnologia/5.10.4/lsp/funcoes/manipulacao-de-arquivos-texto/lernl.htm",
     "docVersion": "5.10.4"
   },
   {
