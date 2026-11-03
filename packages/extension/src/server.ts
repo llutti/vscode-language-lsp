@@ -575,6 +575,7 @@ let bootPhase: BootPhase = 'BOOTING';
 let suppressOpenCompileUntil = 0;
 let refreshInProgress = false;
 let lastRefreshAt = 0;
+let refreshQueued = false;
 const lastCompileByContext = new Map<string, number>();
 const orderedFilesByContext = new Map<string, string[]>();
 const metricsLog: MetricsEntry[] = [];
@@ -1586,14 +1587,71 @@ function resolveBootPrefixTargetForContext(context: ResolvedContext): string | u
 
 function getIgnoredForWorkspace(workspaceUri: string): Set<string>
 {
-  return ignoredDiagnosticsByWorkspace.get(workspaceUri) ?? ignoredDiagnosticsByWorkspace.get('') ?? emptyIgnoredSet;
+  return ignoredDiagnosticsByWorkspace.get(workspaceUri)
+    ?? ignoredDiagnosticsByWorkspace.get('')
+    ?? emptyIgnoredSet;
 }
 
 function getIgnoredForContext(context: ResolvedContext): Set<string>
 {
-  const workspaceSet = ignoredDiagnosticsByWorkspace.get(context.workspaceUri) ?? emptyIgnoredSet;
+  // Contexts loaded from settings and workspace folders normally use the same
+  // URI. Keep the global fallback as well, otherwise a URI spelling mismatch
+  // silently disables user/workspace ignoreIds for that context.
+  const workspaceSet = getIgnoredForWorkspace(context.workspaceUri);
   if (!context.diagnosticsIgnoreIds || context.diagnosticsIgnoreIds.length === 0) return workspaceSet;
   return new Set<string>([...workspaceSet, ...context.diagnosticsIgnoreIds]);
+}
+
+async function refreshIgnoredDiagnosticsForUri(uri: string, workspaceUri: string): Promise<void>
+{
+  // Ask for the effective value using the actual document URI. This is
+  // important for resource-scoped settings: the workspace folder list is not
+  // always available (notably in fallback/single-file mode).
+  const raw = await connection.workspace.getConfiguration({
+    scopeUri: uri,
+    section: 'lsp.diagnostics.ignoreIds'
+  });
+  let values: unknown[] = Array.isArray(raw)
+    ? raw
+    : raw && typeof raw === 'object'
+      ? ((raw as Record<string, unknown>)['diagnostics.ignoreIds'] as unknown[] | undefined) ?? []
+      : [];
+  if (values.length === 0)
+  {
+    const lspConfig = await connection.workspace.getConfiguration({
+      scopeUri: uri,
+      section: 'lsp'
+    }) as ({ diagnostics?: { ignoreIds?: unknown }; 'diagnostics.ignoreIds'?: unknown }) | null;
+    const dotted = lspConfig?.['diagnostics.ignoreIds'];
+    const nested = lspConfig?.diagnostics?.ignoreIds ?? dotted;
+    if (Array.isArray(nested)) values = nested;
+  }
+  const ignored = new Set<string>();
+  for (const value of values)
+  {
+    if (typeof value !== 'string') continue;
+    const normalized = normalizeDiagnosticId(value);
+    if (normalized) ignored.add(normalized);
+  }
+  const previousIgnored = ignoredDiagnosticsByWorkspace.get(workspaceUri);
+  const changed = !previousIgnored
+    || previousIgnored.size !== ignored.size
+    || [...previousIgnored].some((id) => !ignored.has(id));
+  ignoredDiagnosticsByWorkspace.set(workspaceUri, ignored);
+  if (changed)
+  {
+    pullDiagStableByUri.delete(uri);
+    pullDiagLastNonEmptyByUri.delete(uri);
+    pullDiagLastItems.delete(uri);
+    pullDiagCache.delete(uri);
+    pullDiagnosticsFastPathState.clearUriState(uri);
+  }
+  sendLog(
+    'debug',
+    `diagnostics.ignoreIds.effective uri=${uri} workspace=${workspaceUri || '(none)'} ids=${JSON.stringify([...ignored])}`,
+    { id: uri, span: 'diagnostics.ignoreIds.effective' },
+    workspaceUri || undefined
+  );
 }
 
 function schedulePullDiagnosticsRefresh(reason: string, workspaceUri?: string, delayMs: number = 200): void
@@ -2600,9 +2658,18 @@ async function refreshContexts(): Promise<void>
 {
   await ensurePullDiagPersistCacheLoaded();
   const now = Date.now();
-  if (refreshInProgress || now - lastRefreshAt < 500)
+  if (refreshInProgress)
   {
-    sendLog('info', 'refreshContexts: ignorado (debounce)');
+    refreshQueued = true;
+    sendLog('info', 'refreshContexts: enfileirado (refresh em andamento)');
+    return;
+  }
+  if (now - lastRefreshAt < 500)
+  {
+    refreshQueued = true;
+    const delay = Math.max(1, 500 - (now - lastRefreshAt));
+    sendLog('info', `refreshContexts: enfileirado (debounce=${delay}ms)`);
+    setTimeout(() => { void refreshContexts(); }, delay);
     return;
   }
   refreshInProgress = true;
@@ -2638,6 +2705,13 @@ async function refreshContexts(): Promise<void>
   semanticRefreshScheduler.dispose();
   pullDiagnosticsFollowupTracker.clearAll();
   pullDiagnosticsService.reset();
+  // Ignore lists affect the visible diagnostic set. Stable pull snapshots
+  // must not survive a configuration refresh, otherwise the sticky fast path
+  // can return diagnostics that were already configured to be ignored.
+  pullDiagStableByUri.clear();
+  pullDiagLastNonEmptyByUri.clear();
+  pullDiagLastItems.clear();
+  pullDiagCache.clear();
   pullDiagPersistRevisionByContext.clear();
   lastVisiblePullDiagnosticsStateByUri.clear();
   adaptiveTypingDelayByContext.clear();
@@ -2766,6 +2840,11 @@ async function refreshContexts(): Promise<void>
   scheduleSemanticTokensRefresh('refreshContexts');
   refreshInProgress = false;
   serverRuntime.refreshInProgress = false;
+  if (refreshQueued)
+  {
+    refreshQueued = false;
+    setTimeout(() => { void refreshContexts(); }, 0);
+  }
 }
 
 function handleWindowFocusChanged(focused: boolean): void
@@ -3315,6 +3394,7 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
   try
   {
     await ensurePullDiagPersistCacheLoaded();
+      await refreshIgnoredDiagnosticsForUri(uri, workspaceUri);
     const context = findContextForFile(filePath);
     observability.log(obs, 'debug', 'pullDiagnostics.request', {
       id: `${uri}`,
@@ -3442,6 +3522,8 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
       stickyEditWindowMs: PULL_DIAGNOSTICS_STICKY_EDIT_WINDOW_MS
     });
     if (
+      context
+      &&
       visibleFastPath
       && pullDiagnosticsFastPathState.shouldUseStickyFastPath({
         uri,

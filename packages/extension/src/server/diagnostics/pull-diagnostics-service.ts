@@ -163,6 +163,14 @@ const EMPTY_CONTEXT_FILE_PROJECTION: ContextFileProjection = {
   authoritative: false
 };
 
+export function filterFallbackDiagnostics<T extends { code?: string | number }>(diagnostics: T[], ignored: Set<string>): T[] {
+  if (ignored.size === 0) return diagnostics;
+  return diagnostics.filter((diag) => {
+    const id = String(diag.code ?? '').trim().toUpperCase();
+    return !id || !ignored.has(id);
+  });
+}
+
 export function createPullDiagnosticsService(input: {
   documents: Map<string, TextDocument>;
   contextDocs: Map<string, Set<string>>;
@@ -403,12 +411,7 @@ export function createPullDiagnosticsService(input: {
     } else if (inputData.doc) {
       const ignored = input.getIgnoredForWorkspace(inputData.workspaceUri);
       const result = await input.compileFallbackDocument(inputData.doc, false);
-      diagnostics = result.diagnostics
-        .filter((diag) =>
-        {
-          const id = String(diag.code ?? '');
-          return !id || !ignored.has(id.toLowerCase());
-        })
+      diagnostics = filterFallbackDiagnostics(result.diagnostics, ignored)
         .map((diag) => input.toLspDiagnostic(diag));
       source = 'fallback-compile';
       isPrefix = false;

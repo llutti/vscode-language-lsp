@@ -52,6 +52,20 @@ function buildIgnoredSet(values: unknown): Set<string>
   return set;
 }
 
+function extractIgnoreIdsValues(value: unknown): unknown[] {
+  if (Array.isArray(value)) return value;
+  if (!value || typeof value !== 'object') return [];
+  const object = value as Record<string, unknown>;
+  const dotted = object['diagnostics.ignoreIds'];
+  if (Array.isArray(dotted)) return dotted;
+  const nested = object.diagnostics;
+  if (nested && typeof nested === 'object') {
+    const ids = (nested as Record<string, unknown>).ignoreIds;
+    if (Array.isArray(ids)) return ids;
+  }
+  return [];
+}
+
 export function buildIgnoredList(values: unknown): string[]
 {
   return [...buildIgnoredSet(values)];
@@ -62,8 +76,8 @@ export async function loadIgnoredDiagnosticsFromSettings(
   workspaceFolders: WorkspaceFolder[]
 ): Promise<Map<string, Set<string>>>
 {
-  const globalRaw = (await connection.workspace.getConfiguration('lsp.diagnostics.ignoreIds')) as string[] | null;
-  const globalSet = buildIgnoredSet(globalRaw ?? []);
+  const globalRaw = await connection.workspace.getConfiguration('lsp.diagnostics.ignoreIds');
+  const globalSet = buildIgnoredSet(extractIgnoreIdsValues(globalRaw));
   if (workspaceFolders.length === 0)
   {
     const map = new Map<string, Set<string>>();
@@ -80,7 +94,7 @@ export async function loadIgnoredDiagnosticsFromSettings(
   for (let i = 0; i < configs.length; i += 1)
   {
     const folder = workspaceFolders[i];
-    const workspaceSet = buildIgnoredSet(configs[i] ?? []);
+    const workspaceSet = buildIgnoredSet(extractIgnoreIdsValues(configs[i]));
     map.set(folder.uri, new Set<string>([...globalSet, ...workspaceSet]));
   }
   return map;

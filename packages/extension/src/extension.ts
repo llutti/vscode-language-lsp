@@ -68,6 +68,25 @@ export function activate(context: vscode.ExtensionContext) {
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: 'file', language: 'lsp' }],
+    middleware: {
+      // Keep the editor output consistent even when a stale server snapshot
+      // publishes diagnostics after the workspace setting changes.
+      handleDiagnostics: (uri, diagnostics, next) => {
+        const resource = typeof uri === 'string' ? vscode.Uri.parse(uri) : uri;
+        const configured = vscode.workspace
+          .getConfiguration('lsp', resource)
+          .get<string[]>('diagnostics.ignoreIds', []);
+        const ignored = new Set(configured
+          .filter((value): value is string => typeof value === 'string')
+          .map(normalizeDiagnosticCode)
+          .filter(Boolean));
+        const filtered = diagnostics.filter((diagnostic) => {
+          const code = normalizeDiagnosticCode(String(diagnostic.code ?? ''));
+          return !code || !ignored.has(code);
+        });
+        next(uri, filtered);
+      }
+    },
     synchronize: {
       configurationSection: 'lsp',
       fileEvents: fileWatcher
