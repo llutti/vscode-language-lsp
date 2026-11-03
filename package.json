@@ -17,20 +17,20 @@
     "r:sync": "node scripts/readme-sync.mjs"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1",
-    "eslint": "^10.6.0",
-    "globals": "^17.7.0",
+    "@types/node": "^26.6.6",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.63.0",
-    "vitest": "^4.1.10"
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^4.1.12"
   },
   "allowScripts": {
-    "esbuild@0.28.1": true
+    "esbuild@0.28.2": true
   },
   "dependencies": {
-    "@types/vscode": "^1.125.0",
-    "esbuild": "^0.28.1",
+    "@types/vscode": "^1.144.0",
+    "esbuild": "^0.28.2",
     "fast-glob": "^3.3.3",
-    "sql-formatter": "^15.8.2"
+    "sql-formatter": "^15.9.0"
   }
 }
