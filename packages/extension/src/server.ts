@@ -508,6 +508,10 @@ const pendingCompiles = new Map<number, {
 let compilerWorker: Worker | null = null;
 let compilerWorkerGeneration = 0;
 let compilerWorkerFailureHandled = false;
+let compilerWorkerRestartAttempts = 0;
+let compilerWorkerRestartWindowStartedAt = 0;
+const COMPILER_WORKER_RESTART_WINDOW_MS = 180_000;
+const COMPILER_WORKER_MAX_RESTARTS = 5;
 
 const PRIORITY_COMPILE_DELAY_MS = 0;
 const SECONDARY_COMPILE_DELAY_MS = 25;
@@ -1269,6 +1273,7 @@ function ensureCompilerWorker(): Worker
     if (message.workerGeneration !== undefined && message.workerGeneration !== workerGeneration) return;
     const pending = pendingCompiles.get(message.requestId);
     if (!pending) return;
+    if (!message.error) compilerWorkerRestartAttempts = 0;
     pendingCompiles.delete(message.requestId);
     const contextKey = pending.context.key;
     const perfCounters = getCompilePerfCounters(contextKey);
@@ -1423,6 +1428,15 @@ function handleCompilerWorkerFailure(worker: Worker, workerGeneration: number, r
   connection.console.error(`[lsp] compiler worker generation=${workerGeneration} failed (${reason}); pending compilations will be retried`);
   const pending = Array.from(pendingCompiles.values());
   pendingCompiles.clear();
+  const now = Date.now();
+  if (now - compilerWorkerRestartWindowStartedAt > COMPILER_WORKER_RESTART_WINDOW_MS) {
+    compilerWorkerRestartWindowStartedAt = now;
+    compilerWorkerRestartAttempts = 0;
+  }
+  compilerWorkerRestartAttempts += 1;
+  const restartAllowed = compilerWorkerRestartAttempts <= COMPILER_WORKER_MAX_RESTARTS;
+  const backoffMs = Math.min(30_000, 250 * (2 ** Math.min(compilerWorkerRestartAttempts - 1, 7)));
+  if (!restartAllowed) sendLog('error', 'compile: worker restart limit reached; awaiting a new compile request');
   for (const entry of pending)
   {
     const contextKey = entry.context.key;
@@ -1431,7 +1445,8 @@ function handleCompilerWorkerFailure(worker: Worker, workerGeneration: number, r
     notifyContextCompileFinished(contextKey);
     stopCompileProgress(contextKey);
     finishCompileRequest(compileRequests, contextKey, entry.requestId);
-    scheduleCompile(entry.context, 0, 'workerRestart', entry.uri, {
+    if (!restartAllowed) continue;
+    scheduleCompile(entry.context, backoffMs, 'workerRestart', entry.uri, {
       expectedDocVersion: entry.expectedDocVersion,
       includeSemantics: entry.includeSemantics,
       includeSemanticPayload: entry.includeSemanticPayload
