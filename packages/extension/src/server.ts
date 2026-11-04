@@ -14,6 +14,7 @@ import
     TextDocumentSyncKind,
     type Diagnostic,
     type InitializeParams,
+    type WorkDoneProgressServerReporter,
   } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import
@@ -477,6 +478,8 @@ function shouldBootstrapFullCompileOnDidOpen(context: ResolvedContext): boolean
 }
 
 const compileStatusActive = new Set<string>();
+const compileProgressTimers = new Map<string, NodeJS.Timeout>();
+const compileProgressReporters = new Map<string, WorkDoneProgressServerReporter>();
 const internalCache = new Map<string, InternalSignatureDoc[]>();
 const internalIndex = new Map<string, OfficialSignatureIndex>();
 const hoverCache = new Map<string, HoverPayload>();
@@ -2438,12 +2441,25 @@ function revalidateOpenFallbackDocs(): void
 
 async function startCompileProgress(context: ResolvedContext): Promise<void>
 {
+  if (compileStatusActive.has(context.key)) return;
   // Intencionalmente desabilitado: evita "piscar"/mensagens no status bar durante compilação.
   // Mantemos apenas o controle interno para impedir repetição.
   if (!compileStatusActive.has(context.key))
   {
     compileStatusActive.add(context.key);
   }
+  const timer = setTimeout(() => {
+    compileProgressTimers.delete(context.key);
+    void connection.window.createWorkDoneProgress().then((reporter) => {
+      if (!compileStatusActive.has(context.key)) {
+        reporter.done();
+        return;
+      }
+      compileProgressReporters.set(context.key, reporter);
+      reporter.begin(`Compilando ${context.name}`, 0, 'Analisando arquivos');
+    }).catch(() => undefined);
+  }, 750);
+  compileProgressTimers.set(context.key, timer);
 }
 
 function stopCompileProgress(contextKey: string): void
@@ -2453,6 +2469,12 @@ function stopCompileProgress(contextKey: string): void
   {
     compileStatusActive.delete(contextKey);
   }
+  const timer = compileProgressTimers.get(contextKey);
+  if (timer) clearTimeout(timer);
+  compileProgressTimers.delete(contextKey);
+  const reporter = compileProgressReporters.get(contextKey);
+  if (reporter) reporter.done();
+  compileProgressReporters.delete(contextKey);
 }
 
 const applyCompileResult = createCompileResultApplication({
