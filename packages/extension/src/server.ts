@@ -14,6 +14,7 @@ import
     TextDocumentSyncKind,
     type Diagnostic,
     type InitializeParams,
+    type CancellationToken,
     type WorkDoneProgressServerReporter,
   } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -3488,8 +3489,9 @@ async function computeDiagnosticsDirectlyForPull(
   return filtered.map((diag) => toLspDiagnostic(diag));
 }
 
-async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | undefined): Promise<PullDiagnosticReport>
+async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | undefined, token?: CancellationToken): Promise<PullDiagnosticReport>
 {
+  if (token?.isCancellationRequested) return { kind: 'full', items: [] };
   const requestReceivedAtMs = Date.now();
   const uri = params?.textDocument?.uri;
   if (!uri) return { kind: 'full', items: [] };
