@@ -5540,6 +5540,15 @@ connection.onRequest('lsp/perf/get', () =>
 {
   return buildCompilePerfSnapshotPayload();
 });
+
+connection.onNotification('lsp/compile/cancel', (params: { requestId?: number } | undefined) =>
+{
+  const requestId = params?.requestId;
+  if (!Number.isSafeInteger(requestId) || (requestId as number) <= 0) return;
+  const validRequestId = requestId as number;
+  if (!pendingCompiles.has(validRequestId) || !compilerWorker) return;
+  compilerWorker.postMessage({ kind: 'cancel', protocolVersion: 1, requestId: validRequestId });
+});
 const serverRuntime = createServerRuntime({
   documents,
   contextCache,
