@@ -843,5 +843,5 @@ Cada etapa deve ter flag de desligamento, log de ativação e métrica de erro. 
 | Diagnóstico pull | existente e integrado | handler com `CancellationToken`, `resultId` e cache |
 | Métricas e payload | existente e integrado | breakdown de bytes e métricas de fila/compilador |
 | Benchmark de paralelismo | concluído, sem habilitação | `npm run benchmark:worker-contexts`; serial superou paralelo no baseline |
-| Paralelismo por contexto em produção | não habilitado | requer evidência de ganho em workloads reais e isolamento adicional |
+| Paralelismo por contexto em produção | opt-in seguro | `LSP_CONTEXT_PARALLELISM=1`, sessões isoladas, máximo de 4 lanes e fallback serial |
 | Partial results de workspace | não aplicável ao fluxo atual | o servidor expõe diagnóstico de documento; não há operação de workspace streaming |

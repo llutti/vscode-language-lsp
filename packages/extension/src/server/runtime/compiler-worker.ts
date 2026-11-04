@@ -3,9 +3,34 @@ import { createCompilerSession, type ContentOverrides, type CompileResult } from
 import { CompilerExecutionQueue } from '../compile/compiler-execution-queue';
 import { isWorkerRequest, serializeWorkerError, type CompileResultSizeBreakdown, type WorkerCompileRequest, type WorkerResponse } from '../compile/worker-protocol';
 
-const session = createCompilerSession();
-const executionQueue = new CompilerExecutionQueue<void>();
+type CompilerSession = ReturnType<typeof createCompilerSession>;
+const serialSession = createCompilerSession();
+const serialQueue = new CompilerExecutionQueue<void>();
+const parallelSessions = new Map<string, CompilerSession>();
+const parallelQueues = new Map<string, CompilerExecutionQueue<void>>();
+const requestQueues = new Map<number, CompilerExecutionQueue<void>>();
+const parallelEnabled = process.env.LSP_CONTEXT_PARALLELISM === '1';
+const MAX_PARALLEL_CONTEXTS = 4;
 const cancelledRequestIds = new Set<number>();
+
+function contextKey(message: WorkerCompileRequest): string {
+  return `${message.context.rootDir}\u0000${message.context.name}\u0000${message.context.system}`;
+}
+
+function getExecutionLane(message: WorkerCompileRequest): { session: CompilerSession; queue: CompilerExecutionQueue<void> } {
+  if (!parallelEnabled) return { session: serialSession, queue: serialQueue };
+  const key = contextKey(message);
+  let session = parallelSessions.get(key);
+  let queue = parallelQueues.get(key);
+  if (!session && parallelSessions.size >= MAX_PARALLEL_CONTEXTS) return { session: serialSession, queue: serialQueue };
+  if (!session) {
+    session = createCompilerSession();
+    queue = new CompilerExecutionQueue<void>();
+    parallelSessions.set(key, session);
+    parallelQueues.set(key, queue);
+  }
+  return { session, queue: queue! };
+}
 
 function safeByteLength(value: unknown): number {
   try {
@@ -26,9 +51,10 @@ function buildResultSizeBreakdown(result: CompileResult): CompileResultSizeBreak
   return { diagnostics, files, symbols, semanticsByFile, stats, total: diagnostics + files + symbols + semanticsByFile + stats };
 }
 
-async function handleCompile(message: WorkerCompileRequest): Promise<void> {
+async function handleCompile(message: WorkerCompileRequest, session: CompilerSession): Promise<void> {
   if (cancelledRequestIds.delete(message.requestId)) {
     parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId, status: 'cancelled' } satisfies WorkerResponse);
+    requestQueues.delete(message.requestId);
     return;
   }
   const overrides: ContentOverrides = new Map(message.overrides);
@@ -36,6 +62,7 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
     const rawResult = await session.compile(message.context, overrides, message.options);
     if (cancelledRequestIds.delete(message.requestId)) {
       parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId, status: 'cancelled' } satisfies WorkerResponse);
+      requestQueues.delete(message.requestId);
       return;
     }
     const result = message.options?.includeSemanticPayload === false ? { ...rawResult, semanticsByFile: undefined } : rawResult;
@@ -52,6 +79,7 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
       response.resultBytesBreakdown = breakdown;
     }
     parentPort?.postMessage(response);
+    requestQueues.delete(message.requestId);
   } catch (error) {
     parentPort?.postMessage({
       kind: 'compileResult',
@@ -63,6 +91,7 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
       status: 'failed',
       error: serializeWorkerError(error, 'COMPILATION_FAILED', process.env.LSP_DEBUG === '1')
     } satisfies WorkerResponse);
+    requestQueues.delete(message.requestId);
   }
 }
 
@@ -77,12 +106,15 @@ parentPort?.on('message', (message: unknown) => {
   }
   if (message.kind === 'cancel') {
     cancelledRequestIds.add(message.requestId);
-    if (executionQueue.cancel(message.requestId)) {
+    const queue = requestQueues.get(message.requestId);
+    if (queue?.cancel(message.requestId)) {
       cancelledRequestIds.delete(message.requestId);
       parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId, status: 'cancelled' } satisfies WorkerResponse);
     }
     // Active requests finish at the next safe compiler boundary.
     return;
   }
-  executionQueue.enqueue({ id: message.requestId, run: () => handleCompile(message) });
+  const lane = getExecutionLane(message);
+  requestQueues.set(message.requestId, lane.queue);
+  lane.queue.enqueue({ id: message.requestId, run: () => handleCompile(message, lane.session) });
 });
