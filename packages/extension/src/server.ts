@@ -489,6 +489,7 @@ const forceRefreshFilesByContext = new Set<string>();
 const ensurePrefixTargetByContext = new Map<string, string>();
 const compileRequests = createCompileRequestState();
 const pendingCompiles = new Map<number, {
+  requestId: number;
   context: ResolvedContext;
   metricsEnabled: boolean;
   startedAt: number;
@@ -497,6 +498,7 @@ const pendingCompiles = new Map<number, {
   cycle: ValidationCycle;
   trigger: string;
   uri?: string;
+  expectedDocVersion?: number;
   includeSemantics?: boolean;
   includeSemanticPayload?: boolean;
   contextGeneration: number;
@@ -504,6 +506,8 @@ const pendingCompiles = new Map<number, {
   isPrefixCompile: boolean;
 }>();
 let compilerWorker: Worker | null = null;
+let compilerWorkerGeneration = 0;
+let compilerWorkerFailureHandled = false;
 
 const PRIORITY_COMPILE_DELAY_MS = 0;
 const SECONDARY_COMPILE_DELAY_MS = 25;
@@ -1252,8 +1256,12 @@ function ensureCompilerWorker(): Worker
   if (compilerWorker) return compilerWorker;
   const workerPath = path.join(__dirname, 'compiler-worker.js');
   compilerWorker = new Worker(workerPath);
+  const worker = compilerWorker;
+  const workerGeneration = ++compilerWorkerGeneration;
+  compilerWorkerFailureHandled = false;
   compilerWorker.on('message', (message: WorkerCompileResponse) =>
   {
+    if (message.workerGeneration !== undefined && message.workerGeneration !== workerGeneration) return;
     const pending = pendingCompiles.get(message.requestId);
     if (!pending) return;
     pendingCompiles.delete(message.requestId);
@@ -1392,9 +1400,38 @@ function ensureCompilerWorker(): Worker
   });
   compilerWorker.on('error', (error) =>
   {
-    connection.console.error(`[lsp] worker error: ${String(error)}`);
+    handleCompilerWorkerFailure(worker, workerGeneration, `error: ${String(error)}`);
+  });
+  compilerWorker.on('exit', (code) =>
+  {
+    if (code !== 0) handleCompilerWorkerFailure(worker, workerGeneration, `exit code=${code}`);
+    else if (compilerWorker === worker) compilerWorker = null;
   });
   return compilerWorker;
+}
+
+function handleCompilerWorkerFailure(worker: Worker, workerGeneration: number, reason: string): void
+{
+  if (compilerWorkerFailureHandled || compilerWorker !== worker || workerGeneration !== compilerWorkerGeneration) return;
+  compilerWorkerFailureHandled = true;
+  compilerWorker = null;
+  connection.console.error(`[lsp] compiler worker generation=${workerGeneration} failed (${reason}); pending compilations will be retried`);
+  const pending = Array.from(pendingCompiles.values());
+  pendingCompiles.clear();
+  for (const entry of pending)
+  {
+    const contextKey = entry.context.key;
+    compileRunning.set(contextKey, false);
+    fullCompileInFlightByContext.delete(contextKey);
+    notifyContextCompileFinished(contextKey);
+    stopCompileProgress(contextKey);
+    finishCompileRequest(compileRequests, contextKey, entry.requestId);
+    scheduleCompile(entry.context, 0, 'workerRestart', entry.uri, {
+      expectedDocVersion: entry.expectedDocVersion,
+      includeSemantics: entry.includeSemantics,
+      includeSemanticPayload: entry.includeSemanticPayload
+    });
+  }
 }
 
 function buildRuntimeMeta(kind: 'metrics' | 'observability', filePath?: string): { [key: string]: unknown }
@@ -2563,6 +2600,7 @@ async function updateContextCache(
   );
   const requestId = startCompileRequest(compileRequests, context.key);
   pendingCompiles.set(requestId, {
+    requestId,
     context,
     metricsEnabled,
     startedAt: performance.now(),
@@ -2571,6 +2609,7 @@ async function updateContextCache(
     cycle,
     trigger,
     uri,
+    expectedDocVersion,
     includeSemantics,
     includeSemanticPayload,
     contextGeneration: getContextRuntimeGeneration(context.key),
