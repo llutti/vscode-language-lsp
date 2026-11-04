@@ -56,6 +56,8 @@ function extractIgnoreIdsValues(value: unknown): unknown[] {
   if (Array.isArray(value)) return value;
   if (!value || typeof value !== 'object') return [];
   const object = value as Record<string, unknown>;
+  const full = object['lsp.diagnostics.ignoreIds'];
+  if (Array.isArray(full)) return full;
   const dotted = object['diagnostics.ignoreIds'];
   if (Array.isArray(dotted)) return dotted;
   const nested = object.diagnostics;
@@ -68,7 +70,17 @@ function extractIgnoreIdsValues(value: unknown): unknown[] {
 
 export function buildIgnoredList(values: unknown): string[]
 {
-  return [...buildIgnoredSet(values)];
+  return [...buildIgnoredSet(extractIgnoreIdsValues(values))];
+}
+
+export function resolveIgnoredDiagnosticValues(...candidates: unknown[]): string[]
+{
+  for (const candidate of candidates)
+  {
+    const values = buildIgnoredList(candidate);
+    if (values.length > 0) return values;
+  }
+  return [];
 }
 
 export async function loadIgnoredDiagnosticsFromSettings(

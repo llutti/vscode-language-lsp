@@ -145,7 +145,8 @@ import {
   loadFormatSettingsFromSettings,
   loadSemanticHighlightSettingsFromSettings,
   loadIgnoredDiagnosticsFromSettings,
-  normalizeDiagnosticId
+  normalizeDiagnosticId,
+  resolveIgnoredDiagnosticValues
 } from './server/config/server-settings';
 import { appendPersistLog as appendPersistedEventLog, resolvePersistTarget, rotateFileIfNeeded, type PersistRotationMeta } from './server/observability/persist-utils';
 import {
@@ -558,6 +559,7 @@ let workspaceFolders: InitializeParams['workspaceFolders'] = [];
 let resolvedContexts: ResolvedContext[] = [];
 let resolvedContextsByKey = new Map<string, ResolvedContext>();
 let ignoredDiagnosticsByWorkspace = new Map<string, Set<string>>();
+let pullDiagnosticsCorrelationSequence = 0;
 let activeDocumentUri: string | null = null;
 let lastActiveContextKey: string | null = null;
 let windowFocused = true;
@@ -879,7 +881,7 @@ function getCompilePerfCounters(contextKey: string): CompilePerfCounters
 function sendLog(
   level: LogLevel,
   message: string,
-  meta?: { id?: string; cycleId?: string; span?: string; durationMs?: number },
+  meta?: { id?: string; cycleId?: string; span?: string; durationMs?: number; data?: unknown },
   filePath?: string | null
 ): void
 {
@@ -890,7 +892,7 @@ function sendLog(
 function sendDebugLog(
   filePath: string | null,
   message: string,
-  meta?: { id?: string; cycleId?: string; span?: string; durationMs?: number }
+  meta?: { id?: string; cycleId?: string; span?: string; durationMs?: number; data?: unknown }
 ): void
 {
   if (!isDebugLogsEnabledForFile(filePath)) return;
@@ -1598,11 +1600,15 @@ function getIgnoredForContext(context: ResolvedContext): Set<string>
   // URI. Keep the global fallback as well, otherwise a URI spelling mismatch
   // silently disables user/workspace ignoreIds for that context.
   const workspaceSet = getIgnoredForWorkspace(context.workspaceUri);
-  if (!context.diagnosticsIgnoreIds || context.diagnosticsIgnoreIds.length === 0) return workspaceSet;
-  return new Set<string>([...workspaceSet, ...context.diagnosticsIgnoreIds]);
+  const globalSet = ignoredDiagnosticsByWorkspace.get('') ?? emptyIgnoredSet;
+  if (!context.diagnosticsIgnoreIds || context.diagnosticsIgnoreIds.length === 0)
+  {
+    return new Set<string>([...globalSet, ...workspaceSet]);
+  }
+  return new Set<string>([...globalSet, ...workspaceSet, ...context.diagnosticsIgnoreIds]);
 }
 
-async function refreshIgnoredDiagnosticsForUri(uri: string, workspaceUri: string): Promise<void>
+async function refreshIgnoredDiagnosticsForUri(uri: string, workspaceUri: string, correlationId?: string): Promise<void>
 {
   // Ask for the effective value using the actual document URI. This is
   // important for resource-scoped settings: the workspace folder list is not
@@ -1611,20 +1617,28 @@ async function refreshIgnoredDiagnosticsForUri(uri: string, workspaceUri: string
     scopeUri: uri,
     section: 'lsp.diagnostics.ignoreIds'
   });
-  let values: unknown[] = Array.isArray(raw)
-    ? raw
-    : raw && typeof raw === 'object'
-      ? ((raw as Record<string, unknown>)['diagnostics.ignoreIds'] as unknown[] | undefined) ?? []
-      : [];
+  // The configuration adapter can return either the section value or an
+  // object containing the section. Keep this extraction in sync with the
+  // initial settings load, including the nested `diagnostics.ignoreIds`
+  // shape returned by some clients.
+  let values: unknown[] = buildIgnoredList(raw);
+  let lspConfig: ({ diagnostics?: { ignoreIds?: unknown }; 'diagnostics.ignoreIds'?: unknown }) | null = null;
   if (values.length === 0)
   {
-    const lspConfig = await connection.workspace.getConfiguration({
+    lspConfig = await connection.workspace.getConfiguration({
       scopeUri: uri,
       section: 'lsp'
     }) as ({ diagnostics?: { ignoreIds?: unknown }; 'diagnostics.ignoreIds'?: unknown }) | null;
+    const full = (lspConfig as Record<string, unknown> | null)?.['lsp.diagnostics.ignoreIds'];
     const dotted = lspConfig?.['diagnostics.ignoreIds'];
-    const nested = lspConfig?.diagnostics?.ignoreIds ?? dotted;
+    const nested = lspConfig?.diagnostics?.ignoreIds ?? dotted ?? full;
     if (Array.isArray(nested)) values = nested;
+  }
+  if (values.length === 0)
+  {
+    // A User-scoped value may only be returned by the unscoped request.
+    const globalRaw = await connection.workspace.getConfiguration('lsp.diagnostics.ignoreIds');
+    values = resolveIgnoredDiagnosticValues(raw, lspConfig, globalRaw);
   }
   const ignored = new Set<string>();
   for (const value of values)
@@ -1649,7 +1663,7 @@ async function refreshIgnoredDiagnosticsForUri(uri: string, workspaceUri: string
   sendLog(
     'debug',
     `diagnostics.ignoreIds.effective uri=${uri} workspace=${workspaceUri || '(none)'} ids=${JSON.stringify([...ignored])}`,
-    { id: uri, span: 'diagnostics.ignoreIds.effective' },
+    { id: uri, span: 'diagnostics.ignoreIds.effective', data: { correlationId } },
     workspaceUri || undefined
   );
 }
@@ -3122,6 +3136,14 @@ const {
 } = pullDiagnosticsService.state;
 const EMPTY_CONTEXT_FILE_PROJECTION = pullDiagnosticsService.EMPTY_CONTEXT_FILE_PROJECTION;
 const hashDiagnostics = pullDiagnosticsService.hashDiagnostics;
+
+function getDiagnosticCodes(diagnostics: Diagnostic[]): string[]
+{
+  return diagnostics
+    .map((diagnostic) => diagnostic.code)
+    .filter((code): code is string | number => code !== undefined && code !== null)
+    .map((code) => String(code));
+}
 const findDiagnosticsInContextCache = pullDiagnosticsService.findDiagnosticsInContextCache;
 const buildContextFileProjection = pullDiagnosticsService.buildContextFileProjection;
 const rememberRecentPullDiagZero = pullDiagnosticsService.rememberRecentZero;
@@ -3389,17 +3411,21 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
   const filePath = toFsPath(uri);
   const workspaceUri = resolveWorkspaceUriForFile(filePath);
   const obs = getObservabilitySettingsForFile(filePath);
+  const correlationId = isDebugLogsEnabledForFile(filePath)
+    ? `pull-${Date.now()}-${++pullDiagnosticsCorrelationSequence}`
+    : undefined;
   const startedAt = performance.now();
 
   try
   {
     await ensurePullDiagPersistCacheLoaded();
-      await refreshIgnoredDiagnosticsForUri(uri, workspaceUri);
+      await refreshIgnoredDiagnosticsForUri(uri, workspaceUri, correlationId);
     const context = findContextForFile(filePath);
     observability.log(obs, 'debug', 'pullDiagnostics.request', {
       id: `${uri}`,
       span: 'pullDiagnostics.request',
       data: {
+          correlationId,
         mode: 'pull',
         hasContext: Boolean(context),
         contextKey: context?.key ?? null,
@@ -3805,7 +3831,10 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
       {
         return await pullDiagnosticsService.resolveNoContextDiagnostics({
           filePath,
-          workspaceUri: resolveWorkspaceUriForFile(filePath),
+          // Use the workspace resolved for this request. Re-resolving here can
+          // return an empty key for SingleFile documents and lose the effective
+          // workspace/user ignoreIds loaded above.
+          workspaceUri,
           doc,
           booting: bootPhase === 'BOOTING',
           refreshInProgress
@@ -5216,7 +5245,10 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
       return { kind: 'unchanged', resultId: cached.resultId };
     }
 
-    const resultId = `${doc?.version ?? 0}:${hash}`;
+    const ignoreIdsResultKey = !context
+      ? [...getIgnoredForWorkspace(workspaceUri)].sort().join(',')
+      : '';
+    const resultId = `${doc?.version ?? 0}:${hash}${ignoreIdsResultKey ? `:ignore=${ignoreIdsResultKey}` : ''}`;
     if (expireProjectedPrefixReuse)
     {
       ensureScheduled = ensureScheduled || ensurePostFormatAuthoritativeFollowupAction({
@@ -5327,10 +5359,12 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
         span: 'pullDiagnostics.response',
         durationMs,
         data: {
+          correlationId,
           kind: 'full',
           source,
           mode: 'pull',
           diagnosticsCount: diagnostics.length,
+          diagnosticCodes: getDiagnosticCodes(diagnostics),
           cacheHit,
           ensureScheduled,
           contextMatched: Boolean(context),

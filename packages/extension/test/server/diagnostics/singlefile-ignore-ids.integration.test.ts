@@ -80,10 +80,23 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
       .some((diag) => diag.code === 'LSP1408')).toBe(false);
   });
 
-  it('reproduz o fluxo do serviço Pull Diagnostics sem contexto antes/depois do ignore Workspace', async () => {
+  it('reproduz o fluxo fallback sem contexto: ignore Workspace não é aplicado', async () => {
     const uri = 'file:///tmp/singlefile-lsp1408.lspt';
     const doc = TextDocument.create(uri, 'lsp', 1, 'FuncaoQueNaoExiste();');
     const ignoredState = new Set<string>();
+    const contextKey = 'file:///tmp/workspace::TR';
+    const context = {
+      key: contextKey, workspaceUri: 'file:///tmp/workspace', name: 'TR',
+      rootDir: '/tmp/workspace', filePattern: '**/*.lspt',
+      includeSubdirectories: true, system: 'HCM', diagnosticsIgnoreIds: []
+    } as never;
+    const contextCache = {
+      files: new Set(['/tmp/singlefile-lsp1408.lspt']),
+      symbols: [], symbolsByName: new Map(), symbolsStale: false,
+      diagnosticsByFile: new Map(), diagHashByFile: new Map(),
+      semanticsByFile: new Map(), semanticPayloadByFile: new Map(),
+      compilerDiagnostics: [], lastCompileWasPrefix: false
+    } as never;
     const runtime = {
       pullDiagCache: new Map(), pullDiagLastItems: new Map(),
       pullDiagPrewarmByUri: new Map(), pullDiagPrewarmTimers: new Map(),
@@ -94,8 +107,10 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
       documents: new Map([[uri, doc]]), contextDocs: new Map(), runtime,
       toFsPath: (value) => value.replace('file://', ''),
       normalizePathKey: (value) => value,
-      getIgnoredForContext: () => new Set(),
-      applyIgnoreIdsToLspDiagnostics: (diagnostics) => diagnostics,
+      getIgnoredForContext: () => ignoredState,
+      applyIgnoreIdsToLspDiagnostics: (diagnostics, ignored) => diagnostics.filter((diagnostic) =>
+        !ignored.has(String(diagnostic.code ?? '').trim().toUpperCase())
+      ),
       projectCompilerDiagnosticsForFile: () => [],
       getPersistCache: () => ({ getValidated: () => null, set: () => {}, flush: async () => {} }),
       resolveWorkspaceKey: () => '/workspace', buildContextSignature: () => 'sig',
@@ -108,11 +123,15 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
       logContextProjectionSelected: () => {}, hasPendingOrRecentFollowupForUri: () => false,
       shouldScheduleFollowup: () => false, scheduleFollowup: () => {},
       computeDiagnosticsDirectlyForPull: async () => [],
-      getIgnoredForWorkspace: () => ignoredState,
-      compileFallbackDocument: async () => ({ diagnostics: [{
-        code: 'LSP1408', message: 'função não criada', severity: 'Warning',
-        range: { start: { line: 0, character: 0 }, end: { line: 0, character: 20 } }
-      }] }),
+      // O arquivo do log não pertence a um contexto. O fallback consulta o
+      // conjunto do workspace, enquanto a configuração já está presente no
+      // estado efetivo do contexto.
+      getIgnoredForWorkspace: () => new Set<string>(),
+      compileFallbackDocument: async () => ({ diagnostics: [
+        { code: 'LSP1408', message: 'função não criada', severity: 'Warning', range: { start: { line: 0, character: 0 }, end: { line: 0, character: 20 } } },
+        { code: 'LSP1101', message: 'diagnóstico mantido', severity: 'Warning', range: { start: { line: 1, character: 0 }, end: { line: 1, character: 20 } } },
+        { code: 'LSP1408', message: 'função não criada', severity: 'Warning', range: { start: { line: 2, character: 0 }, end: { line: 2, character: 20 } } }
+      ]}),
       toLspDiagnostic: (diag) => ({ ...diag, severity: DiagnosticSeverity.Warning, source: 'lsp' }),
       schedulePullDiagnosticsRefresh: () => {}
     });
@@ -121,13 +140,78 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
       filePath: '/tmp/singlefile-lsp1408.lspt', workspaceUri: '/workspace', doc,
       booting: false, refreshInProgress: false
     });
-    expect(before.diagnostics.some((diag) => diag.code === 'LSP1408')).toBe(true);
+    expect(before.diagnostics.filter((diag) => diag.code === 'LSP1408')).toHaveLength(2);
 
     ignoredState.add('LSP1408');
     const after = await service.resolveNoContextDiagnostics({
       filePath: '/tmp/singlefile-lsp1408.lspt', workspaceUri: '/workspace', doc,
       booting: false, refreshInProgress: false
     });
-    expect(after.diagnostics).toHaveLength(0);
+    expect(after.diagnostics).toEqual(expect.arrayContaining([
+      expect.objectContaining({ code: 'LSP1101' })
+    ]));
+    expect(after.diagnostics.filter((diag) => diag.code === 'LSP1408')).toHaveLength(0);
+  });
+
+  it('valida o fluxo com contexto: snapshot contextual respeita ignore Workspace', async () => {
+    const uri = 'file:///tmp/context-lsp1408.lspt';
+    const filePath = '/tmp/context-lsp1408.lspt';
+    const doc = TextDocument.create(uri, 'lsp', 1, 'FuncaoQueNaoExiste();');
+    const ignored = new Set<string>();
+    const context = {
+      key: 'file:///tmp/workspace::TR', workspaceUri: 'file:///tmp/workspace',
+      name: 'TR', rootDir: '/tmp/workspace', filePattern: '**/*.lspt',
+      includeSubdirectories: true, system: 'HCM', diagnosticsIgnoreIds: []
+    } as never;
+    const cache = {
+      files: new Set([filePath]), symbols: [], symbolsByName: new Map(), symbolsStale: false,
+      diagnosticsByFile: new Map([[filePath, [{
+        code: 'LSP1408', message: 'função não criada', severity: DiagnosticSeverity.Warning,
+        range: { start: { line: 0, character: 0 }, end: { line: 0, character: 20 } }
+      }]]]),
+      diagHashByFile: new Map(), semanticsByFile: new Map(), semanticPayloadByFile: new Map(),
+      compilerDiagnostics: [], lastCompileWasPrefix: false
+    } as never;
+    const runtime = {
+      pullDiagCache: new Map(), pullDiagLastItems: new Map(),
+      pullDiagPrewarmByUri: new Map(), pullDiagPrewarmTimers: new Map(),
+      pullDiagPrewarmInFlight: new Map(), pullDiagDirtyStampByContext: new Map(),
+      pullDiagStableByUri: new Map(), pullDiagLastNonEmptyByUri: new Map()
+    } as never;
+    const service = createPullDiagnosticsService({
+      documents: new Map([[uri, doc]]), contextDocs: new Map(), runtime,
+      toFsPath: (value) => value.replace('file://', ''), normalizePathKey: (value) => value,
+      getIgnoredForContext: () => ignored,
+      applyIgnoreIdsToLspDiagnostics: (diagnostics, ids) => diagnostics.filter((diagnostic) =>
+        !ids.has(String(diagnostic.code ?? '').toUpperCase())
+      ),
+      projectCompilerDiagnosticsForFile: () => [],
+      getPersistCache: () => ({ getValidated: () => null, set: () => {}, flush: async () => {} }),
+      resolveWorkspaceKey: () => '/workspace', buildContextSignature: () => 'sig',
+      computeDocHash: () => 'hash', getPersistContextRevision: () => 0, getDirtyStamp: () => 0,
+      prewarmDelayMs: 0, shouldSkipDidOpenPrewarm: () => true, prewarmDiagnostics: async () => [],
+      sendDebugLog: () => {}, zeroObservationWindowMs: 0, getLastFullCompileCommittedAt: () => undefined,
+      getLastDidChangeAtByUri: () => 0, hasRecentEditBurst: () => false, recentCommitWindowMs: 0,
+      didOpenZeroFollowupWindowMs: 0, getContextCache: () => cache,
+      hasActiveContextCompileSignal: () => false, logContextProjectionSelected: () => {},
+      hasPendingOrRecentFollowupForUri: () => false, shouldScheduleFollowup: () => false,
+      scheduleFollowup: () => {}, computeDiagnosticsDirectlyForPull: async () => [],
+      getIgnoredForWorkspace: () => ignored, compileFallbackDocument: async () => ({ diagnostics: [] }),
+      toLspDiagnostic: (diag) => ({ ...diag, severity: DiagnosticSeverity.Warning, source: 'lsp' }),
+      schedulePullDiagnosticsRefresh: () => {}
+    });
+
+    const before = await service.resolveContextProjectionDiagnostics({
+      context, uri, filePath, doc, forceRefreshFiles: false,
+      contextKeyForResponse: context.key, contextNameForResponse: context.name
+    });
+    expect(before.result?.diagnostics).toHaveLength(1);
+
+    ignored.add('LSP1408');
+    const after = await service.resolveContextProjectionDiagnostics({
+      context, uri, filePath, doc, forceRefreshFiles: false,
+      contextKeyForResponse: context.key, contextNameForResponse: context.name
+    });
+    expect(after.result?.diagnostics).toHaveLength(0);
   });
 });

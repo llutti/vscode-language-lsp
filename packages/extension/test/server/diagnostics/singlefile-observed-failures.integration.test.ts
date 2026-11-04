@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { compileSingleFile } from '@lsp/compiler';
 import { filterFallbackDiagnostics } from '../../../src/server/diagnostics/pull-diagnostics-service';
-import { mergeIgnoreIds } from '../../../src/server/diagnostics/diagnostics-ignore';
+import { applyIgnoreIds, mergeIgnoreIds } from '../../../src/server/diagnostics/diagnostics-ignore';
 
 async function compileObservedSingleFile() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-observed-singlefile-'));
@@ -16,6 +16,39 @@ async function compileObservedSingleFile() {
 }
 
 describe('SingleFile/Fallback: ignoreIds', () => {
+  it('REPRODUÇÃO: deve aplicar ignoreIds User na projeção de arquivo com contexto', () => {
+    const contextDiagnostics = [{ id: 'LSP1408', message: 'função não criada' }];
+    const contextIgnoreIds = new Set<string>();
+    const userIgnoreIds = new Set(mergeIgnoreIds(['LSP1408'], []));
+
+    // O caminho contextual deve projetar usando a união dos IDs User e dos
+    // IDs definidos diretamente no contexto.
+    const effectiveIgnoreIds = new Set<string>([
+      ...contextIgnoreIds,
+      ...userIgnoreIds
+    ]);
+    const projected = applyIgnoreIds(contextDiagnostics, effectiveIgnoreIds);
+
+    expect(projected.some((diagnostic) => diagnostic.id === 'LSP1408')).toBe(false);
+    expect(userIgnoreIds.has('LSP1408')).toBe(true);
+  });
+
+  it('REPRODUÇÃO DOS LOGS: deve filtrar LSP1408 no diagnóstico bruto do compilador', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-raw-singlefile-'));
+    const filePath = path.join(root, 'outside-context.lspt');
+    const text = ['Definir Numero n;', 'FuncaoQueNaoExiste(n);'].join('\n');
+    fs.writeFileSync(filePath, text, 'utf8');
+
+    const compiled = await compileSingleFile({ filePath, text, system: 'HCM', includeSemantics: true });
+    const ignored = new Set(mergeIgnoreIds([], ['LSP1408']));
+    const filtered = filterFallbackDiagnostics(
+      compiled.diagnostics as unknown as Array<{ code?: string | number; message: string }>,
+      ignored
+    );
+
+    expect(filtered.some((diag) => (diag as { id?: string }).id === 'LSP1408')).toBe(false);
+  });
+
   it('SingleFile deve remover LSP1408 quando o ignore está somente no contexto', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-observed-failure-'));
     const filePath = path.join(root, 'outside-context.lspt');
