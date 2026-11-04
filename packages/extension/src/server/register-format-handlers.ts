@@ -21,6 +21,16 @@ type FormatReportWithDecision = FormatDocumentReport & {
 
 const GO_TO_FORMAT_ERROR_ACTION: MessageActionItem = { title: 'Ir para erro' };
 
+type FormatWithCursorParams = {
+  textDocument: { uri: string };
+  cursorOffset: number;
+};
+
+type FormatWithCursorResult = TextEdit[] | {
+  edits: TextEdit[];
+  cursorOffset: number;
+};
+
 export function registerFormatHandlers(input: {
   connection: Connection;
   documents: Map<string, TextDocument>;
@@ -317,7 +327,7 @@ export function registerFormatHandlers(input: {
     return runFormatting(doc, token) as TextEdit[];
   });
 
-  connection.onRequest('lsp/formatWithCursor', (params: { textDocument: { uri: string }; cursorOffset: number }, token: CancellationToken) =>
+  connection.onRequest<FormatWithCursorResult, unknown>('lsp/formatWithCursor', (params: FormatWithCursorParams, token: CancellationToken) =>
   {
     const doc = documents.get(params.textDocument.uri);
     if (!doc)
