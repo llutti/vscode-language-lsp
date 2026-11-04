@@ -80,6 +80,7 @@ import {
 } from './server/compile/compile-orchestrator';
 import { mergeExpectedDocVersion } from './server/compile/compile-version-gate';
 import { createCompileResultApplication } from './server/compile/compile-result-application';
+import { makeCompileRequest, type WorkerCompileRequest, type WorkerCompileResponse } from './server/compile/worker-protocol';
 import { isLikelyFormatDrivenChange, isUndoLikeHashTransition, type FormatWindow } from './server/compile/format-change-classifier';
 import {
   completionItem,
@@ -208,15 +209,6 @@ type PullDiagnosticRequestParams = {
 type PullDiagnosticReport =
   | { kind: 'full'; items: Diagnostic[]; resultId?: string }
   | { kind: 'unchanged'; resultId: string };
-
-type CompileResultSizeBreakdown = {
-  diagnostics: number;
-  files: number;
-  symbols: number;
-  semanticsByFile: number;
-  stats: number;
-  total: number;
-};
 
 type MetricsEntry = {
   timestamp: string;
@@ -1255,30 +1247,6 @@ function logObsoleteWorkDropped(contextKey: string, reason: string, uri?: string
   });
 }
 
-type WorkerCompileRequest = {
-  requestId: number;
-  context: ValidationContextConfig;
-  overrides: Array<[string, string]>;
-  options?: {
-    collectStats?: boolean;
-    forceRefreshFiles?: boolean;
-    prefixUntilFilePath?: string;
-    changedFilePaths?: string[];
-    semanticFilePaths?: string[];
-    includeSemantics?: boolean;
-    includeSemanticPayload?: boolean;
-    semanticBudgetFiles?: number;
-  };
-};
-
-type WorkerCompileResponse = {
-  requestId: number;
-  result?: CompileResult;
-  resultBytes?: number;
-  resultBytesBreakdown?: CompileResultSizeBreakdown;
-  error?: string;
-};
-
 function ensureCompilerWorker(): Worker
 {
   if (compilerWorker) return compilerWorker;
@@ -1360,7 +1328,7 @@ function ensureCompilerWorker(): Worker
     if (message.error)
     {
       perfCounters.compileErrored += 1;
-      connection.console.error(`[lsp] erro ao compilar contexto ${pending.context.name}: ${message.error}`);
+      connection.console.error(`[lsp] erro ao compilar contexto ${pending.context.name}: ${message.error.code} ${message.error.message}`);
     } else if (message.result)
     {
       perfCounters.compileCommitted += 1;
@@ -2610,7 +2578,7 @@ async function updateContextCache(
   });
   const worker = ensureCompilerWorker();
   const semanticFilePaths = resolveSemanticPayloadFilePathsForCompile(context, trigger, changedFilePaths);
-  const payload: WorkerCompileRequest = {
+  const payload: WorkerCompileRequest = makeCompileRequest({
     requestId,
     context: {
       name: context.name,
@@ -2630,7 +2598,7 @@ async function updateContextCache(
       includeSemanticPayload,
       semanticBudgetFiles
     }
-  };
+  });
   const payloadBytes = Buffer.byteLength(JSON.stringify(payload), 'utf8');
   perfCounters.totalWorkerPayloadBytes += payloadBytes;
   const pendingCompile = pendingCompiles.get(requestId);

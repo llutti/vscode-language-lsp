@@ -398,3 +398,433 @@ O roadmap poderá ser considerado concluído quando:
 - manter o controle de versão e geração de contexto;
 - não introduzir compressão ou paralelismo antes de medir o problema;
 - não usar encerramento forçado do Worker como mecanismo normal de cancelamento.
+
+## Detalhamento técnico e referências de mercado
+
+Esta seção transforma as sugestões em decisões implementáveis e registra padrões usados por ferramentas de linguagem e runtimes de produção. As referências não significam que o projeto deva copiar uma implementação específica; servem como comparação para validar as decisões locais.
+
+### Padrões externos que orientam o roadmap
+
+- O [Language Server Protocol](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.18/specification/) usa JSON-RPC, identificadores de requisição e cancelamento por notificação (`$/cancelRequest`). A consequência prática é separar requisições, notificações e comandos de cancelamento no protocolo, em vez de tentar transferir `AbortSignal` pelo `postMessage`.
+- O [Node.js Worker Threads](https://nodejs.org/api/worker_threads.html) diferencia `error`, `message` e `exit`, e oferece `resourceLimits` e `performance`. O servidor deve registrar a causa do término, o código de saída e a duração de cada geração do Worker; um `exit` normal não deve ser tratado como crash.
+- O [VS Code](https://code.visualstudio.com/api/advanced-topics/extension-host) executa extensões em hosts local, remoto ou web. Portanto, caminhos absolutos, disponibilidade de Node.js e capacidade de criar Workers devem ser tratados como propriedades do ambiente, não como invariantes do compilador.
+- O TypeScript expõe APIs de programa incremental e watch, mas o cache é associado ao estado do programa e às alterações observadas. Isso reforça a decisão de serializar o acesso à sessão até que o isolamento de estado seja demonstrado, e não apenas inferido pelo fato de as chamadas serem assíncronas.
+
+### 1. Fila da sessão: desenho recomendado
+
+Usar uma fila explícita com estado observável, em vez de apenas encadear Promises anônimas. Cada item deve conter `requestId`, contexto, geração, instante de entrada, prioridade e uma função de execução. A fila deve expor pelo menos:
+
+- `enqueue(request)`, `cancel(requestId)` e `close(reason)`;
+- estado `queued`, `running`, `completed`, `cancelled` ou `failed`;
+- limite de tamanho e política para overflow;
+- garantia de que o `catch` de uma tarefa não interrompe a cadeia;
+- `finally` para liberar o estado de execução mesmo quando o compilador lança exceção.
+
+Política sugerida: manter apenas a compilação mais recente por contexto quando uma tarefa ainda está na fila, mas nunca substituir uma tarefa que já iniciou. A substituída deve receber um motivo explícito (`superseded`) para alimentar métricas. O limite de fila deve falhar de forma controlada, com mensagem recuperável, em vez de consumir memória indefinidamente.
+
+Critérios adicionais:
+
+- invariantes testáveis: `activeCount <= 1`, cada item termina uma única vez e cada resposta possui `requestId` único;
+- medir `queueWaitMs`, `compileMs`, `responseMs` e `endToEndMs` separadamente;
+- não manter referências a documentos, árvores ou payloads após a conclusão;
+- usar monotonicidade de geração para rejeitar commits atrasados, mesmo quando a resposta chega depois de uma reinicialização.
+
+### 2. Falha e reinicialização: máquina de estados
+
+Modelar o ciclo de vida do Worker como `starting -> ready -> stopping -> stopped` e `failed -> restarting`, com um identificador de geração (`workerGeneration`). Toda mensagem enviada deve carregar ou ser associada à geração atual. Respostas de gerações anteriores devem ser descartadas sem alterar `compileRunning` ou `pendingCompiles` da geração nova.
+
+Ao receber `error` ou `exit` inesperado:
+
+1. marcar o Worker como indisponível;
+2. rejeitar ou cancelar todas as pendências com um erro tipado (`WORKER_CRASHED`);
+3. liberar flags e timers em uma rotina idempotente;
+4. aplicar backoff exponencial com jitter, por exemplo 250 ms, 1 s, 4 s e limite de 30 s;
+5. interromper após um número máximo de tentativas dentro de uma janela;
+6. expor um estado degradado ao usuário e permitir retry manual.
+
+Não reiniciar imediatamente em loop. Registrar causa, código de saída, memória disponível, contexto, número da tentativa e tempo desde a última reinicialização. O [runtime do Node](https://nodejs.org/api/worker_threads.html) deve ser tratado como fonte dos eventos de ciclo de vida; o protocolo da aplicação deve ser responsável por concluir as requisições pendentes.
+
+### 3. Protocolo: envelope, versões e validação
+
+Adotar um envelope discriminado, por exemplo:
+
+```ts
+type WorkerMessage =
+  | { kind: 'compile'; protocolVersion: 1; request: CompileRequest }
+  | { kind: 'cancel'; protocolVersion: 1; requestId: number }
+  | { kind: 'ping'; protocolVersion: 1; nonce: string };
+```
+
+As respostas devem conter `kind`, `protocolVersion`, `requestId`, `workerGeneration` e `status`. Erros de validação não devem ser confundidos com erros de compilação. Recomenda-se separar códigos estáveis (`INVALID_MESSAGE`, `UNSUPPORTED_PROTOCOL`, `COMPILATION_FAILED`, `CANCELLED`, `WORKER_CRASHED`) do texto exibido ao usuário.
+
+Validar na fronteira e normalizar os dados antes de enfileirar. Além dos campos já listados, validar limites: quantidade máxima de arquivos, tamanho máximo de caminho, tamanho de overrides e profundidade de objetos. Se o projeto já usar uma biblioteca de schemas, reutilizá-la; caso contrário, um validador pequeno e sem dependência é suficiente para este protocolo.
+
+### 4. Erros, logs e privacidade
+
+Usar erro serializado com `code`, `message`, `name`, `stack` opcional, `retryable`, `requestId` e `workerGeneration`. O stack completo deve permanecer em log local de debug; a resposta ao cliente deve remover caminhos absolutos, conteúdo-fonte, variáveis de ambiente e argumentos potencialmente sensíveis.
+
+Adotar logs estruturados em uma linha por evento, com campos como `event`, `requestId`, `contextId`, `generation`, `queueWaitMs`, `compileMs`, `payloadBytes` e `outcome`. Gerar um `traceId` por operação do servidor e propagá-lo ao Worker. Amostrar operações bem-sucedidas e registrar sempre falhas, reinicializações e filas acima do limiar.
+
+### 5. Testes de contrato e falhas reais
+
+Além dos testes unitários, criar três camadas:
+
+- contrato: mensagens produzidas pelo servidor são aceitas pelo Worker e respostas rejeitadas pelo servidor falham de modo previsível;
+- integração: Worker real, duas compilações, erro durante `compile`, `exit` inesperado e reconstrução;
+- propriedade/stress: sequências aleatórias de compile, cancel, supersede e restart, verificando que não há duas execuções da sessão e que toda requisição termina.
+
+Usar uma barreira controlada no mock de `session.compile()` para provar a serialização, em vez de depender de temporização. Incluir testes para payload grande, contexto removido durante uma compilação, versão antiga e reinicialização no intervalo entre resposta e commit.
+
+### 6. Payload e transporte: medir antes de mudar
+
+Registrar tamanho bruto e, se aplicável, tamanho após serialização por componente: diagnósticos, arquivos, símbolos, semântica e estatísticas. Definir metas de produto antes da otimização, por exemplo p95 de resposta, tamanho máximo esperado e tempo aceitável de bootstrap.
+
+Ordem recomendada de otimização:
+
+1. remover campos que o consumidor não usa;
+2. limitar semântica a arquivos solicitados;
+3. enviar resultados por arquivo ou em lotes menores;
+4. reutilizar dados identificados por hash de conteúdo;
+5. testar estruturas compactas para posições e intervalos;
+6. só então comparar compressão, `Transferable` e formatos binários.
+
+Cada opção deve ser avaliada com CPU, memória e latência de ponta a ponta. `Transferable` pode reduzir cópias, mas não resolve objetos JavaScript já estruturados; compressão pode reduzir transporte e aumentar CPU. A decisão deve ser baseada em p50/p95 e não apenas no tamanho médio.
+
+### 7. Cancelamento cooperativo e prioridade
+
+Implementar cancelamento como comando idempotente. O Worker deve manter `cancelledRequestIds` apenas pelo tempo necessário, responder uma vez e limpar o conjunto em `finally`. Pontos seguros de cancelamento devem existir entre fases do compilador; nunca interromper uma mutação parcial da sessão.
+
+Usar prioridades: edição ativa e diagnóstico do arquivo aberto acima de indexação, bootstrap e métricas. O cancelamento de uma requisição que ainda está na fila é imediato; o de uma execução ativa depende dos pontos de verificação. O servidor deve distinguir `cancelled`, `superseded` e `timed_out`, pois cada estado exige ação operacional diferente.
+
+### 8. Paralelismo por contexto: só após evidência
+
+Antes de criar filas por contexto, medir a relação entre ganho e custo com um experimento controlado. Criar uma sessão independente por contexto, impor limite de concorrência (por exemplo, número de núcleos menos um), limitar memória e executar cenários de um, dois e vários contextos.
+
+O experimento deve comparar: latência p95, throughput, memória RSS/heap, taxa de reinicialização, tamanho dos caches e impacto no host da extensão. Se houver estado global ou cache compartilhado não isolável, manter uma fila única. Paralelismo só deve ser habilitado por feature flag e desativado automaticamente após pressão de memória ou falhas repetidas.
+
+## Checklist de implementação por item
+
+| Item | Entregável mínimo | Evidência para avançar |
+| --- | --- | --- |
+| Fila | classe de fila, estados e métricas | teste prova `activeCount <= 1` |
+| Reinício | máquina de estados, limpeza idempotente e backoff | integração com `error` e `exit` |
+| Protocolo | envelope versionado e validator | testes de contrato em ambos os lados |
+| Erros | códigos, sanitização e logs estruturados | diagnóstico reproduzível sem stack exposto |
+| Testes | unitário, integração e stress | execução repetida sem flakiness |
+| Payload | breakdown por componente e baseline | decisão baseada em p95 |
+| Cancelamento | comando idempotente e checkpoints | compilação não corrompe a sessão |
+| Paralelismo | benchmark por contexto e feature flag | ganho líquido sem regressão de memória |
+
+## Referências consultadas
+
+- [Language Server Protocol 3.18](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.18/specification/)
+- [Node.js Worker Threads](https://nodejs.org/api/worker_threads.html)
+- [Visual Studio Code Extension Host](https://code.visualstudio.com/api/advanced-topics/extension-host)
+- [TypeScript Compiler API — incremental programs](https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API#writing-an-incremental-program-watcher)
+
+## Oportunidades nas versões atuais de `vscode-languageclient` e `vscode-languageserver`
+
+O projeto já declara `vscode-languageclient` e `vscode-languageserver` `^11.0.0`, com `11.0.0` resolvido no lockfile. A atualização ajuda diretamente em algumas frentes do roadmap, mas não elimina a necessidade de proteger a sessão persistente do compilador: o dispatch LSP controla a concorrência dos handlers da conexão, enquanto `CompilerSession` possui estado incremental próprio.
+
+### Aplicações diretas
+
+#### 1. Cancelamento nativo em requests
+
+O client aceita `CancellationToken` em `sendRequest`, e o server recebe o token no handler. Isso deve orientar o item 10 do roadmap:
+
+- usar o token LSP no caminho editor → servidor;
+- converter o cancelamento em uma decisão explícita para o request interno do Worker;
+- manter um `requestId` correlacionado até a sessão;
+- verificar cancelamento entre fases seguras da compilação;
+- retornar `CANCELLED`/descartar o resultado sem aplicar mutações parciais.
+
+O token não deve ser enviado diretamente ao Worker via `postMessage`; ele deve ser traduzido para o comando serializável `cancel` já proposto.
+
+#### 2. Controle de paralelismo do dispatch
+
+As versões recentes permitem controlar o paralelismo de requests e notifications da conexão, e handlers assíncronos podem controlar a conclusão do dispatch. Isso oferece uma primeira barreira no servidor LSP:
+
+- configurar dispatch serializado para notificações que atualizam documentos;
+- permitir paralelismo apenas para requests comprovadamente independentes;
+- não considerar essa configuração suficiente para proteger `CompilerSession` quando o Worker tiver seu próprio listener concorrente;
+- adicionar teste que combine duas notificações de alteração com uma solicitação de compilação.
+
+A recomendação inicial é serializar as notificações que alteram o estado do contexto e manter a fila do Worker como segunda barreira. Depois de medir, as duas filas podem ser simplificadas, mas não devem ser removidas por suposição.
+
+#### 3. Reinicialização e `errorHandler` do Language Client
+
+O `LanguageClient` já possui eventos de início/parada e uma política configurável de erro/restart, incluindo limite de reinicializações em uma janela de tempo. Isso pode orientar o item 2:
+
+- centralizar a política de restart do processo/servidor no `errorHandler` do client;
+- manter no servidor uma política independente para o Worker interno;
+- diferenciar restart do language server de restart do Compiler Worker;
+- evitar dois backoffs competindo entre si;
+- propagar ao usuário o estado final quando o limite for atingido.
+
+Se o Worker é interno ao mesmo language server, a política mais simples é reiniciar primeiro o Worker e preservar a conexão LSP. Só reiniciar o language server quando o Worker não puder ser recriado ou quando houver suspeita de corrupção de estado global.
+
+#### 4. Progresso de trabalho e resultados parciais
+
+`vscode-languageserver` oferece `WorkDoneProgressReporter` e suporte a partial results. Eles podem melhorar compilação inicial, indexação e análise de workspace:
+
+- usar work-done progress para informar início, fase, percentual aproximado e conclusão;
+- usar partial results para símbolos, referências ou diagnósticos de workspace potencialmente grandes;
+- não publicar partial results de uma geração antiga;
+- incluir `contextGeneration` e `documentVersion` na decisão de commit;
+- encerrar sempre o progress em `finally`, inclusive em cancelamento e erro.
+
+Isso complementa, mas não substitui, a otimização de payload. Partial results reduzem latência percebida e permitem descarte incremental; não necessariamente reduzem bytes totais.
+
+#### 5. Diagnóstico pull e invalidação
+
+O protocolo atual possui requests de diagnóstico de documento e workspace, além de refresh. Esse modelo pode orientar a separação entre “documento mudou” e “compilação concluída”:
+
+- o client solicita diagnósticos quando necessário, em vez de o servidor enviar sempre o conjunto completo;
+- o servidor devolve `resultId` e pode informar que o resultado não mudou;
+- alterações de arquivo invalidam somente os contextos afetados;
+- a resposta deve ser descartada se o `resultId`, a geração ou a versão não corresponderem ao estado atual.
+
+Antes de migrar, confirmar se o client atual e a versão mínima suportada do VS Code negociam diagnóstico pull. Manter `publishDiagnostics` como fallback durante a transição.
+
+#### 6. Sincronização incremental de documentos
+
+O suporte do client/server para sincronização incremental e versões de documento deve ser usado como fonte canônica para `documentVersion`. O Worker não deve receber apenas o texto atual sem a versão que o originou. O envelope de compilação deve transportar:
+
+```ts
+{
+  documentUri: string;
+  documentVersion: number;
+  contextGeneration: number;
+}
+```
+
+Isso reduz commits obsoletos e torna os testes de corrida determinísticos.
+
+#### 7. Observabilidade integrada
+
+O client possui trace/output channel e middleware de requests/notifications. Eles podem conectar a observabilidade LSP às métricas internas:
+
+- gerar `traceId` no início da request LSP;
+- propagá-lo ao servidor, Worker e resposta;
+- usar middleware para medir latência de rede/protocolo;
+- usar métricas próprias para medir fila e compilador;
+- evitar registrar conteúdo-fonte e caminhos sensíveis no trace normal.
+
+Assim, uma operação pode ser decomposta em `LSP wait -> server scheduling -> Worker queue -> compile -> serialization -> LSP response`.
+
+### Recursos que não devem ser usados como substitutos
+
+- `CancellationToken` do LSP não torna o compilador cancelável automaticamente;
+- paralelismo do dispatch não garante segurança de uma sessão incremental compartilhada;
+- restart automático do `LanguageClient` não limpa necessariamente `pendingCompiles` do servidor;
+- partial results não substituem controle de versão e descarte de respostas obsoletas;
+- `WorkDoneProgress` melhora feedback, mas não resolve backpressure nem vazamento de payload.
+
+### Nova ordem recomendada
+
+1. Confirmar as capacidades negociadas em `initialize` e a versão mínima suportada.
+2. Configurar dispatch e handlers assíncronos de modo compatível com a política de estado do servidor.
+3. Conectar `CancellationToken` LSP ao comando interno `cancel`.
+4. Adicionar restart isolado do Worker, com `errorHandler` LSP como fallback.
+5. Adicionar progress e partial results apenas para operações longas/grandes.
+6. Avaliar diagnóstico pull com fallback para publicação tradicional.
+7. Medir novamente fila, payload e latência ponta a ponta.
+
+Referências específicas: [repositório oficial e histórico de releases](https://github.com/microsoft/vscode-languageserver-node), [documentação do `vscode-languageclient`](https://www.npmjs.com/package/vscode-languageclient) e [especificação LSP 3.18](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.18/specification/).
+
+## Plano detalhado de implementação e testes
+
+### Objetivo do plano
+
+Implementar as melhorias sem perder o cache incremental, sem alterar prematuramente o comportamento funcional do servidor e com possibilidade de rollback por etapa. A estratégia é primeiro tornar o fluxo determinístico e observável; depois conectar cancelamento, progresso e resultados parciais; por fim medir otimizações e paralelismo.
+
+### Preparação e baseline
+
+Antes de alterar o comportamento:
+
+1. registrar o estado atual do branch e confirmar os comandos de build, lint e testes;
+2. mapear os pontos de criação do Worker, listeners de `message`, `error` e `exit`, chamadas de `session.compile()` e commits de resultados;
+3. documentar o ciclo atual de uma compilação: origem LSP, agendamento, execução, resposta e descarte;
+4. criar um conjunto pequeno de fixtures: arquivo válido, arquivo com erro, dois contextos, documento alterado rapidamente e projeto grande;
+5. medir baseline de p50/p95 para tempo total, tempo de compilação, tamanho da resposta e memória;
+6. adicionar uma flag de diagnóstico para habilitar métricas detalhadas sem alterar a experiência normal.
+
+**Saída:** baseline versionado, mapa de dependências e matriz de testes reproduzível.
+
+### Etapa 1 — Contrato compartilhado e validação
+
+Criar `packages/extension/src/server/compile/worker-protocol.ts` com:
+
+- envelope versionado para `compile`, `cancel`, `ping` e respostas;
+- `requestId`, `workerGeneration`, `contextGeneration` e `documentVersion`;
+- estados de resposta: `ok`, `failed`, `cancelled`, `superseded` e `rejected`;
+- códigos de erro estáveis;
+- tipos serializáveis, sem `Promise`, `AbortSignal`, objetos de VS Code ou referências a classes;
+- funções `parseWorkerMessage`, `parseWorkerResponse` e serialização de erros.
+
+Implementar a validação na entrada do Worker e no servidor. A validação deve rejeitar mensagens desconhecidas, campos obrigatórios ausentes, tipos incorretos e payloads acima dos limites definidos.
+
+**Testes:** tabela de mensagens válidas; campos ausentes; tipos incorretos; versão de protocolo incompatível; request duplicado; payload acima do limite; erro não-`Error`; stack sanitizado.
+
+**Aceite:** servidor e Worker importam o mesmo contrato; nenhuma mensagem inválida chega a `session.compile()`; testes de contrato passam nos dois sentidos.
+
+### Etapa 2 — Fila serializada do Worker
+
+Criar uma abstração pequena, por exemplo `CompilerExecutionQueue`, em arquivo separado do listener. A fila deve:
+
+- aceitar itens com `requestId`, contexto e função assíncrona;
+- manter no máximo uma execução ativa por `CompilerSession`;
+- permitir coalescer itens ainda não iniciados do mesmo contexto;
+- marcar itens substituídos como `superseded`;
+- continuar funcionando depois de uma exceção;
+- executar limpeza em `finally`;
+- expor tamanho atual, máximo observado e tempos de espera.
+
+Alterar `compiler-worker.ts` para validar, enfileirar e responder usando essa abstração. O listener de `parentPort` não deve chamar `handleRequest()` diretamente sem passar pela fila.
+
+**Testes unitários:** ordem FIFO; uma execução ativa; erro na primeira tarefa não bloqueia a segunda; coalescência; fechamento da fila; cancelamento antes da execução.
+
+**Testes de integração:** duas mensagens simultâneas; duas mensagens do mesmo contexto; contextos diferentes ainda serializados na primeira versão; resposta com `requestId` correto.
+
+**Aceite:** nunca há duas chamadas concorrentes a `session.compile()`; a segunda tarefa começa somente após a primeira terminar; nenhuma exceção deixa a fila travada.
+
+### Etapa 3 — Ciclo de vida e recuperação do Worker
+
+No servidor, criar um controlador de ciclo de vida, por exemplo `CompilerWorkerController`, responsável por:
+
+- iniciar e registrar a geração do Worker;
+- encaminhar mensagens;
+- receber `error` e `exit`;
+- resolver/rejeitar pendências uma única vez;
+- limpar `pendingCompiles`, flags, timers e listeners;
+- recriar o Worker com backoff e limite de tentativas;
+- descartar respostas de gerações antigas;
+- expor estado `starting`, `ready`, `failed`, `restarting` e `stopped`.
+
+Separar restart do Worker interno de restart do `LanguageClient`. O primeiro deve ser tentado sem derrubar a conexão LSP; o segundo fica como fallback para falha estrutural do servidor.
+
+**Testes:** `error`; `exit` não-zero; `exit` normal; Worker que falha ao iniciar; falha durante compilação; múltiplas falhas; backoff; limite de tentativas; resposta antiga após restart; retry manual; limpeza idempotente.
+
+**Aceite:** nenhuma compilação fica pendente indefinidamente; o sistema não entra em loop de restart; flags retornam a estado consistente; o usuário recebe diagnóstico acionável.
+
+### Etapa 4 — Integração com cancelamento LSP
+
+No servidor LSP:
+
+1. receber `CancellationToken` nos handlers que iniciam compilação;
+2. cancelar imediatamente itens ainda na fila;
+3. enviar `{ kind: 'cancel', requestId }` ao Worker para itens ativos;
+4. manter checkpoints entre fases seguras do compilador;
+5. tornar cancelamento idempotente;
+6. não aplicar resultado cancelado, obsoleto ou de geração antiga;
+7. garantir limpeza em `finally`.
+
+O cancelamento deve distinguir `cancelled` de `superseded` e `timed_out`. Não encerrar o Worker como mecanismo normal de cancelamento.
+
+**Testes:** cancelar antes da fila; cancelar durante compilação; cancelar duas vezes; cancelar após conclusão; cancelamento e restart simultâneos; resposta cancelada não altera diagnósticos nem cache; token já cancelado na entrada.
+
+**Aceite:** o editor consegue cancelar requests longos; o compilador não fica em estado parcial; não há resposta duplicada nem vazamento de IDs cancelados.
+
+### Etapa 5 — Versões, gerações e descarte de resultados
+
+Centralizar a decisão de commit em uma função testável, por exemplo `isCurrentCompileResult(response, state)`. Ela deve verificar:
+
+- `requestId` ainda esperado;
+- `workerGeneration` atual;
+- `contextGeneration` atual;
+- `documentVersion` atual;
+- request não cancelado ou substituído;
+- contexto ainda existente.
+
+Adicionar logs de motivo de descarte: `old-request`, `old-worker`, `old-context`, `old-document`, `cancelled` ou `unknown-context`.
+
+**Testes:** respostas fora de ordem; resposta depois de nova edição; resposta depois de fechar/reabrir contexto; resposta de Worker antigo; resposta duplicada; resposta com versão futura; resultado parcial antigo.
+
+**Aceite:** apenas o resultado correspondente ao estado atual pode alterar diagnósticos, símbolos ou semântica.
+
+### Etapa 6 — Observabilidade, progresso e resultados parciais
+
+Adicionar métricas com nomes estáveis:
+
+- `compile.queue.wait_ms`;
+- `compile.execution_ms`;
+- `compile.end_to_end_ms`;
+- `compile.request.bytes` e `compile.response.bytes`;
+- `compile.queue.depth`;
+- `compile.discarded.count`;
+- `worker.restart.count`;
+- `worker.failure.count`;
+- `compile.outcome`.
+
+Propagar `traceId` do request LSP até o Worker. Usar `WorkDoneProgress` somente em bootstrap, indexação e operações acima de um limiar. Usar partial results apenas para coleções grandes e com a mesma validação de geração/versão do resultado final.
+
+**Testes:** métricas em sucesso, erro, cancelamento e descarte; progress termina em `finally`; partial result seguido de cancelamento; partial result de geração antiga; traceId preservado; logs não contêm conteúdo-fonte ou caminhos indevidos.
+
+**Aceite:** é possível separar latência de fila, compilador e transporte; nenhuma operação deixa progress aberto.
+
+### Etapa 7 — Diagnóstico pull e redução de payload
+
+Implementar primeiro a medição por componente. Depois:
+
+1. remover campos não consumidos;
+2. limitar semântica aos arquivos solicitados;
+3. reutilizar resultados por `resultId` ou hash quando compatível;
+4. avaliar envio em lotes;
+5. habilitar diagnóstico pull com fallback para `publishDiagnostics`;
+6. comparar formatos compactos e compressão apenas se o baseline justificar.
+
+**Testes:** resposta vazia; resposta inalterada por `resultId`; arquivo alterado parcialmente; payload grande; fallback para client sem capacidade; partial result incompleto; compressão/descompressão com corrupção detectada.
+
+**Aceite:** redução de payload e/ou latência no cenário que motivou a mudança, sem aumento inaceitável de CPU ou memória.
+
+### Etapa 8 — Paralelismo controlado por contexto
+
+Somente após as etapas anteriores:
+
+- criar uma sessão independente por contexto;
+- limitar concorrência por configuração/feature flag;
+- adicionar limite de memória e desligamento automático em pressão;
+- executar benchmark com um, dois e vários contextos;
+- comparar contra a fila única;
+- manter rollback simples para serialização global.
+
+**Testes:** isolamento de cache; contextos concorrentes; criação e remoção durante execução; falha de uma sessão sem afetar outra; limite de concorrência; pressão de memória; restart individual; respostas cruzadas.
+
+**Aceite:** ganho líquido de p95 ou throughput, sem regressão de consistência, memória, estabilidade ou experiência no host da extensão.
+
+## Matriz de testes de regressão
+
+| Área | Casos obrigatórios | Resultado esperado |
+| --- | --- | --- |
+| Protocolo | válido, inválido, versão incompatível | rejeição segura e erro classificável |
+| Concorrência | requests simultâneos e fora de ordem | sessão protegida e commit atual |
+| Ciclo de vida | erro, exit, restart, retry | pendências concluídas e estado consistente |
+| Cancelamento | fila, execução, duplicado, tardio | cancelamento idempotente |
+| Versões | documento, contexto e Worker antigos | resposta descartada com motivo |
+| Payload | pequeno, grande, parcial, vazio | limites e consumidores preservados |
+| LSP | capabilities, token, progress, pull | fallback compatível |
+| Observabilidade | sucesso, erro, descarte, restart | métricas e trace completos |
+| Performance | p50/p95, memória, throughput | decisão baseada em baseline |
+
+## Estratégia de rollout
+
+1. liberar contrato e métricas sem alteração funcional;
+2. ativar fila serializada por padrão;
+3. ativar recuperação do Worker;
+4. ativar cancelamento apenas para operações compatíveis;
+5. habilitar progress e partial results por operação;
+6. testar diagnóstico pull atrás de feature flag;
+7. avaliar paralelismo em benchmark e liberar somente se superar a fila única.
+
+Cada etapa deve ter flag de desligamento, log de ativação e métrica de erro. A remoção das flags só deve ocorrer depois de uma janela de uso sem regressões.
+
+## Critérios finais de conclusão
+
+- build, lint e testes unitários passam;
+- testes de integração do Worker passam de forma repetida e sem dependência de timing;
+- não existe chamada concorrente à mesma sessão sem isolamento comprovado;
+- falhas, cancelamentos e restarts não deixam pendências presas;
+- respostas antigas nunca alteram o estado atual;
+- métricas permitem atribuir latência a LSP, agendamento, Worker, compilador ou transporte;
+- toda otimização de payload ou paralelismo possui baseline, benchmark e rollback;
+- a extensão mantém comportamento compatível em ambientes local, remoto e web quando suportados.
