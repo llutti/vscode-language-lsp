@@ -14,6 +14,7 @@ export type QueueSnapshot = {
 export class CompilerExecutionQueue<T> {
   private readonly items: QueueItem<T>[] = [];
   private running = false;
+  private activeId: number | undefined;
   private maxDepth = 0;
   private completed = 0;
   private failed = 0;
@@ -39,6 +40,10 @@ export class CompilerExecutionQueue<T> {
     return true;
   }
 
+  isRunning(id: number): boolean {
+    return this.running && this.activeId === id;
+  }
+
   snapshot(): QueueSnapshot {
     return {
       queued: this.items.length,
@@ -58,6 +63,7 @@ export class CompilerExecutionQueue<T> {
     const item = this.items.shift();
     if (!item) return;
     this.running = true;
+    this.activeId = item.id;
     try {
       await item.run();
       this.completed += 1;
@@ -65,6 +71,7 @@ export class CompilerExecutionQueue<T> {
       this.failed += 1;
     } finally {
       this.running = false;
+      this.activeId = undefined;
       if (this.items.length > 0) await this.drain();
     }
   }

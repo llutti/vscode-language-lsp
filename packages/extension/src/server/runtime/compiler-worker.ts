@@ -62,8 +62,11 @@ parentPort?.on('message', (message: unknown) => {
   }
   if (message.kind === 'cancel') {
     cancelledRequestIds.add(message.requestId);
-    executionQueue.cancel(message.requestId);
-    parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
+    if (executionQueue.cancel(message.requestId)) {
+      cancelledRequestIds.delete(message.requestId);
+      parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
+    }
+    // Active requests finish at the next safe compiler boundary.
     return;
   }
   executionQueue.enqueue({ id: message.requestId, run: () => handleCompile(message) });
