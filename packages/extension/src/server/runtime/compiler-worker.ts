@@ -28,18 +28,18 @@ function buildResultSizeBreakdown(result: CompileResult): CompileResultSizeBreak
 
 async function handleCompile(message: WorkerCompileRequest): Promise<void> {
   if (cancelledRequestIds.delete(message.requestId)) {
-    parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
+    parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId, status: 'cancelled' } satisfies WorkerResponse);
     return;
   }
   const overrides: ContentOverrides = new Map(message.overrides);
   try {
     const rawResult = await session.compile(message.context, overrides, message.options);
     if (cancelledRequestIds.delete(message.requestId)) {
-      parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
+      parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId, status: 'cancelled' } satisfies WorkerResponse);
       return;
     }
     const result = message.options?.includeSemanticPayload === false ? { ...rawResult, semanticsByFile: undefined } : rawResult;
-    const response: WorkerResponse = { kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, workerGeneration: message.workerGeneration, result };
+    const response: WorkerResponse = { kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, workerGeneration: message.workerGeneration, status: 'ok', result };
     if (message.options?.collectStats && response.kind === 'compileResult') {
       const breakdown = buildResultSizeBreakdown(result);
       response.resultBytes = breakdown.total;
@@ -52,6 +52,7 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
       protocolVersion: 1,
       requestId: message.requestId,
       workerGeneration: message.workerGeneration,
+      status: 'failed',
       error: serializeWorkerError(error, 'COMPILATION_FAILED', process.env.LSP_DEBUG === '1')
     } satisfies WorkerResponse);
   }
@@ -59,7 +60,7 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
 
 parentPort?.on('message', (message: unknown) => {
   if (!isWorkerRequest(message)) {
-    parentPort?.postMessage({ kind: 'compileResult', protocolVersion: 1, requestId: 0, error: serializeWorkerError('Mensagem de Worker inválida', 'INVALID_MESSAGE') } satisfies WorkerResponse);
+    parentPort?.postMessage({ kind: 'compileResult', protocolVersion: 1, requestId: 0, status: 'rejected', error: serializeWorkerError('Mensagem de Worker inválida', 'INVALID_MESSAGE') } satisfies WorkerResponse);
     return;
   }
   if (message.kind === 'ping') {
@@ -70,7 +71,7 @@ parentPort?.on('message', (message: unknown) => {
     cancelledRequestIds.add(message.requestId);
     if (executionQueue.cancel(message.requestId)) {
       cancelledRequestIds.delete(message.requestId);
-      parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
+      parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId, status: 'cancelled' } satisfies WorkerResponse);
     }
     // Active requests finish at the next safe compiler boundary.
     return;

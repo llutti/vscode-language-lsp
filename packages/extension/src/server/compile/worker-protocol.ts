@@ -67,6 +67,7 @@ export type WorkerCompileResponse = {
   protocolVersion: typeof WORKER_PROTOCOL_VERSION;
   requestId: number;
   workerGeneration?: number;
+  status: 'ok' | 'failed' | 'cancelled' | 'rejected';
   result?: CompileResult;
   resultBytes?: number;
   resultBytesBreakdown?: CompileResultSizeBreakdown;
@@ -77,6 +78,7 @@ export type WorkerCancelResponse = {
   kind: 'cancelled';
   protocolVersion: typeof WORKER_PROTOCOL_VERSION;
   requestId: number;
+  status: 'cancelled';
 };
 
 export type WorkerPongResponse = {
@@ -138,8 +140,9 @@ export function isWorkerResponse(value: unknown): value is WorkerResponse {
   if (!isRecord(value) || value.protocolVersion !== WORKER_PROTOCOL_VERSION || typeof value.kind !== 'string') return false;
   if (value.kind === 'pong') return typeof value.nonce === 'string';
   if (!Number.isSafeInteger(value.requestId) || (value.requestId as number) < 0) return false;
-  if (value.kind === 'cancelled') return true;
+  if (value.kind === 'cancelled') return value.status === 'cancelled';
   if (value.kind !== 'compileResult') return false;
+  if (value.status !== 'ok' && value.status !== 'failed' && value.status !== 'rejected' && value.status !== 'cancelled') return false;
   if (value.error !== undefined) {
     if (!isRecord(value.error) || typeof value.error.code !== 'string' || typeof value.error.message !== 'string' || typeof value.error.retryable !== 'boolean') return false;
   }

@@ -23,8 +23,8 @@ describe('worker protocol', () => {
   });
 
   it('valida respostas de compilação e rejeita respostas incompletas', () => {
-    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, result: {} })).toBe(true);
-    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, error: { code: 'COMPILATION_FAILED', message: 'x', retryable: false } })).toBe(true);
-    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, error: 'x' })).toBe(false);
+    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, status: 'ok', result: {} })).toBe(true);
+    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, status: 'failed', error: { code: 'COMPILATION_FAILED', message: 'x', retryable: false } })).toBe(true);
+    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, status: 'failed', error: 'x' })).toBe(false);
   });
 });
