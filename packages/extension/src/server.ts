@@ -490,6 +490,7 @@ const ensurePrefixTargetByContext = new Map<string, string>();
 const compileRequests = createCompileRequestState();
 const pendingCompiles = new Map<number, {
   requestId: number;
+  workerGeneration: number;
   context: ResolvedContext;
   metricsEnabled: boolean;
   startedAt: number;
@@ -1327,6 +1328,30 @@ function ensureCompilerWorker(): Worker
       logObsoleteWorkDropped(contextKey, 'stale-context-generation', pending.uri);
       finalizeStale();
       maybeLogContextQuiesced(contextKey, 'stale-context-generation', pending.uri);
+      return;
+    }
+    if (message.workerGeneration !== undefined && message.workerGeneration !== pending.workerGeneration)
+    {
+      perfCounters.compileStaleDropped += 1;
+      perfCounters.cancelledObsoleteCount += 1;
+      logObsoleteWorkDropped(contextKey, 'stale-worker-generation', pending.uri);
+      finalizeStale();
+      return;
+    }
+    if (message.contextGeneration !== undefined && message.contextGeneration !== pending.contextGeneration)
+    {
+      perfCounters.compileStaleDropped += 1;
+      perfCounters.cancelledObsoleteCount += 1;
+      logObsoleteWorkDropped(contextKey, 'stale-message-context-generation', pending.uri);
+      finalizeStale();
+      return;
+    }
+    if (message.documentVersion !== undefined && pending.expectedDocVersion !== undefined && message.documentVersion !== pending.expectedDocVersion)
+    {
+      perfCounters.compileStaleDropped += 1;
+      perfCounters.cancelledObsoleteCount += 1;
+      logObsoleteWorkDropped(contextKey, 'stale-message-document-version', pending.uri);
+      finalizeStale();
       return;
     }
     if (!isLatestValidationCycle(validationCycles, pending.cycle))
@@ -2621,6 +2646,7 @@ async function updateContextCache(
   const requestId = startCompileRequest(compileRequests, context.key);
   pendingCompiles.set(requestId, {
     requestId,
+    workerGeneration: compilerWorkerGeneration,
     context,
     metricsEnabled,
     startedAt: performance.now(),
