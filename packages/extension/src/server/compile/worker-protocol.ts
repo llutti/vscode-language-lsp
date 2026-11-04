@@ -132,6 +132,18 @@ export function isWorkerRequest(value: unknown): value is WorkerRequest {
   return value.kind === 'ping' && typeof value.nonce === 'string' && value.nonce.length > 0;
 }
 
+export function isWorkerResponse(value: unknown): value is WorkerResponse {
+  if (!isRecord(value) || value.protocolVersion !== WORKER_PROTOCOL_VERSION || typeof value.kind !== 'string') return false;
+  if (value.kind === 'pong') return typeof value.nonce === 'string';
+  if (!Number.isSafeInteger(value.requestId) || (value.requestId as number) < 0) return false;
+  if (value.kind === 'cancelled') return true;
+  if (value.kind !== 'compileResult') return false;
+  if (value.error !== undefined) {
+    if (!isRecord(value.error) || typeof value.error.code !== 'string' || typeof value.error.message !== 'string' || typeof value.error.retryable !== 'boolean') return false;
+  }
+  return value.result === undefined || isRecord(value.result);
+}
+
 export function serializeWorkerError(error: unknown, code: WorkerErrorCode = 'COMPILATION_FAILED'): WorkerError {
   const isError = error instanceof Error;
   return {

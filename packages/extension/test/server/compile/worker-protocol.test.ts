@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isWorkerRequest, serializeWorkerError, WORKER_PROTOCOL_VERSION } from '../../../src/server/compile/worker-protocol';
+import { isWorkerRequest, isWorkerResponse, serializeWorkerError, WORKER_PROTOCOL_VERSION } from '../../../src/server/compile/worker-protocol';
 
 describe('worker protocol', () => {
   const context = { name: 'ctx', rootDir: 'C:/workspace', filePattern: '*.lsp', includeSubdirectories: true, system: 'HCM' };
@@ -17,5 +17,11 @@ describe('worker protocol', () => {
   it('serializa Error e valores não-Error', () => {
     expect(serializeWorkerError(new Error('boom')).message).toBe('boom');
     expect(serializeWorkerError('boom', 'INVALID_MESSAGE')).toMatchObject({ code: 'INVALID_MESSAGE', message: 'boom', retryable: false });
+  });
+
+  it('valida respostas de compilação e rejeita respostas incompletas', () => {
+    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, result: {} })).toBe(true);
+    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, error: { code: 'COMPILATION_FAILED', message: 'x', retryable: false } })).toBe(true);
+    expect(isWorkerResponse({ kind: 'compileResult', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, error: 'x' })).toBe(false);
   });
 });

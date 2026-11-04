@@ -80,7 +80,7 @@ import {
 } from './server/compile/compile-orchestrator';
 import { mergeExpectedDocVersion } from './server/compile/compile-version-gate';
 import { createCompileResultApplication } from './server/compile/compile-result-application';
-import { makeCompileRequest, type WorkerCompileRequest, type WorkerCompileResponse } from './server/compile/worker-protocol';
+import { isWorkerResponse, makeCompileRequest, type WorkerCompileRequest, type WorkerCompileResponse } from './server/compile/worker-protocol';
 import { isLikelyFormatDrivenChange, isUndoLikeHashTransition, type FormatWindow } from './server/compile/format-change-classifier';
 import {
   completionItem,
@@ -1261,6 +1261,11 @@ function ensureCompilerWorker(): Worker
   compilerWorkerFailureHandled = false;
   compilerWorker.on('message', (message: WorkerCompileResponse) =>
   {
+    if (!isWorkerResponse(message))
+    {
+      connection.console.error('[lsp] resposta inválida recebida do compiler worker');
+      return;
+    }
     if (message.workerGeneration !== undefined && message.workerGeneration !== workerGeneration) return;
     const pending = pendingCompiles.get(message.requestId);
     if (!pending) return;
