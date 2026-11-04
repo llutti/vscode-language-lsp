@@ -34,6 +34,10 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
   const overrides: ContentOverrides = new Map(message.overrides);
   try {
     const rawResult = await session.compile(message.context, overrides, message.options);
+    if (cancelledRequestIds.delete(message.requestId)) {
+      parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
+      return;
+    }
     const result = message.options?.includeSemanticPayload === false ? { ...rawResult, semanticsByFile: undefined } : rawResult;
     const response: WorkerResponse = { kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, result };
     if (message.options?.collectStats && response.kind === 'compileResult') {
