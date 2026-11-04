@@ -146,7 +146,7 @@ import {
   loadSemanticHighlightSettingsFromSettings,
   loadIgnoredDiagnosticsFromSettings,
   normalizeDiagnosticId,
-  resolveIgnoredDiagnosticValues
+  readIgnoredDiagnosticValues
 } from './server/config/server-settings';
 import { appendPersistLog as appendPersistedEventLog, resolvePersistTarget, rotateFileIfNeeded, type PersistRotationMeta } from './server/observability/persist-utils';
 import {
@@ -160,6 +160,7 @@ import { registerFormatHandlers } from './server/register-format-handlers';
 import { registerLanguageHandlers } from './server/register-language-handlers';
 import { registerLifecycleHandlers } from './server/register-lifecycle-handlers';
 import { registerSemanticHandlers } from './server/register-semantic-handlers';
+import { buildPullDiagnosticsResultId, canReusePullDiagnosticsResult } from './server/diagnostics/pull-diagnostics-result';
 import {
   clearFullCompileQueued,
   getCompileDelayForReason,
@@ -1610,42 +1611,41 @@ function getIgnoredForContext(context: ResolvedContext): Set<string>
 
 async function refreshIgnoredDiagnosticsForUri(uri: string, workspaceUri: string, correlationId?: string): Promise<void>
 {
+  const filePath = toFsPath(uri);
+  const trace = {
+    id: uri,
+    span: 'diagnostics.ignoreIds.refresh',
+    data: { correlationId, workspaceUri, phase: 'start' }
+  };
+  sendLog(
+    'debug',
+    `diagnostics.ignoreIds.refresh start uri=${uri} workspace=${workspaceUri || '(none)'}`,
+    trace,
+    filePath
+  );
+  let readCount = 0;
   // Ask for the effective value using the actual document URI. This is
   // important for resource-scoped settings: the workspace folder list is not
   // always available (notably in fallback/single-file mode).
-  const raw = await connection.workspace.getConfiguration({
-    scopeUri: uri,
-    section: 'lsp.diagnostics.ignoreIds'
-  });
-  // The configuration adapter can return either the section value or an
-  // object containing the section. Keep this extraction in sync with the
-  // initial settings load, including the nested `diagnostics.ignoreIds`
-  // shape returned by some clients.
-  let values: unknown[] = buildIgnoredList(raw);
-  let lspConfig: ({ diagnostics?: { ignoreIds?: unknown }; 'diagnostics.ignoreIds'?: unknown }) | null = null;
-  if (values.length === 0)
-  {
-    lspConfig = await connection.workspace.getConfiguration({
-      scopeUri: uri,
-      section: 'lsp'
-    }) as ({ diagnostics?: { ignoreIds?: unknown }; 'diagnostics.ignoreIds'?: unknown }) | null;
-    const full = (lspConfig as Record<string, unknown> | null)?.['lsp.diagnostics.ignoreIds'];
-    const dotted = lspConfig?.['diagnostics.ignoreIds'];
-    const nested = lspConfig?.diagnostics?.ignoreIds ?? dotted ?? full;
-    if (Array.isArray(nested)) values = nested;
-  }
-  if (values.length === 0)
-  {
-    // A User-scoped value may only be returned by the unscoped request.
-    const globalRaw = await connection.workspace.getConfiguration('lsp.diagnostics.ignoreIds');
-    values = resolveIgnoredDiagnosticValues(raw, lspConfig, globalRaw);
-  }
-  const ignored = new Set<string>();
-  for (const value of values)
-  {
-    if (typeof value !== 'string') continue;
-    const normalized = normalizeDiagnosticId(value);
-    if (normalized) ignored.add(normalized);
+  let ignored: Set<string>;
+  try {
+    ignored = new Set(await readIgnoredDiagnosticValues(connection, uri, (trace) => {
+      readCount += 1;
+    sendLog(
+      'debug',
+      `diagnostics.ignoreIds.configRead uri=${uri} workspace=${workspaceUri || '(none)'} source=${trace.source} section=${trace.section} scope=${trace.scopeUri || '(none)'} raw=${JSON.stringify(trace.raw)} extracted=${JSON.stringify(trace.extracted)}`,
+      { id: uri, span: 'diagnostics.ignoreIds.configRead' },
+      filePath
+    );
+    }));
+  } catch (error) {
+    sendLog(
+      'error',
+      `diagnostics.ignoreIds.refresh failed uri=${uri} workspace=${workspaceUri || '(none)'} error=${String(error)}`,
+      { id: uri, span: 'diagnostics.ignoreIds.refresh', data: { correlationId, readCount } },
+      filePath
+    );
+    throw error;
   }
   const previousIgnored = ignoredDiagnosticsByWorkspace.get(workspaceUri);
   const changed = !previousIgnored
@@ -1662,9 +1662,9 @@ async function refreshIgnoredDiagnosticsForUri(uri: string, workspaceUri: string
   }
   sendLog(
     'debug',
-    `diagnostics.ignoreIds.effective uri=${uri} workspace=${workspaceUri || '(none)'} ids=${JSON.stringify([...ignored])}`,
-    { id: uri, span: 'diagnostics.ignoreIds.effective', data: { correlationId } },
-    workspaceUri || undefined
+    `diagnostics.ignoreIds.effective uri=${uri} workspace=${workspaceUri || '(none)'} ids=${JSON.stringify([...ignored])} source=resource-scoped-configuration readCount=${readCount} changed=${changed}`,
+    { id: uri, span: 'diagnostics.ignoreIds.effective', data: { correlationId, readCount, changed } },
+    filePath
   );
 }
 
@@ -2743,6 +2743,15 @@ async function refreshContexts(): Promise<void>
     string,
     { persistToFile: string; persistMaxFileBytes: number; persistMaxFiles: number }
   >();
+  for (const [workspaceUri, ignored] of ignoredDiagnosticsByWorkspace.entries())
+  {
+    sendLog(
+      'debug',
+      `diagnostics.ignoreIds.loaded workspace=${workspaceUri || '(global)'} ids=${JSON.stringify([...ignored])}`,
+      { id: workspaceUri || 'global', span: 'diagnostics.ignoreIds.loaded', data: { source: 'startup' } },
+      workspaceUri || undefined
+    );
+  }
   semanticHighlightSettingsByWorkspace = await loadSemanticHighlightSettingsFromSettings(connection, workspaceFolders ?? []);
   observabilityPersistRotationByPath.clear();
 
@@ -3421,6 +3430,20 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
     await ensurePullDiagPersistCacheLoaded();
       await refreshIgnoredDiagnosticsForUri(uri, workspaceUri, correlationId);
     const context = findContextForFile(filePath);
+    const workspaceIgnored = getIgnoredForWorkspace(workspaceUri);
+    const globalIgnored = ignoredDiagnosticsByWorkspace.get('') ?? emptyIgnoredSet;
+    const contextIgnored = context
+      ? new Set(context.diagnosticsIgnoreIds.map(normalizeDiagnosticId).filter(Boolean))
+      : new Set<string>();
+    const effectiveIgnored = context
+      ? getIgnoredForContext(context)
+      : new Set<string>([...globalIgnored, ...workspaceIgnored]);
+    sendLog(
+      'debug',
+      `diagnostics.ignoreIds.scopes uri=${uri} workspace=${workspaceUri || '(none)'} context=${context?.key || '(none)'} user=${JSON.stringify([...globalIgnored])} workspaceIds=${JSON.stringify([...workspaceIgnored])} contextIds=${JSON.stringify([...contextIgnored])} effective=${JSON.stringify([...effectiveIgnored])}`,
+      { id: uri, span: 'diagnostics.ignoreIds.scopes', data: { correlationId } },
+      filePath
+    );
     observability.log(obs, 'debug', 'pullDiagnostics.request', {
       id: `${uri}`,
       span: 'pullDiagnostics.request',
@@ -5153,11 +5176,20 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
         && Date.now() <= formatMarkerForProjectedPrefixExpiry.requestedAtMs + (formatMarkerForProjectedPrefixExpiry.windowMs * 2)
       )
     });
+    const resultId = buildPullDiagnosticsResultId({
+      docVersion: doc?.version,
+      hash,
+      contextMatched: Boolean(context),
+      ignoredIds: getIgnoredForWorkspace(workspaceUri)
+    });
     if (
-      cached
-      && prevId
-      && cached.resultId === prevId
-      && cached.hash === hash
+      canReusePullDiagnosticsResult({
+        cached,
+        previousResultId: prevId,
+        hash,
+        resultId
+      })
+      && cached
       && !expireProjectedPrefixReuse
       && !shouldForcePostFormatDiagnosticsRepublish({
         uri,
@@ -5245,10 +5277,6 @@ async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | un
       return { kind: 'unchanged', resultId: cached.resultId };
     }
 
-    const ignoreIdsResultKey = !context
-      ? [...getIgnoredForWorkspace(workspaceUri)].sort().join(',')
-      : '';
-    const resultId = `${doc?.version ?? 0}:${hash}${ignoreIdsResultKey ? `:ignore=${ignoreIdsResultKey}` : ''}`;
     if (expireProjectedPrefixReuse)
     {
       ensureScheduled = ensureScheduled || ensurePostFormatAuthoritativeFollowupAction({

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadIgnoredDiagnosticsFromSettings } from '../../../src/server/config/server-settings';
+import { loadIgnoredDiagnosticsFromSettings, readIgnoredDiagnosticValues } from '../../../src/server/config/server-settings';
 import { applyIgnoreIds } from '../../../src/server/diagnostics/diagnostics-ignore';
 /*
   it('mantém o ID após leitura por URI vazia e fallback global aninhado', () => {
@@ -102,5 +102,25 @@ describe('diagnostics ignoreIds: configuração LSP real', () => {
 
     expect(effectiveIgnored.has('LSP1408')).toBe(true);
     expect(projected).toHaveLength(0);
+  });
+
+  it('mantém o ignore no SingleFile após leitura resource-scoped vazia', async () => {
+    const calls: unknown[] = [];
+    const connection = {
+      workspace: {
+        getConfiguration: async (section: unknown) => {
+          calls.push(section);
+          if (typeof section === 'object' && section !== null) return [];
+          return { lsp: { diagnostics: { ignoreIds: ['LSP1408'] } } };
+        }
+      }
+    };
+
+    const first = await readIgnoredDiagnosticValues(connection, 'file:///workspace/file.lspt');
+    const second = await readIgnoredDiagnosticValues(connection, 'file:///workspace/file.lspt');
+
+    expect(first).toEqual(['LSP1408']);
+    expect(second).toEqual(['LSP1408']);
+    expect(calls).toHaveLength(6);
   });
 });

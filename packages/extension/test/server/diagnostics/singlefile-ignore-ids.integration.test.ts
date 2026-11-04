@@ -123,10 +123,7 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
       logContextProjectionSelected: () => {}, hasPendingOrRecentFollowupForUri: () => false,
       shouldScheduleFollowup: () => false, scheduleFollowup: () => {},
       computeDiagnosticsDirectlyForPull: async () => [],
-      // O arquivo do log não pertence a um contexto. O fallback consulta o
-      // conjunto do workspace, enquanto a configuração já está presente no
-      // estado efetivo do contexto.
-      getIgnoredForWorkspace: () => new Set<string>(),
+      getIgnoredForWorkspace: () => ignoredState,
       compileFallbackDocument: async () => ({ diagnostics: [
         { code: 'LSP1408', message: 'função não criada', severity: 'Warning', range: { start: { line: 0, character: 0 }, end: { line: 0, character: 20 } } },
         { code: 'LSP1101', message: 'diagnóstico mantido', severity: 'Warning', range: { start: { line: 1, character: 0 }, end: { line: 1, character: 20 } } },
