@@ -828,3 +828,20 @@ Cada etapa deve ter flag de desligamento, log de ativação e métrica de erro. 
 - métricas permitem atribuir latência a LSP, agendamento, Worker, compilador ou transporte;
 - toda otimização de payload ou paralelismo possui baseline, benchmark e rollback;
 - a extensão mantém comportamento compatível em ambientes local, remoto e web quando suportados.
+
+## Status de implementação
+
+| Área | Estado | Evidência |
+| --- | --- | --- |
+| Protocolo compartilhado e validação | concluído | `worker-protocol.ts` e testes de contrato |
+| Fila serializada da sessão | concluído | `compiler-execution-queue.ts` e testes de exclusão mútua |
+| Falhas, gerações e backoff | concluído | controlador no servidor e teste de política de restart |
+| Erros estruturados e privacidade | concluído | códigos, status e stack somente em debug |
+| Cancelamento cooperativo | concluído | comando `cancel`, fila e checkpoint pós-compilação |
+| Controle de versão/geração | concluído | metadados no envelope e descarte de resposta obsoleta |
+| Progresso LSP | concluído | `WorkDoneProgress` com atraso e encerramento idempotente |
+| Diagnóstico pull | existente e integrado | handler com `CancellationToken`, `resultId` e cache |
+| Métricas e payload | existente e integrado | breakdown de bytes e métricas de fila/compilador |
+| Benchmark de paralelismo | concluído, sem habilitação | `npm run benchmark:worker-contexts`; serial superou paralelo no baseline |
+| Paralelismo por contexto em produção | não habilitado | requer evidência de ganho em workloads reais e isolamento adicional |
+| Partial results de workspace | não aplicável ao fluxo atual | o servidor expõe diagnóstico de documento; não há operação de workspace streaming |
