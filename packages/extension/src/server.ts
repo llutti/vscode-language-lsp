@@ -2624,6 +2624,7 @@ async function updateContextCache(
   const semanticFilePaths = resolveSemanticPayloadFilePathsForCompile(context, trigger, changedFilePaths);
   const payload: WorkerCompileRequest = makeCompileRequest({
     requestId,
+    workerGeneration: compilerWorkerGeneration,
     context: {
       name: context.name,
       rootDir: context.rootDir,

@@ -39,7 +39,7 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
       return;
     }
     const result = message.options?.includeSemanticPayload === false ? { ...rawResult, semanticsByFile: undefined } : rawResult;
-    const response: WorkerResponse = { kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, result };
+    const response: WorkerResponse = { kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, workerGeneration: message.workerGeneration, result };
     if (message.options?.collectStats && response.kind === 'compileResult') {
       const breakdown = buildResultSizeBreakdown(result);
       response.resultBytes = breakdown.total;
@@ -47,7 +47,7 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
     }
     parentPort?.postMessage(response);
   } catch (error) {
-    parentPort?.postMessage({ kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, error: serializeWorkerError(error) } satisfies WorkerResponse);
+    parentPort?.postMessage({ kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, workerGeneration: message.workerGeneration, error: serializeWorkerError(error) } satisfies WorkerResponse);
   }
 }
 
