@@ -163,6 +163,14 @@ const EMPTY_CONTEXT_FILE_PROJECTION: ContextFileProjection = {
   authoritative: false
 };
 
+export function filterFallbackDiagnostics<T extends { code?: string | number; id?: string | number }>(diagnostics: T[], ignored: Set<string>): T[] {
+  if (ignored.size === 0) return diagnostics;
+  return diagnostics.filter((diag) => {
+    const id = String(diag.code ?? diag.id ?? '').trim().toUpperCase();
+    return !id || !ignored.has(id);
+  });
+}
+
 export function createPullDiagnosticsService(input: {
   documents: Map<string, TextDocument>;
   contextDocs: Map<string, Set<string>>;
@@ -403,12 +411,7 @@ export function createPullDiagnosticsService(input: {
     } else if (inputData.doc) {
       const ignored = input.getIgnoredForWorkspace(inputData.workspaceUri);
       const result = await input.compileFallbackDocument(inputData.doc, false);
-      diagnostics = result.diagnostics
-        .filter((diag) =>
-        {
-          const id = String(diag.code ?? '');
-          return !id || !ignored.has(id.toLowerCase());
-        })
+      diagnostics = filterFallbackDiagnostics(result.diagnostics, ignored)
         .map((diag) => input.toLspDiagnostic(diag));
       source = 'fallback-compile';
       isPrefix = false;
@@ -532,18 +535,22 @@ export function createPullDiagnosticsService(input: {
         input.scheduleFollowup(inputData.context, inputData.uri, inputData.filePath, inputData.doc.version, 0);
       }
       if (reusablePersistedZeroSnapshot) {
+        const diagnostics = input.applyIgnoreIdsToLspDiagnostics(
+          reusablePersistedZeroSnapshot.diagnostics,
+          input.getIgnoredForContext(inputData.context)
+        );
         pullDiagCache.set(inputData.uri, { resultId: reusablePersistedZeroSnapshot.resultId, hash: reusablePersistedZeroSnapshot.hash });
-        pullDiagLastItems.set(inputData.uri, reusablePersistedZeroSnapshot.diagnostics);
+        pullDiagLastItems.set(inputData.uri, diagnostics);
         return {
           kind: 'guarded-zero',
           resultId: reusablePersistedZeroSnapshot.resultId,
           hash: reusablePersistedZeroSnapshot.hash,
-          diagnostics: reusablePersistedZeroSnapshot.diagnostics,
+          diagnostics,
           dirtyStamp,
           scheduledFollowup: scheduledPersistedZeroFollowup,
           didOpenAgeMs: didOpenAgeMs ?? 0,
           persistedDiagnosticsCount: persisted.diagnostics.length,
-          reusedSnapshotNonEmpty: reusablePersistedZeroSnapshot.diagnostics.length
+          reusedSnapshotNonEmpty: diagnostics.length
         };
       }
     }
@@ -554,12 +561,16 @@ export function createPullDiagnosticsService(input: {
       input.scheduleFollowup(inputData.context, inputData.uri, inputData.filePath, inputData.doc.version, 0);
     }
     pullDiagCache.set(inputData.uri, { resultId: persisted.resultId, hash: persisted.hash });
-    pullDiagLastItems.set(inputData.uri, persisted.diagnostics);
+    const diagnostics = input.applyIgnoreIdsToLspDiagnostics(
+      persisted.diagnostics,
+      input.getIgnoredForContext(inputData.context)
+    );
+    pullDiagLastItems.set(inputData.uri, diagnostics);
     return {
       kind: 'persisted',
       resultId: persisted.resultId,
       hash: persisted.hash,
-      diagnostics: persisted.diagnostics,
+      diagnostics,
       dirtyStamp,
       scheduledFollowup
     };
@@ -610,6 +621,10 @@ export function createPullDiagnosticsService(input: {
       || (lastNonEmpty && lastNonEmpty.contextKey === inputData.context.key && lastNonEmpty.dirtyStamp === dirtyStamp && lastNonEmpty.diagnostics.length > 0)
     );
     if (!inputData.forceRefreshFiles && stable && stableIsFresh && stableMatchesCurrentVersion && !hasRecentUriEditSinceLastFullCommit && !stableZeroSupersededByCommittedDiagnostics) {
+      const diagnostics = input.applyIgnoreIdsToLspDiagnostics(
+        stable.diagnostics,
+        input.getIgnoredForContext(inputData.context)
+      );
       input.logContextProjectionSelected({
         uri: inputData.uri,
         filePath: inputData.filePath,
@@ -624,13 +639,13 @@ export function createPullDiagnosticsService(input: {
         contextCacheLastCompileWasPrefix: null,
         contextCacheCommittedAtMs: null,
         selectedSource: 'context-projected',
-        selectedDiagnosticsCount: stable.diagnostics.length,
+        selectedDiagnosticsCount: diagnostics.length,
         selectedAuthoritative: true,
         recentZeroObservation: Boolean(recentZeroObservation)
       });
       return {
         result: {
-          diagnostics: stable.diagnostics,
+          diagnostics,
           source: 'context-projected',
           cacheHit: true,
           contextMatched: true,

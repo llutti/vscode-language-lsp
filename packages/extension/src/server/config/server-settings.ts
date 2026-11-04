@@ -11,6 +11,14 @@ type WorkspaceConfigurationReader = {
   };
 };
 
+export type DiagnosticIgnoreConfigurationTrace = {
+  scopeUri?: string;
+  section: string;
+  source: 'resource-effective' | 'global-user' | 'workspace-effective';
+  raw: unknown;
+  extracted: string[];
+};
+
 type DebugSettings = {
   enabled: boolean;
   dir: string;
@@ -52,9 +60,93 @@ function buildIgnoredSet(values: unknown): Set<string>
   return set;
 }
 
+function extractIgnoreIdsValues(value: unknown): unknown[] {
+  if (Array.isArray(value)) return value;
+  if (!value || typeof value !== 'object') return [];
+  const object = value as Record<string, unknown>;
+  const full = object['lsp.diagnostics.ignoreIds'];
+  if (Array.isArray(full)) return full;
+  const dotted = object['diagnostics.ignoreIds'];
+  if (Array.isArray(dotted)) return dotted;
+  const lspDiagnostics = object['lsp.diagnostics'];
+  if (lspDiagnostics && typeof lspDiagnostics === 'object') {
+    const ids = (lspDiagnostics as Record<string, unknown>).ignoreIds;
+    if (Array.isArray(ids)) return ids;
+  }
+  const nested = object.diagnostics;
+  if (nested && typeof nested === 'object') {
+    const ids = (nested as Record<string, unknown>).ignoreIds;
+    if (Array.isArray(ids)) return ids;
+  }
+  const lsp = object.lsp;
+  if (lsp && typeof lsp === 'object') {
+    const diagnostics = (lsp as Record<string, unknown>).diagnostics;
+    if (diagnostics && typeof diagnostics === 'object') {
+      const ids = (diagnostics as Record<string, unknown>).ignoreIds;
+      if (Array.isArray(ids)) return ids;
+    }
+  }
+  return [];
+}
+
 export function buildIgnoredList(values: unknown): string[]
 {
-  return [...buildIgnoredSet(values)];
+  return [...buildIgnoredSet(extractIgnoreIdsValues(values))];
+}
+
+export function resolveIgnoredDiagnosticValues(...candidates: unknown[]): string[]
+{
+  for (const candidate of candidates)
+  {
+    const values = buildIgnoredList(candidate);
+    if (values.length > 0) return values;
+  }
+  return [];
+}
+
+export async function readIgnoredDiagnosticValues(
+  connection: WorkspaceConfigurationReader,
+  scopeUri?: string,
+  onRead?: (trace: DiagnosticIgnoreConfigurationTrace) => void
+): Promise<string[]>
+{
+  const read = async (
+    section: unknown,
+    label: string,
+    source: DiagnosticIgnoreConfigurationTrace['source']
+  ): Promise<unknown> => {
+    const raw = await connection.workspace.getConfiguration(section);
+    if (typeof section === 'string') {
+      onRead?.({ scopeUri, section: label, source, raw, extracted: buildIgnoredList(raw) });
+    } else {
+      const request = section as { section?: string; scopeUri?: string };
+      onRead?.({
+        scopeUri: request.scopeUri ?? scopeUri,
+        section: request.section ?? label,
+        source,
+        raw,
+        extracted: buildIgnoredList(raw)
+      });
+    }
+    return raw;
+  };
+  const scopedSection = scopeUri
+    ? await read({
+        scopeUri,
+        section: 'lsp.diagnostics.ignoreIds'
+      }, 'lsp.diagnostics.ignoreIds', 'resource-effective')
+    : undefined;
+  if (scopeUri) {
+    const scopedLsp = await read({
+      scopeUri,
+      section: 'lsp'
+    }, 'lsp', 'resource-effective');
+    const global = await read('lsp.diagnostics.ignoreIds', 'lsp.diagnostics.ignoreIds', 'global-user');
+    return resolveIgnoredDiagnosticValues(scopedSection, scopedLsp, global);
+  }
+  return resolveIgnoredDiagnosticValues(
+    await read('lsp.diagnostics.ignoreIds', 'lsp.diagnostics.ignoreIds', 'global-user')
+  );
 }
 
 export async function loadIgnoredDiagnosticsFromSettings(
@@ -62,8 +154,7 @@ export async function loadIgnoredDiagnosticsFromSettings(
   workspaceFolders: WorkspaceFolder[]
 ): Promise<Map<string, Set<string>>>
 {
-  const globalRaw = (await connection.workspace.getConfiguration('lsp.diagnostics.ignoreIds')) as string[] | null;
-  const globalSet = buildIgnoredSet(globalRaw ?? []);
+  const globalSet = buildIgnoredSet(await readIgnoredDiagnosticValues(connection));
   if (workspaceFolders.length === 0)
   {
     const map = new Map<string, Set<string>>();
@@ -71,17 +162,12 @@ export async function loadIgnoredDiagnosticsFromSettings(
     return map;
   }
 
-  const requests = workspaceFolders.map((folder) => ({
-    scopeUri: folder.uri,
-    section: 'lsp.diagnostics.ignoreIds'
-  }));
-  const configs = (await connection.workspace.getConfiguration(requests)) as Array<string[] | null>;
   const map = new Map<string, Set<string>>();
-  for (let i = 0; i < configs.length; i += 1)
+  for (const folder of workspaceFolders)
   {
-    const folder = workspaceFolders[i];
-    const workspaceSet = buildIgnoredSet(configs[i] ?? []);
-    map.set(folder.uri, new Set<string>([...globalSet, ...workspaceSet]));
+    const values = await readIgnoredDiagnosticValues(connection, folder.uri);
+    const workspaceSet = buildIgnoredSet(values);
+    map.set(folder.uri, new Set<string>([...workspaceSet]));
   }
   return map;
 }

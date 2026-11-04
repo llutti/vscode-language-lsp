@@ -53,7 +53,34 @@ type RefactorEditPlanPayload = {
   };
 };
 
+function readDiagnosticIgnoreIds(resource?: vscode.Uri): string[] {
+  const config = vscode.workspace.getConfiguration('lsp', resource);
+  const inspection = config.inspect<string[]>('diagnostics.ignoreIds');
+  return Array.from(new Set([
+    inspection?.globalValue,
+    inspection?.workspaceValue,
+    inspection?.workspaceFolderValue
+  ].flatMap((value) => Array.isArray(value) ? value : [])
+    .map(normalizeDiagnosticCode)
+    .filter(Boolean)));
+}
+
 export function activate(context: vscode.ExtensionContext) {
+
+  let output: vscode.OutputChannel | null = null;
+  const appendDiagnosticsLog = (
+    resource: vscode.Uri | undefined,
+    detailed: string,
+    basic?: string
+  ): void => {
+    if (!output) return;
+    const debugEnabled = vscode.workspace
+      .getConfiguration('lsp.debug', resource)
+      .get<boolean>('enabled', false);
+    if (debugEnabled || basic) {
+      output.appendLine(debugEnabled ? detailed : basic ?? detailed);
+    }
+  };
 
   const serverModule = context.asAbsolutePath(path.join('dist', 'server.js'));
   const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
@@ -68,6 +95,55 @@ export function activate(context: vscode.ExtensionContext) {
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: 'file', language: 'lsp' }],
+    middleware: {
+      workspace: {
+        configuration: async (params, token, next) => {
+          const values = await next(params, token);
+          const resolvedValues = Array.isArray(values) ? values : [];
+          return params.items.map((item, index) => {
+            const section = item.section ?? '';
+            if (section !== 'lsp.diagnostics.ignoreIds') {
+              return resolvedValues[index];
+            }
+
+            const resource = item.scopeUri
+              ? vscode.Uri.parse(item.scopeUri)
+              : undefined;
+            const config = vscode.workspace.getConfiguration('lsp', resource);
+            const inspection = config.inspect<string[]>('diagnostics.ignoreIds');
+            const effective = config.get<string[]>('diagnostics.ignoreIds', []);
+            const resolved = readDiagnosticIgnoreIds(resource);
+            appendDiagnosticsLog(resource, `[diagnostics][configuration] section=${section} uri=${resource?.toString() ?? '(none)'} effective=${JSON.stringify(effective)} inspect=${JSON.stringify({
+              default: inspection?.defaultValue ?? null,
+              global: inspection?.globalValue ?? null,
+              workspace: inspection?.workspaceValue ?? null,
+              workspaceFolder: inspection?.workspaceFolderValue ?? null,
+              defaultLanguage: inspection?.defaultLanguageValue ?? null,
+              globalLanguage: inspection?.globalLanguageValue ?? null,
+              workspaceLanguage: inspection?.workspaceLanguageValue ?? null,
+              workspaceFolderLanguage: inspection?.workspaceFolderLanguageValue ?? null
+            })} resolvedByScope=${JSON.stringify(resolved)}`, `[diagnostics][configuration] uri=${resource?.toString() ?? '(none)'} resolvedCount=${resolved.length}`);
+            return resolved;
+          });
+        }
+      },
+      // Keep the editor output consistent even when a stale server snapshot
+      // publishes diagnostics after the workspace setting changes.
+      handleDiagnostics: (uri, diagnostics, next) => {
+        const resource = typeof uri === 'string' ? vscode.Uri.parse(uri) : uri;
+        const configured = readDiagnosticIgnoreIds(resource);
+        appendDiagnosticsLog(resource, `[diagnostics][middleware] uri=${resource.toString()} configured=${JSON.stringify(configured)}`);
+        const ignored = new Set(configured
+          .filter((value): value is string => typeof value === 'string')
+          .map(normalizeDiagnosticCode)
+          .filter(Boolean));
+        const filtered = diagnostics.filter((diagnostic) => {
+          const code = normalizeDiagnosticCode(String(diagnostic.code ?? ''));
+          return !code || !ignored.has(code);
+        });
+        next(uri, filtered);
+      }
+    },
     synchronize: {
       configurationSection: 'lsp',
       fileEvents: fileWatcher
@@ -80,6 +156,9 @@ export function activate(context: vscode.ExtensionContext) {
   };
 
   client = new LanguageClient('lsp', 'Linguagem de Suporte para "Linguagem Senior de Programação"', serverOptions, clientOptions);
+  output = vscode.window.createOutputChannel('LSP');
+  context.subscriptions.push(output);
+
   const clientStart = client.start();
   context.subscriptions.push({
     dispose: () => {
@@ -87,8 +166,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  const output = vscode.window.createOutputChannel('LSP');
-  context.subscriptions.push(output);
   const contextConfigAccessor: ContextConfigAccessor<vscode.Uri> = {
     inspectContexts: (resource) => {
       const config = vscode.workspace.getConfiguration('lsp', resource ?? undefined);
@@ -759,7 +836,11 @@ export function activate(context: vscode.ExtensionContext) {
       const current = config.get<string[]>('diagnostics.ignoreIds', []);
       const next = mergeIgnoredCodes(current, code);
       const target = scope === 'workspace' ? vscode.ConfigurationTarget.Workspace : vscode.ConfigurationTarget.Global;
+      appendDiagnosticsLog(resource, `[diagnostics][write] uri=${resource?.toString() ?? '(none)'} scope=${scope} target=${target} before=${JSON.stringify(current)} next=${JSON.stringify(next)}`, `[diagnostics][write] scope=${scope} count=${next.length}`);
       await config.update('diagnostics.ignoreIds', next, target);
+      const inspected = config.inspect<string[]>('diagnostics.ignoreIds');
+      const reread = config.get<string[]>('diagnostics.ignoreIds', []);
+      appendDiagnosticsLog(resource, `[diagnostics][write-result] uri=${resource?.toString() ?? '(none)'} scope=${scope} reread=${JSON.stringify(reread)} inspect=${JSON.stringify({ global: inspected?.globalValue ?? null, workspace: inspected?.workspaceValue ?? null, workspaceFolder: inspected?.workspaceFolderValue ?? null })}`, `[diagnostics][write-result] scope=${scope} count=${next.length} rereadCount=${reread.length}`);
     })
   );
 

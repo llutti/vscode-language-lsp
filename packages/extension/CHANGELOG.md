@@ -2,6 +2,11 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.12] - 04/11/2026
+### Correções
+  - Corrigida a aplicação de diagnósticos ignorados nos escopos User, Workspace e Context.
+  - Melhorar documentação de diversas funções.
+
 ## [2.0.11] - 08/07/2026
 ### Novidades
   - Símbolos implícitos de `Numero`: variáveis declaradas via `v_numero;` ou `v_numero = 0;` (sem `Definir Numero`) agora aparecem no OUTLINE como símbolos do tipo *Variable*.

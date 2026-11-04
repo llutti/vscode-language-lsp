@@ -1980,20 +1980,6 @@
     "docVersion": "6.10.4"
   },
   {
-    "name": "Fechar",
-    "documentation": "Fecha um arquivo previamente aberto.",
-    "params": [
-      {
-        "name": "ManipuladorArquivo",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
     "name": "FinalVtr",
     "documentation": "Libera as estruturas alocadas anteriormente pela função CalculaVtr",
     "params": [],
@@ -2642,78 +2628,6 @@
     "docVersion": "6.10.4"
   },
   {
-    "name": "Gravar",
-    "documentation": "Escreve determinado número de bytes para um arquivo binário e retorna o número de bytes gravados no arquivo.",
-    "params": [
-      {
-        "name": "ManipuladorArquivo",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
-      },
-      {
-        "name": "Dados",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo."
-      },
-      {
-        "name": "NumeroDeBytes",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Indica o número de bytes que devem ser lidos do arquivo."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "GravarNL",
-    "documentation": "Grava uma linha no arquivo indicado pelo <manipulador de arquivo> com o valor da <variável> passada como parâmetro.",
-    "params": [
-      {
-        "name": "ManipuladorArquivo",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
-      },
-      {
-        "name": "ValorLinha",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "GravarNLEOL",
-    "documentation": "Grava uma linha em um arquivo texto com a opção de incluir a quebra de linha ao final.",
-    "params": [
-      {
-        "name": "ManipuladorArquivo",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
-      },
-      {
-        "name": "ValorLinha",
-        "type": "Alfa",
-        "isReturnValue": false,
-        "documentation": "Indica a variável de onde os dados serão obtidos para a gravação no arquivo texto."
-      },
-      {
-        "name": "UseEOL [0:Não | 1:Sim]",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Determina se deve ou não ser adicionada a quebra de linha ao final."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
     "name": "GravarVtr",
     "documentation": "Grava os passes na tabela R028PVT, calculada anteriormente pela função CalculaVtr",
     "params": [
@@ -2853,52 +2767,6 @@
         "type": "Alfa",
         "isReturnValue": false,
         "documentation": ""
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "Ler",
-    "documentation": "Lê determinado números de bytes do arquivo binário indicado. Esta função retorna o **número de bytes** que foram **lidos** do arquivo. Se a leitura atingiu o final do arquivo, o retorno será o **número de bytes lidos** até o final do arquivo.",
-    "params": [
-      {
-        "name": "ManipuladorArquivo",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
-      },
-      {
-        "name": "Retorno",
-        "type": "Alfa",
-        "isReturnValue": true,
-        "documentation": "Indica a variável de onde os dados serão obtidos para leitura."
-      },
-      {
-        "name": "NumeroDeBytes",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Indica o número de bytes que devem ser lidos do arquivo."
-      }
-    ],
-    "docUrl": "",
-    "docVersion": ""
-  },
-  {
-    "name": "LerNL",
-    "documentation": "Lê uma linha de um arquivo texto. Se a função conseguiu ler uma ou mais linhas, o retorno será **1**. Se o final do arquivo for atingido ou se o arquivo não contiver nenhum texto, o retorno será **0 (zero)**.\n\n**Observação:** A função LerNL considera apenas como quebra de linha *“CRLF”* ou *“#13#10”*, padrão do sistema operacional Windows.",
-    "params": [
-      {
-        "name": "ManipuladorArquivo",
-        "type": "Numero",
-        "isReturnValue": false,
-        "documentation": "Determina o manipulador de arquivo para onde os dados serão gravados."
-      },
-      {
-        "name": "Retorno",
-        "type": "Alfa",
-        "isReturnValue": true,
-        "documentation": "Indica a variável de onde os dados serão obtidos para leitura."
       }
     ],
     "docUrl": "",
