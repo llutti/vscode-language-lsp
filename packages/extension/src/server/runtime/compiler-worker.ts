@@ -47,7 +47,13 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
     }
     parentPort?.postMessage(response);
   } catch (error) {
-    parentPort?.postMessage({ kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, workerGeneration: message.workerGeneration, error: serializeWorkerError(error) } satisfies WorkerResponse);
+    parentPort?.postMessage({
+      kind: 'compileResult',
+      protocolVersion: 1,
+      requestId: message.requestId,
+      workerGeneration: message.workerGeneration,
+      error: serializeWorkerError(error, 'COMPILATION_FAILED', process.env.LSP_DEBUG === '1')
+    } satisfies WorkerResponse);
   }
 }
 

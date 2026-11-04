@@ -15,7 +15,10 @@ describe('worker protocol', () => {
   });
 
   it('serializa Error e valores não-Error', () => {
-    expect(serializeWorkerError(new Error('boom')).message).toBe('boom');
+    const error = serializeWorkerError(new Error('boom'));
+    expect(error.message).toBe('boom');
+    expect(error.stack).toBeUndefined();
+    expect(serializeWorkerError(new Error('boom'), 'COMPILATION_FAILED', true).stack).toContain('Error: boom');
     expect(serializeWorkerError('boom', 'INVALID_MESSAGE')).toMatchObject({ code: 'INVALID_MESSAGE', message: 'boom', retryable: false });
   });
 

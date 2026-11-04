@@ -146,13 +146,13 @@ export function isWorkerResponse(value: unknown): value is WorkerResponse {
   return value.result === undefined || isRecord(value.result);
 }
 
-export function serializeWorkerError(error: unknown, code: WorkerErrorCode = 'COMPILATION_FAILED'): WorkerError {
+export function serializeWorkerError(error: unknown, code: WorkerErrorCode = 'COMPILATION_FAILED', includeStack = false): WorkerError {
   const isError = error instanceof Error;
   return {
     code,
     message: isError ? error.message : String(error),
     name: isError ? error.name : undefined,
-    stack: isError ? error.stack : undefined,
+    stack: includeStack && isError ? error.stack : undefined,
     retryable: code === 'WORKER_CRASHED'
   };
 }
