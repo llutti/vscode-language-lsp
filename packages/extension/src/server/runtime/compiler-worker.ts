@@ -5,6 +5,7 @@ import { isWorkerRequest, serializeWorkerError, type CompileResultSizeBreakdown,
 
 const session = createCompilerSession();
 const executionQueue = new CompilerExecutionQueue<void>();
+const cancelledRequestIds = new Set<number>();
 
 function safeByteLength(value: unknown): number {
   try {
@@ -26,6 +27,10 @@ function buildResultSizeBreakdown(result: CompileResult): CompileResultSizeBreak
 }
 
 async function handleCompile(message: WorkerCompileRequest): Promise<void> {
+  if (cancelledRequestIds.delete(message.requestId)) {
+    parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
+    return;
+  }
   const overrides: ContentOverrides = new Map(message.overrides);
   try {
     const rawResult = await session.compile(message.context, overrides, message.options);
@@ -52,6 +57,8 @@ parentPort?.on('message', (message: unknown) => {
     return;
   }
   if (message.kind === 'cancel') {
+    cancelledRequestIds.add(message.requestId);
+    executionQueue.cancel(message.requestId);
     parentPort?.postMessage({ kind: 'cancelled', protocolVersion: 1, requestId: message.requestId } satisfies WorkerResponse);
     return;
   }

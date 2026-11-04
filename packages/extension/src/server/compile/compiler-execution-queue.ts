@@ -32,6 +32,13 @@ export class CompilerExecutionQueue<T> {
     this.items.length = 0;
   }
 
+  cancel(id: number): boolean {
+    const index = this.items.findIndex((item) => item.id === id);
+    if (index < 0) return false;
+    this.items.splice(index, 1);
+    return true;
+  }
+
   snapshot(): QueueSnapshot {
     return {
       queued: this.items.length,
