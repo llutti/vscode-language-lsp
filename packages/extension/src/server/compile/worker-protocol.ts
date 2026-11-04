@@ -18,6 +18,8 @@ export type WorkerCompileRequest = {
   protocolVersion: typeof WORKER_PROTOCOL_VERSION;
   requestId: number;
   workerGeneration?: number;
+  contextGeneration?: number;
+  documentVersion?: number;
   context: ValidationContextConfig;
   overrides: Array<[string, string]>;
   options?: WorkerCompileOptions;
@@ -67,6 +69,8 @@ export type WorkerCompileResponse = {
   protocolVersion: typeof WORKER_PROTOCOL_VERSION;
   requestId: number;
   workerGeneration?: number;
+  contextGeneration?: number;
+  documentVersion?: number;
   status: 'ok' | 'failed' | 'cancelled' | 'rejected';
   result?: CompileResult;
   resultBytes?: number;
@@ -127,6 +131,8 @@ export function isWorkerRequest(value: unknown): value is WorkerRequest {
     return Number.isSafeInteger(requestId)
       && (requestId as number) > 0
       && (value.workerGeneration === undefined || (typeof value.workerGeneration === 'number' && Number.isSafeInteger(value.workerGeneration)))
+      && (value.contextGeneration === undefined || (typeof value.contextGeneration === 'number' && Number.isSafeInteger(value.contextGeneration)))
+      && (value.documentVersion === undefined || (typeof value.documentVersion === 'number' && Number.isSafeInteger(value.documentVersion)))
       && isContext(value.context)
       && Array.isArray(value.overrides)
       && value.overrides.every((entry) => Array.isArray(entry) && entry.length === 2 && typeof entry[0] === 'string' && typeof entry[1] === 'string')

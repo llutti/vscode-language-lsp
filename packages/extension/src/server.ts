@@ -2640,6 +2640,8 @@ async function updateContextCache(
   const payload: WorkerCompileRequest = makeCompileRequest({
     requestId,
     workerGeneration: compilerWorkerGeneration,
+    contextGeneration: getContextRuntimeGeneration(context.key),
+    documentVersion: expectedDocVersion,
     context: {
       name: context.name,
       rootDir: context.rootDir,

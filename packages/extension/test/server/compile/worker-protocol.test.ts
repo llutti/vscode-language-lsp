@@ -5,7 +5,7 @@ describe('worker protocol', () => {
   const context = { name: 'ctx', rootDir: 'C:/workspace', filePattern: '*.lsp', includeSubdirectories: true, system: 'HCM' };
 
   it('aceita uma requisição de compilação válida', () => {
-    expect(isWorkerRequest({ kind: 'compile', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, workerGeneration: 2, context, overrides: [['a', 'b']], options: { collectStats: true } })).toBe(true);
+    expect(isWorkerRequest({ kind: 'compile', protocolVersion: WORKER_PROTOCOL_VERSION, requestId: 1, workerGeneration: 2, contextGeneration: 3, documentVersion: 4, context, overrides: [['a', 'b']], options: { collectStats: true } })).toBe(true);
   });
 
   it('rejeita payloads incompletos ou com tipos inválidos', () => {

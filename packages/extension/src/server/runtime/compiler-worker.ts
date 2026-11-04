@@ -39,7 +39,13 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
       return;
     }
     const result = message.options?.includeSemanticPayload === false ? { ...rawResult, semanticsByFile: undefined } : rawResult;
-    const response: WorkerResponse = { kind: 'compileResult', protocolVersion: 1, requestId: message.requestId, workerGeneration: message.workerGeneration, status: 'ok', result };
+    const response: WorkerResponse = {
+      kind: 'compileResult', protocolVersion: 1, requestId: message.requestId,
+      workerGeneration: message.workerGeneration,
+      contextGeneration: message.contextGeneration,
+      documentVersion: message.documentVersion,
+      status: 'ok', result
+    };
     if (message.options?.collectStats && response.kind === 'compileResult') {
       const breakdown = buildResultSizeBreakdown(result);
       response.resultBytes = breakdown.total;
@@ -52,6 +58,8 @@ async function handleCompile(message: WorkerCompileRequest): Promise<void> {
       protocolVersion: 1,
       requestId: message.requestId,
       workerGeneration: message.workerGeneration,
+      contextGeneration: message.contextGeneration,
+      documentVersion: message.documentVersion,
       status: 'failed',
       error: serializeWorkerError(error, 'COMPILATION_FAILED', process.env.LSP_DEBUG === '1')
     } satisfies WorkerResponse);
