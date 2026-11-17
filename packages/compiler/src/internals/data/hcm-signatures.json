@@ -1671,6 +1671,74 @@
     "docVersion": ""
   },
   {
+    "name": "EntradaValor",
+    "documentation": "Esta função permite informar valores para a regra através da tela de entrada **FRENTLSP** durante a execução.",
+    "params": [
+      {
+        "name": "TituloTela",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Título da tela"
+      },
+      {
+        "name": "Descricao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Nome/descrição do campo de entrada"
+      },
+      {
+        "name": "TipoDado",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Indica o tipo do dado para o campo de entrada:\n- **1**:Alfa\n- **2**:Numero,\n- **3**:Dinheiro,\n- **4**:Data,\n- **5**:Hora\n- **6**:Senha"
+      },
+      {
+        "name": "Mascara",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica a mascará para ser aplicada no campo de entrada"
+      },
+      {
+        "name": "ValorPadraoAlfa",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Valor **padrão alfanumérico**  para o campo de entrada"
+      },
+      {
+        "name": "ValorPadraoNumero",
+        "type": "Numero",
+        "isReturnValue": false,
+        "documentation": "Valor **padrão numérico**  para o campo de entrada"
+      },
+      {
+        "name": "RetornoAlfa",
+        "type": "Alfa",
+        "isReturnValue": true,
+        "documentation": "Variável alfanumérica (definida na regra) que armazenará o valor digitado no campo de entrada."
+      },
+      {
+        "name": "RetornoNumerico",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Variável numérica (definida na regra) que armazenará o valor digitado no campo de entrada"
+      },
+      {
+        "name": "TipoSaida",
+        "type": "Numero",
+        "isReturnValue": true,
+        "documentation": "Indica o tipo de saída da tela de entrada:\n- **0**: Botão **OK não clicado**\n- **1**: Clicar no Botão **OK**"
+      },
+      {
+        "name": "Observacao",
+        "type": "Alfa",
+        "isReturnValue": false,
+        "documentation": "Indica uma instrução para o preenchimento do campo"
+      }
+    ],
+    "docUrl": "https://documentacao.senior.com.br/gestao-de-pessoas-hcm/6.10.4/customizacoes/funcoes/funcao_entradavalor",
+    "docVersion": "6.10.4"
+  },
+  {
     "name": "EnviaEMail",
     "documentation": "Função que permite enviar e-mails. É possível verificar erros através das variáveis CodErroEnviaEmail e MsgErroEnviaEmail.\nQuando a mesma  possuir destinatários inválidos, a função retornará 1, caso contrário retornará 0.",
     "type": "Numero",

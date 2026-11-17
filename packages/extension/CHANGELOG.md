@@ -2,6 +2,10 @@
 
 Alterações realizadas na extensão.
 
+## [2.0.13] - 17/11/2026
+### Correções
+  - Adicionar Função "EntradaValor"
+
 ## [2.0.12] - 04/11/2026
 ### Correções
   - Corrigida a aplicação de diagnósticos ignorados nos escopos User, Workspace e Context.
