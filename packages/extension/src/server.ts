@@ -14,6 +14,8 @@ import
     TextDocumentSyncKind,
     type Diagnostic,
     type InitializeParams,
+    type CancellationToken,
+    type WorkDoneProgressServerReporter,
   } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import
@@ -80,6 +82,7 @@ import {
 } from './server/compile/compile-orchestrator';
 import { mergeExpectedDocVersion } from './server/compile/compile-version-gate';
 import { createCompileResultApplication } from './server/compile/compile-result-application';
+import { isWorkerResponse, makeCompileRequest, type WorkerCompileRequest, type WorkerCompileResponse } from './server/compile/worker-protocol';
 import { isLikelyFormatDrivenChange, isUndoLikeHashTransition, type FormatWindow } from './server/compile/format-change-classifier';
 import {
   completionItem,
@@ -208,15 +211,6 @@ type PullDiagnosticRequestParams = {
 type PullDiagnosticReport =
   | { kind: 'full'; items: Diagnostic[]; resultId?: string }
   | { kind: 'unchanged'; resultId: string };
-
-type CompileResultSizeBreakdown = {
-  diagnostics: number;
-  files: number;
-  symbols: number;
-  semanticsByFile: number;
-  stats: number;
-  total: number;
-};
 
 type MetricsEntry = {
   timestamp: string;
@@ -485,6 +479,8 @@ function shouldBootstrapFullCompileOnDidOpen(context: ResolvedContext): boolean
 }
 
 const compileStatusActive = new Set<string>();
+const compileProgressTimers = new Map<string, NodeJS.Timeout>();
+const compileProgressReporters = new Map<string, WorkDoneProgressServerReporter>();
 const internalCache = new Map<string, InternalSignatureDoc[]>();
 const internalIndex = new Map<string, OfficialSignatureIndex>();
 const hoverCache = new Map<string, HoverPayload>();
@@ -497,6 +493,8 @@ const forceRefreshFilesByContext = new Set<string>();
 const ensurePrefixTargetByContext = new Map<string, string>();
 const compileRequests = createCompileRequestState();
 const pendingCompiles = new Map<number, {
+  requestId: number;
+  workerGeneration: number;
   context: ResolvedContext;
   metricsEnabled: boolean;
   startedAt: number;
@@ -505,6 +503,7 @@ const pendingCompiles = new Map<number, {
   cycle: ValidationCycle;
   trigger: string;
   uri?: string;
+  expectedDocVersion?: number;
   includeSemantics?: boolean;
   includeSemanticPayload?: boolean;
   contextGeneration: number;
@@ -512,6 +511,12 @@ const pendingCompiles = new Map<number, {
   isPrefixCompile: boolean;
 }>();
 let compilerWorker: Worker | null = null;
+let compilerWorkerGeneration = 0;
+let compilerWorkerFailureHandled = false;
+let compilerWorkerRestartAttempts = 0;
+let compilerWorkerRestartWindowStartedAt = 0;
+const COMPILER_WORKER_RESTART_WINDOW_MS = 180_000;
+const COMPILER_WORKER_MAX_RESTARTS = 5;
 
 const PRIORITY_COMPILE_DELAY_MS = 0;
 const SECONDARY_COMPILE_DELAY_MS = 25;
@@ -1255,39 +1260,25 @@ function logObsoleteWorkDropped(contextKey: string, reason: string, uri?: string
   });
 }
 
-type WorkerCompileRequest = {
-  requestId: number;
-  context: ValidationContextConfig;
-  overrides: Array<[string, string]>;
-  options?: {
-    collectStats?: boolean;
-    forceRefreshFiles?: boolean;
-    prefixUntilFilePath?: string;
-    changedFilePaths?: string[];
-    semanticFilePaths?: string[];
-    includeSemantics?: boolean;
-    includeSemanticPayload?: boolean;
-    semanticBudgetFiles?: number;
-  };
-};
-
-type WorkerCompileResponse = {
-  requestId: number;
-  result?: CompileResult;
-  resultBytes?: number;
-  resultBytesBreakdown?: CompileResultSizeBreakdown;
-  error?: string;
-};
-
 function ensureCompilerWorker(): Worker
 {
   if (compilerWorker) return compilerWorker;
   const workerPath = path.join(__dirname, 'compiler-worker.js');
   compilerWorker = new Worker(workerPath);
+  const worker = compilerWorker;
+  const workerGeneration = ++compilerWorkerGeneration;
+  compilerWorkerFailureHandled = false;
   compilerWorker.on('message', (message: WorkerCompileResponse) =>
   {
+    if (!isWorkerResponse(message))
+    {
+      connection.console.error('[lsp] resposta inválida recebida do compiler worker');
+      return;
+    }
+    if (message.workerGeneration !== undefined && message.workerGeneration !== workerGeneration) return;
     const pending = pendingCompiles.get(message.requestId);
     if (!pending) return;
+    if (!message.error) compilerWorkerRestartAttempts = 0;
     pendingCompiles.delete(message.requestId);
     const contextKey = pending.context.key;
     const perfCounters = getCompilePerfCounters(contextKey);
@@ -1343,6 +1334,30 @@ function ensureCompilerWorker(): Worker
       maybeLogContextQuiesced(contextKey, 'stale-context-generation', pending.uri);
       return;
     }
+    if (message.workerGeneration !== undefined && message.workerGeneration !== pending.workerGeneration)
+    {
+      perfCounters.compileStaleDropped += 1;
+      perfCounters.cancelledObsoleteCount += 1;
+      logObsoleteWorkDropped(contextKey, 'stale-worker-generation', pending.uri);
+      finalizeStale();
+      return;
+    }
+    if (message.contextGeneration !== undefined && message.contextGeneration !== pending.contextGeneration)
+    {
+      perfCounters.compileStaleDropped += 1;
+      perfCounters.cancelledObsoleteCount += 1;
+      logObsoleteWorkDropped(contextKey, 'stale-message-context-generation', pending.uri);
+      finalizeStale();
+      return;
+    }
+    if (message.documentVersion !== undefined && pending.expectedDocVersion !== undefined && message.documentVersion !== pending.expectedDocVersion)
+    {
+      perfCounters.compileStaleDropped += 1;
+      perfCounters.cancelledObsoleteCount += 1;
+      logObsoleteWorkDropped(contextKey, 'stale-message-document-version', pending.uri);
+      finalizeStale();
+      return;
+    }
     if (!isLatestValidationCycle(validationCycles, pending.cycle))
     {
       perfCounters.compileStaleDropped += 1;
@@ -1360,7 +1375,7 @@ function ensureCompilerWorker(): Worker
     if (message.error)
     {
       perfCounters.compileErrored += 1;
-      connection.console.error(`[lsp] erro ao compilar contexto ${pending.context.name}: ${message.error}`);
+      connection.console.error(`[lsp] erro ao compilar contexto ${pending.context.name}: ${message.error.code} ${message.error.message}`);
     } else if (message.result)
     {
       perfCounters.compileCommitted += 1;
@@ -1424,9 +1439,48 @@ function ensureCompilerWorker(): Worker
   });
   compilerWorker.on('error', (error) =>
   {
-    connection.console.error(`[lsp] worker error: ${String(error)}`);
+    handleCompilerWorkerFailure(worker, workerGeneration, `error: ${String(error)}`);
+  });
+  compilerWorker.on('exit', (code) =>
+  {
+    if (code !== 0) handleCompilerWorkerFailure(worker, workerGeneration, `exit code=${code}`);
+    else if (compilerWorker === worker) compilerWorker = null;
   });
   return compilerWorker;
+}
+
+function handleCompilerWorkerFailure(worker: Worker, workerGeneration: number, reason: string): void
+{
+  if (compilerWorkerFailureHandled || compilerWorker !== worker || workerGeneration !== compilerWorkerGeneration) return;
+  compilerWorkerFailureHandled = true;
+  compilerWorker = null;
+  connection.console.error(`[lsp] compiler worker generation=${workerGeneration} failed (${reason}); pending compilations will be retried`);
+  const pending = Array.from(pendingCompiles.values());
+  pendingCompiles.clear();
+  const now = Date.now();
+  if (now - compilerWorkerRestartWindowStartedAt > COMPILER_WORKER_RESTART_WINDOW_MS) {
+    compilerWorkerRestartWindowStartedAt = now;
+    compilerWorkerRestartAttempts = 0;
+  }
+  compilerWorkerRestartAttempts += 1;
+  const restartAllowed = compilerWorkerRestartAttempts <= COMPILER_WORKER_MAX_RESTARTS;
+  const backoffMs = Math.min(30_000, 250 * (2 ** Math.min(compilerWorkerRestartAttempts - 1, 7)));
+  if (!restartAllowed) sendLog('error', 'compile: worker restart limit reached; awaiting a new compile request');
+  for (const entry of pending)
+  {
+    const contextKey = entry.context.key;
+    compileRunning.set(contextKey, false);
+    fullCompileInFlightByContext.delete(contextKey);
+    notifyContextCompileFinished(contextKey);
+    stopCompileProgress(contextKey);
+    finishCompileRequest(compileRequests, contextKey, entry.requestId);
+    if (!restartAllowed) continue;
+    scheduleCompile(entry.context, backoffMs, 'workerRestart', entry.uri, {
+      expectedDocVersion: entry.expectedDocVersion,
+      includeSemantics: entry.includeSemantics,
+      includeSemanticPayload: entry.includeSemanticPayload
+    });
+  }
 }
 
 function buildRuntimeMeta(kind: 'metrics' | 'observability', filePath?: string): { [key: string]: unknown }
@@ -2388,12 +2442,25 @@ function revalidateOpenFallbackDocs(): void
 
 async function startCompileProgress(context: ResolvedContext): Promise<void>
 {
+  if (compileStatusActive.has(context.key)) return;
   // Intencionalmente desabilitado: evita "piscar"/mensagens no status bar durante compilação.
   // Mantemos apenas o controle interno para impedir repetição.
   if (!compileStatusActive.has(context.key))
   {
     compileStatusActive.add(context.key);
   }
+  const timer = setTimeout(() => {
+    compileProgressTimers.delete(context.key);
+    void connection.window.createWorkDoneProgress().then((reporter) => {
+      if (!compileStatusActive.has(context.key)) {
+        reporter.done();
+        return;
+      }
+      compileProgressReporters.set(context.key, reporter);
+      reporter.begin(`Compilando ${context.name}`, 0, 'Analisando arquivos');
+    }).catch(() => undefined);
+  }, 750);
+  compileProgressTimers.set(context.key, timer);
 }
 
 function stopCompileProgress(contextKey: string): void
@@ -2403,6 +2470,12 @@ function stopCompileProgress(contextKey: string): void
   {
     compileStatusActive.delete(contextKey);
   }
+  const timer = compileProgressTimers.get(contextKey);
+  if (timer) clearTimeout(timer);
+  compileProgressTimers.delete(contextKey);
+  const reporter = compileProgressReporters.get(contextKey);
+  if (reporter) reporter.done();
+  compileProgressReporters.delete(contextKey);
 }
 
 const applyCompileResult = createCompileResultApplication({
@@ -2595,6 +2668,8 @@ async function updateContextCache(
   );
   const requestId = startCompileRequest(compileRequests, context.key);
   pendingCompiles.set(requestId, {
+    requestId,
+    workerGeneration: compilerWorkerGeneration,
     context,
     metricsEnabled,
     startedAt: performance.now(),
@@ -2603,6 +2678,7 @@ async function updateContextCache(
     cycle,
     trigger,
     uri,
+    expectedDocVersion,
     includeSemantics,
     includeSemanticPayload,
     contextGeneration: getContextRuntimeGeneration(context.key),
@@ -2610,8 +2686,11 @@ async function updateContextCache(
   });
   const worker = ensureCompilerWorker();
   const semanticFilePaths = resolveSemanticPayloadFilePathsForCompile(context, trigger, changedFilePaths);
-  const payload: WorkerCompileRequest = {
+  const payload: WorkerCompileRequest = makeCompileRequest({
     requestId,
+    workerGeneration: compilerWorkerGeneration,
+    contextGeneration: getContextRuntimeGeneration(context.key),
+    documentVersion: expectedDocVersion,
     context: {
       name: context.name,
       rootDir: context.rootDir,
@@ -2630,7 +2709,7 @@ async function updateContextCache(
       includeSemanticPayload,
       semanticBudgetFiles
     }
-  };
+  });
   const payloadBytes = Buffer.byteLength(JSON.stringify(payload), 'utf8');
   perfCounters.totalWorkerPayloadBytes += payloadBytes;
   const pendingCompile = pendingCompiles.get(requestId);
@@ -3410,8 +3489,9 @@ async function computeDiagnosticsDirectlyForPull(
   return filtered.map((diag) => toLspDiagnostic(diag));
 }
 
-async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | undefined): Promise<PullDiagnosticReport>
+async function handleDocumentDiagnostic(params: PullDiagnosticRequestParams | undefined, token?: CancellationToken): Promise<PullDiagnosticReport>
 {
+  if (token?.isCancellationRequested) return { kind: 'full', items: [] };
   const requestReceivedAtMs = Date.now();
   const uri = params?.textDocument?.uri;
   if (!uri) return { kind: 'full', items: [] };
@@ -5532,6 +5612,15 @@ connection.onRequest('lsp/metrics/get', () =>
 connection.onRequest('lsp/perf/get', () =>
 {
   return buildCompilePerfSnapshotPayload();
+});
+
+connection.onNotification('lsp/compile/cancel', (params: { requestId?: number } | undefined) =>
+{
+  const requestId = params?.requestId;
+  if (!Number.isSafeInteger(requestId) || (requestId as number) <= 0) return;
+  const validRequestId = requestId as number;
+  if (!pendingCompiles.has(validRequestId) || !compilerWorker) return;
+  compilerWorker.postMessage({ kind: 'cancel', protocolVersion: 1, requestId: validRequestId });
 });
 const serverRuntime = createServerRuntime({
   documents,

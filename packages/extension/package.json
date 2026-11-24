@@ -2,7 +2,7 @@
   "name": "lsp",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "publisher": "llutti",
   "icon": "images/icon.png",
   "license": "LICENSE.md",
@@ -70,8 +70,9 @@
     "@lsp/compiler": "*"
   },
   "devDependencies": {
-    "vscode-languageclient": "^9.0.1",
-    "vscode-languageserver": "^9.0.1",
+    "@types/node": "^26.6.6",
+    "vscode-languageclient": "^11.0.1",
+    "vscode-languageserver": "^11.0.1",
     "vscode-languageserver-textdocument": "^1.0.16"
   },
   "contributes": {

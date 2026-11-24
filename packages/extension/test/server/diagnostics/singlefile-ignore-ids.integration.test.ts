@@ -8,6 +8,7 @@ import { DiagnosticSeverity } from 'vscode-languageserver';
 import { createPullDiagnosticsService } from '../../../src/server/diagnostics/pull-diagnostics-service';
 import { filterFallbackDiagnostics } from '../../../src/server/diagnostics/pull-diagnostics-service';
 import { applyIgnoreIds, mergeIgnoreIds } from '../../../src/server/diagnostics/diagnostics-ignore';
+import type { ContextCache, ResolvedContext } from '../../../src/server/server-runtime';
 
 describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
   it('remove IDs ignorados independentemente de maiúsculas/minúsculas', () => {
@@ -84,19 +85,6 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
     const uri = 'file:///tmp/singlefile-lsp1408.lspt';
     const doc = TextDocument.create(uri, 'lsp', 1, 'FuncaoQueNaoExiste();');
     const ignoredState = new Set<string>();
-    const contextKey = 'file:///tmp/workspace::TR';
-    const context = {
-      key: contextKey, workspaceUri: 'file:///tmp/workspace', name: 'TR',
-      rootDir: '/tmp/workspace', filePattern: '**/*.lspt',
-      includeSubdirectories: true, system: 'HCM', diagnosticsIgnoreIds: []
-    } as never;
-    const contextCache = {
-      files: new Set(['/tmp/singlefile-lsp1408.lspt']),
-      symbols: [], symbolsByName: new Map(), symbolsStale: false,
-      diagnosticsByFile: new Map(), diagHashByFile: new Map(),
-      semanticsByFile: new Map(), semanticPayloadByFile: new Map(),
-      compilerDiagnostics: [], lastCompileWasPrefix: false
-    } as never;
     const runtime = {
       pullDiagCache: new Map(), pullDiagLastItems: new Map(),
       pullDiagPrewarmByUri: new Map(), pullDiagPrewarmTimers: new Map(),
@@ -155,12 +143,12 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
     const filePath = '/tmp/context-lsp1408.lspt';
     const doc = TextDocument.create(uri, 'lsp', 1, 'FuncaoQueNaoExiste();');
     const ignored = new Set<string>();
-    const context = {
+    const context: ResolvedContext = {
       key: 'file:///tmp/workspace::TR', workspaceUri: 'file:///tmp/workspace',
       name: 'TR', rootDir: '/tmp/workspace', filePattern: '**/*.lspt',
       includeSubdirectories: true, system: 'HCM', diagnosticsIgnoreIds: []
-    } as never;
-    const cache = {
+    };
+    const cache: ContextCache = {
       files: new Set([filePath]), symbols: [], symbolsByName: new Map(), symbolsStale: false,
       diagnosticsByFile: new Map([[filePath, [{
         code: 'LSP1408', message: 'função não criada', severity: DiagnosticSeverity.Warning,
@@ -168,7 +156,7 @@ describe('diagnostics ignoreIds: SingleFile/Fallback', () => {
       }]]]),
       diagHashByFile: new Map(), semanticsByFile: new Map(), semanticPayloadByFile: new Map(),
       compilerDiagnostics: [], lastCompileWasPrefix: false
-    } as never;
+    };
     const runtime = {
       pullDiagCache: new Map(), pullDiagLastItems: new Map(),
       pullDiagPrewarmByUri: new Map(), pullDiagPrewarmTimers: new Map(),

@@ -1,4 +1,4 @@
-import type { Connection, Diagnostic } from 'vscode-languageserver/node';
+import type { CancellationToken, Connection, Diagnostic } from 'vscode-languageserver/node';
 
 type PullDiagnosticRequestParams = {
   textDocument?: { uri?: string };
@@ -11,11 +11,11 @@ type PullDiagnosticReport =
 
 export function registerDiagnosticsHandlers(input: {
   connection: Connection;
-  handleDocumentDiagnostic(params: PullDiagnosticRequestParams | undefined): Promise<PullDiagnosticReport>;
+  handleDocumentDiagnostic(params: PullDiagnosticRequestParams | undefined, token?: CancellationToken): Promise<PullDiagnosticReport>;
 }): void
 {
-  input.connection.onRequest('textDocument/diagnostic', async (params: PullDiagnosticRequestParams | undefined) =>
+  input.connection.onRequest('textDocument/diagnostic', async (params: PullDiagnosticRequestParams | undefined, token: CancellationToken) =>
   {
-    return await input.handleDocumentDiagnostic(params);
+    return await input.handleDocumentDiagnostic(params, token);
   });
 }

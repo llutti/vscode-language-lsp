@@ -1,6 +1,6 @@
 {
   "name": "lsp-workspace",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -14,23 +14,24 @@
     "typecheck": "npm run --workspaces typecheck",
     "version:sync": "node scripts/sync-version.mjs",
     "version:check": "node scripts/check-version.mjs",
-    "r:sync": "node scripts/readme-sync.mjs"
+    "r:sync": "node scripts/readme-sync.mjs",
+    "benchmark:worker-contexts": "npm -w @lsp/compiler run build && node scripts/benchmark-worker-contexts.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "globals": "^17.14.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.1",
-    "vitest": "^4.1.12"
+    "typescript-eslint": "^8.74.0",
+    "vitest": "^5.1.1"
   },
   "allowScripts": {
     "esbuild@0.28.2": true
   },
   "dependencies": {
-    "@types/vscode": "^1.144.0",
+    "@types/vscode": "^1.146.0",
     "esbuild": "^0.28.2",
     "fast-glob": "^3.3.3",
-    "sql-formatter": "^15.9.0"
+    "sql-formatter": "^15.10.0"
   }
 }
