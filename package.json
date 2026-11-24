@@ -22,7 +22,7 @@
     "eslint": "^10.15.0",
     "globals": "^17.14.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.73.0",
+    "typescript-eslint": "^8.74.0",
     "vitest": "^5.1.1"
   },
   "allowScripts": {
@@ -32,6 +32,6 @@
     "@types/vscode": "^1.146.0",
     "esbuild": "^0.28.2",
     "fast-glob": "^3.3.3",
-    "sql-formatter": "^15.9.1"
+    "sql-formatter": "^15.10.0"
   }
 }

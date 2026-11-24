@@ -2,7 +2,7 @@
 
 Alterações realizadas na extensão.
 
-## [2.0.13] - 17/11/2026
+## [2.0.13] - 24/11/2026
 ### Correções
   - Adicionar Função "EntradaValor"
 
